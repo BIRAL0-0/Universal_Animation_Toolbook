@@ -55,6 +55,10 @@ python3 universal_toolbook/run_studio.py render work/episode.json --out /tmp/dra
   --draft --voice auto --workers 2 --chunk-sec 20
 ```
 
+Exit code **3** with `"status": "COMPLETE_SILENT"` means the render did encode, but no voice
+backend produced speech — `"voice_diagnosis"` names what is missing. Fix it and re-render rather
+than inspecting a silent draft (see `05_AUDIO.md`).
+
 `--draft` = 960×540, same timeline, ~1 minute for a 2-minute film. Use it to check:
 
 - every board at `cue_on + 1.5 s` → fully built, inside the safe band, not over a name tag;

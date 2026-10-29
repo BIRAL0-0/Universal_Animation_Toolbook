@@ -36,6 +36,8 @@ python3 universal_toolbook/run_studio.py render work/episode.json --out /tmp/dra
 - [ ] No frame with audible speech and no subtitle
 - [ ] No two-row card unless deliberate; no one-word line merged into its neighbour
 - [ ] Speaker labels correct (a line attributed to the wrong character is visible in the card)
+- [ ] `status` is `COMPLETE` (not `COMPLETE_SILENT`) and the process exited 0
+- [ ] Report says `"voiced": true`; a `false` here means the film has no narration — stop
 - [ ] Voices are audibly distinct; no line is truncated
 - [ ] BGM sits under the narration (no pumping, no dropouts at scene joins)
 - [ ] Draft duration ≈ planned duration; a big mismatch means a retiming problem
@@ -48,7 +50,7 @@ python3 universal_toolbook/run_studio.py render work/episode.json --out output/f
 ```
 
 - [ ] `final_film_1080p_validation_report.json` → `valid: true`, `film_grain: false`,
-      `warnings: []`, `frames ≈ duration × 30`
+      `voiced: true`, `warnings: []`, `frames ≈ duration × 30`
 - [ ] `ffprobe` → 1920×1080, 30 fps, h264 + aac
 - [ ] `ffmpeg -v error -i out.mp4 -f null -` prints nothing (full decode)
 - [ ] Audio peak ≤ −1 dBFS, RMS −16 … −19 dBFS (parse `master_audio.wav`)

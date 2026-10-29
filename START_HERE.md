@@ -56,6 +56,11 @@ python3 universal_toolbook/run_studio.py render work/episode.json \
 `--voice auto` is required here: the Edge endpoint is unreachable, so the engine falls back to
 the three installed Piper voices and reports what actually ran in `voice_backend`.
 
+**Read `"voiced"` in the report, not just `"status"`.** If no backend could speak, the render
+exits **3** with `"status": "COMPLETE_SILENT"` and a `"voice_diagnosis"` list naming what is
+missing — the file would be subtitles and music only. `check` prints `offline_voiceover_ready`
+so you can catch it before rendering; `--voice none` is the only way to ask for silence.
+
 ## 4. Read in this order
 
 | # | File | Why |

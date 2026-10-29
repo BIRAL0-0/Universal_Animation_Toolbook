@@ -33,6 +33,24 @@ Installed offline voices and how the alias map resolves common Edge ids:
 | `en-US-JennyNeural`, `en-US-AriaNeural`, `en-US-AnaNeural` | `en_US-amy-medium` |
 
 Check or install more: `python3 universal_toolbook/tools/fetch_piper_voices.py check` / `install`.
+`run_studio.py check` prints `offline_voiceover_ready` next to the node/ffmpeg/edge probes, so
+you know before you spend a render whether offline narration is possible.
+
+### A silent master fails loudly
+
+If a voice mode produces no speech at all, the render is **not** reported as a clean finish:
+
+| What you see | Meaning |
+| --- | --- |
+| `"status": "COMPLETE"` + `"voiced": true` | narration exists — deliverable |
+| `"status": "COMPLETE_SILENT"` + exit code **3** + `!` banner | the file has subtitles/music only; `"voice_diagnosis"` lists the missing pieces |
+| `"status": "COMPLETE"` + `"voiced": false` + `--allow-silent` | you explicitly accepted a silent master |
+| `"status": "COMPLETE"` + `"voiced": false` + `--voice none` | a deliberately silent timing draft |
+
+The same `voiced` / `warnings` fields are copied into `<film>_validation_report.json`, so a
+downstream check can refuse a silent file without re-reading the console. Never deliver a
+master whose report says `"voiced": false`; fix the backend (`pip install piper-tts`,
+`python3 universal_toolbook/tools/fetch_piper_voices.py install`) and re-render.
 
 ## 5.2 Picking voices so they are distinguishable
 

@@ -9,6 +9,14 @@ Edge/Azure TTS is unreachable (`speech.platform.bing.com:443` refused). Use `--v
 (or `--voice piper`). Check `python3 universal_toolbook/tools/fetch_piper_voices.py check` first; it should say
 `offline_voiceover_ready: true` with ≥ 2 voices.
 
+**The render finished fast but the film is silent (status `COMPLETE_SILENT`, exit 3)**
+No backend synthesized anything: Piper and its `.onnx` voices are missing on this machine and
+Edge is unreachable, so the engine wrote subtitles + music only. Read `"voice_diagnosis"` in
+`<film>_report.json` — it names the missing package or model directory. Fix with
+`pip install piper-tts` then `python3 universal_toolbook/tools/fetch_piper_voices.py install`,
+and re-render. `--voice none` (intentional silence) and `--allow-silent` (accepted silence) are
+the only ways a silent master reports `COMPLETE`.
+
 **A re-render mixes old and new frames**
 `--resume` is reusing chunks from a previous, different episode. Delete
 `output/.work_<name>/` and render again.

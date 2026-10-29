@@ -48,6 +48,9 @@ THREE TIERS OF RULE — know which one you are touching
     - validate must print "warnings": [] before rendering
     - render 1080p stills and LOOK at every one before any full render
     - film grain stays OFF
+    - "status": "COMPLETE" alone is not proof of a film: the report must also say
+      "voiced": true. COMPLETE_SILENT / exit code 3 means no narration was synthesized — fix the
+      voice backend and re-render, never deliver it
     - never overwrite an existing master; new filename, and state it
     - never report a number that did not come from a file the run produced
     - if a verbatim script is supplied, preserve 100% of its words: run

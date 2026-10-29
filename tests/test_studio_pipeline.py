@@ -21,6 +21,9 @@ from engine.voice_engine import (
 )
 from tools.script_helper import segment_user_script, verify_script_fidelity
 
+sys.path.insert(0, str(ROOT.parent))
+from universal_toolbook.run_studio import _voice_diagnosis  # noqa: E402
+
 
 def main() -> int:
     # 1. Verify all 7 bundled Creative Commons / NCS-style BGM tracks exist & load
@@ -115,10 +118,21 @@ def main() -> int:
     assert abs(mock_scene["camera_shots"][1]["start"] - 4.49) < 0.10
     assert abs(mock_scene["camera_shots"][2]["start"] - 7.74) < 0.10
 
+    # 3. A voice run that synthesizes nothing must explain itself instead of failing silently:
+    #    the renderer turns this diagnosis into `status: COMPLETE_SILENT` + exit code 3.
+    missing_edge = _voice_diagnosis({"edge_tts": False})
+    assert missing_edge, "voice diagnosis must never be empty when no backend produced speech"
+    assert any("pip install" in line for line in missing_edge), missing_edge
+    assert any("edge-tts is not installed" in line for line in missing_edge), missing_edge
+    with_edge = _voice_diagnosis({"edge_tts": True})
+    assert any("no internet" in line for line in with_edge), with_edge
+    assert any("piper-tts" in line for line in with_edge), with_edge
+
     print(
         json.dumps(
             {
                 "py_tests": "PASSED",
+                "voice_failure_diagnosis": "PASSED",
                 "bgm_tracks_verified": len(catalog),
                 "script_mood_matching": "PASSED",
                 "silence_compactor_verified": True,

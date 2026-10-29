@@ -45,6 +45,10 @@ Measured on this machine (2 vCPU, `--workers 2`):
 - **English only** with the installed models. Other languages need a matching Piper voice.
 - No singing, no voice cloning, no emotion tags beyond rate/pitch.
 - One audio file per line: very long lines (60+ words) produce a long unbreakable subtitle.
+- **A machine with no voice backend cannot narrate.** A fresh clone has neither Piper nor
+  voices, and Edge is blocked, so `--voice auto` yields a silent film. That case now exits **3**
+  with `"status": "COMPLETE_SILENT"` and a `voice_diagnosis` list instead of reporting a clean
+  `COMPLETE`; `--voice none` / `--allow-silent` are the only paths to a silent `COMPLETE`.
 
 ## Visual
 
