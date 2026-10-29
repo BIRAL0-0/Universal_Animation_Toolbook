@@ -5,6 +5,11 @@ Give any AI agent this repo plus a script, and it renders a zero-grain `1920×10
 
 **Start here → [`00_START_HERE.md`](00_START_HERE.md)** · full JSON schema → [`01_TOOLBOOK_REFERENCE.md`](01_TOOLBOOK_REFERENCE.md) · agent brief → [`MASTER_PROMPT.md`](MASTER_PROMPT.md)
 
+**New session with a script and no idea what to do? → [`process/README.md`](process/README.md).**
+That folder is the film-agnostic production procedure (intake → authoring → rendering → QA),
+and [`process/SESSION_PROMPT.md`](process/SESSION_PROMPT.md) is the prompt to paste into it.
+Start from the runnable skeleton [`templates/episode_minimal.json`](templates/episode_minimal.json).
+
 ## Sample output
 
 [`examples/two_inch_bridge_episode.json`](examples/two_inch_bridge_episode.json) — *“The Two-Inch Bridge”*,

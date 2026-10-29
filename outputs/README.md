@@ -1,70 +1,55 @@
-# outputs/ — durable, text-native results
+# outputs/ — the durable channel for a run's results
 
-Video is a large binary: it does not always survive a chat transfer or a preview pane. This
-folder is the **reliable channel**. Downloadable media is either produced on demand or left in
-the git-ignored `output/` directory — everything that *can* be represented as text is
-committed here instead.
+Video is a large binary and does not always survive a chat, a viewer, or a preview pane. This
+folder is where a finished run puts the parts of its result that **are text**, so something
+useful always reaches the reader even when the `.mp4` cannot.
 
-## Contents
+Keep it generic: one sub-folder per finished film.
 
-| File | What it is |
-| --- | --- |
-| `final_film_1080p_chapters.txt` | 8 YouTube-style chapter timestamps + the Creative Commons music credits. |
-| `final_film_1080p_report.json` | Full render report: resolution, fps, duration, scene count, voice backend, BGM tracks and credits, sfx count, output paths. |
-| `final_film_1080p_validation_report.json` | Machine gate: `valid`, `frames`, `dimensions`, `fps`, `film_grain`, `warnings`. |
-| `final_film_1080p_visual_audio_cues.json` | 28 synchronised foley/visual cue entries. |
-| `film_storyboard.svg` | The whole film as a **self-contained animated SVG** (8 slides, 32 s loop, base64 stills + SMIL fades). Pure text — opens in any browser or SVG viewer, no media transfer needed. Rebuild with `python3 tools/build_storyboard_svg.py output/final_film_1080p.mp4 --out outputs/film_storyboard.svg --stills 3,15,26,38,50,62,76,90`. |
+```
+outputs/
+  <film-slug>/
+    chapters.txt        chapter timestamps + generated CC music credits
+    report.json         resolution, fps, duration, voice_backend, BGM tracks, sfx count
+    validation.json     {valid, frames, dimensions, fps, film_grain, warnings}
+    cues.json           every synchronised foley/visual cue
+    storyboard.svg      optional: the film as animated SVG (text, no video needed)
+    NOTES.md            master path, SHA-256, exact rebuild command, what changed
+```
 
-## The master itself
+## Rules
 
-| Property | Value |
-| --- | --- |
-| Path (local, git-ignored) | `output/final_film_1080p.mp4` |
-| Size | 8,309,102 bytes |
-| SHA-256 | `71a82c99ad9fb2425afc3273f1671c41ec651658978eb46d03f4b3674a45f4b9` |
-| Format | 1920×1080 · 30 fps · 3087 frames · 102.915 s · H.264 High + AAC 44.1 kHz stereo |
-| Grain | none |
-| Audio | peak −2.87 dBFS · RMS −17.4 dBFS |
+1. **Text only.** No `*.mp4`, `*.gif`, `*.webm` — those stay in the git-ignored `output/` and
+   are regenerated from the episode JSON. Media patterns are already in `.gitignore`.
+2. Always record in `NOTES.md`:
+   - the master's path, byte size and `sha256sum`;
+   - the exact render command that produced it;
+   - the episode spec it came from (path + commit);
+   - `voice_backend` actually used (not the voices requested).
+3. Never edit a report by hand — copy it from the render output verbatim.
 
-Rebuild it byte-for-byte-close from the spec at any time:
+## Producing the text set
 
 ```bash
-python3 run_studio.py check
-python3 run_studio.py validate work/episode.json
-python3 run_studio.py render work/episode.json --out output/final_film_1080p.mp4 \
-  --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
+OUT=outputs/<film-slug>
+mkdir -p "$OUT"
+cp output/final_film_1080p_chapters.txt              "$OUT/chapters.txt"
+cp output/final_film_1080p_report.json               "$OUT/report.json"
+cp output/final_film_1080p_validation_report.json    "$OUT/validation.json"
+cp output/final_film_1080p_visual_audio_cues.json    "$OUT/cues.json"
+python3 tools/build_storyboard_svg.py output/final_film_1080p.mp4 --out "$OUT/storyboard.svg"
+sha256sum output/final_film_1080p.mp4
 ```
 
-(Numbers will match; byte-level hashes will not, because encoder threads and the Piper voice
-models are not deterministic across machines.)
+## Getting the actual video to a human, in order of reliability
 
-## Getting the video out, in order of reliability
-
-1. **Regenerate** locally with the command above — always works, needs no transfer.
-2. **Serve it**: `python3 tools/serve_deliverables.py 8000 output`, then open the preview from
-   inside Arena (not in an external browser tab) — the page has 1080p / 720p download buttons.
-3. **Workspace files**: `work/deliverables/` holds `final_film_1080p.mp4`,
-   `final_film_720p_compact.mp4`, `preview_clip.gif`, `full_film_preview_560.gif` and
-   `film_storyboard.svg` (a self-contained animated SVG — text, no binary needed).
-4. **Text-only fallback**: `film_storyboard.svg` and `outputs/final_film_1080p_visual_audio_cues.json`
-   describe the film frame by frame without a single media byte.
-
-## Chapters
-
-```
-00:00  Kessa Chasm | Twelve Weeks
-00:13  The Shortcut | Two Inches
-00:24  Ahead of Schedule | Too Fast
-00:36  Inspection | Check It Again
-00:48  June | The Deck Sings
-00:59  The Rule | Margin
-01:14  Rebuild | Margin Restored
-01:26  August | The Crossing
-```
-
-## Music (Creative Commons)
-
-- "Where Stars Fall" — Scott Buckley (CC BY 4.0)
-- "Softly" — Loyalty Freak Music (CC0 1.0 Public Domain)
-- "The Distant Sun (Monomyth 1)" — Scott Buckley (CC BY 4.0)
-- "The Restoration (Monomyth 12)" — Scott Buckley (CC BY 4.0)
+1. **Rebuild it.** `python3 run_studio.py render <episode>.json --out <path>.mp4 --full
+   --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto` — always works,
+   no transfer involved.
+2. **Serve it.** `python3 tools/serve_deliverables.py 8000 output`, open the preview from
+   inside the app (not a raw URL in an external tab). Range requests are supported, so seeking
+   and downloads work.
+3. **Wrap it.** `python3 run_studio.py player output/final_film_1080p.mp4 --out output/player.html`.
+4. **Show the SVG storyboard** above — it renders where video is refused.
+5. If none of those reach the reader, the text set in this folder plus the rebuild command is
+   the deliverable.
