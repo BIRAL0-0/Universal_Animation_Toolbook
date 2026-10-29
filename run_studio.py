@@ -40,8 +40,10 @@ def ensure_dependencies(auto_install: bool = True) -> Dict[str, Any]:
         raise RuntimeError("Node.js (`node`) is required on PATH.")
     status["node"] = subprocess.check_output([node_bin, "-v"], text=True).strip()
 
+    # Either 2D backend is fine: node-canvas (needs cairo/pango) or @napi-rs/canvas (prebuilt).
     canvas_dir = STUDIO_ROOT / "node_modules" / "canvas"
-    if not canvas_dir.exists() and auto_install:
+    napi_canvas_dir = STUDIO_ROOT / "node_modules" / "@napi-rs" / "canvas"
+    if not canvas_dir.exists() and not napi_canvas_dir.exists() and auto_install:
         npm_bin = shutil.which("npm")
         if npm_bin:
             subprocess.run(
@@ -567,7 +569,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="BGM mode/track: auto, dynamic, electronic_drive, upbeat_ncs_synth, chill_focus, retro_pulse, reflective_piano, suspense_tension, triumph_horizon, procedural, none, or /path/to/track.mp3",
     )
-    pr.add_argument("--voice", choices=["auto", "edge", "offline", "none"], default="auto")
+    pr.add_argument("--voice", choices=["auto", "edge", "piper", "offline", "none"], default="auto")
     pr.add_argument("--voice-name", default="en-US-AndrewNeural")
     pr.add_argument("--voice-rate", default="+2%")
     pr.add_argument("--voice-dir", default=None)

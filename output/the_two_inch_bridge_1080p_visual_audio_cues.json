@@ -1,0 +1,169 @@
+[
+  {
+    "t": 18.08,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 21.553,
+    "type": "board_pop",
+    "pan": 0.10999999999999999
+  },
+  {
+    "t": 30.068,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 41.165,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 45.319,
+    "type": "board_pop",
+    "pan": 0.10999999999999999
+  },
+  {
+    "t": 53.759,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 55.389,
+    "type": "board_pop",
+    "pan": -0.49500000000000005
+  },
+  {
+    "t": 68.056,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 72.776,
+    "type": "board_pop",
+    "pan": -0.462
+  },
+  {
+    "t": 79.024,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 80.1,
+    "type": "step",
+    "pan": -0.39900000000150304,
+    "actor": "nia",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 80.622,
+    "type": "step",
+    "pan": -0.37799999999849404,
+    "actor": "nia",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 81.046,
+    "type": "step",
+    "pan": -0.3570000000010037,
+    "actor": "nia",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 81.421,
+    "type": "step",
+    "pan": -0.33600000000044233,
+    "actor": "nia",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 81.77,
+    "type": "step",
+    "pan": -0.31500000000287925,
+    "actor": "nia",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 82.101,
+    "type": "step",
+    "pan": -0.2940000000002818,
+    "actor": "nia",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 82.422,
+    "type": "step",
+    "pan": -0.2730000000006963,
+    "actor": "nia",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 82.739,
+    "type": "step",
+    "pan": -0.25200000000366707,
+    "actor": "nia",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 83.057,
+    "type": "step",
+    "pan": -0.2309999999993037,
+    "actor": "nia",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 83.378,
+    "type": "step",
+    "pan": -0.20999999999971813,
+    "actor": "nia",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 83.709,
+    "type": "step",
+    "pan": -0.1889999999971208,
+    "actor": "nia",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 84.058,
+    "type": "step",
+    "pan": -0.1679999999995577,
+    "actor": "nia",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 84.433,
+    "type": "step",
+    "pan": -0.14699999999899627,
+    "actor": "nia",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 84.857,
+    "type": "step",
+    "pan": -0.12600000000150594,
+    "actor": "nia",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 85.379,
+    "type": "step",
+    "pan": -0.10499999999849699,
+    "actor": "nia",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 86.535,
+    "type": "step",
+    "pan": -0.08399999999999999,
+    "actor": "nia",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 91.169,
+    "type": "chapter_chime",
+    "pan": 0
+  }
+]

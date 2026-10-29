@@ -26,6 +26,9 @@ The AI autonomously designs **custom characters (with hairstyles, articulated ha
 - **Non-Flickering Cinema Subtitles & Multi-Word Keyword Highlights**:
   - Supports single-word and **multi-word phrase** `accent_words` (`"9 PM"`, `"no excuses"`), clean speaker pill badges (`DANIEL:`), gap-bridged active-word golden/accent glow capsules (zero `strokeText` smear, zero inter-word strobe), and persistent keyword underlines.
 - **Bundled Creative Commons BGM Library (`assets/bgm/`)**: 7 normalized stereo MP3 tracks (`CC0` & `CC BY 4.0`) with automatic mood scoring, dynamic multi-act switching, and automatic license attribution in `*_chapters.txt`.
+- **Offline Neural Fallback Voiceover (`piper-tts`)**: when the Edge neural endpoint is unreachable (air-gapped sandbox, CI runner, offline edit bay) any line the cloud backend cannot voice is synthesized locally by Piper from `.onnx` voices, with syllable-weighted word timings snapped to real silence→voicing transitions so glowing subtitles, lip-sync and board `cue_on` snaps stay locked. Edge voice ids map automatically (`en-US-GuyNeural` → `en_US-ryan-medium`, `en-US-JennyNeural` → `en_US-amy-medium`, `en-US-ChristopherNeural` → `en_GB-alan-medium`).
+- **Portable Canvas Backend**: renders through `node-canvas` **or** `@napi-rs/canvas` (`engine/canvas_backend.js`), so a Cairo-free / slim container works with zero code changes (`npm install` now treats both as optional).
+- **Screen-Space Graphics Boards**: in-world boards are clamped to safe zones in *screen* space, so they stay put and never clip off-frame while the 2.5D camera pushes and pans behind them.
 
 ---
 
@@ -51,6 +54,26 @@ python3 run_studio.py stills work/episode.json --out-dir work/stills --width 192
 
 # 6. Render full 1920x1080 @ 30fps voiced MP4 with parallel workers (always use --preset veryfast)
 python3 run_studio.py render work/episode.json --out output/final_1080p.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume
+
+# 7. Offline neural voices (only needed when the Edge endpoint is unreachable)
+pip install piper-tts
+python3 tools/fetch_piper_voices.py check
+python3 tools/fetch_piper_voices.py install --from-dir /path/to/piper_voices
+
+# 8. Shipped sample film: a complete 8-scene parchment short in ~107 s
+python3 run_studio.py render examples/two_inch_bridge_episode.json \
+    --out output/the_two_inch_bridge_1080p.mp4 --full --preset veryfast --crf 21 \
+    --chunk-sec 30 --workers 3
 ```
+
+## Bundled Sample Film
+
+`examples/two_inch_bridge_episode.json` — **“The Two-Inch Bridge”**
+(`output/the_two_inch_bridge_1080p.mp4`, 1920×1080, 30 fps, ~1:47) is a complete hand-inked
+parchment short that exercises the whole engine in one spec: two custom ink-stick characters,
+seven parchment backdrops, speech-locked camera cuts, four in-world graphics boards
+(`notebook_page`, `bar_chart`, `checklist_card`, `stat_cards`), a world-locked `handoff` between
+two actors, per-scene dynamic CC BGM, and two-cast narration. Use it as the reference for pacing
+and JSON structure.
 
 See `01_TOOLBOOK_REFERENCE.md` for the complete V3 JSON specification.

@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
-const { createCanvas } = require('canvas');
+const { createCanvas, rawFrameBytes, rawPixelFormat } = require('./canvas_backend');
 
 const { registerFonts } = require('./font');
 const { clamp, lerp, ease, eio, eo, ca, hexToRgb, mixRgb, rgbCss, BONES, drawFigure } = require('./character_rig');
@@ -768,6 +768,10 @@ function renderEpisodeFrame(ctx, outW, outH, episode, frameIdx) {
     ctx.drawImage(getParchmentBackdrop(BASE_W, BASE_H), 0, 0);
   }
 
+  // Boards are screen-space UI (safe-zone clamped), so remember the pre-camera transform and
+  // draw them through it: they stay put while the camera pans/pushes, exactly like real graphics.
+  const screenMatrix = ctx.getTransform();
+
   ctx.save();
   if (zoom !== 1.0 || panX !== 0.0 || focusX !== BASE_W * 0.5 || focusY !== BASE_H * 0.54) {
     ctx.translate(BASE_W * 0.5, BASE_H * 0.54);
@@ -947,7 +951,10 @@ function renderEpisodeFrame(ctx, outW, outH, episode, frameIdx) {
   // 4. Execute Unified Depth-Sorted World Render Queue
   for (const item of renderQueue) {
     if (item.kind === 'board') {
+      ctx.save();
+      ctx.setTransform(screenMatrix.a, screenMatrix.b, screenMatrix.c, screenMatrix.d, screenMatrix.e, screenMatrix.f);
       drawWorldBoard(ctx, item.board, ts, sc.duration, BASE_W, FLOOR_Y, activeLight);
+      ctx.restore();
     } else if (item.kind === 'prop') {
       drawWorldProp(ctx, item.prop, BASE_W, FLOOR_Y, globalT, activeLight, ts, 'full');
     } else if (item.kind === 'split_group') {
@@ -1226,7 +1233,7 @@ async function renderVideoSegment({
   const args = [
     '-y',
     '-f', 'rawvideo',
-    '-pix_fmt', 'bgra',
+    '-pix_fmt', rawPixelFormat,
     '-s', `${width}x${height}`,
     '-r', String(episode.fps),
     '-i', 'pipe:0',
@@ -1257,7 +1264,7 @@ async function renderVideoSegment({
   const t0 = Date.now();
   for (let f = startFrame; f < finalEnd; f++) {
     renderEpisodeFrame(ctx, width, height, episode, f);
-    const raw = canvas.toBuffer('raw');
+    const raw = rawFrameBytes(canvas);
     if (!ff.stdin.write(raw)) {
       await new Promise((r) => ff.stdin.once('drain', r));
     }
@@ -1287,8 +1294,8 @@ function renderSceneStills({ episode, outDir, width = 1920, height = 1080, scene
 
   const scenes = episode.scenes;
   const picked = [];
-  if (scenes.length <= sceneLimit) {
-    picked.push(...scenes);
+  if (scenes.length <= sceneLimit || sceneLimit <= 1) {
+    picked.push(...(sceneLimit <= 1 ? scenes.slice(0, 1) : scenes));
   } else {
     for (let i = 0; i < sceneLimit; i++) {
       const idx = Math.min(scenes.length - 1, Math.round((i * (scenes.length - 1)) / (sceneLimit - 1)));

@@ -124,3 +124,64 @@ Shots can either specify fixed `start`/`end` seconds OR snap directly to spoken 
 ### Glowing Subtitles, Multi-Word Phrase Highlighting & Voice Sync
 - **`accent_words`**: Supports both single words and **multi-word phrases** (e.g. `["discipline", "9 PM", "no excuses", "one more hour"]`) plus automatic ALL-CAPS emphasis detection.
 - **Smooth Active-Word Glow**: Continuous-speech `WordBoundary` micro-gaps (`<= 0.28s`) are automatically bridged so the golden/accent active-word glow capsule glides smoothly from word to word without flickering, while pausing naturally across real sentence breaks.
+
+### Screen-Space Graphics Boards (camera-independent)
+Boards are composited through the *pre-camera* transform, so a `camera_shots` push or pan moves the
+world (environment, props, characters) **behind** them while the board stays anchored in its
+safe-zone rectangle and never clips off-frame. No JSON change is needed — this is how every board
+type behaves now.
+
+### Subtitle Chunking Rules (natural cue breaks)
+A single `dialogue` line can still produce several cinematic subtitle cues. The splitter:
+1. always breaks at sentence punctuation (`! ? .`) once a cue holds 2+ words;
+2. breaks at clause punctuation (`, ; : —`) once a cue reaches 5 words / 34 characters;
+3. only hard-cuts at the 11-word / 68-character cap, and when it must, it slices **after** the most
+   recent punctuation or **before** the nearest function word (`and`, `the`, `she`, `that`, …) so a
+   cue never starts or ends mid-phrase.
+
+Write dialogue in short, one-breath sentences if you want broadcast-style single-line cues.
+
+---
+
+## Voice Backends & Offline Rendering
+
+| Backend | Trigger | Notes |
+| --- | --- | --- |
+| `edge-tts` | default when the endpoint is reachable | Word-boundary-accurate timestamps, per-speaker neural voices |
+| `piper-offline` | automatic fallback per line | Local `.onnx` voices, syllable-weighted timings refined against real voiced onsets |
+| `os-tts` | `--voice offline` with `espeak-ng` installed | Robotic, last resort |
+| `external-audio` | `--voice-dir <dir>` with `S01.wav` … `S07.wav` | Your own recorded narration |
+| `text-led` | `--voice none` | Silence; choreography/captions still render |
+
+```bash
+pip install piper-tts
+python3 tools/fetch_piper_voices.py check                       # is offline voiceover ready?
+python3 tools/fetch_piper_voices.py install --from-dir ~/voices # copies .onnx + .onnx.json
+python3 run_studio.py render work/episode.json --out out.mp4 --voice piper   # force offline
+```
+
+Voice resolution: `PIPER_VOICE_DIR` → `~/.cache/piper_voices` → `assets/voices/`. Edge voice ids in
+existing episode JSON keep working — `en-US-GuyNeural`, `en-US-JennyNeural` and
+`en-US-ChristopherNeural` map onto the three recommended Piper models. Any `.onnx` dropped in the
+voice directory can be addressed directly as `"voice": "piper:en_GB-semaine-medium"`.
+
+---
+
+## Canvas Backends
+
+`engine/canvas_backend.js` renders through **either** `node-canvas` (Cairo/Pango, needs a native
+build) **or** `@napi-rs/canvas` (prebuilt binaries, no system libraries), whichever resolves first.
+Both are declared as `optionalDependencies`, so `npm install` succeeds on a machine that can only
+build one of them, and `python3 run_studio.py check` accepts either.
+
+---
+
+## Bundled Example Films
+
+| Spec | Style | Length | Demonstrates |
+| --- | --- | --- | --- |
+| `examples/two_inch_bridge_episode.json` | parchment ink | ~1:47 | 2 ink-stick actors, 7 parchment backdrops, speech-locked cuts, 4 board types, `handoff` two-actor IK, dynamic CC BGM |
+| `examples/red_umbrella_episode.json` | cel | long-form | night-city weather, umbrellas, family cast |
+| `examples/discipline_vs_obsession_episode.json` | cel | long-form | phone cards, desks, multi-act BGM switching |
+| `examples/minimal_parchment_template.json` | parchment | 1 scene | smallest possible parchment spec |
+| `examples/minimal_schema_template.json` | cel | 1 scene | smallest possible spec |
