@@ -2,6 +2,10 @@
 
 const { clamp, lerp, ease, eo, ca, hexToRgb } = require('./character_rig');
 const { drawSoftGlow } = require('./environments');
+// Harbor-beacon prop extension (lighthouse, lamp mechanism, boats, fog, oil flask, workbench).
+// Drawn in its own module so this file keeps one dispatch line; see engine/beacon_harbor.js.
+const { BEACON_PROPS, drawBeaconProp } = require('./beacon_harbor');
+const BEACON_PROP_SET = new Set(BEACON_PROPS);
 
 const K = (t, a, b) => (b <= a ? 1 : clamp((t - a) / (b - a)));
 
@@ -37,6 +41,7 @@ const SUPPORTED_PROPS = Object.freeze([
   'judge_table',
   'curtain_window',
   'park_tree',
+  ...BEACON_PROPS,
 ]);
 
 const SUPPORTED_BOARDS = Object.freeze([
@@ -60,6 +65,13 @@ function drawWorldProp(g, prop, W, floorY, t, sceneAccent = '#38bdf8', sceneT = 
   const px = (prop.x ?? 0.5) * W;
   const s = prop.scale ?? 1.0;
   const accent = prop.color || sceneAccent;
+
+  // Harbor-beacon set: single-pass ink props, dispatched to engine/beacon_harbor.js
+  if (BEACON_PROP_SET.has(prop.type)) {
+    if (propPass === 'front_only') return;
+    drawBeaconProp(g, prop, W, floorY, t, ts, s);
+    return;
+  }
 
   g.save();
   if (prop.type === 'desk') {
