@@ -23,7 +23,18 @@ jobs:
         with:
           python-version: "3.11"
       - name: Every path quoted in the markdown must exist
-        run: python tools/check_docs.py --verbose
+        run: |
+          set +e
+          python tools/check_docs.py --verbose > /tmp/docs.log 2>&1
+          code=$?
+          cat /tmp/docs.log
+          if [ "$code" -ne 0 ]; then
+            # Surface the findings as annotations: they show up in the checks UI and through
+            # the API, where a full log download is not always reachable.
+            grep -E 'not found|FAILED|Error|Traceback' /tmp/docs.log | head -8 \
+              | sed 's/^/::error::docs check: /'
+          fi
+          exit "$code"
       - name: Workflow files must parse as YAML
         run: |
           pip install --quiet pyyaml
