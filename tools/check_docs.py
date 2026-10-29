@@ -15,7 +15,11 @@ Rules (deliberately narrow, to avoid flagging prose):
      kit-relative fallback on purpose: every quoted path must be unambiguous for a reader
      sitting at the repository root.
 
-Runtime artifacts (files a render produces) are listed in ALLOW_MISSING.
+Runtime artifacts (files a render produces) are listed in ALLOW_MISSING. Anything under a
+runtime directory -- `output/`, `work/`, `node_modules/`, `.venv/` -- is created by the pipeline
+and is deliberately absent from a fresh clone, so a reference to it is not a broken path. That
+distinction is why this check passes in a checkout with a render in it and must also pass in a
+bare clone: `git clone <repo> /tmp/x && python3 tools/check_docs.py` is the real test.
 
 Usage:
     python3 tools/check_docs.py [--verbose]
@@ -43,6 +47,19 @@ ALLOW_MISSING = {
     "output/.work_<name>/", "path/to/piper_voices", "/path/to/piper_voices",
     "~/.cache/piper_voices", "universal_toolbook/node_modules/",
 }
+
+# Directories a render or an install creates. A path inside them cannot exist in a fresh clone.
+RUNTIME_PREFIXES = (
+    "output/",
+    "work/",
+    "node_modules/",
+    "universal_toolbook/node_modules/",
+    ".venv/",
+    "assets/voices/",
+    "universal_toolbook/assets/voices/",
+    "~/.cache/",
+    "outputs/storyboard",
+)
 
 PLACEHOLDER = ("<", ">", "{", "}", "*", "…", "...", "/path/to", "your_", "my_", "$")
 
@@ -86,6 +103,13 @@ def is_claim(token: str) -> bool:
     return "/" in t
 
 
+def is_runtime(token: str) -> bool:
+    t = token.strip().rstrip(".,;:")
+    if t.rstrip("/") in {"output", "work", "node_modules", ".venv", "assets/voices"}:
+        return True
+    return t.startswith(RUNTIME_PREFIXES)
+
+
 def resolve(token: str, doc: Path) -> bool:
     t = token.strip().rstrip(".,;:")
     if t in ALLOW_MISSING:
@@ -103,6 +127,7 @@ def main() -> int:
     args = ap.parse_args()
 
     problems: list[str] = []
+    runtime: list[str] = []
     claims = 0
     docs = tracked_docs()
 
@@ -118,7 +143,7 @@ def main() -> int:
                 target = cm.group(1)
                 if target.endswith((".py", ".js")):
                     claims += 1
-                    if not resolve(target, doc):
+                    if not resolve(target, doc) and not is_runtime(target):
                         problems.append(f"{rel}: command target not found -> {target}")
                 continue
             for token in span.split():
@@ -126,7 +151,10 @@ def main() -> int:
                     continue
                 claims += 1
                 if not resolve(token, doc):
-                    problems.append(f"{rel}: path not found -> {token}")
+                    if is_runtime(token):
+                        runtime.append(f"{rel}: {token}")
+                    else:
+                        problems.append(f"{rel}: path not found -> {token}")
 
         # 2b: commands inside fenced blocks (the reading lists and copy-paste blocks)
         for fence in FENCE_RE.finditer(text):
@@ -134,19 +162,19 @@ def main() -> int:
             for cm in FENCE_CMD_RE.finditer(body):
                 target = cm.group(1)
                 claims += 1
-                if not resolve(target, doc):
+                if not resolve(target, doc) and not is_runtime(target):
                     problems.append(f"{rel}: fenced command not found -> {target}")
             for cm in CP_RE.finditer(body):
                 src = cm.group(1)
                 claims += 1
-                if not resolve(src, doc):
+                if not resolve(src, doc) and not is_runtime(src):
                     problems.append(f"{rel}: fenced cp source not found -> {src}")
             for cm in NPM_PREFIX_RE.finditer(body):
                 target = cm.group(1)
                 if target in ALLOW_MISSING:
                     continue
                 claims += 1
-                if not resolve(target, doc):
+                if not resolve(target, doc) and not is_runtime(target):
                     problems.append(f"{rel}: npm --prefix not found -> {target}")
 
         # 3: relative markdown links
@@ -174,9 +202,13 @@ def main() -> int:
         return 1
 
     print(f"DOCS CHECK OK: {claims} path references resolved across {len(docs)} markdown files")
+    if runtime:
+        print(f"  ({len(runtime)} reference(s) point at render/install output, absent from a fresh clone)")
     if args.verbose:
         for d in docs:
             print("  " + str(d.relative_to(ROOT)))
+        for r in runtime:
+            print("  runtime: " + r)
     return 0
 
 
