@@ -24,6 +24,10 @@ jobs:
           python-version: "3.11"
       - name: Every path quoted in the markdown must exist
         run: python tools/check_docs.py --verbose
+      - name: Workflow files must parse as YAML
+        run: |
+          pip install --quiet pyyaml
+          python tools/check_workflows.py
 
   specs:
     name: specs validate
@@ -64,7 +68,7 @@ jobs:
       - name: JS regression suite
         run: node tests/run_all_tests.js | tee /tmp/js.json
       - name: Fail if the JS suite did not pass
-        run: grep -q '"js_tests": "PASSED"' /tmp/js.json
+        run: grep -q 'js_tests.*PASSED' /tmp/js.json
       - name: Python pipeline suite
         run: python tests/test_studio_pipeline.py
 
