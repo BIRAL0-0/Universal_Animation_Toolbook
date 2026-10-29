@@ -27,6 +27,13 @@ One scene = one location + one continuous stretch of time. Practical targets:
 | Lines per scene | 3–6 | each line is ~3–5 s of speech |
 | Characters per scene | 2 (max 3) | 3+ on a 1920 frame collides constantly |
 
+> **These are the short-form defaults, not the engine's limits.** The bundled long-form specs
+> (`examples/discipline_vs_obsession_episode.json` — 9 scenes, 48–74 s each, 520 s declared;
+> `examples/red_umbrella_episode.json` — 9 scenes up to 40 s) prove longer scenes work, at the
+> cost of render time and of much harder camera/beat timing. If a script is a one-act piece or
+> a video essay, budget 30–60 s per scene and keep a camera move inside each one so it never
+> reads as a slide. See `08_LIMITS.md` for the measured cost.
+
 Write down for each scene: **id, chapter title, location, who is on screen, what changes**
 (a fact is revealed / a decision is made / a thing breaks). A scene where nothing changes is
 a candidate for deletion — this is also the single best defence against "talking heads".

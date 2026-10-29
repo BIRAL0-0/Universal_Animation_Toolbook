@@ -6,7 +6,7 @@ Every entry here was hit in practice. Symptom → cause → fix.
 
 **Render hangs or fails on the first line of dialogue**
 Edge/Azure TTS is unreachable (`speech.platform.bing.com:443` refused). Use `--voice auto`
-(or `--voice piper`). Check `tools/fetch_piper_voices.py check` first; it should say
+(or `--voice piper`). Check `python3 universal_toolbook/tools/fetch_piper_voices.py check` first; it should say
 `offline_voiceover_ready: true` with ≥ 2 voices.
 
 **A re-render mixes old and new frames**
@@ -103,4 +103,4 @@ Handing a binary to a human is the hard part, not the render. In order of reliab
    reach the reader, and state the rebuild command for the video.
 
 Note: the Python stdlib `http.server` does **not** answer `Range` requests — video seeking and
-some browsers fail against it. Use `tools/serve_deliverables.py`.
+some browsers fail against it. Use `universal_toolbook/tools/serve_deliverables.py`.

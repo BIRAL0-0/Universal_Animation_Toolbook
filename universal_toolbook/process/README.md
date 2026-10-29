@@ -1,5 +1,8 @@
 # process/ — the universal production procedure
 
+> **First landing page for any session: [`START_HERE.md`](../../START_HERE.md)** at the
+> repository root — bootstrap commands and the reading order in one place.
+
 Everything here is **film-agnostic**. It does not describe any particular story; it describes
 how to turn *any* script into a finished 1080p `.mp4` with this engine. If you are a fresh
 session that was handed a script and has never seen this repository, read these in order:
@@ -14,12 +17,14 @@ session that was handed a script and has never seen this repository, read these 
 | 05 | [`05_AUDIO.md`](05_AUDIO.md) | Voices, pacing, BGM, foley, or the audio sounds wrong. |
 | 06 | [`06_QA_GATE.md`](06_QA_GATE.md) | Before you call anything finished. |
 | 07 | [`07_TROUBLESHOOTING.md`](07_TROUBLESHOOTING.md) | A command failed or a render looks broken. |
+| 08 | [`08_LIMITS.md`](08_LIMITS.md) | You are about to promise something the engine cannot do. |
 | — | [`REPO_MAP.md`](REPO_MAP.md) | You need to know which folder stores what, or what is not in git. |
 
 > **Where things are.** The engine is one self-contained folder: `universal_toolbook/`.
 > Commands below are written for the **repository root**; `cd universal_toolbook` and drop the
 > prefix if you prefer, or copy the folder somewhere else entirely — it resolves its own
-> `engine/`, `assets/` and `config/` relative to `run_studio.py`.
+> `universal_toolbook/engine/`, `universal_toolbook/assets/` and
+> `universal_toolbook/config/` relative to `run_studio.py`.
 
 Companion material already in the repo:
 
@@ -29,6 +34,7 @@ Companion material already in the repo:
 - `universal_toolbook/templates/episode_minimal.json` — a **runnable 2-scene episode**; start by copying it.
 - `examples/*.json` — complete reference films (cel and parchment) to copy structure and pacing from.
 - `tests/` — engine regression suite. **Development only**; you never need it to render a film.
+- `tools/check_docs.py` — verifies every path quoted in these docs actually exists.
 
 ---
 

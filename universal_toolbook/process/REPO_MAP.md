@@ -27,6 +27,7 @@ Universal_Animation_Toolbook/
 │   │   ├── 05_AUDIO.md                 voices, pacing, BGM, foley, measurement
 │   │   ├── 06_QA_GATE.md               definition of finished
 │   │   ├── 07_TROUBLESHOOTING.md       symptom → cause → fix
+│   │   ├── 08_LIMITS.md                what the engine does / does not do
 │   │   └── REPO_MAP.md                 this file
 │   │
 │   ├── templates/
@@ -76,9 +77,13 @@ Universal_Animation_Toolbook/
 │   ├── README.md                    the convention (one folder per film, no media)
 │   └── two_inch_bridge_parchment/   worked example: chapters, report, validation, cues, NOTES.md
 │
+├── tools/                        dev tooling (not needed to render)
+│   └── check_docs.py                verifies every path quoted in the docs exists
+│
 ├── output/                       renders (git-ignored)
 ├── work/                         your episode + QA stills (git-ignored)
-└── README.md                     repo map + quick start
+├── START_HERE.md                 ★ first landing page: bootstrap + reading order + hard rules
+└── README.md                     repo summary + quick start
 ```
 
 ## Which part stores what
@@ -86,13 +91,14 @@ Universal_Animation_Toolbook/
 | You want to change… | Edit | It is read by |
 | --- | --- | --- |
 | the story, lines, scenes, cast | `work/episode.json` (a copy of `universal_toolbook/templates/episode_minimal.json`) | everything |
-| how a body looks / moves | `engine/character_rig.js`, `engine/motion_library.js` | the compositor |
-| the room, sky, weather | `engine/environments.js` or the scene's `setting` | the compositor |
-| a prop or a chart | `engine/world_props_and_boards.js`, or `props[]` / `boards[]` in the episode | the compositor |
-| subtitle position, chapters, grain | `engine/video_renderer.js` | the compositor |
-| voice choice, pacing, timings | `voices` / `dialogue[].pause_after`; behaviour in `engine/voice_engine.py` | audio pass |
-| music, mix levels | `assets/bgm/*` + `bgm`/`bgm_gain`; `engine/audio_mixer.py` | audio pass |
+| how a body looks / moves | `universal_toolbook/engine/character_rig.js`, `universal_toolbook/engine/motion_library.js` | the compositor |
+| the room, sky, weather | `universal_toolbook/engine/environments.js` or the scene's `setting` | the compositor |
+| a prop or a chart | `universal_toolbook/engine/world_props_and_boards.js`, or `props[]` / `boards[]` in the episode | the compositor |
+| subtitle position, chapters, grain | `universal_toolbook/engine/video_renderer.js` | the compositor |
+| voice choice, pacing, timings | `voices` / `dialogue[].pause_after`; behaviour in `universal_toolbook/engine/voice_engine.py` | audio pass |
+| music, mix levels | `universal_toolbook/assets/bgm/*` + `bgm`/`bgm_gain`; `universal_toolbook/engine/audio_mixer.py` | audio pass |
 | the procedure itself | `process/*.md` | humans and agents |
+| what the docs claim exists | `python3 tools/check_docs.py` | CI and pre-push checks |
 
 ## Command paths
 
@@ -128,9 +134,9 @@ committed inside `universal_toolbook/`.
 ## The data path, in one line each
 
 1. `work/episode.json` → validated → **scenes, dialogue, beats, cues**
-2. `engine/voice_engine.py` → one audio file per line + **real word timings**
-3. `engine/episode.js` → retimes every scene to those timings → final track layout
-4. `engine/video_renderer.js` → draws each frame (environment → props → actors → boards → subtitles)
-5. `engine/audio_mixer.py` → voices + BGM + foley → `master_audio.wav`
+2. `universal_toolbook/engine/voice_engine.py` → one audio file per line + **real word timings**
+3. `universal_toolbook/engine/episode.js` → retimes every scene to those timings → final track layout
+4. `universal_toolbook/engine/video_renderer.js` → draws each frame (environment → props → actors → boards → subtitles)
+5. `universal_toolbook/engine/audio_mixer.py` → voices + BGM + foley → `master_audio.wav`
 6. `run_studio.py render` → chunks → concatenates → muxes audio → `output/*.mp4` + report JSON
 7. `outputs/<film>/` → the text half of the result (chapters, report, validation, cues)

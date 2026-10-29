@@ -3,7 +3,9 @@
 The definition of "finished". Every box is ticked **on a rendered frame**, never on the JSON.
 
 ## 0 — Pre-flight
-- [ ] `run_studio.py check` → `status: OK`
+- [ ] `mkdir -p work` has been run (fresh clones have no `work/`)
+- [ ] `python3 tools/check_docs.py` → every documented path resolves
+- [ ] `python3 universal_toolbook/run_studio.py check` → `status: OK`
 - [ ] `validate work/episode.json` → `warnings: []`
 - [ ] `duration_sec`, `scene_count`, `sound_events` match the plan
 - [ ] If a verbatim script was supplied: validated against it, 100 % preserved

@@ -1,0 +1,120 @@
+name: verify
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  docs:
+    name: docs paths resolve
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Every path quoted in the markdown must exist
+        run: python tools/check_docs.py --verbose
+
+  specs:
+    name: specs validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install python deps
+        run: pip install -r universal_toolbook/requirements.txt
+      - name: Install canvas backend
+        run: npm install --prefix universal_toolbook --no-audit --no-fund
+      - name: Environment check
+        run: python universal_toolbook/run_studio.py check
+
+      - name: Validate the template and every reference film
+        run: python tools/validate_specs.py
+
+  engine-tests:
+    name: engine tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install python deps
+        run: pip install -r universal_toolbook/requirements.txt
+      - name: Install canvas backend
+        run: npm install --prefix universal_toolbook --no-audit --no-fund
+      - name: JS regression suite
+        run: node tests/run_all_tests.js | tee /tmp/js.json
+      - name: Fail if the JS suite did not pass
+        run: grep -q '"js_tests": "PASSED"' /tmp/js.json
+      - name: Python pipeline suite
+        run: python tests/test_studio_pipeline.py
+
+  render-smoke:
+    name: render smoke (silent draft)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install python deps
+        run: pip install -r universal_toolbook/requirements.txt
+      - name: Install canvas backend
+        run: npm install --prefix universal_toolbook --no-audit --no-fund
+      - name: Stills render (proves the compositor draws)
+        run: |
+          mkdir -p work
+          python universal_toolbook/run_studio.py stills \
+            universal_toolbook/templates/episode_minimal.json \
+            --out-dir work/stills --width 1920 --height 1080
+          test -f work/stills/S01_modern_office.png
+      - name: Silent draft encode (proves the ffmpeg path, no network needed)
+        run: |
+          python universal_toolbook/run_studio.py render \
+            universal_toolbook/templates/episode_minimal.json \
+            --out /tmp/smoke/film.mp4 --draft --voice none --workers 2 --chunk-sec 20 \
+            | tee /tmp/render.json
+          grep -q '"status": "COMPLETE"' /tmp/render.json
+      - name: Encoded output must self-validate
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+
+          path = pathlib.Path("/tmp/smoke/film_validation_report.json")
+          if not path.exists():
+              sys.exit("renderer did not write a validation report")
+          rep = json.loads(path.read_text())
+          ok = (
+              rep.get("valid") is True
+              and rep.get("film_grain") is False
+              and rep.get("warnings") == []
+              and rep.get("fps") == 30
+              and rep.get("frames", 0) > 0
+          )
+          print(json.dumps(rep, indent=2))
+          if not ok:
+              sys.exit("validation report is not clean")
+          print("draft validation report is clean")
+          PY

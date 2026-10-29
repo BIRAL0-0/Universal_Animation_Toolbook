@@ -37,19 +37,19 @@ cp output/final_film_1080p_chapters.txt              "$OUT/chapters.txt"
 cp output/final_film_1080p_report.json               "$OUT/report.json"
 cp output/final_film_1080p_validation_report.json    "$OUT/validation.json"
 cp output/final_film_1080p_visual_audio_cues.json    "$OUT/cues.json"
-python3 tools/build_storyboard_svg.py output/final_film_1080p.mp4 --out "$OUT/storyboard.svg"
+python3 universal_toolbook/tools/build_storyboard_svg.py output/final_film_1080p.mp4 --out "$OUT/storyboard.svg"
 sha256sum output/final_film_1080p.mp4
 ```
 
 ## Getting the actual video to a human, in order of reliability
 
-1. **Rebuild it.** `python3 run_studio.py render <episode>.json --out <path>.mp4 --full
+1. **Rebuild it.** `python3 universal_toolbook/run_studio.py render <episode>.json --out <path>.mp4 --full
    --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto` — always works,
    no transfer involved.
-2. **Serve it.** `python3 tools/serve_deliverables.py 8000 output`, open the preview from
+2. **Serve it.** `python3 universal_toolbook/tools/serve_deliverables.py 8000 output`, open the preview from
    inside the app (not a raw URL in an external tab). Range requests are supported, so seeking
    and downloads work.
-3. **Wrap it.** `python3 run_studio.py player output/final_film_1080p.mp4 --out output/player.html`.
+3. **Wrap it.** `python3 universal_toolbook/run_studio.py player output/final_film_1080p.mp4 --out output/player.html`.
 4. **Show the SVG storyboard** above — it renders where video is refused.
 5. If none of those reach the reader, the text set in this folder plus the rebuild command is
    the deliverable.

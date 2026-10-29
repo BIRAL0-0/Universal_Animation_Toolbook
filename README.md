@@ -13,11 +13,14 @@ Universal_Animation_Toolbook/
 └── work/                   your working episode + QA stills — git-ignored
 ```
 
-`universal_toolbook/` is self-contained: `run_studio.py` resolves its own `engine/`, `assets/`
-and `config/` relative to itself, so it can be copied out and used on its own. Episodes and
+`universal_toolbook/` is self-contained: `universal_toolbook/run_studio.py` resolves its own `universal_toolbook/engine/`, `universal_toolbook/assets/`
+and `universal_toolbook/config/` relative to itself, so it can be copied out and used on its own. Episodes and
 outputs always resolve from *your* current directory.
 
 ## Start here
+
+**First stop for any session: [`START_HERE.md`](START_HERE.md)** — bootstrap commands, the
+reading order, and the five non-negotiable rules in one page.
 
 | If you want to… | Open |
 | --- | --- |
@@ -27,6 +30,7 @@ outputs always resolve from *your* current directory.
 | the full JSON schema, all actions/environments | [`universal_toolbook/01_TOOLBOOK_REFERENCE.md`](universal_toolbook/01_TOOLBOOK_REFERENCE.md) |
 | the creative brief for an agent | [`universal_toolbook/MASTER_PROMPT.md`](universal_toolbook/MASTER_PROMPT.md) |
 | which folder stores what | [`universal_toolbook/process/REPO_MAP.md`](universal_toolbook/process/REPO_MAP.md) |
+| know what the engine cannot do | [`universal_toolbook/process/08_LIMITS.md`](universal_toolbook/process/08_LIMITS.md) |
 | a worked spec to copy | [`examples/`](examples) |
 
 ## Quick start (from the repository root)

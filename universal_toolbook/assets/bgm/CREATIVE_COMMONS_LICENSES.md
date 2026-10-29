@@ -1,6 +1,6 @@
 # Creative Commons & Public Domain BGM Library Licenses
 
-All bundled background music tracks in `assets/bgm/` are genuine, royalty-free Creative Commons (`CC0 1.0` Public Domain, `CC BY 4.0`, and `CC BY 3.0`) instrumental tracks safe for YouTube, educational, and commercial video production. When `run_studio.py render` finishes, it automatically writes the exact attribution line for the selected BGM track(s) into your output `*_chapters.txt` file!
+All bundled background music tracks in `universal_toolbook/assets/bgm/` are genuine, royalty-free Creative Commons (`CC0 1.0` Public Domain, `CC BY 4.0`, and `CC BY 3.0`) instrumental tracks safe for YouTube, educational, and commercial video production. When `run_studio.py render` finishes, it automatically writes the exact attribution line for the selected BGM track(s) into your output `*_chapters.txt` file!
 
 ## Bundled Track Credits
 
@@ -33,4 +33,4 @@ All bundled background music tracks in `assets/bgm/` are genuine, royalty-free C
    - Source: https://commons.wikimedia.org/wiki/File:QuarksUnited_-_Regeneration_(Trance).opus
 
 ## Supplying Custom NCS (NoCopyrightSounds) or CC Tracks
-You can also drop any `.mp3`, `.wav`, `.ogg`, or `.opus` track from NCS (`ncs.io`) or any Creative Commons archive into `assets/bgm/` or pass `--bgm /path/to/track.mp3` to `run_studio.py render`. The audio mixer automatically normalizes, loops with seamless crossfades, and sidechain-ducks (`-9.5 dB`) the music underneath voiceover narration.
+You can also drop any `.mp3`, `.wav`, `.ogg`, or `.opus` track from NCS (`ncs.io`) or any Creative Commons archive into `universal_toolbook/assets/bgm/` or pass `--bgm /path/to/track.mp3` to `run_studio.py render`. The audio mixer automatically normalizes, loops with seamless crossfades, and sidechain-ducks (`-9.5 dB`) the music underneath voiceover narration.
