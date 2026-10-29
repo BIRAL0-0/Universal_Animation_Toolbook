@@ -209,25 +209,64 @@ function splitIntoBalancedChunks(words) {
   const subChunks = [];
   let buf = [];
   let charLen = 0;
+
+  // Chunk at punctuation first, and only hard-cut at the word/char cap as a last resort:
+  // a cue should never begin mid-phrase (e.g. "river. Master Okoro gave her one rule.").
+  const isSentenceEnd = (w) => /[.!?]["']?$/.test(w);
+  const isClauseEnd = (w) => /[,;:\u2014-]$/.test(w);
+  const HARD_WORDS = 11;
+  const HARD_CHARS = 68;
+  const FUNCTION_WORD_RE =
+    /^(and|or|but|so|then|that|which|who|because|as|if|when|while|with|from|to|of|in|on|for|a|an|the|he|she|it|they|we|i|his|her|their|our|my|was|is|are|were|had|has|have|will|would|could|should|can|did|do|does|not)$/i;
+
   for (let i = 0; i < words.length; i++) {
     const w = words[i];
     buf.push(w);
     charLen += w.length + 1;
-    const endsSentence = /[.!?]["']?$/.test(w);
-    const endsClause = /[,;:—-]$/.test(w);
-    if (
-      (endsSentence && buf.length >= 2) ||
-      (endsClause && (buf.length >= 5 || charLen >= 34)) ||
-      buf.length >= 8 ||
-      charLen >= 48
-    ) {
+
+    if ((isSentenceEnd(w) && buf.length >= 2) || (isClauseEnd(w) && (buf.length >= 5 || charLen >= 34))) {
       subChunks.push(buf.join(' '));
       buf = [];
       charLen = 0;
+      continue;
     }
+
+    const hitCap = buf.length >= HARD_WORDS || charLen >= HARD_CHARS;
+    if (!hitCap) continue;
+
+    // Prefer cutting AFTER the most recent punctuation (so the cue keeps its comma/period)...
+    let cutAfter = -1;
+    for (let k = buf.length - 2; k >= 3; k--) {
+      const token = words[i - (buf.length - 1 - k)];
+      if (isSentenceEnd(token) && k >= 1) { cutAfter = k; break; }
+      if (isClauseEnd(token) && k >= 4) { cutAfter = k; break; }
+    }
+    // ...otherwise cut BEFORE the nearest function word so the next cue starts on content.
+    let cutBefore = -1;
+    if (cutAfter < 0) {
+      for (let k = buf.length - 2; k >= 4; k--) {
+        if (FUNCTION_WORD_RE.test(words[i - (buf.length - 1 - k)])) { cutBefore = k; break; }
+      }
+    }
+
+    if (cutAfter > 0 && cutAfter < buf.length - 1) {
+      subChunks.push(buf.slice(0, cutAfter + 1).join(' '));
+      buf = buf.slice(cutAfter + 1);
+    } else if (cutBefore > 0) {
+      subChunks.push(buf.slice(0, cutBefore).join(' '));
+      buf = buf.slice(cutBefore);
+    } else if (buf.length >= HARD_WORDS + 3 || charLen >= HARD_CHARS + 18) {
+      subChunks.push(buf.join(' '));
+      buf = [];
+    } else {
+      continue;
+    }
+    charLen = buf.reduce((acc, t) => acc + t.length + 1, 0);
   }
+
   if (buf.length > 0) {
-    if (subChunks.length > 0 && buf.length <= 2 && (subChunks[subChunks.length - 1].length + buf.join(' ').length) <= 52) {
+    const last = subChunks.length > 0 ? subChunks[subChunks.length - 1] : '';
+    if (last && buf.length <= 2 && last.length + buf.join(' ').length <= 52) {
       subChunks[subChunks.length - 1] += ' ' + buf.join(' ');
     } else {
       subChunks.push(buf.join(' '));

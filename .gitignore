@@ -1,0 +1,31 @@
+# Byte-compiled / caches
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node canvas backend (installed at run time)
+node_modules/
+
+# Render scratch space
+output/.work_*/
+*.partial
+
+# Offline neural voices (~60 MB each) are fetched, never committed
+assets/voices/
+*.onnx
+*.onnx.json
+
+# Rendered deliverables are build artifacts, not source
+output/*.mp4
+output/stills/
+
+# Large media deliverables: regenerable from work/episode.json, never committed
+work/deliverables/*.mp4
+work/deliverables/*.gif
+work/deliverables/*.webm
+work/deliverables/*.webp
+work/deliverables/*.svg
+work/stills/
+outputs/*.mp4
+outputs/*.gif

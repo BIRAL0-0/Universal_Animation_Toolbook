@@ -3,7 +3,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const { createCanvas } = require('canvas');
+const { createCanvas } = require('../engine/canvas_backend');
 
 const { registerFonts } = require('../engine/font');
 const {

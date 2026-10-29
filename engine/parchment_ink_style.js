@@ -10,7 +10,7 @@
  *  - Bold dark-ink + crimson-red typography & parchment subtitle cards
  */
 
-const { createCanvas } = require('canvas');
+const { createCanvas } = require('./canvas_backend');
 const { BONES, clamp, lerp, ease, eo, ca, skeleton, applyPostureToPose } = require('./character_rig');
 
 const INK = '#1a1612';
@@ -1106,6 +1106,23 @@ function drawParchmentHeadline(g, chapterTitle, ts) {
   const startX = 960 - totalW * 0.5;
   const y = lerp(52, 74, enter);
 
+  // Soft paper plate: the chapter headline is screen-space, so background line art (window frames,
+  // lamps, clocks) can drift behind it during camera moves. A low-alpha cream wash keeps the ink
+  // legible without reading as a visible card.
+  const plateW = totalW + 76;
+  const plateH = 74;
+  const plateX = 960 - plateW * 0.5;
+  const plateY = y - plateH * 0.5;
+  const plateGrad = g.createLinearGradient(plateX, 0, plateX + plateW, 0);
+  plateGrad.addColorStop(0, 'rgba(247, 238, 219, 0)');
+  plateGrad.addColorStop(0.14, 'rgba(247, 238, 219, 0.86)');
+  plateGrad.addColorStop(0.86, 'rgba(247, 238, 219, 0.86)');
+  plateGrad.addColorStop(1, 'rgba(247, 238, 219, 0)');
+  g.fillStyle = plateGrad;
+  g.beginPath();
+  g.roundRect(plateX, plateY, plateW, plateH, 16);
+  g.fill();
+
   g.fillStyle = INK;
   g.textAlign = 'left';
   g.fillText(blackPart, startX, y);
@@ -1163,7 +1180,7 @@ function drawParchmentSubtitle(g, subtitles, ts, mode = 'cinema') {
   const lineH = 42;
   const totalH = lines.length * lineH + 22;
   const maxW = Math.max(...lines.map((l) => l.width)) + 56;
-  const centerY = 1002 - (lines.length - 1) * 18;
+  const centerY = 962 - (lines.length - 1) * 18;
 
   g.fillStyle = 'rgba(252, 244, 228, 0.93)';
   g.strokeStyle = 'rgba(26, 22, 18, 0.42)';
