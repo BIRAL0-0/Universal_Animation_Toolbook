@@ -706,6 +706,11 @@ function renderCharacterPass(ctx, entry, drawMode, parchmentMode, activeLight, s
       posture: state.posture ?? actor.posture,
       nameTag: actor.showNameTag ? actor.name : null,
       globalT,
+      // Amplitude + viseme driven lip sync, gated to this actor's own speech (never the narrator's)
+      faceAnim: {
+        talkAmount: actorIsSpeaking ? speechState.talkAmount : 0,
+        viseme: actorIsSpeaking ? speechState.viseme || 'open' : 'open',
+      },
     });
   }
 

@@ -1,6 +1,6 @@
 # two_inch_bridge_cel — the finished master, shipped in the repo
 
-Unlike `outputs/two_inch_bridge_parchment/` (text mirrors only), this folder carries the actual
+Unlike a text-mirrors-only folder, this one carries the actual
 `the_two_inch_bridge_1080p.mp4`. Video usually cannot cross a chat window or a preview pane, and
 a "film" folder with no film in it is a poor answer to "where is the video" — so the master is
 committed here, at 7.9 MB, well inside what a git host serves without complaint.

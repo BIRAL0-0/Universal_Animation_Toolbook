@@ -12,6 +12,7 @@
 
 const { createCanvas } = require('./canvas_backend');
 const { BONES, clamp, lerp, ease, eo, ca, skeleton, applyPostureToPose } = require('./character_rig');
+const { HARBOR_BACKDROPS, drawBeaconBackdrop, keeperGate } = require('./beacon_harbor');
 
 const INK = '#1a1612';
 const INK_SOFT = 'rgba(26, 22, 18, 0.55)';
@@ -205,6 +206,13 @@ function drawParchmentHorizon(g, floorY, fromX = -260, toX = 2180, gapStart = nu
  */
 function drawParchmentEnvironment(g, setting, globalT, ts, panX, floorY = 835) {
   const kind = (setting && setting.backdrop) || 'parchment_studio';
+
+  // Harbor-beacon set (see engine/beacon_harbor.js): the whole prop + backdrop extension for
+  // "The Beacon That Kept Time" lives in that module and is dispatched here, so this file keeps
+  // owning the shared ink vocabulary and every existing backdrop is untouched.
+  if (HARBOR_BACKDROPS.includes(kind)) {
+    return drawBeaconBackdrop(g, setting, globalT, ts, panX, floorY);
+  }
 
   if (kind === 'parchment_studio') {
     drawParchmentHorizon(g, floorY);
@@ -1032,6 +1040,31 @@ function drawInkStickFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
     g.moveTo(mx - 6.5 * s, my + 1 * s);
     g.quadraticCurveTo(mx, my + 3.8 * s, mx + 6.5 * s, my - 0.8 * s);
     g.stroke();
+  }
+
+  // Speech-locked ink mouth. `opts.faceAnim` is only non-zero while THIS actor is the active
+  // speaker (the renderer gates it by speaker id and ignores narrator lines entirely), so the
+  // jaw closes on its own between lines and never moves over a narrator passage.
+  const faceAnim = opts.faceAnim;
+  const talk = faceAnim ? clamp(Number(faceAnim.talkAmount) || 0) : 0;
+  if (talk > 0.045 && expr !== 'burnout_cry') {
+    const sealed = faceAnim.viseme === 'closed';
+    const openW = 8.2 * s - 1.5 * s * talk;
+    const openH = sealed ? 1.1 * s : (1.6 + 6.9 * talk) * s;
+    g.save();
+    // mask the resting expression line, then draw the ink mouth over it
+    g.fillStyle = PAPER_LIGHT;
+    g.beginPath();
+    g.ellipse(mx, my + 1.2 * s, 10.4 * s, 6.6 * s, 0, 0, Math.PI * 2);
+    g.fill();
+    g.fillStyle = sealed ? 'rgba(247, 235, 212, 0.9)' : 'rgba(120, 84, 46, 0.78)';
+    g.strokeStyle = INK;
+    g.lineWidth = 2.5 * s;
+    g.beginPath();
+    g.ellipse(mx, my + (sealed ? 0.6 * s : 0.4 * s), Math.max(3.2 * s, openW), Math.max(1.0 * s, openH), 0, 0, Math.PI * 2);
+    g.fill();
+    g.stroke();
+    g.restore();
   }
   g.restore();
 

@@ -19,8 +19,10 @@ outputs/
     NOTES.md            master path, byte size, SHA-256, exact rebuild command
 ```
 
-Two folders show both shapes: `two_inch_bridge_cel/` ships the master next to its text set,
-`two_inch_bridge_parchment/` is the text-only variant for a cut whose binary was not kept.
+Folder shapes in this repo: `two_inch_bridge_cel/` ships the master next to its text set, and
+`the_beacon_that_kept_time/` adds a poster, a contact sheet and eight scene stills for a fully
+offline-voiced 1:47 fable. A folder with no `.mp4` is still a valid shape (text mirrors only);
+the master is then rebuilt with the command recorded in that folder's `NOTES.md`.
 
 ## Rules
 

@@ -1,0 +1,1465 @@
+{
+  "title": "The Beacon That Kept Time",
+  "channel_name": "",
+  "thesis": "A signal is a promise, not a performance: reliability matters more than showiness.",
+  "style": "parchment",
+  "bgm": "dynamic",
+  "subtitles_mode": "cinema",
+  "outro": false,
+  "voices": {
+    "narrator": {
+      "voice": "en-US-GuyNeural",
+      "rate": "+1%",
+      "pitch": "-1Hz"
+    },
+    "anya": {
+      "voice": "en-US-JennyNeural",
+      "rate": "+3%",
+      "pitch": "+2Hz"
+    },
+    "mara": {
+      "voice": "en-US-ChristopherNeural",
+      "rate": "-3%",
+      "pitch": "-2Hz"
+    }
+  },
+  "cast": {
+    "anya": {
+      "name": "ANYA",
+      "style": "ink_stick",
+      "accessories": [
+        "tunic",
+        "long_hair"
+      ],
+      "expression": "curious",
+      "posture": 0.34,
+      "scale": 0.95,
+      "eyes": true
+    },
+    "mara": {
+      "name": "MARA",
+      "style": "ink_stick",
+      "accessories": [
+        "coat",
+        "side_wisps",
+        "glasses"
+      ],
+      "expression": "determined",
+      "posture": -0.1,
+      "scale": 1.02,
+      "eyes": true
+    },
+    "keeper": {
+      "name": "THE NEW KEEPER",
+      "style": "ink_stick",
+      "accessories": [
+        "tunic",
+        "side_wisps"
+      ],
+      "expression": "focused",
+      "posture": 0.5,
+      "scale": 0.8,
+      "eyes": true
+    }
+  },
+  "scenes": [
+    {
+      "id": "S01",
+      "chapter": "The Keeper's Pattern | Dusk",
+      "mood": "reflective",
+      "bgm": "reflective_piano",
+      "bgm_gain": 0.9,
+      "accent_color": "#b4762a",
+      "duration": 13.31,
+      "min_duration": 13.31,
+      "lead_in": 0.6,
+      "tail_out": 0.55,
+      "setting": {
+        "backdrop": "parchment_lantern",
+        "hour": "dusk",
+        "fog": 0.06,
+        "window_x": 0.2,
+        "window_w": 0.3,
+        "glow_x": 0.8,
+        "beam_pattern": "steady",
+        "window_boats": [
+          {
+            "x": -0.28,
+            "scale": 0.66,
+            "lamp": true
+          },
+          {
+            "x": 0.2,
+            "scale": 0.5,
+            "lamp": false
+          },
+          {
+            "x": 0.02,
+            "scale": 0.38,
+            "lamp": false
+          }
+        ]
+      },
+      "props": [
+        {
+          "type": "beacon_mechanism",
+          "x": 0.8,
+          "scale": 1.3,
+          "z": -12,
+          "pattern": "steady",
+          "spin": 1.0,
+          "beam_reach": 250
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.03,
+          "zoom_to": 1.07,
+          "focus_x": 0.46,
+          "focus_y": 0.58,
+          "cut": true
+        },
+        {
+          "cue_on": "three steady sweeps",
+          "zoom_from": 1.08,
+          "zoom_to": 1.13,
+          "focus_x": 0.64,
+          "focus_y": 0.6,
+          "move_dur": 2.0,
+          "cut": true
+        },
+        {
+          "cue_on": "clear nights",
+          "zoom_from": 1.14,
+          "zoom_to": 1.09,
+          "focus_x": 0.38,
+          "focus_y": 0.6,
+          "move_dur": 1.8,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "anya",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.275,
+              "action": "hold_blueprint",
+              "x": 0.36,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 6.275,
+              "end": 13.31,
+              "action": "talk_explain",
+              "x": 0.36,
+              "facing": 1,
+              "expression": "curious"
+            }
+          ]
+        },
+        {
+          "id": "mara",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 7.225,
+              "action": "talk_explain",
+              "x": 0.6,
+              "facing": -1,
+              "expression": "determined"
+            },
+            {
+              "start": 7.225,
+              "end": 13.31,
+              "action": "point_emphasis",
+              "x": 0.6,
+              "facing": -1,
+              "expression": "focused"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "notebook_page",
+          "x": 0.33,
+          "y": 104,
+          "w": 560,
+          "h": 212,
+          "build_dur": 1.0,
+          "bold_first": true,
+          "lines": [
+            "THE KEEPER'S PATTERN:",
+            "Three sweeps, then the pause.",
+            "Every boat counts on it."
+          ],
+          "cue_on": "that pattern",
+          "hold_sec": 7.5
+        }
+      ],
+      "accent_words": [
+        "three steady sweeps",
+        "that pattern"
+      ],
+      "sfx": [
+        {
+          "type": "clock_tick",
+          "at": 0.333,
+          "pan": 0.25
+        },
+        {
+          "type": "clock_tick",
+          "at": 1.283,
+          "pan": 0.25
+        },
+        {
+          "type": "clock_tick",
+          "at": 2.234,
+          "pan": 0.25
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "At the edge of a salt-worn town, Anya apprenticed under Mara, keeper of the harbor beacon.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "mara",
+          "text": "Three steady sweeps, then a pause. Boats know that pattern.",
+          "pause_after": 0.28
+        },
+        {
+          "speaker": "anya",
+          "text": "Even on clear nights?",
+          "pause_after": 0.4
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "chapter": "Saving a Flask | After Dark",
+      "mood": "focus",
+      "bgm": "chill_focus",
+      "bgm_gain": 0.86,
+      "accent_color": "#a8712c",
+      "duration": 12.9,
+      "min_duration": 12.9,
+      "lead_in": 0.6,
+      "tail_out": 0.55,
+      "setting": {
+        "backdrop": "parchment_lantern",
+        "hour": "night",
+        "fog": 0.12,
+        "window_x": 0.2,
+        "window_w": 0.3,
+        "glow_x": 0.82,
+        "beam_pattern": "steady"
+      },
+      "props": [
+        {
+          "type": "beacon_mechanism",
+          "x": 0.82,
+          "scale": 1.3,
+          "z": -12,
+          "pattern": "steady",
+          "spin": 1.0,
+          "beam_reach": 230
+        },
+        {
+          "type": "keeper_bench",
+          "x": 0.2,
+          "z": -6
+        },
+        {
+          "type": "oil_flask",
+          "x": 0.2,
+          "lift": 96,
+          "z": 8,
+          "scale": 1.0,
+          "fill": 0.68,
+          "marked": true,
+          "mark": 0.34,
+          "mark_label": "RESERVE"
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.04,
+          "zoom_to": 1.09,
+          "focus_x": 0.32,
+          "focus_y": 0.58,
+          "cut": true
+        },
+        {
+          "cue_on": "keep the rhythm",
+          "zoom_from": 1.1,
+          "zoom_to": 1.16,
+          "focus_x": 0.6,
+          "focus_y": 0.6,
+          "move_dur": 2.0,
+          "cut": true
+        },
+        {
+          "cue_on": "fog will come",
+          "zoom_from": 1.16,
+          "zoom_to": 1.08,
+          "focus_x": 0.78,
+          "focus_y": 0.58,
+          "move_dur": 2.2,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "anya",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 5.326,
+              "action": "hold_blueprint",
+              "x": 0.38,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 5.326,
+              "end": 12.9,
+              "action": "talk_explain",
+              "x": 0.38,
+              "facing": 1,
+              "expression": "hopeful"
+            }
+          ]
+        },
+        {
+          "id": "mara",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 7.49,
+              "action": "listen_nod",
+              "x": 0.6,
+              "facing": -1,
+              "expression": "focused"
+            },
+            {
+              "start": 7.49,
+              "end": 12.9,
+              "action": "point_emphasis",
+              "x": 0.6,
+              "facing": -1,
+              "expression": "determined"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "stat_cards",
+          "x": 0.62,
+          "y": 104,
+          "w": 520,
+          "h": 200,
+          "build_dur": 1.1,
+          "cue_on": "a flask each week",
+          "hold_sec": 6.5,
+          "cards": [
+            {
+              "value": "1 FLASK",
+              "label": "SAVED EVERY WEEK"
+            },
+            {
+              "value": "0",
+              "label": "NIGHTS WE CAN PREDICT"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "dim it",
+        "keep the rhythm"
+      ],
+      "sfx": [
+        {
+          "type": "paper_slide",
+          "at": 0.416,
+          "pan": -0.35
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Anya measured the oil. The old lamp burned long after the last boat reached shore.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "anya",
+          "text": "If I dim it, we save a flask each week.",
+          "pause_after": 0.28
+        },
+        {
+          "speaker": "mara",
+          "text": "Keep the rhythm. We never know when fog will come.",
+          "pause_after": 0.4
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "chapter": "A Brighter Mirror | Midsummer",
+      "mood": "energetic",
+      "bgm": "upbeat_ncs_synth",
+      "bgm_gain": 0.94,
+      "accent_color": "#d99a2b",
+      "duration": 10.97,
+      "min_duration": 10.97,
+      "lead_in": 0.6,
+      "tail_out": 0.55,
+      "setting": {
+        "backdrop": "parchment_harbor",
+        "hour": "dusk",
+        "fog": 0.04,
+        "beam_pattern": "flicker",
+        "beam_from_x": 0.87,
+        "beam_from_y": 400
+      },
+      "props": [
+        {
+          "type": "beacon_tower",
+          "x": 0.87,
+          "scale": 1.5,
+          "z": -30,
+          "pattern": "flicker",
+          "height": 320,
+          "beam_dir": -1,
+          "beam_reach": 1150
+        },
+        {
+          "type": "harbor_boat",
+          "x": 0.3,
+          "scale": 0.6,
+          "lift": 168,
+          "z": -22,
+          "lamp": false
+        },
+        {
+          "type": "harbor_boat",
+          "x": 0.58,
+          "scale": 0.45,
+          "lift": 192,
+          "z": -24,
+          "lamp": false
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.02,
+          "zoom_to": 1.06,
+          "focus_x": 0.5,
+          "focus_y": 0.58,
+          "cut": true
+        },
+        {
+          "cue_on": "whole harbor",
+          "zoom_from": 1.08,
+          "zoom_to": 1.14,
+          "focus_x": 0.42,
+          "focus_y": 0.6,
+          "move_dur": 2.0,
+          "cut": true
+        },
+        {
+          "cue_on": "read our signal",
+          "zoom_from": 1.16,
+          "zoom_to": 1.08,
+          "focus_x": 0.68,
+          "focus_y": 0.6,
+          "move_dur": 2.2,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "anya",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 5.119,
+              "action": "celebrate_arms_up",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 5.119,
+              "end": 10.97,
+              "action": "talk_explain",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "smile"
+            }
+          ]
+        },
+        {
+          "id": "mara",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.399,
+              "action": "cross_arms_skeptical",
+              "x": 0.68,
+              "facing": -1,
+              "expression": "worried"
+            },
+            {
+              "start": 6.399,
+              "end": 10.97,
+              "action": "point_emphasis",
+              "x": 0.68,
+              "facing": -1,
+              "expression": "focused"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "notebook_page",
+          "x": 0.24,
+          "y": 104,
+          "w": 540,
+          "h": 212,
+          "build_dur": 1.0,
+          "bold_first": true,
+          "lines": [
+            "BRIGHTER, NOT STEADIER",
+            "Rooftops dazzled.",
+            "The pattern unreadable."
+          ],
+          "cue_on": "the beacon flicker",
+          "hold_sec": 7.0
+        }
+      ],
+      "accent_words": [
+        "brighter mirror",
+        "read our signal"
+      ],
+      "sfx": [
+        {
+          "type": "wind_gust",
+          "at": 2.925,
+          "pan": 0.2
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "For midsummer, Anya fitted a brighter mirror. It dazzled rooftops but made the beacon flicker.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "anya",
+          "text": "Now the whole harbor sees us!",
+          "pause_after": 0.26
+        },
+        {
+          "speaker": "mara",
+          "text": "Can sailors still read our signal?",
+          "pause_after": 0.4
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "chapter": "Fog at the Breakwater | That Night",
+      "mood": "tension",
+      "bgm": "suspense_tension",
+      "bgm_gain": 1.0,
+      "accent_color": "#8d6b4a",
+      "duration": 13.5,
+      "min_duration": 13.5,
+      "lead_in": 0.65,
+      "tail_out": 0.55,
+      "setting": {
+        "backdrop": "parchment_harbor",
+        "hour": "fog",
+        "fog": 0.92,
+        "beam_pattern": "flicker",
+        "beam_from_x": 0.9,
+        "beam_from_y": 420
+      },
+      "props": [
+        {
+          "type": "beacon_tower",
+          "x": 0.9,
+          "scale": 1.38,
+          "z": -30,
+          "pattern": "flicker",
+          "height": 300,
+          "beam_dir": -1,
+          "beam_reach": 1080
+        },
+        {
+          "type": "fog_bank",
+          "x": 0.5,
+          "z": -16,
+          "density": 0.5,
+          "lift": 176,
+          "w": 1.3,
+          "h": 230
+        },
+        {
+          "type": "harbor_boat",
+          "x": 0.6,
+          "scale": 0.95,
+          "lift": 96,
+          "z": -6,
+          "lamp": true,
+          "crew": true,
+          "bob": 5.2
+        },
+        {
+          "type": "fog_bank",
+          "x": 0.55,
+          "z": 16,
+          "density": 0.3,
+          "lift": 62,
+          "w": 1.35,
+          "h": 180
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.0,
+          "zoom_to": 1.05,
+          "focus_x": 0.5,
+          "focus_y": 0.56,
+          "cut": true
+        },
+        {
+          "cue_on": "three steady sweeps",
+          "zoom_from": 1.08,
+          "zoom_to": 1.16,
+          "focus_x": 0.6,
+          "focus_y": 0.56,
+          "move_dur": 2.2,
+          "cut": true
+        },
+        {
+          "cue_on": "find the channel",
+          "zoom_from": 1.18,
+          "zoom_to": 1.1,
+          "focus_x": 0.3,
+          "focus_y": 0.6,
+          "move_dur": 2.0,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "anya",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.517,
+              "action": "look_horizon",
+              "x": 0.24,
+              "facing": 1,
+              "expression": "worried"
+            },
+            {
+              "start": 6.517,
+              "end": 13.5,
+              "action": "clench_fist",
+              "x": 0.24,
+              "facing": 1,
+              "expression": "tense"
+            }
+          ]
+        },
+        {
+          "id": "mara",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 7.821,
+              "action": "listen_nod",
+              "x": 0.4,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 7.821,
+              "end": 13.5,
+              "action": "point_emphasis",
+              "x": 0.4,
+              "facing": 1,
+              "expression": "determined"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "three steady sweeps",
+        "the channel"
+      ],
+      "sfx": [
+        {
+          "type": "wind_gust",
+          "at": 0.559,
+          "pan": -0.1
+        },
+        {
+          "type": "wind_gust",
+          "at": 5.772,
+          "pan": 0.15
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "That night, fog erased the moon. A fishing boat drifted beyond the breakwater, searching for three steady sweeps.",
+          "pause_after": 0.32
+        },
+        {
+          "speaker": "anya",
+          "text": "They're following the flicker! They can't find the channel!",
+          "pause_after": 0.26
+        },
+        {
+          "speaker": "mara",
+          "text": "Give them the pattern we promised.",
+          "pause_after": 0.4
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "chapter": "The Promise | Same Night",
+      "mood": "tension",
+      "bgm": "suspense_tension",
+      "bgm_gain": 0.88,
+      "accent_color": "#c08a2a",
+      "duration": 13.0,
+      "min_duration": 13.0,
+      "lead_in": 0.6,
+      "tail_out": 0.6,
+      "setting": {
+        "backdrop": "parchment_lantern",
+        "hour": "fog",
+        "fog": 0.8,
+        "window_x": 0.2,
+        "window_w": 0.34,
+        "glow_x": 0.82,
+        "beam_pattern": "steady"
+      },
+      "props": [
+        {
+          "type": "beacon_mechanism",
+          "x": 0.78,
+          "scale": 1.32,
+          "z": -12,
+          "pattern": "shaded",
+          "spin": 1.0,
+          "spin_to": 0.5,
+          "slow_at": 1.4,
+          "slow_dur": 3.6,
+          "shade_at": 3.0,
+          "shade_dur": 2.2,
+          "beam_reach": 240
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.03,
+          "zoom_to": 1.08,
+          "focus_x": 0.5,
+          "focus_y": 0.58,
+          "cut": true
+        },
+        {
+          "cue_on": "slowed the wheel",
+          "zoom_from": 1.1,
+          "zoom_to": 1.17,
+          "focus_x": 0.72,
+          "focus_y": 0.58,
+          "move_dur": 2.2,
+          "cut": true
+        },
+        {
+          "cue_on": "crossed the fog",
+          "zoom_from": 1.14,
+          "zoom_to": 1.04,
+          "focus_x": 0.34,
+          "focus_y": 0.6,
+          "move_dur": 2.6,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "anya",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 4.815,
+              "action": "handoff_give",
+              "x": 0.46,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 4.815,
+              "end": 13.0,
+              "action": "point_emphasis",
+              "x": 0.52,
+              "facing": 1,
+              "expression": "focused"
+            }
+          ]
+        },
+        {
+          "id": "mara",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 4.815,
+              "action": "handoff_receive",
+              "x": 0.64,
+              "facing": -1,
+              "expression": "focused"
+            },
+            {
+              "start": 4.815,
+              "end": 13.0,
+              "action": "talk_explain",
+              "x": 0.64,
+              "facing": -1,
+              "expression": "determined"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "notebook_page",
+          "x": 0.3,
+          "y": 104,
+          "w": 540,
+          "h": 212,
+          "build_dur": 1.0,
+          "bold_first": true,
+          "lines": [
+            "WHAT WAS PROMISED",
+            "Three sweeps, then",
+            "the pause."
+          ],
+          "cue_on": "restored the pause",
+          "hold_sec": 6.5
+        }
+      ],
+      "accent_words": [
+        "slowed the wheel",
+        "restored the pause"
+      ],
+      "sfx": [
+        {
+          "type": "clock_tick",
+          "at": 7.704,
+          "pan": 0.3
+        },
+        {
+          "type": "clock_tick",
+          "at": 8.667,
+          "pan": 0.3
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Together they slowed the wheel, shaded the mirror, and restored the pause. Three beams crossed the fog.",
+          "pause_after": 0.32
+        },
+        {
+          "speaker": "mara",
+          "text": "A signal is a promise, not a performance.",
+          "pause_after": 0.28
+        },
+        {
+          "speaker": "anya",
+          "text": "I made it bright, not dependable.",
+          "pause_after": 0.4
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "chapter": "Set It Right | Dawn",
+      "mood": "focus",
+      "bgm": "chill_focus",
+      "bgm_gain": 0.92,
+      "accent_color": "#b4762a",
+      "duration": 13.63,
+      "min_duration": 13.63,
+      "lead_in": 0.6,
+      "tail_out": 0.55,
+      "setting": {
+        "backdrop": "parchment_lantern",
+        "hour": "dawn",
+        "fog": 0.16,
+        "window_x": 0.2,
+        "window_w": 0.3,
+        "glow_x": 0.78,
+        "beam_pattern": "steady"
+      },
+      "props": [
+        {
+          "type": "beacon_mechanism",
+          "x": 0.8,
+          "scale": 1.24,
+          "z": -12,
+          "pattern": "steady",
+          "spin": 0.9,
+          "beam_reach": 230
+        },
+        {
+          "type": "keeper_bench",
+          "x": 0.22,
+          "z": -6
+        },
+        {
+          "type": "oil_flask",
+          "x": 0.16,
+          "lift": 96,
+          "z": 8,
+          "scale": 0.9,
+          "fill": 0.9
+        },
+        {
+          "type": "oil_flask",
+          "x": 0.28,
+          "lift": 96,
+          "z": 8,
+          "scale": 0.9,
+          "fill": 0.44,
+          "marked": true,
+          "mark": 0.42,
+          "mark_label": "MARK"
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.04,
+          "zoom_to": 1.08,
+          "focus_x": 0.44,
+          "focus_y": 0.58,
+          "cut": true
+        },
+        {
+          "cue_on": "one job",
+          "zoom_from": 1.1,
+          "zoom_to": 1.16,
+          "focus_x": 0.62,
+          "focus_y": 0.6,
+          "move_dur": 2.2,
+          "cut": true
+        },
+        {
+          "cue_on": "be trusted",
+          "zoom_from": 1.14,
+          "zoom_to": 1.06,
+          "focus_x": 0.76,
+          "focus_y": 0.58,
+          "move_dur": 2.2,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "anya",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.865,
+              "action": "hold_blueprint",
+              "x": 0.4,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 6.865,
+              "end": 13.63,
+              "action": "check_watch",
+              "x": 0.4,
+              "facing": 1,
+              "expression": "determined"
+            }
+          ]
+        },
+        {
+          "id": "mara",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 8.683,
+              "action": "listen_nod",
+              "x": 0.62,
+              "facing": -1,
+              "expression": "focused"
+            },
+            {
+              "start": 8.683,
+              "end": 13.63,
+              "action": "nod_yes",
+              "x": 0.62,
+              "facing": -1,
+              "expression": "smile"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "checklist_card",
+          "x": 0.6,
+          "y": 104,
+          "w": 560,
+          "h": 212,
+          "build_dur": 1.1,
+          "cue_on": "one job",
+          "hold_sec": 6.5,
+          "items": [
+            "SHUTTER - THREE WINDOWS",
+            "OIL - RESERVE MARKED",
+            "WHEEL - ONE TURN, ITS TIME"
+          ]
+        }
+      ],
+      "accent_words": [
+        "one job",
+        "its time"
+      ],
+      "sfx": [
+        {
+          "type": "clock_tick",
+          "at": 7.471,
+          "pan": 0.28
+        },
+        {
+          "type": "clock_tick",
+          "at": 8.481,
+          "pan": 0.28
+        },
+        {
+          "type": "paper_slide",
+          "at": 1.212,
+          "pan": -0.32
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "At dawn, Anya rebuilt the shutter and marked the oil reserve. Every piece had one job; every turn, its time.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "anya",
+          "text": "Three sweeps. One pause. No guessing.",
+          "pause_after": 0.26
+        },
+        {
+          "speaker": "mara",
+          "text": "Now it can be trusted.",
+          "pause_after": 0.4
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "chapter": "The Answering Light | Before Dawn",
+      "mood": "hopeful",
+      "bgm": "triumph_horizon",
+      "bgm_gain": 1.0,
+      "accent_color": "#c9922c",
+      "duration": 12.05,
+      "min_duration": 12.05,
+      "lead_in": 0.65,
+      "tail_out": 0.6,
+      "setting": {
+        "backdrop": "parchment_harbor",
+        "hour": "night",
+        "fog": 0.5,
+        "beam_pattern": "steady",
+        "beam_from_x": 0.9,
+        "beam_from_y": 430
+      },
+      "props": [
+        {
+          "type": "beacon_tower",
+          "x": 0.9,
+          "scale": 1.36,
+          "z": -30,
+          "pattern": "steady",
+          "height": 300,
+          "beam_dir": -1,
+          "beam_reach": 1050
+        },
+        {
+          "type": "fog_bank",
+          "x": 0.5,
+          "z": -14,
+          "density": 0.28,
+          "lift": 168,
+          "w": 1.3,
+          "h": 200
+        },
+        {
+          "type": "channel_marker",
+          "x": 0.62,
+          "z": -10,
+          "scale": 0.9,
+          "lift": 120
+        },
+        {
+          "type": "harbor_boat",
+          "x": 0.44,
+          "scale": 0.92,
+          "lift": 92,
+          "z": -4,
+          "lamp": true,
+          "crew": true,
+          "bob": 3.6,
+          "move_from_x": 0.78,
+          "move_to_x": 0.44,
+          "move_at": 1.8,
+          "move_dur": 8.4
+        },
+        {
+          "type": "rope_coil",
+          "x": 0.2,
+          "z": 12,
+          "scale": 1.0,
+          "tail": true
+        },
+        {
+          "type": "fog_bank",
+          "x": 0.5,
+          "z": 18,
+          "density": 0.16,
+          "lift": 46,
+          "w": 1.4,
+          "h": 150
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.02,
+          "zoom_to": 1.06,
+          "focus_x": 0.5,
+          "focus_y": 0.56,
+          "cut": true
+        },
+        {
+          "cue_on": "deck lamp",
+          "zoom_from": 1.08,
+          "zoom_to": 1.14,
+          "focus_x": 0.6,
+          "focus_y": 0.58,
+          "move_dur": 2.2,
+          "cut": true
+        },
+        {
+          "cue_on": "returned safely",
+          "zoom_from": 1.12,
+          "zoom_to": 1.02,
+          "focus_x": 0.34,
+          "focus_y": 0.6,
+          "move_dur": 2.6,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "anya",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.674,
+              "action": "look_horizon",
+              "x": 0.22,
+              "facing": 1,
+              "expression": "hopeful"
+            },
+            {
+              "start": 6.674,
+              "end": 12.05,
+              "action": "celebrate_arms_up",
+              "x": 0.22,
+              "facing": 1,
+              "expression": "smile"
+            }
+          ]
+        },
+        {
+          "id": "mara",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 7.601,
+              "action": "listen_nod",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 7.601,
+              "end": 12.05,
+              "action": "point_emphasis",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "smile"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "deck lamp",
+        "returned safely"
+      ],
+      "sfx": [
+        {
+          "type": "door_bell",
+          "at": 9.6,
+          "pan": -0.25,
+          "lock_timing": true
+        },
+        {
+          "type": "wind_gust",
+          "at": 1.298,
+          "pan": 0.1
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "The boat answered with a deck lamp, found the channel, and returned safely. The harbor heard ropes and relieved laughter.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "anya",
+          "text": "They followed the rhythm.",
+          "pause_after": 0.28
+        },
+        {
+          "speaker": "mara",
+          "text": "They followed what stayed true.",
+          "pause_after": 0.4
+        }
+      ]
+    },
+    {
+      "id": "S08",
+      "chapter": "A Light That Returns | Years Later",
+      "mood": "reflective",
+      "bgm": "reflective_piano",
+      "bgm_gain": 0.94,
+      "accent_color": "#c98a2a",
+      "duration": 17.98,
+      "min_duration": 17.98,
+      "lead_in": 0.7,
+      "tail_out": 1.5,
+      "hold_silent_tail": true,
+      "fade_to_black": true,
+      "setting": {
+        "backdrop": "parchment_harbor",
+        "hour": "sunrise",
+        "fog": 0.14,
+        "beam_pattern": "steady",
+        "beam_from_x": 0.13,
+        "beam_from_y": 400,
+        "beam_dir": -1
+      },
+      "props": [
+        {
+          "type": "beacon_tower",
+          "x": 0.13,
+          "scale": 1.5,
+          "z": -30,
+          "pattern": "steady",
+          "height": 320,
+          "beam_dir": -1,
+          "beam_reach": 1100
+        },
+        {
+          "type": "harbor_boat",
+          "x": 0.66,
+          "scale": 0.5,
+          "lift": 176,
+          "z": -22,
+          "lamp": false
+        },
+        {
+          "type": "harbor_boat",
+          "x": 0.84,
+          "scale": 0.42,
+          "lift": 196,
+          "z": -24,
+          "lamp": false
+        },
+        {
+          "type": "rope_coil",
+          "x": 0.44,
+          "z": 10,
+          "scale": 0.9
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.02,
+          "zoom_to": 1.07,
+          "focus_x": 0.5,
+          "focus_y": 0.58,
+          "cut": true
+        },
+        {
+          "cue_on": "new keeper",
+          "zoom_from": 1.08,
+          "zoom_to": 1.14,
+          "focus_x": 0.6,
+          "focus_y": 0.6,
+          "move_dur": 2.2,
+          "cut": true
+        },
+        {
+          "cue_on": "again and again",
+          "zoom_from": 1.14,
+          "zoom_to": 1.0,
+          "focus_x_from": 0.55,
+          "focus_x_to": 0.42,
+          "move_dur": 3.4,
+          "cut": false,
+          "blend_sec": 1.0
+        }
+      ],
+      "characters": [
+        {
+          "id": "anya",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 7.991,
+              "action": "talk_explain",
+              "x": 0.5,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 7.991,
+              "end": 17.98,
+              "action": "point_emphasis",
+              "x": 0.5,
+              "facing": 1,
+              "expression": "determined"
+            }
+          ]
+        },
+        {
+          "id": "keeper",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 8.99,
+              "action": "listen_nod",
+              "x": 0.72,
+              "facing": -1,
+              "expression": "focused"
+            },
+            {
+              "start": 8.99,
+              "end": 17.98,
+              "action": "nod_yes",
+              "x": 0.72,
+              "facing": -1,
+              "expression": "hopeful"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "notebook_page",
+          "x": 0.34,
+          "y": 104,
+          "w": 540,
+          "h": 212,
+          "build_dur": 1.0,
+          "bold_first": true,
+          "lines": [
+            "THE PATTERN, TAUGHT ON",
+            "Three sweeps,",
+            "then the pause."
+          ],
+          "cue_on": "new keeper",
+          "hold_sec": 6.0
+        }
+      ],
+      "accent_words": [
+        "the pattern",
+        "again and again"
+      ],
+      "sfx": [
+        {
+          "type": "clock_tick",
+          "at": 0.45,
+          "pan": -0.3
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Years later, Anya taught the pattern to a new keeper. The beacon didn't need to be the brightest light in the world.",
+          "pause_after": 0.32
+        },
+        {
+          "speaker": "anya",
+          "text": "It only needs to be there when someone needs it.",
+          "pause_after": 0.34
+        },
+        {
+          "speaker": "narrator",
+          "text": "Trust is a light that returns, again and again.",
+          "pause_after": 0.0,
+          "allow_long_pause": true
+        }
+      ]
+    }
+  ]
+}
