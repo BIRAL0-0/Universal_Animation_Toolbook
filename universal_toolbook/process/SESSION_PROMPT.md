@@ -78,7 +78,8 @@ WORKFLOW
 
 DELIVERY
   output/final_film_1080p.mp4 and output/final_film_1080p_chapters.txt
-  Plus text mirrors in outputs/<film>/ (chapters, report, validation, cue sheet, NOTES.md)
+  Plus the master and text mirrors in outputs/<film>/ (mp4 when it stays under ~50 MB,
+  plus chapters, report, validation, cue sheet, storyboard, NOTES.md)
   because large binaries do not always survive a transfer. If a viewer refuses video:
     python3 universal_toolbook/tools/build_storyboard_svg.py <master.mp4> --out outputs/<film>/storyboard.svg
   Do not commit renders; *.mp4 and work/ are git-ignored on purpose.
