@@ -163,6 +163,8 @@ def cmd_check(_args: argparse.Namespace) -> int:
                 "pip install -r universal_toolbook/requirements.txt",
                 "npm install --prefix universal_toolbook",
                 "pip install piper-tts   # offline voices, when the Edge endpoint is unreachable",
+                "python3 universal_toolbook/tools/fetch_piper_voices.py install "
+                "# or --github <owner>/<repo> / --from-dir <dir> behind a blocked network",
                 "python3 universal_toolbook/tools/fetch_piper_voices.py check",
             ],
             "detail": {k: v for k, v in deps.items() if k.endswith("_error")},
@@ -245,6 +247,18 @@ def cmd_check(_args: argparse.Namespace) -> int:
             indent=2,
         )
     )
+
+    # A green `check` still cannot narrate without a voice model. Say so once, here, instead
+    # of letting the next render end in a silent master or an exit code 3.
+    if not deps.get("offline_voiceover_ready"):
+        print(
+            "\nNOTE: no offline voice models -- if the Edge endpoint is unreachable, renders will "
+            "have no narration.\n"
+            "  pip install piper-tts && python3 universal_toolbook/tools/fetch_piper_voices.py install\n"
+            "  (behind a blocked network: ... install --github <owner>/<repo> --github-path <dir>)\n"
+            "  silent drafts on purpose: render ... --voice none",
+            file=sys.stderr,
+        )
     return 0
 
 

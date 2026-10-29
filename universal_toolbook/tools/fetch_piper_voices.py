@@ -100,9 +100,9 @@ def cmd_check(args: argparse.Namespace) -> int:
         print(
             "\nOffline voiceover is NOT ready.\n"
             "  1. pip install piper-tts\n"
-            "  2. python3 universal_toolbook/tools/fetch_piper_voices.py install"
-            "          (or --from-dir /path/to/piper_voices when this machine has no route to"
-            " huggingface.co)\n",
+            "  2. python3 universal_toolbook/tools/fetch_piper_voices.py install\n"
+            "     huggingface.co blocked? add --github <owner>/<repo> --github-path <dir>,\n"
+            "     or copy the files in with --from-dir /path/to/piper_voices\n",
             file=sys.stderr,
         )
     return 0 if status["offline_voiceover_ready"] else 1
