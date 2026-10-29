@@ -13,6 +13,7 @@ committed here instead.
 | `final_film_1080p_report.json` | Full render report: resolution, fps, duration, scene count, voice backend, BGM tracks and credits, sfx count, output paths. |
 | `final_film_1080p_validation_report.json` | Machine gate: `valid`, `frames`, `dimensions`, `fps`, `film_grain`, `warnings`. |
 | `final_film_1080p_visual_audio_cues.json` | 28 synchronised foley/visual cue entries. |
+| `film_storyboard.svg` | The whole film as a **self-contained animated SVG** (8 slides, 32 s loop, base64 stills + SMIL fades). Pure text — opens in any browser or SVG viewer, no media transfer needed. Rebuild with `python3 tools/build_storyboard_svg.py output/final_film_1080p.mp4 --out outputs/film_storyboard.svg --stills 3,15,26,38,50,62,76,90`. |
 
 ## The master itself
 
