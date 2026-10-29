@@ -14,6 +14,7 @@ session that was handed a script and has never seen this repository, read these 
 | 05 | [`05_AUDIO.md`](05_AUDIO.md) | Voices, pacing, BGM, foley, or the audio sounds wrong. |
 | 06 | [`06_QA_GATE.md`](06_QA_GATE.md) | Before you call anything finished. |
 | 07 | [`07_TROUBLESHOOTING.md`](07_TROUBLESHOOTING.md) | A command failed or a render looks broken. |
+| — | [`REPO_MAP.md`](REPO_MAP.md) | You need to know which folder stores what, or what is not in git. |
 
 Companion material already in the repo:
 
