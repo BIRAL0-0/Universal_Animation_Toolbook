@@ -1,0 +1,25 @@
+# Byte-compiled / caches
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node canvas backend (installed at run time)
+node_modules/
+
+*.partial
+
+# Offline neural voices (~60 MB each) are fetched, never committed
+assets/voices/
+*.onnx
+*.onnx.json
+
+
+
+# Toolbook install artifacts (npm/postinstall)
+universal_toolbook/node_modules/
+universal_toolbook/package-lock.json.partial
+
+# Renders, QA frames and delivery bundles are build artifacts, not source
+output/
+work/

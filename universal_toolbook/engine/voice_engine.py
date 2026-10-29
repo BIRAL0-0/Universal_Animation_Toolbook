@@ -8,6 +8,8 @@ Supports:
   2. Internal TTS dead-air compactor (`compact_internal_silences_with_words`) that eliminates sluggish mid-sentence TTS gaps while keeping `WordBoundary` timestamps 100% locked
   3. Exact post-reveal `cue_on` / `hide_on` speech-locked timing for `board` / `boards` AND `camera_shots`
   4. Classic single-string `scene.narration`, external `--voice-dir`, or offline OS TTS fallback
+  5. Fully offline neural fallback via **Piper** (`piper-tts` + local `.onnx` voices, see `tools/fetch_piper_voices.py`)
+     used automatically whenever the Edge neural endpoint is unreachable — no cloud, no API keys.
 """
 
 from __future__ import annotations
@@ -16,6 +18,7 @@ import asyncio
 import copy
 import hashlib
 import json
+import os
 import re
 import shutil
 import struct
@@ -329,6 +332,278 @@ async def _batch_synthesize_lines(jobs: List[Dict[str, Any]], concurrency: int =
     await asyncio.gather(*(_worker(j) for j in jobs))
 
 
+# ---------------------------------------------------------------------------------------------
+# Offline neural TTS: Piper (piper-tts + local .onnx voices)
+# ---------------------------------------------------------------------------------------------
+# Used automatically when the Edge neural endpoint is unreachable (air-gapped sandboxes, CI,
+# offline editing rigs). Voice models live OUTSIDE the repo: set `PIPER_VOICE_DIR`, or let
+# `tools/fetch_piper_voices.py` place them in `~/.cache/piper_voices`.
+PIPER_VOICE_DIR_ENV = "PIPER_VOICE_DIR"
+
+# Edge neural voice names -> bundled Piper voice ids, so existing episode JSON files keep working.
+PIPER_EDGE_ALIASES = {
+    "en-us-guyneural": "en_US-ryan-medium",
+    "en-us-andrewneural": "en_US-ryan-medium",
+    "en-us-ericneural": "en_US-ryan-medium",
+    "en-us-christopherneural": "en_GB-alan-medium",
+    "en-gb-ryanneural": "en_GB-alan-medium",
+    "en-gb-thomasneural": "en_GB-alan-medium",
+    "en-us-jennyneural": "en_US-amy-medium",
+    "en-us-arianeural": "en_US-amy-medium",
+    "en-us-ananeural": "en_US-amy-medium",
+    "en-us-michelleNeural".lower(): "en_US-amy-medium",
+    "en-us-emoneneural": "en_US-amy-medium",
+}
+PIPER_DEFAULT_VOICE = "en_US-ryan-medium"
+
+_piper_voice_cache: Dict[str, Any] = {}
+
+
+def piper_voice_dir() -> Optional[Path]:
+    """Locate a directory of Piper `.onnx` voice models (env var wins, then `~/.cache`)."""
+    candidates: List[Path] = []
+    env_dir = os.environ.get(PIPER_VOICE_DIR_ENV)
+    if env_dir:
+        candidates.append(Path(env_dir).expanduser())
+    candidates.append(Path.home() / ".cache" / "piper_voices")
+    candidates.append(Path(__file__).resolve().parent.parent / "assets" / "voices")
+    for cand in candidates:
+        try:
+            if cand.is_dir() and any(cand.glob("*.onnx")):
+                return cand
+        except OSError:
+            continue
+    return None
+
+
+def _piper_available() -> bool:
+    try:
+        import piper  # noqa: F401
+    except ImportError:
+        return False
+    return piper_voice_dir() is not None
+
+
+def _piper_model_id(voice_name: str) -> str:
+    """Map any configured voice name (Edge id, `piper:<id>`, `<id>.onnx`) to a Piper voice id."""
+    raw = str(voice_name or "").strip()
+    low = raw.lower()
+    if low.startswith("piper:"):
+        return raw[6:].strip()
+    if low.endswith(".onnx"):
+        return raw[:-5]
+    if re.match(r"^[a-z]{2}[-_][a-z]{2}[-_][a-z0-9_]+[-_](x_low|low|medium|high)$", low):
+        return raw
+    return PIPER_EDGE_ALIASES.get(low, PIPER_DEFAULT_VOICE)
+
+
+def _piper_length_scale(rate: str) -> float:
+    """Convert an Edge-style rate (`+2%`) into a Piper `length_scale` (<1 = faster)."""
+    match = re.match(r"^([+-]?\d+(?:\.\d+)?)\s*%?$", str(rate or "").strip())
+    mult = 1.0 + (float(match.group(1)) / 100.0) if match else 1.0
+    mult = max(0.6, min(1.6, mult))
+    return round(1.0 / mult, 4)
+
+
+def _piper_get_voice(model_id: str):
+    """Load (and memoize) a Piper voice. Returns `None` when the model file is missing."""
+    if model_id in _piper_voice_cache:
+        return _piper_voice_cache[model_id]
+
+    from piper import PiperVoice
+
+    vdir = piper_voice_dir()
+    if vdir is None:
+        return None
+    onnx = vdir / f"{model_id}.onnx"
+    if not onnx.exists():
+        matches = sorted(vdir.glob(f"{model_id}*.onnx"))
+        if not matches:
+            _piper_voice_cache[model_id] = None
+            return None
+        onnx = matches[0]
+    cfg = onnx.with_suffix(".onnx.json")
+    voice = PiperVoice.load(str(onnx), config_path=str(cfg) if cfg.exists() else None)
+    _piper_voice_cache[model_id] = voice
+    return voice
+
+
+def _piper_word_timings(text: str, dur: float) -> List[Dict[str, Any]]:
+    """
+    Estimate word-level onsets for Piper output.
+
+    Piper's VITS models do not expose phoneme durations, so each token is weighted by an
+    English syllable count plus a trailing-punctuation breath, then laid out across the
+    measured clip duration. Punctuation weight becomes real inter-word silence (not a
+    stretched word), which keeps subtitle highlights and board `cue_on` snaps natural.
+    """
+    tokens = [t for t in re.split(r"\s+", text.strip()) if t]
+    if not tokens or dur <= 0.02:
+        return []
+
+    speech_w: List[float] = []
+    pause_w: List[float] = []
+    for tok in tokens:
+        core = re.sub(r"[^A-Za-z']", "", tok)
+        syllables = max(1, len(re.findall(r"[aeiouyAEIOUY]+", core))) if core else 1
+        speech_w.append(0.85 * syllables + 0.55)
+        if re.search(r"[.!?][\"')\]]*$", tok):
+            pause_w.append(1.35)
+        elif re.search(r"[,;:][\"')\]]*$", tok):
+            pause_w.append(0.7)
+        elif re.search(r"[—\u2013-]$", tok):
+            pause_w.append(0.45)
+        else:
+            pause_w.append(0.12)
+
+    total = sum(speech_w) + sum(pause_w) or 1.0
+    unit = dur / total
+
+    out: List[Dict[str, Any]] = []
+    cursor = 0.0
+    for tok, sw, pw in zip(tokens, speech_w, pause_w):
+        span = max(0.06, sw * unit)
+        start = cursor
+        end = min(dur, start + span * 0.95)
+        out.append({"word": tok, "start": round(start, 3), "end": round(end, 3)})
+        cursor += span + pw * unit
+        if cursor >= dur:
+            cursor = dur
+    return out
+
+
+def _refine_word_onsets_with_energy(
+    words: List[Dict[str, Any]], wav_path: Path, dur: float
+) -> List[Dict[str, Any]]:
+    """
+    Snap estimated word onsets onto real silence -> voicing transitions.
+
+    Piper has no duration model, so onsets are estimated; this pass looks for an actual
+    voiced-run start (preceded by >=30 ms of near-silence) within +/-160 ms of each estimate
+    and moves the word there. Words inside continuous speech keep their estimate, so the
+    subtitle glow never jitters.
+    """
+    if not words or dur <= 0.05:
+        return words
+    try:
+        with wave.open(str(wav_path), "rb") as wf:
+            sr = wf.getframerate()
+            raw = wf.readframes(wf.getnframes())
+    except Exception:
+        return words
+
+    n = len(raw) // 2
+    if n < 256:
+        return words
+    samples = struct.unpack(f"<{n}h", raw)
+    hop = max(1, int(round(sr * 0.01)))
+    rms: List[float] = []
+    for i in range(0, n, hop):
+        seg = samples[i : i + hop]
+        if not seg:
+            break
+        rms.append((sum(float(s) * float(s) for s in seg) / len(seg)) ** 0.5)
+    if len(rms) < 6:
+        return words
+
+    peak = sorted(rms)[int(0.92 * (len(rms) - 1))] or 1.0
+    thr = max(150.0, peak * 0.10)
+    voiced = [v >= thr for v in rms]
+
+    starts: List[float] = []
+    for i, is_voiced in enumerate(voiced):
+        if not is_voiced:
+            continue
+        if i >= 3 and not any(voiced[i - 3 : i]):
+            starts.append(i * 0.01)
+    if not starts:
+        return words
+
+    for word in words:
+        est = float(word.get("start", 0.0))
+        best: Optional[float] = None
+        best_delta = 0.16
+        for s in starts:
+            delta = abs(s - est)
+            if delta < best_delta:
+                best_delta = delta
+                best = s
+        if best is None:
+            continue
+        shift = best - est
+        new_start = round(max(0.0, best), 3)
+        new_end = round(min(dur, max(new_start + 0.05, float(word.get("end", new_start)) + shift)), 3)
+        word["start"] = new_start
+        word["end"] = new_end
+    return words
+
+
+def _synthesize_piper_line(job: Dict[str, Any]) -> bool:
+    """Synthesize one dialogue line with Piper into the job's WAV (+ cached word timings)."""
+    out_wav: Path = job["wav"]
+    meta_txt: Path = job["meta"]
+    words_json: Path = out_wav.with_suffix(".words.json")
+    sig: str = job["sig"]
+
+    if (
+        out_wav.exists()
+        and meta_txt.exists()
+        and words_json.exists()
+        and meta_txt.read_text(encoding="utf-8") == sig
+    ):
+        job["ok"] = True
+        job["dur"] = wav_duration_seconds(out_wav)
+        try:
+            job["words"] = json.loads(words_json.read_text(encoding="utf-8"))
+        except Exception:
+            job["words"] = _piper_word_timings(job["text"], job["dur"])
+        return True
+
+    model_id = _piper_model_id(job.get("piper_voice") or job.get("voice"))
+    voice = _piper_get_voice(model_id)
+    if voice is None:
+        return False
+
+    from piper import SynthesisConfig
+
+    raw_wav = out_wav.with_suffix(".raw.wav")
+    raw_wav.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        with wave.open(str(raw_wav), "wb") as wf:
+            voice.synthesize_wav(
+                job["text"],
+                wf,
+                syn_config=SynthesisConfig(
+                    length_scale=_piper_length_scale(job.get("rate", "+0%")),
+                    normalize_audio=True,
+                ),
+            )
+        dur, _lead = convert_to_mono_wav_ex(raw_wav, out_wav)
+        raw_wav.unlink(missing_ok=True)
+        if dur <= 0.04:
+            return False
+        words = _refine_word_onsets_with_energy(_piper_word_timings(job["text"], dur), out_wav, dur)
+        meta_txt.write_text(sig, encoding="utf-8")
+        words_json.write_text(json.dumps(words), encoding="utf-8")
+        job["ok"] = True
+        job["dur"] = dur
+        job["words"] = words
+        job["piper_model"] = model_id
+        return True
+    except Exception:
+        raw_wav.unlink(missing_ok=True)
+        return False
+
+
+def _batch_synthesize_piper_lines(jobs: List[Dict[str, Any]]) -> int:
+    """Synthesize every pending line with local Piper voices (sequential: one ONNX session each)."""
+    done = 0
+    for job in jobs:
+        if _synthesize_piper_line(job):
+            done += 1
+    return done
+
+
 def try_synthesize_os_tts(text: str, out_wav: Path) -> Optional[float]:
     espeak = shutil.which("espeak-ng") or shutil.which("espeak")
     if espeak:
@@ -471,15 +746,17 @@ def _align_single_board(
     rev = float(rev_raw)
 
     if bd.get("hide_on"):
-        # Anchor `hide_on` slightly BEFORE phrase start (`hit - 0.38s`) so boards fade out cleanly
-        # before any close-up camera cut triggered on the same phrase!
-        start_hit = _find_phrase_time(scene_words, str(bd["hide_on"]), use_end=False, min_time=rev + 0.35)
-        if start_hit is not None and start_hit > rev + 0.8:
-            bd["hide_at"] = round(min(scene_dur - 0.25, max(rev + 1.0, start_hit - 0.38)), 3)
+        # A board must stay on screen until the `hide_on` phrase has actually been *spoken*.
+        # Hiding on the phrase's onset visibly yanks the graphic away mid-word, so we hold a short
+        # reading beat after the last syllable and only fall back to pre-empting a same-phrase
+        # camera cut when the phrase end is not findable at all.
+        end_hit = _find_phrase_time(scene_words, str(bd["hide_on"]), use_end=True, min_time=rev + 0.35)
+        if end_hit is not None and end_hit > rev + 0.6:
+            bd["hide_at"] = round(min(scene_dur - 0.25, end_hit + 0.5), 3)
         else:
-            end_hit = _find_phrase_time(scene_words, str(bd["hide_on"]), use_end=True, min_time=rev + 0.35)
-            if end_hit is not None and end_hit > rev + 0.6:
-                bd["hide_at"] = round(min(scene_dur - 0.25, end_hit + 0.25), 3)
+            start_hit = _find_phrase_time(scene_words, str(bd["hide_on"]), use_end=False, min_time=rev + 0.35)
+            if start_hit is not None and start_hit > rev + 0.8:
+                bd["hide_at"] = round(min(scene_dur - 0.25, max(rev + 1.0, start_hit + 0.9)), 3)
     if bd.get("hide_at") is None:
         if bd.get("hold_sec") is not None:
             bd["hide_at"] = round(min(scene_dur - 0.25, rev + float(bd["hold_sec"])), 3)
@@ -919,11 +1196,22 @@ def prepare_episode_voiceover(
         scene_plans.append({"idx": idx, "sid": sid, "scene": sc, "lines": lines})
 
     backend_used = "text-led"
-    if edge_available and batch_jobs and not (voice_dir and voice_dir.exists()):
+    has_external_audio = bool(voice_dir and voice_dir.exists())
+    if edge_available and batch_jobs and not has_external_audio and mode != "piper":
         asyncio.run(_batch_synthesize_lines(batch_jobs, concurrency=5))
         if any(j["ok"] for j in batch_jobs):
             used_voices = sorted({j["voice"] for j in batch_jobs if j["ok"]})
             backend_used = "edge-tts:" + ",".join(used_voices)
+
+    # Offline neural fallback: any line the cloud backend could not produce is voiced locally
+    # with Piper, so an air-gapped run still ends up with a fully narrated, lip-synced film.
+    if batch_jobs and not has_external_audio and mode in ("auto", "edge", "piper"):
+        missing = [j for j in batch_jobs if not j["ok"]]
+        if missing and _piper_available():
+            done = _batch_synthesize_piper_lines(missing)
+            if done:
+                used_models = sorted({j.get("piper_model") or _piper_model_id(j["voice"]) for j in batch_jobs if j["ok"]})
+                backend_used = "piper-offline:" + ",".join(used_models)
 
     segments: List[Dict[str, Any]] = []
     for plan in scene_plans:

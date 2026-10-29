@@ -3,7 +3,8 @@
   "version": "3.0.0",
   "private": true,
   "description": "Universal AI-agnostic 16:9 zero-grain long-form animation, voiceover & Creative Commons BGM toolbook",
-  "dependencies": {
+  "optionalDependencies": {
+    "@napi-rs/canvas": "^1.0.13",
     "canvas": "^2.11.2"
   }
 }

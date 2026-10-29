@@ -1,7 +1,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const { registerFont } = require('canvas');
+const { registerFont } = require('./canvas_backend');
 
 let registered = false;
 let fontInfo = { boldFamily: 'sans-serif', regFamily: 'sans-serif', boldPath: null, regPath: null };

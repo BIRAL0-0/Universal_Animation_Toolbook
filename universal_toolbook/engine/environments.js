@@ -76,6 +76,33 @@ function drawFloorBase(g, W, H, floorY, floorHex, trimHex, trimAlpha = 0.55) {
   lineGrad.addColorStop(1, `rgba(${tr},${tg},${tb},0.080)`);
   g.fillStyle = lineGrad;
   g.fillRect(-200, floorY - 1.5, W + 400, 3);
+
+  // Perspective floor sheen + depth bands so the lower third never reads as flat black
+  g.save();
+  g.beginPath();
+  g.rect(-300, floorY, W + 600, H - floorY + 100);
+  g.clip();
+  const depth = Math.max(1, H - floorY);
+  for (let i = 1; i <= 5; i++) {
+    const yy = floorY + (depth * i) / 5.2;
+    g.strokeStyle = `rgba(${tr},${tg},${tb},${ca(0.055 * (1 - i / 7))})`;
+    g.lineWidth = 1.4;
+    g.beginPath();
+    g.moveTo(-300, yy);
+    g.lineTo(W + 300, yy);
+    g.stroke();
+  }
+  const sheen = g.createLinearGradient(0, floorY, 0, floorY + depth * 0.65);
+  sheen.addColorStop(0, `rgba(${tr},${tg},${tb},${ca(0.12)})`);
+  sheen.addColorStop(1, `rgba(${tr},${tg},${tb},0)`);
+  g.fillStyle = sheen;
+  g.fillRect(-300, floorY, W + 600, depth * 0.65);
+  const warm = g.createRadialGradient(W * 0.5, floorY + depth * 0.18, 20, W * 0.5, floorY + depth * 0.18, Math.max(W, H) * 0.45);
+  warm.addColorStop(0, `rgba(${tr},${tg},${tb},${ca(0.07)})`);
+  warm.addColorStop(1, `rgba(${tr},${tg},${tb},0)`);
+  g.fillStyle = warm;
+  g.fillRect(-300, floorY, W + 600, depth + 100);
+  g.restore();
 }
 
 function drawSkyGradient(g, W, floorY, stops) {
@@ -475,19 +502,94 @@ function renderEnvironment(g, envName, W, H, floorY, t, opts = {}) {
       [1, '#173666'],
     ]);
     drawFloorBase(g, W, H, floorY, '#050c1a', '#60a5fa', 0.55);
-    // Central misty chasm cut into floor
-    const gapL = W * 0.36, gapR = W * 0.64;
-    const chasmGrad = g.createLinearGradient(0, floorY, 0, H);
-    chasmGrad.addColorStop(0, '#0d2247');
-    chasmGrad.addColorStop(1, '#1e3a8a');
-    g.fillStyle = chasmGrad;
+    // Central misty chasm cut into floor, with rock lips and depth falloff
+    const gapL = W * 0.355, gapR = W * 0.645;
+    const jag = (edgeX, dir, seed) => {
+      // irregular rock lip so the chasm never reads as a flat rectangle
+      g.beginPath();
+      g.moveTo(edgeX, floorY + 2);
+      let y = floorY + 2;
+      let s2 = seed;
+      const step = (H - floorY) / 7;
+      for (let i = 0; i < 7; i += 1) {
+        s2 = (s2 * 1103515245 + 12345) & 0x7fffffff;
+        const jitter = (s2 % 100) / 100;
+        y += step;
+        g.lineTo(edgeX + dir * (6 + jitter * 26), y);
+      }
+      g.lineTo(edgeX, H + 10);
+      g.closePath();
+      g.fillStyle = '#02060f';
+      g.fill();
+    };
+    // Rim shadow at the far lip, deep gloom through the middle, faint mist near camera
+    const deepGrad = g.createLinearGradient(0, floorY, 0, H);
+    deepGrad.addColorStop(0, '#01040b');
+    deepGrad.addColorStop(0.30, '#020711');
+    deepGrad.addColorStop(0.72, '#061530');
+    deepGrad.addColorStop(1, '#0a1d3f');
+    g.fillStyle = deepGrad;
     g.fillRect(gapL, floorY - 2, gapR - gapL, H - floorY + 10);
+    // distant river thread deep in the gorge
+    g.strokeStyle = 'rgba(96,165,250,0.28)';
+    g.lineWidth = 2.5;
+    g.beginPath();
+    g.moveTo(gapL + 40, H - 16);
+    g.bezierCurveTo(W * 0.46, H - 40, W * 0.54, H - 30, gapR - 40, H - 46);
+    g.stroke();
+    jag(gapL, -1, 7919);
+    jag(gapR, 1, 104729);
+    // rim light along both lips
+    g.strokeStyle = 'rgba(96,165,250,0.55)';
+    g.lineWidth = 2;
+    g.beginPath();
+    g.moveTo(gapL - 2, floorY + 1);
+    g.lineTo(gapR + 2, floorY + 1);
+    g.stroke();
     // Bridge deck across chasm
     g.fillStyle = '#334155';
     g.strokeStyle = '#60a5fa';
     g.lineWidth = 2.5;
     g.fillRect(gapL - 16, floorY - 6, gapR - gapL + 32, 10);
     g.strokeRect(gapL - 16, floorY - 6, gapR - gapL + 32, 10);
+    g.fillStyle = 'rgba(96,165,250,0.16)';
+    g.fillRect(gapL - 16, floorY + 2, gapR - gapL + 32, 26);
+    // mist pooling just under the far lip
+    const mist = g.createLinearGradient(0, floorY + 4, 0, floorY + 70);
+    mist.addColorStop(0, 'rgba(148,197,255,0.20)');
+    mist.addColorStop(1, 'rgba(148,197,255,0)');
+    g.fillStyle = mist;
+    g.fillRect(gapL, floorY + 4, gapR - gapL, 70);
+    // suspension pylons + catenary cables behind the deck
+    const towerH = 300;
+    const cableSpan = (gapR - gapL) + 150;
+    g.strokeStyle = 'rgba(148,163,184,0.55)';
+    g.lineWidth = 3;
+    [gapL - 8, gapR + 8].forEach((tx) => {
+      g.beginPath();
+      g.moveTo(tx, floorY + 4);
+      g.lineTo(tx, floorY - towerH);
+      g.stroke();
+      g.beginPath();
+      g.moveTo(tx - 12, floorY - towerH + 4);
+      g.lineTo(tx, floorY - towerH - 16);
+      g.lineTo(tx + 12, floorY - towerH + 4);
+      g.stroke();
+    });
+    g.strokeStyle = 'rgba(148,163,184,0.30)';
+    g.lineWidth = 2;
+    g.beginPath();
+    g.moveTo(gapL - 8, floorY - towerH);
+    g.quadraticCurveTo(W * 0.5, floorY - towerH + 120, gapR + 8, floorY - towerH);
+    g.stroke();
+    for (let cx = gapL; cx <= gapR; cx += cableSpan / 12) {
+      const t = (cx - (gapL - 8)) / ((gapR + 8) - (gapL - 8));
+      const drop = (floorY - towerH) + 120 * (4 * t * (1 - t)) * 0.9;
+      g.beginPath();
+      g.moveTo(cx, drop + 12);
+      g.lineTo(cx, floorY - 4);
+      g.stroke();
+    }
     drawLightCone(g, W * 0.5, 0, floorY, 90, 380, '#60a5fa', 0.15);
   } else if (key === 'sunrise_summit') {
     drawSkyGradient(g, W, floorY, [

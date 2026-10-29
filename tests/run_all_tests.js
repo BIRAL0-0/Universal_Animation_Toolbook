@@ -3,9 +3,9 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const { createCanvas } = require('canvas');
+const { createCanvas } = require('../universal_toolbook/engine/canvas_backend');
 
-const { registerFonts } = require('../engine/font');
+const { registerFonts } = require('../universal_toolbook/engine/font');
 const {
   BONES,
   BUILDS,
@@ -16,17 +16,17 @@ const {
   walkMotion,
   runMotion,
   drawFigure,
-} = require('../engine/character_rig');
-const { SUPPORTED_ENVIRONMENTS, drawEnvironment } = require('../engine/environments');
-const { SUPPORTED_ACTIONS, evaluateCharacterState, resolveSceneInteractions } = require('../engine/motion_library');
+} = require('../universal_toolbook/engine/character_rig');
+const { SUPPORTED_ENVIRONMENTS, drawEnvironment } = require('../universal_toolbook/engine/environments');
+const { SUPPORTED_ACTIONS, evaluateCharacterState, resolveSceneInteractions } = require('../universal_toolbook/engine/motion_library');
 const {
   compileEpisode,
   markAccentPhrases,
   mapDisplayTokensToWordTimings,
   bridgeContinuousWordGaps,
   buildSubtitlesFromLineTimings,
-} = require('../engine/episode');
-const { renderEpisodeFrame } = require('../engine/video_renderer');
+} = require('../universal_toolbook/engine/episode');
+const { renderEpisodeFrame } = require('../universal_toolbook/engine/video_renderer');
 
 registerFonts();
 
@@ -182,18 +182,18 @@ for (let i = 0; i <= 80; i++) {
 }
 
 // 8. Verify zero film-grain configuration
-const cfg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'config', 'studio_config.json'), 'utf8'));
+const cfg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'universal_toolbook', 'config', 'studio_config.json'), 'utf8'));
 assert.strictEqual(cfg.film_grain, false);
-const rendererCode = fs.readFileSync(path.join(__dirname, '..', 'engine', 'video_renderer.js'), 'utf8');
+const rendererCode = fs.readFileSync(path.join(__dirname, '..', 'universal_toolbook', 'engine', 'video_renderer.js'), 'utf8');
 assert(!rendererCode.includes('makeGrain'));
 
 // 9. Compile minimal Cinema, Parchment & V3 Occlusion/Interaction scenes cleanly
-const spec = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'examples', 'minimal_schema_template.json'), 'utf8'));
+const spec = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'minimal_schema_template.json'), 'utf8'));
 const ep = compileEpisode(spec);
 assert.strictEqual(ep.warnings.length, 0);
 renderEpisodeFrame(g, 960, 540, ep, 15);
 
-const pSpec = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'examples', 'minimal_parchment_template.json'), 'utf8'));
+const pSpec = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'minimal_parchment_template.json'), 'utf8'));
 const pEp = compileEpisode(pSpec);
 assert.strictEqual(pEp.warnings.length, 0);
 renderEpisodeFrame(g, 960, 540, pEp, 15);

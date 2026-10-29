@@ -26,6 +26,9 @@ The AI autonomously designs **custom characters (with hairstyles, articulated ha
 - **Non-Flickering Cinema Subtitles & Multi-Word Keyword Highlights**:
   - Supports single-word and **multi-word phrase** `accent_words` (`"9 PM"`, `"no excuses"`), clean speaker pill badges (`DANIEL:`), gap-bridged active-word golden/accent glow capsules (zero `strokeText` smear, zero inter-word strobe), and persistent keyword underlines.
 - **Bundled Creative Commons BGM Library (`assets/bgm/`)**: 7 normalized stereo MP3 tracks (`CC0` & `CC BY 4.0`) with automatic mood scoring, dynamic multi-act switching, and automatic license attribution in `*_chapters.txt`.
+- **Offline Neural Fallback Voiceover (`piper-tts`)**: when the Edge neural endpoint is unreachable (air-gapped sandbox, CI runner, offline edit bay) any line the cloud backend cannot voice is synthesized locally by Piper from `.onnx` voices, with syllable-weighted word timings snapped to real silence→voicing transitions so glowing subtitles, lip-sync and board `cue_on` snaps stay locked. Edge voice ids map automatically (`en-US-GuyNeural` → `en_US-ryan-medium`, `en-US-JennyNeural` → `en_US-amy-medium`, `en-US-ChristopherNeural` → `en_GB-alan-medium`).
+- **Portable Canvas Backend**: renders through `node-canvas` **or** `@napi-rs/canvas` (`engine/canvas_backend.js`), so a Cairo-free / slim container works with zero code changes (`npm install` now treats both as optional).
+- **Screen-Space Graphics Boards**: in-world boards are clamped to safe zones in *screen* space, so they stay put and never clip off-frame while the 2.5D camera pushes and pans behind them.
 
 ---
 
@@ -33,24 +36,47 @@ The AI autonomously designs **custom characters (with hairstyles, articulated ha
 
 ```bash
 # 1. Verify Node, Python, fonts, FFmpeg, and bundled BGM tracks (auto-installs missing deps)
-python3 run_studio.py check
+python3 universal_toolbook/run_studio.py check
 
-# 2. Run automated JS + Python V3 test suites
-node tests/run_all_tests.js
-python3 tests/test_studio_pipeline.py
+# 2. List bundled Creative Commons BGM tracks & mood keywords
+python3 universal_toolbook/run_studio.py bgm-list
 
-# 3. List bundled Creative Commons BGM tracks & mood keywords
-python3 run_studio.py bgm-list
+# 3. Validate an episode JSON specification (and optional verbatim script match)
+cp universal_toolbook/templates/episode_minimal.json work/episode.json
+python3 universal_toolbook/run_studio.py validate work/episode.json
 
-# 4. Validate an episode JSON specification (and optional verbatim script match)
-python3 run_studio.py validate examples/minimal_schema_template.json
-python3 run_studio.py validate examples/minimal_parchment_template.json
+# 4. Render 1920x1080 PNG scene stills for visual QA before full video encoding
+python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills --width 1920 --height 1080 --limit 8
 
-# 5. Render 1920x1080 PNG scene stills for visual QA before full video encoding
-python3 run_studio.py stills work/episode.json --out-dir work/stills --width 1920 --height 1080 --limit 8
+# 5. Render full 1920x1080 @ 30fps voiced MP4 with parallel workers (always use --preset veryfast)
+python3 universal_toolbook/run_studio.py render work/episode.json --out output/final_1080p.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume
 
-# 6. Render full 1920x1080 @ 30fps voiced MP4 with parallel workers (always use --preset veryfast)
-python3 run_studio.py render work/episode.json --out output/final_1080p.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume
+# 6. Offline neural voices (only needed when the Edge endpoint is unreachable)
+pip install piper-tts
+python3 universal_toolbook/tools/fetch_piper_voices.py check
+python3 universal_toolbook/tools/fetch_piper_voices.py install --from-dir /path/to/piper_voices
+
+# 7. Reference films: complete episode specs to copy structure and pacing from
+python3 universal_toolbook/run_studio.py validate examples/cel_two_inch_bridge_episode.json
+python3 universal_toolbook/run_studio.py render examples/cel_two_inch_bridge_episode.json \
+    --out output/final_film_1080p.mp4 --full --preset veryfast --crf 24 \
+    --chunk-sec 45 --workers 2 --resume --voice auto
 ```
+
+## Where to start a new film
+
+`universal_toolbook/templates/episode_minimal.json` — a validated 2-scene episode that renders
+as-is. Copy it to `work/episode.json`, replace the story, and build up from there.
+
+## Reference films (`examples/`)
+
+Complete, working specs — the fastest way to learn the pacing and JSON shape:
+
+| Spec | Style | Shows |
+| --- | --- | --- |
+| `examples/cel_two_inch_bridge_episode.json` | cel | 8 scenes, notebook + stat boards, rain setting, speech-locked cuts |
+| `examples/two_inch_bridge_episode.json` | parchment | 8 scenes, ink-stick cast, 7 backdrops, two-actor `handoff` |
+| `examples/red_umbrella_episode.json` | cel | night-city weather, umbrellas, multi-character cast |
+| `examples/discipline_vs_obsession_episode.json` | cel | long-form essay pacing, phone cards, per-act BGM |
 
 See `01_TOOLBOOK_REFERENCE.md` for the complete V3 JSON specification.

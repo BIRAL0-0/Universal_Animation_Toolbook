@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import base64
 import concurrent.futures
+import importlib.util
 import json
 import math
 import os
@@ -37,30 +38,57 @@ def ensure_dependencies(auto_install: bool = True) -> Dict[str, Any]:
     status: Dict[str, Any] = {}
     node_bin = shutil.which("node")
     if not node_bin:
-        raise RuntimeError("Node.js (`node`) is required on PATH.")
+        status["node"] = None
+        status["missing"] = status.get("missing", []) + ["node"]
+        status["python"] = sys.version.split()[0]
+        return status
     status["node"] = subprocess.check_output([node_bin, "-v"], text=True).strip()
 
+    # Either 2D backend is fine: node-canvas (needs cairo/pango) or @napi-rs/canvas (prebuilt).
     canvas_dir = STUDIO_ROOT / "node_modules" / "canvas"
-    if not canvas_dir.exists() and auto_install:
+    napi_canvas_dir = STUDIO_ROOT / "node_modules" / "@napi-rs" / "canvas"
+    if not canvas_dir.exists() and not napi_canvas_dir.exists() and auto_install:
         npm_bin = shutil.which("npm")
+        status["canvas_backend_installed"] = False
         if npm_bin:
-            subprocess.run(
-                [npm_bin, "install", "--no-audit", "--no-fund"],
-                cwd=str(STUDIO_ROOT),
-                check=True,
-            )
+            try:
+                subprocess.run(
+                    [npm_bin, "install", "--no-audit", "--no-fund"],
+                    cwd=str(STUDIO_ROOT),
+                    check=True,
+                    timeout=600,
+                    capture_output=True,
+                )
+                status["canvas_backend_installed"] = True
+            except Exception as exc:
+                status["missing"] = status.get("missing", [])
+                status["missing"].append("canvas backend")
+                status["canvas_error"] = f"{type(exc).__name__}: {exc}"[:300]
+
+    def _ffmpeg():
+        from engine.voice_engine import get_ffmpeg_exe
+        return get_ffmpeg_exe()
 
     try:
-        from engine.voice_engine import get_ffmpeg_exe
-        status["ffmpeg"] = get_ffmpeg_exe()
+        status["ffmpeg"] = _ffmpeg()
     except Exception:
+        # A fresh machine (or a PEP 668 system Python) may have no imageio-ffmpeg and
+        # refuse to install it. Never raise from here: report what is missing so the
+        # caller can print an actionable message instead of a traceback.
         if auto_install:
-            subprocess.run(
-                [sys.executable, "-m", "pip", "install", "--quiet", "imageio-ffmpeg"],
-                check=True,
-            )
-            from engine.voice_engine import get_ffmpeg_exe
-            status["ffmpeg"] = get_ffmpeg_exe()
+            try:
+                subprocess.run(
+                    [sys.executable, "-m", "pip", "install", "--quiet", "imageio-ffmpeg"],
+                    check=True,
+                    timeout=180,
+                    capture_output=True,
+                )
+                status["ffmpeg"] = _ffmpeg()
+            except Exception as exc:
+                status["ffmpeg"] = None
+                status["missing"] = status.get("missing", [])
+                status["missing"].append("imageio-ffmpeg")
+                status["ffmpeg_error"] = f"{type(exc).__name__}: {exc}"[:300]
         else:
             raise
 
@@ -73,7 +101,8 @@ def ensure_dependencies(auto_install: bool = True) -> Dict[str, Any]:
                 subprocess.run(
                     [sys.executable, "-m", "pip", "install", "--quiet", "edge-tts"],
                     check=True,
-                    timeout=45,
+                    timeout=120,
+                    capture_output=True,
                 )
                 status["edge_tts"] = True
             except Exception:
@@ -82,6 +111,15 @@ def ensure_dependencies(auto_install: bool = True) -> Dict[str, Any]:
             status["edge_tts"] = False
 
     status["python"] = sys.version.split()[0]
+
+    # Voice readiness: a render with no voices silently produces a silent film, so the
+    # bootstrap check reports it up front.
+    try:
+        from engine.voice_engine import _piper_available  # type: ignore
+        piper = bool(_piper_available())
+    except Exception:
+        piper = False
+    status["offline_voiceover_ready"] = piper
     return status
 
 
@@ -109,6 +147,30 @@ def cmd_bgm_list(_args: argparse.Namespace) -> int:
 def cmd_check(_args: argparse.Namespace) -> int:
     t0 = time.time()
     deps = ensure_dependencies(auto_install=True)
+
+    # Report a missing dependency as a status, never as a traceback: the first command a
+    # new session runs must tell it what to install and how, not hand it a stack trace.
+    if deps.get("missing"):
+        cfg = json.loads((STUDIO_ROOT / "config" / "studio_config.json").read_text(encoding="utf-8"))
+        print(json.dumps({
+            "status": "NEEDS_DEPS",
+            "missing": sorted(set(deps["missing"])),
+            "node": deps.get("node"),
+            "python": deps.get("python"),
+            "film_grain": cfg.get("film_grain"),
+            "fix": [
+                "python3 -m venv .venv && . .venv/bin/activate   # if pip is blocked (PEP 668)",
+                "pip install -r universal_toolbook/requirements.txt",
+                "npm install --prefix universal_toolbook",
+                "pip install piper-tts   # offline voices, when the Edge endpoint is unreachable",
+                "python3 universal_toolbook/tools/fetch_piper_voices.py install "
+                "# or --github <owner>/<repo> / --from-dir <dir> behind a blocked network",
+                "python3 universal_toolbook/tools/fetch_piper_voices.py check",
+            ],
+            "detail": {k: v for k, v in deps.items() if k.endswith("_error")},
+        }, indent=2))
+        return 2
+
     cfg = json.loads((STUDIO_ROOT / "config" / "studio_config.json").read_text(encoding="utf-8"))
     assert cfg.get("film_grain") is False, "studio_config.json must keep film_grain: false!"
 
@@ -185,6 +247,18 @@ def cmd_check(_args: argparse.Namespace) -> int:
             indent=2,
         )
     )
+
+    # A green `check` still cannot narrate without a voice model. Say so once, here, instead
+    # of letting the next render end in a silent master or an exit code 3.
+    if not deps.get("offline_voiceover_ready"):
+        print(
+            "\nNOTE: no offline voice models -- if the Edge endpoint is unreachable, renders will "
+            "have no narration.\n"
+            "  pip install piper-tts && python3 universal_toolbook/tools/fetch_piper_voices.py install\n"
+            "  (behind a blocked network: ... install --github <owner>/<repo> --github-path <dir>)\n"
+            "  silent drafts on purpose: render ... --voice none",
+            file=sys.stderr,
+        )
     return 0
 
 
@@ -236,6 +310,46 @@ def cmd_stills(args: argparse.Namespace) -> int:
         check=True,
     )
     return 0
+
+
+def _voice_diagnosis(deps: Dict[str, Any]) -> List[str]:
+    """Explain *why* a voice mode produced no speech, in the order the engine tries backends."""
+    out: List[str] = []
+    if not deps.get("edge_tts"):
+        out.append("edge-tts is not installed -> pip install -r universal_toolbook/requirements.txt")
+    else:
+        out.append(
+            "edge-tts is installed but every line failed (normally no internet access to the "
+            "neural speech endpoint)"
+        )
+    try:
+        from engine.voice_engine import piper_voice_dir  # type: ignore
+
+        have_pkg = importlib.util.find_spec("piper") is not None
+        voice_dir = piper_voice_dir()
+        if have_pkg and voice_dir is not None:
+            out.append(
+                f"piper-tts is installed and voice models were found in {voice_dir}, "
+                "but offline synthesis still failed"
+            )
+        elif have_pkg:
+            out.append(
+                "piper-tts is installed but no .onnx voice models were found -> "
+                "python3 universal_toolbook/tools/fetch_piper_voices.py install"
+            )
+        elif voice_dir is not None:
+            out.append(
+                f"piper-tts is not installed, although local voice models exist in {voice_dir} "
+                "-> pip install piper-tts"
+            )
+        else:
+            out.append(
+                "piper-tts and local voice models are both missing -> pip install piper-tts && "
+                "python3 universal_toolbook/tools/fetch_piper_voices.py install"
+            )
+    except Exception as exc:  # pragma: no cover - diagnostics must never crash a render
+        out.append(f"offline voice probe failed: {exc}")
+    return out
 
 
 def cmd_render(args: argparse.Namespace) -> int:
@@ -401,6 +515,28 @@ def cmd_render(args: argparse.Namespace) -> int:
     cues_path = out_mp4.with_name(f"{out_mp4.stem}_visual_audio_cues.json")
     cues_path.write_text(json.dumps(compiled.get("soundEvents", []), indent=2), encoding="utf-8")
 
+    warnings: List[str] = []
+    voice_diagnosis = _voice_diagnosis(deps) if (
+        vo_backend == "text-led" and args.voice not in (None, "none")
+    ) else []
+    silent_render = vo_backend == "text-led" and args.voice not in (None, "none")
+    if silent_render:
+        msg = (
+            "NO SPEECH WAS SYNTHESIZED: the backend is 'text-led', so this file has "
+            "subtitles and music but no narration. Fix with "
+            "`pip install piper-tts` + "
+            "`python3 universal_toolbook/tools/fetch_piper_voices.py install` "
+            "(or an internet-connected edge-tts run), then re-render. "
+            "Pass --voice none for a deliberately silent draft, "
+            "or --allow-silent to accept this one."
+        )
+        warnings.append(msg)
+        print("\n" + "!" * 78 + f"\nWARNING: {msg}", file=sys.stderr)
+        for line in voice_diagnosis:
+            print(f"  - {line}", file=sys.stderr)
+        print("!" * 78 + "\n", file=sys.stderr)
+
+    # Written after the voice check so the gate artifact records whether speech exists.
     val_path = out_mp4.with_name(f"{out_mp4.stem}_validation_report.json")
     val_path.write_text(
         json.dumps(
@@ -411,7 +547,9 @@ def cmd_render(args: argparse.Namespace) -> int:
                 "dimensions": [width, height],
                 "fps": fps,
                 "film_grain": False,
-                "warnings": compiled.get("warnings", []),
+                "voiced": vo_backend != "text-led",
+                "voice_backend": vo_backend,
+                "warnings": list(compiled.get("warnings", [])) + warnings,
             },
             indent=2,
         ),
@@ -419,7 +557,7 @@ def cmd_render(args: argparse.Namespace) -> int:
     )
 
     report = {
-        "status": "COMPLETE",
+        "status": "COMPLETE_SILENT" if (silent_render and not args.allow_silent) else "COMPLETE",
         "title": compiled["title"],
         "output_mp4": str(out_mp4),
         "size_mb": round(out_mp4.stat().st_size / (1024 * 1024), 3),
@@ -430,6 +568,10 @@ def cmd_render(args: argparse.Namespace) -> int:
         "duration_min": round(compiled["totalDuration"] / 60.0, 2),
         "scene_count": len(compiled["scenes"]),
         "voice_backend": vo_backend,
+        "voiced": vo_backend != "text-led",
+        "voice_mode": args.voice,
+        "voice_diagnosis": voice_diagnosis,
+        "warnings": warnings,
         "audio": audio_stats,
         "chapters_file": str(chapters_path),
         "elapsed_sec": round(time.time() - t0, 2),
@@ -437,6 +579,8 @@ def cmd_render(args: argparse.Namespace) -> int:
     report_path = out_mp4.with_name(f"{out_mp4.stem}_report.json")
     report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(json.dumps(report, indent=2))
+    if silent_render and not args.allow_silent:
+        return 3
     return 0
 
 
@@ -567,10 +711,15 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="BGM mode/track: auto, dynamic, electronic_drive, upbeat_ncs_synth, chill_focus, retro_pulse, reflective_piano, suspense_tension, triumph_horizon, procedural, none, or /path/to/track.mp3",
     )
-    pr.add_argument("--voice", choices=["auto", "edge", "offline", "none"], default="auto")
+    pr.add_argument("--voice", choices=["auto", "edge", "piper", "offline", "none"], default="auto")
     pr.add_argument("--voice-name", default="en-US-AndrewNeural")
     pr.add_argument("--voice-rate", default="+2%")
     pr.add_argument("--voice-dir", default=None)
+    pr.add_argument(
+        "--allow-silent",
+        action="store_true",
+        help="Accept a render with no synthesized speech (otherwise it exits 3 and reports status COMPLETE_SILENT).",
+    )
     pr.add_argument("--subtitles", choices=["cinema", "off"], default=None)
     pr.add_argument("--crf", type=int, default=17)
     pr.add_argument("--preset", default="veryfast")
