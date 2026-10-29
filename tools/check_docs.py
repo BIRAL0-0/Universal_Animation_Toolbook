@@ -78,8 +78,15 @@ LINK_RE = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
 
 
 def tracked_docs() -> list[Path]:
+    # --cached --others --exclude-standard = tracked files PLUS untracked, non-ignored ones.
+    # A brand-new doc is skipped by a plain `git ls-files`, which is how a broken path in a
+    # freshly written NOTES.md passed locally and then failed the CI docs job.
     try:
-        out = subprocess.check_output(["git", "ls-files", "*.md"], cwd=ROOT, text=True)
+        out = subprocess.check_output(
+            ["git", "ls-files", "--cached", "--others", "--exclude-standard", "*.md"],
+            cwd=ROOT,
+            text=True,
+        )
         files = [ROOT / ln for ln in out.splitlines() if ln.strip()]
     except Exception:
         files = list(ROOT.rglob("*.md"))
