@@ -27,6 +27,8 @@ Companion material already in the repo:
 - `00_START_HERE.md` — CLI surface and capabilities.
 - `01_TOOLBOOK_REFERENCE.md` — the full JSON schema and every action/environment name.
 - `universal_toolbook/templates/episode_minimal.json` — a **runnable 2-scene episode**; start by copying it.
+- `examples/*.json` — complete reference films (cel and parchment) to copy structure and pacing from.
+- `tests/` — engine regression suite. **Development only**; you never need it to render a film.
 
 ---
 

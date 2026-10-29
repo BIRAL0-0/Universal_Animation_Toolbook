@@ -19,14 +19,14 @@ DO NOT START WRITING JSON BEFORE YOU READ THESE FILES IN THIS ORDER:
   process/05_AUDIO.md                  (voices, pacing, BGM, foley)
   process/06_QA_GATE.md                (the definition of "finished")
 Also available: 01_TOOLBOOK_REFERENCE.md (full schema, all actions/environments),
-templates/episode_minimal.json (the runnable skeleton).
+templates/episode_minimal.json (the runnable skeleton) and examples/*.json (complete reference films).
 
 HARD RULES
 1. Copy templates/episode_minimal.json to work/episode.json and extend it; do not invent keys.
 2. `python3 universal_toolbook/run_studio.py validate work/episode.json` must print "warnings": [] before rendering.
 3. Render 1080p stills and LOOK at every one of them before any full render. Fix overlaps,
    clipping, floating actors and empty backgrounds, then re-render the stills.
-0. Use --voice auto in this environment (the Edge/Azure endpoint is unreachable; the engine
+4. Use --voice auto in this environment (the Edge/Azure endpoint is unreachable; the engine
    falls back to local Piper voices and reports the real backend in the render JSON).
 5. Final render flags are fixed:
    render work/episode.json --out output/final_film_1080p.mp4 --full --preset veryfast

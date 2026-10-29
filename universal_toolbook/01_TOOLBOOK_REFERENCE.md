@@ -181,3 +181,16 @@ build one of them, and `python3 universal_toolbook/run_studio.py check` accepts 
 `templates/episode_minimal.json` is a complete, validated 2-scene episode (cel style, two
 characters, one board, two camera shots per scene). Copy it, replace the story, and build up
 from there — it renders as-is, so it doubles as a pipeline smoke test.
+
+## Example Specs (`examples/`)
+
+| Spec | Style | Length | Demonstrates |
+| --- | --- | --- | --- |
+| `examples/cel_two_inch_bridge_episode.json` | cel | ~1:43 | 8 scenes, notebook/stat boards, custom rain setting, speech-locked cuts |
+| `examples/two_inch_bridge_episode.json` | parchment | ~1:47 | 2 ink-stick actors, 7 parchment backdrops, 4 board types, two-actor `handoff` |
+| `examples/red_umbrella_episode.json` | cel | long-form | night-city weather, umbrellas, family cast |
+| `examples/discipline_vs_obsession_episode.json` | cel | long-form | phone cards, desks, multi-act BGM switching |
+| `examples/two_inch_bridge_fable_episode.json` | parchment | ~1:45 | same story, fable framing, different board cues |
+
+Each is a complete, valid episode: validate it, render it, or copy it as the starting point for
+a new film.

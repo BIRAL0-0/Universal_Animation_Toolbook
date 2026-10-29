@@ -55,6 +55,28 @@ python3 universal_toolbook/run_studio.py render work/episode.json --out output/f
 pip install piper-tts
 python3 universal_toolbook/tools/fetch_piper_voices.py check
 python3 universal_toolbook/tools/fetch_piper_voices.py install --from-dir /path/to/piper_voices
+
+# 7. Reference films: complete episode specs to copy structure and pacing from
+python3 universal_toolbook/run_studio.py validate examples/cel_two_inch_bridge_episode.json
+python3 universal_toolbook/run_studio.py render examples/cel_two_inch_bridge_episode.json \
+    --out output/final_film_1080p.mp4 --full --preset veryfast --crf 24 \
+    --chunk-sec 45 --workers 2 --resume --voice auto
 ```
+
+## Where to start a new film
+
+`universal_toolbook/templates/episode_minimal.json` — a validated 2-scene episode that renders
+as-is. Copy it to `work/episode.json`, replace the story, and build up from there.
+
+## Reference films (`examples/`)
+
+Complete, working specs — the fastest way to learn the pacing and JSON shape:
+
+| Spec | Style | Shows |
+| --- | --- | --- |
+| `examples/cel_two_inch_bridge_episode.json` | cel | 8 scenes, notebook + stat boards, rain setting, speech-locked cuts |
+| `examples/two_inch_bridge_episode.json` | parchment | 8 scenes, ink-stick cast, 7 backdrops, two-actor `handoff` |
+| `examples/red_umbrella_episode.json` | cel | night-city weather, umbrellas, multi-character cast |
+| `examples/discipline_vs_obsession_episode.json` | cel | long-form essay pacing, phone cards, per-act BGM |
 
 See `01_TOOLBOOK_REFERENCE.md` for the complete V3 JSON specification.
