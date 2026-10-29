@@ -38,42 +38,23 @@ The AI autonomously designs **custom characters (with hairstyles, articulated ha
 # 1. Verify Node, Python, fonts, FFmpeg, and bundled BGM tracks (auto-installs missing deps)
 python3 universal_toolbook/run_studio.py check
 
-# 2. Run automated JS + Python V3 test suites
-node universal_toolbook/tests/run_all_tests.js
-python3 tests/test_studio_pipeline.py
-
-# 3. List bundled Creative Commons BGM tracks & mood keywords
+# 2. List bundled Creative Commons BGM tracks & mood keywords
 python3 universal_toolbook/run_studio.py bgm-list
 
-# 4. Validate an episode JSON specification (and optional verbatim script match)
-python3 universal_toolbook/run_studio.py validate examples/minimal_schema_template.json
-python3 universal_toolbook/run_studio.py validate examples/minimal_parchment_template.json
+# 3. Validate an episode JSON specification (and optional verbatim script match)
+cp universal_toolbook/templates/episode_minimal.json work/episode.json
+python3 universal_toolbook/run_studio.py validate work/episode.json
 
-# 5. Render 1920x1080 PNG scene stills for visual QA before full video encoding
+# 4. Render 1920x1080 PNG scene stills for visual QA before full video encoding
 python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills --width 1920 --height 1080 --limit 8
 
-# 6. Render full 1920x1080 @ 30fps voiced MP4 with parallel workers (always use --preset veryfast)
+# 5. Render full 1920x1080 @ 30fps voiced MP4 with parallel workers (always use --preset veryfast)
 python3 universal_toolbook/run_studio.py render work/episode.json --out output/final_1080p.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume
 
-# 7. Offline neural voices (only needed when the Edge endpoint is unreachable)
+# 6. Offline neural voices (only needed when the Edge endpoint is unreachable)
 pip install piper-tts
 python3 universal_toolbook/tools/fetch_piper_voices.py check
 python3 universal_toolbook/tools/fetch_piper_voices.py install --from-dir /path/to/piper_voices
-
-# 8. Shipped sample film: a complete 8-scene parchment short in ~107 s
-python3 universal_toolbook/run_studio.py render examples/two_inch_bridge_episode.json \
-    --out output/the_two_inch_bridge_1080p.mp4 --full --preset veryfast --crf 21 \
-    --chunk-sec 30 --workers 3
 ```
-
-## Bundled Sample Film
-
-`examples/two_inch_bridge_episode.json` — **“The Two-Inch Bridge”**
-(`output/the_two_inch_bridge_1080p.mp4`, 1920×1080, 30 fps, ~1:47) is a complete hand-inked
-parchment short that exercises the whole engine in one spec: two custom ink-stick characters,
-seven parchment backdrops, speech-locked camera cuts, four in-world graphics boards
-(`notebook_page`, `bar_chart`, `checklist_card`, `stat_cards`), a world-locked `handoff` between
-two actors, per-scene dynamic CC BGM, and two-cast narration. Use it as the reference for pacing
-and JSON structure.
 
 See `01_TOOLBOOK_REFERENCE.md` for the complete V3 JSON specification.

@@ -176,12 +176,8 @@ build one of them, and `python3 universal_toolbook/run_studio.py check` accepts 
 
 ---
 
-## Bundled Example Films
+## Starting Spec
 
-| Spec | Style | Length | Demonstrates |
-| --- | --- | --- | --- |
-| `examples/two_inch_bridge_episode.json` | parchment ink | ~1:47 | 2 ink-stick actors, 7 parchment backdrops, speech-locked cuts, 4 board types, `handoff` two-actor IK, dynamic CC BGM |
-| `examples/red_umbrella_episode.json` | cel | long-form | night-city weather, umbrellas, family cast |
-| `examples/discipline_vs_obsession_episode.json` | cel | long-form | phone cards, desks, multi-act BGM switching |
-| `examples/minimal_parchment_template.json` | parchment | 1 scene | smallest possible parchment spec |
-| `examples/minimal_schema_template.json` | cel | 1 scene | smallest possible spec |
+`templates/episode_minimal.json` is a complete, validated 2-scene episode (cel style, two
+characters, one board, two camera shots per scene). Copy it, replace the story, and build up
+from there — it renders as-is, so it doubles as a pipeline smoke test.

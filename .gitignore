@@ -23,3 +23,6 @@ universal_toolbook/package-lock.json.partial
 # Renders, QA frames and delivery bundles are build artifacts, not source
 output/
 work/
+
+# Local scratch: episode drafts, QA stills, kept-aside example specs
+examples/

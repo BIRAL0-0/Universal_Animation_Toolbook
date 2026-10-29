@@ -27,7 +27,6 @@ Companion material already in the repo:
 - `00_START_HERE.md` — CLI surface and capabilities.
 - `01_TOOLBOOK_REFERENCE.md` — the full JSON schema and every action/environment name.
 - `universal_toolbook/templates/episode_minimal.json` — a **runnable 2-scene episode**; start by copying it.
-- `examples/*.json` — complete worked episodes (cel and parchment) to crib structure from.
 
 ---
 

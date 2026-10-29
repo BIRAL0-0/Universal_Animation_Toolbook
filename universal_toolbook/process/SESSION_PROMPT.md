@@ -19,7 +19,7 @@ DO NOT START WRITING JSON BEFORE YOU READ THESE FILES IN THIS ORDER:
   process/05_AUDIO.md                  (voices, pacing, BGM, foley)
   process/06_QA_GATE.md                (the definition of "finished")
 Also available: 01_TOOLBOOK_REFERENCE.md (full schema, all actions/environments),
-templates/episode_minimal.json (runnable skeleton), examples/ (two complete episodes).
+templates/episode_minimal.json (the runnable skeleton).
 
 HARD RULES
 1. Copy templates/episode_minimal.json to work/episode.json and extend it; do not invent keys.

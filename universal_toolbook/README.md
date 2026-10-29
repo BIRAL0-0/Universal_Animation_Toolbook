@@ -10,24 +10,13 @@ That folder is the film-agnostic production procedure (intake → authoring → 
 and [`process/SESSION_PROMPT.md`](process/SESSION_PROMPT.md) is the prompt to paste into it.
 Start from the runnable skeleton [`universal_toolbook/templates/episode_minimal.json`](templates/episode_minimal.json).
 
-## Sample output
-
-[`examples/two_inch_bridge_episode.json`](examples/two_inch_bridge_episode.json) — *“The Two-Inch Bridge”*,
-a 1:47 hand-inked parchment short, was rendered from that single spec file:
-
-```bash
-python3 universal_toolbook/run_studio.py render examples/two_inch_bridge_episode.json \
-    --out output/the_two_inch_bridge_1080p.mp4 --full --preset veryfast \
-    --crf 21 --chunk-sec 30 --workers 3
-```
-
 ## Quick start
 
 ```bash
 python3 universal_toolbook/run_studio.py check                 # node, python, ffmpeg, fonts, BGM
-npm install                                 # 2D canvas backend (node-canvas or @napi-rs/canvas)
-pip install edge-tts imageio-ffmpeg numpy   # neural voiceover + audio mixing
-python3 universal_toolbook/run_studio.py render my_episode.json --out output/my_film.mp4 --full
+npm install --prefix universal_toolbook      # 2D canvas backend (node-canvas or @napi-rs/canvas)
+pip install -r universal_toolbook/requirements.txt   # neural voiceover + audio mixing
+python3 universal_toolbook/run_studio.py render work/episode.json --out output/film.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 ```
 
 Runs fully offline when `edge-tts` cannot reach its endpoint: install `piper-tts`, drop a couple of
