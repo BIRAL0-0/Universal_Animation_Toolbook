@@ -91,7 +91,16 @@ Known: it does not report in this build. Measure `master_audio.wav` with Python 
 ## Tooling / environment
 
 **`pip install` refused (PEP 668)**
-Use the project venv: `/home/user/.venv/bin/python`, not the system interpreter.
+The system interpreter is marked externally managed. Work in a virtual environment instead of
+forcing `--break-system-packages`:
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r universal_toolbook/requirements.txt
+.venv/bin/python universal_toolbook/run_studio.py check      # expect "status": "OK"
+```
+
+Every command in this kit works with the venv interpreter on PATH (`. .venv/bin/activate`).
 
 **`@napi-rs/canvas` errors on `toBuffer('raw')`**
 Not supported in 1.0.13. The engine uses `toBuffer('image/png')` / the node-canvas path instead.
