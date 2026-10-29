@@ -25,7 +25,7 @@ For **each** still:
 ## 2 — Draft — timing, boards, cuts
 
 ```bash
-python3 run_studio.py render work/episode.json --out /tmp/draft/film_draft.mp4 \
+python3 universal_toolbook/run_studio.py render work/episode.json --out /tmp/draft/film_draft.mp4 \
   --draft --voice auto --workers 2 --chunk-sec 20
 ```
 
@@ -41,7 +41,7 @@ python3 run_studio.py render work/episode.json --out /tmp/draft/film_draft.mp4 \
 ## 3 — Master
 
 ```bash
-python3 run_studio.py render work/episode.json --out output/final_film_1080p.mp4 \
+python3 universal_toolbook/run_studio.py render work/episode.json --out output/final_film_1080p.mp4 \
   --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 ```
 

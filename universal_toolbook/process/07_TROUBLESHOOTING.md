@@ -93,11 +93,11 @@ Cosmetic: the sub-parsers don't accept `--help`. Run without it; it validates no
 **Delivery: viewer/dev preview can't show or download the MP4**
 Handing a binary to a human is the hard part, not the render. In order of reliability:
 
-1. `python3 tools/serve_deliverables.py 8000 output` — Range-capable (`206`) static server;
+1. `python3 universal_toolbook/tools/serve_deliverables.py 8000 output` — Range-capable (`206`) static server;
    open the page from inside the app, not from a raw URL in another browser tab.
-2. `python3 run_studio.py player output/final_film_1080p.mp4 --out output/player.html` —
+2. `python3 universal_toolbook/run_studio.py player output/final_film_1080p.mp4 --out output/player.html` —
    self-contained HTML5 player with a download wrapper.
-3. `python3 tools/build_storyboard_svg.py <master> --out outputs/storyboard.svg` — the film as
+3. `python3 universal_toolbook/tools/build_storyboard_svg.py <master> --out outputs/storyboard.svg` — the film as
    a **text** SVG (stills + captions + cross-fades); renders where video is refused.
 4. Write the text artifacts into `outputs/` so at minimum the chapters, report and cue sheet
    reach the reader, and state the rebuild command for the video.

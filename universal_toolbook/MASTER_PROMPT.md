@@ -28,14 +28,14 @@ CREATIVE & TECHNICAL RULES:
 3. NATURAL AUDIO PACING, BGM & VISUAL QA
    - Assign distinct neural voices in `voices` at crisp, natural conversational rates (`+0%` to `+4%`) with tight turn pauses (`0.22s–0.32s`).
    - Pair scenes with mood-matched Creative Commons tracks from `assets/bgm/` (`bgm: "dynamic"` or `"auto"`) plus foley cues.
-   - ALWAYS render 1080p QA stills (`python3 run_studio.py stills ...`) and inspect them to verify anatomy, z-occlusion, subtitle highlights, and safe-zone framing before running the full video render.
+   - ALWAYS render 1080p QA stills (`python3 universal_toolbook/run_studio.py stills ...`) and inspect them to verify anatomy, z-occlusion, subtitle highlights, and safe-zone framing before running the full video render.
 
 EXECUTION WORKFLOW:
-1. Unpack `Universal_Animation_Toolbook.zip`, `cd Universal_Animation_Toolbook`, and run `python3 run_studio.py check`.
-2. Author `work/episode.json` and run `python3 run_studio.py validate work/episode.json` (confirm `warnings: []`).
-3. Render and visually inspect scene stills via `python3 run_studio.py stills work/episode.json --out-dir work/stills --width 1920 --height 1080`.
+1. Unpack the archive, `cd Universal_Animation_Toolbook`, and run `python3 universal_toolbook/run_studio.py check`.
+2. Author `work/episode.json` and run `python3 universal_toolbook/run_studio.py validate work/episode.json` (confirm `warnings: []`).
+3. Render and visually inspect scene stills via `python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills --width 1920 --height 1080`.
 4. Render the final 1080p 30fps MP4 (always use `--preset veryfast`):
-   `python3 run_studio.py render work/episode.json --out output/final_film_1080p.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume`
+   `python3 universal_toolbook/run_studio.py render work/episode.json --out output/final_film_1080p.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume`
 5. Deliver `output/final_film_1080p.mp4` and `output/final_film_1080p_chapters.txt`.
 
 ==================== MY REQUEST / SCRIPT ====================

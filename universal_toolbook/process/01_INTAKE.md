@@ -61,7 +61,7 @@ scenes — scenes reference these ids, and a typo is silent until render time.
 
 ## 1.5 Map mood → BGM
 
-Pick a track per scene from `python3 run_studio.py bgm-list` (id, moods, keywords, licence).
+Pick a track per scene from `python3 universal_toolbook/run_studio.py bgm-list` (id, moods, keywords, licence).
 Keep `bgm_gain` 0.86–0.92 so narration stays on top. Typical mapping:
 
 | Scene feeling | Track family |

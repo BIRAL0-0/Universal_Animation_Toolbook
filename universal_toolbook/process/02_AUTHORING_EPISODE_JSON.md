@@ -1,12 +1,12 @@
 # 02 — AUTHORING `episode.json`
 
 The whole film is one JSON file. This page is the working guide; `01_TOOLBOOK_REFERENCE.md`
-is the exhaustive schema, and `templates/episode_minimal.json` is a **validated, runnable**
+is the exhaustive schema, and `universal_toolbook/templates/episode_minimal.json` is a **validated, runnable**
 2-scene skeleton — copy it, don't start from a blank file.
 
 ```bash
-cp templates/episode_minimal.json work/episode.json
-python3 run_studio.py validate work/episode.json      # "warnings": []
+cp universal_toolbook/templates/episode_minimal.json work/episode.json
+python3 universal_toolbook/run_studio.py validate work/episode.json      # "warnings": []
 ```
 
 ---
@@ -159,7 +159,7 @@ Avoid one-word entries — they get merged with the following line.
 }
 ```
 
-Use presets when they fit (`python3 run_studio.py` environments list in the reference); use a
+Use presets when they fit (`python3 universal_toolbook/run_studio.py` environments list in the reference); use a
 custom setting when the story needs weather or a specific sky. `pure_black` exists but the
 brief forbids leaving a scene on it.
 

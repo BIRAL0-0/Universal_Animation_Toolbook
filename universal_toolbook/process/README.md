@@ -16,12 +16,17 @@ session that was handed a script and has never seen this repository, read these 
 | 07 | [`07_TROUBLESHOOTING.md`](07_TROUBLESHOOTING.md) | A command failed or a render looks broken. |
 | — | [`REPO_MAP.md`](REPO_MAP.md) | You need to know which folder stores what, or what is not in git. |
 
+> **Where things are.** The engine is one self-contained folder: `universal_toolbook/`.
+> Commands below are written for the **repository root**; `cd universal_toolbook` and drop the
+> prefix if you prefer, or copy the folder somewhere else entirely — it resolves its own
+> `engine/`, `assets/` and `config/` relative to `run_studio.py`.
+
 Companion material already in the repo:
 
 - `MASTER_PROMPT.md` — the director's brief (creative intent, what to ask for).
 - `00_START_HERE.md` — CLI surface and capabilities.
 - `01_TOOLBOOK_REFERENCE.md` — the full JSON schema and every action/environment name.
-- `templates/episode_minimal.json` — a **runnable 2-scene episode**; start by copying it.
+- `universal_toolbook/templates/episode_minimal.json` — a **runnable 2-scene episode**; start by copying it.
 - `examples/*.json` — complete worked episodes (cel and parchment) to crib structure from.
 
 ---
@@ -29,13 +34,13 @@ Companion material already in the repo:
 ## The pipeline in seven lines
 
 ```bash
-python3 run_studio.py check                                     # env, fonts, ffmpeg, BGM, voices
-cp templates/episode_minimal.json work/episode.json             # then author it
-python3 run_studio.py validate work/episode.json                # must print warnings: []
-python3 run_studio.py stills work/episode.json --out-dir work/stills --width 1920 --height 1080
-python3 run_studio.py render work/episode.json --out /tmp/draft/film.mp4 --draft --voice auto
+python3 universal_toolbook/run_studio.py check                                     # env, fonts, ffmpeg, BGM, voices
+cp universal_toolbook/templates/episode_minimal.json work/episode.json             # then author it
+python3 universal_toolbook/run_studio.py validate work/episode.json                # must print warnings: []
+python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills --width 1920 --height 1080
+python3 universal_toolbook/run_studio.py render work/episode.json --out /tmp/draft/film.mp4 --draft --voice auto
 # inspect every still and every board cue, fix, repeat the two lines above
-python3 run_studio.py render work/episode.json --out output/final_film_1080p.mp4 \
+python3 universal_toolbook/run_studio.py render work/episode.json --out output/final_film_1080p.mp4 \
   --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 ```
 

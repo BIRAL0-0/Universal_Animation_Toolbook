@@ -23,7 +23,7 @@ templates/episode_minimal.json (runnable skeleton), examples/ (two complete epis
 
 HARD RULES
 1. Copy templates/episode_minimal.json to work/episode.json and extend it; do not invent keys.
-2. `python3 run_studio.py validate work/episode.json` must print "warnings": [] before rendering.
+2. `python3 universal_toolbook/run_studio.py validate work/episode.json` must print "warnings": [] before rendering.
 3. Render 1080p stills and LOOK at every one of them before any full render. Fix overlaps,
    clipping, floating actors and empty backgrounds, then re-render the stills.
 0. Use --voice auto in this environment (the Edge/Azure endpoint is unreachable; the engine
@@ -38,7 +38,7 @@ DELIVERY
   output/final_film_1080p.mp4 + output/final_film_1080p_chapters.txt
   Plus a text mirror in outputs/ (chapters, report, validation, cue sheet) because big binaries
   do not always survive a transfer. If a viewer refuses video, build a text-only storyboard:
-  python3 tools/build_storyboard_svg.py <master.mp4> --out outputs/storyboard.svg
+  python3 universal_toolbook/tools/build_storyboard_svg.py <master.mp4> --out outputs/storyboard.svg
 
 WORKFLOW
   check -> author episode.json -> validate -> stills -> inspect -> draft -> inspect frames at
@@ -61,7 +61,7 @@ SCRIPT
   session that omits it will hang or fail on the first line of dialogue.
 - The fixed flag set (`veryfast`, `crf 24`, `chunk 45`, `2 workers`, `resume`) is the
   documented rendering path; changing it changes render time and encode quality unpredictably.
-- Pointing at `templates/episode_minimal.json` prevents invented schema keys — validation is
+- Pointing at `universal_toolbook/templates/episode_minimal.json` prevents invented schema keys — validation is
   strict about structure but silent about intent.
 
 ## If the session cannot read files at all

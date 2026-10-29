@@ -32,7 +32,7 @@ Installed offline voices and how the alias map resolves common Edge ids:
 | `en-US-ChristopherNeural` | `en_GB-alan-medium` |
 | `en-US-JennyNeural`, `en-US-AriaNeural`, `en-US-AnaNeural` | `en_US-amy-medium` |
 
-Check or install more: `python3 tools/fetch_piper_voices.py check` / `install`.
+Check or install more: `python3 universal_toolbook/tools/fetch_piper_voices.py check` / `install`.
 
 ## 5.2 Picking voices so they are distinguishable
 
@@ -57,7 +57,7 @@ Check or install more: `python3 tools/fetch_piper_voices.py check` / `install`.
 ## 5.4 BGM
 
 ```bash
-python3 run_studio.py bgm-list        # id, moods, keywords, licence, source
+python3 universal_toolbook/run_studio.py bgm-list        # id, moods, keywords, licence, source
 ```
 
 - `"bgm": "dynamic"` at episode level → each scene picks from its `bgm` id.

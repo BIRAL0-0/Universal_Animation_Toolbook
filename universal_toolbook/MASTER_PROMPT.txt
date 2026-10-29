@@ -16,7 +16,7 @@ FOLLOW THESE MANDATORY CREATIVE & TECHNICAL RULES:
    - Save my exact provided script to `work/user_script.txt`.
    - Every single spoken sentence of my script must appear in exact order across `scenes[i].narration` (do NOT summarize, skip, or rewrite my script unless I explicitly asked you to write one).
    - Verify `"exact_word_match": true` using:
-     `python3 run_studio.py validate work/episode.json --script work/user_script.txt`
+     `python3 universal_toolbook/run_studio.py validate work/episode.json --script work/user_script.txt`
 
 3. ONE COHESIVE STORYLINE — CREATE CHARACTERS DYNAMICALLY FROM MY SCRIPT
    - Do NOT make disconnected "stitched Shorts" clips or black text slides. Build ONE continuous storyline across the entire video that visually proves the main idea of my script.
@@ -32,17 +32,17 @@ FOLLOW THESE MANDATORY CREATIVE & TECHNICAL RULES:
    - Whenever my script explains a mechanism, comparison, or proof, mount an animated in-world `board` (`line_graph`, `flow_chain`, `bar_chart`, `cycle_loop`, `iceberg`, `checklist_card`) inside the scene (`x: 0.44..0.50`) while characters stand beside it (`x: 0.10..0.38`) pointing/explaining.
 
 5. AUTO-MATCH CREATIVE COMMONS / NCS-STYLE BGM + SYNCED VOICEOVER
-   - Inspect `python3 run_studio.py bgm-list` (7 bundled normalized CC0 / CC-BY instrumental tracks: `electronic_drive`, `upbeat_ncs_synth`, `chill_focus`, `retro_pulse`, `reflective_piano`, `suspense_tension`, `triumph_horizon`) and set `"bgm"` to the track ID that best fits my script's tone (or `"dynamic"` to crossfade tracks across multi-act mood shifts).
+   - Inspect `python3 universal_toolbook/run_studio.py bgm-list` (7 bundled normalized CC0 / CC-BY instrumental tracks: `electronic_drive`, `upbeat_ncs_synth`, `chill_focus`, `retro_pulse`, `reflective_piano`, `suspense_tension`, `triumph_horizon`) and set `"bgm"` to the track ID that best fits my script's tone (or `"dynamic"` to crossfade tracks across multi-act mood shifts).
 
 AUTONOMOUS EXECUTION STEPS (RUN IN CODE EXECUTION NOW):
-1. Unpack `Universal_Animation_Toolbook.zip`, `cd Universal_Animation_Toolbook`, read `01_TOOLBOOK_REFERENCE.md`, and run `python3 run_studio.py check`.
-2. Save my script below to `work/user_script.txt`. Optionally run `python3 tools/script_helper.py parse work/user_script.txt --out work/skeleton.json` to get beat timings, then author the full bespoke `work/episode.json` with custom characters, custom settings, varied lighting, multi-character choreography, in-world proof boards, and matched BGM.
-3. Run `python3 run_studio.py validate work/episode.json --script work/user_script.txt` and ensure `exact_word_match: true` and `warnings: []`.
-4. Render visual QA stills via `python3 run_studio.py stills work/episode.json --out-dir work/stills --limit 8` and inspect them to confirm zero text overlap, sharp visuals, and proper character placement.
+1. Unpack `Universal_Animation_Toolbook.zip`, `cd Universal_Animation_Toolbook`, read `01_TOOLBOOK_REFERENCE.md`, and run `python3 universal_toolbook/run_studio.py check`.
+2. Save my script below to `work/user_script.txt`. Optionally run `python3 universal_toolbook/tools/script_helper.py parse work/user_script.txt --out work/skeleton.json` to get beat timings, then author the full bespoke `work/episode.json` with custom characters, custom settings, varied lighting, multi-character choreography, in-world proof boards, and matched BGM.
+3. Run `python3 universal_toolbook/run_studio.py validate work/episode.json --script work/user_script.txt` and ensure `exact_word_match: true` and `warnings: []`.
+4. Render visual QA stills via `python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills --limit 8` and inspect them to confirm zero text overlap, sharp visuals, and proper character placement.
 5. Render the final voiced zero-grain 16:9 video:
-   `python3 run_studio.py render work/episode.json --out output/final_video_1080p.mp4 --full --preset veryfast --crf 17 --chunk-sec 45 --resume`
+   `python3 universal_toolbook/run_studio.py render work/episode.json --out output/final_video_1080p.mp4 --full --preset veryfast --crf 17 --chunk-sec 45 --resume`
    (If sandbox execution time is tight on a very long script, use `--draft` or `--max-chunks` + `--resume` until complete.)
-6. Deliver `output/final_video_1080p.mp4` and `output/final_video_1080p_chapters.txt` directly for download (and if your UI needs an HTML download wrapper, also run `python3 run_studio.py player output/final_video_1080p.mp4 --out output/video_player_download.html`).
+6. Deliver `output/final_video_1080p.mp4` and `output/final_video_1080p_chapters.txt` directly for download (and if your UI needs an HTML download wrapper, also run `python3 universal_toolbook/run_studio.py player output/final_video_1080p.mp4 --out output/video_player_download.html`).
 
 ==================== MY SCRIPT STARTS BELOW ====================
 [PASTE YOUR SCRIPT HERE]

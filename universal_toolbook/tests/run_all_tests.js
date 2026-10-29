@@ -188,12 +188,12 @@ const rendererCode = fs.readFileSync(path.join(__dirname, '..', 'engine', 'video
 assert(!rendererCode.includes('makeGrain'));
 
 // 9. Compile minimal Cinema, Parchment & V3 Occlusion/Interaction scenes cleanly
-const spec = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'examples', 'minimal_schema_template.json'), 'utf8'));
+const spec = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'templates', 'minimal_schema_template.json'), 'utf8'));
 const ep = compileEpisode(spec);
 assert.strictEqual(ep.warnings.length, 0);
 renderEpisodeFrame(g, 960, 540, ep, 15);
 
-const pSpec = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'examples', 'minimal_parchment_template.json'), 'utf8'));
+const pSpec = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'templates', 'minimal_parchment_template.json'), 'utf8'));
 const pEp = compileEpisode(pSpec);
 assert.strictEqual(pEp.warnings.length, 0);
 renderEpisodeFrame(g, 960, 540, pEp, 15);

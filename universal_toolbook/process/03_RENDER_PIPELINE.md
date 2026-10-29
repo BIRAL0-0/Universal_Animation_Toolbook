@@ -4,7 +4,7 @@ Exact commands, in order, with the flags that are known to work. Anything you ch
 changes render time and encode quality — change it deliberately, not accidentally.
 
 ```bash
-python3 run_studio.py --help            # check | bgm-list | validate | stills | render | player
+python3 universal_toolbook/run_studio.py --help            # check | bgm-list | validate | stills | render | player
 ```
 
 ---
@@ -12,7 +12,7 @@ python3 run_studio.py --help            # check | bgm-list | validate | stills |
 ## Step 0 — environment
 
 ```bash
-python3 run_studio.py check
+python3 universal_toolbook/run_studio.py check
 ```
 
 Prints `status: OK`, the number of bundled BGM tracks, ffmpeg/font availability and the voice
@@ -22,7 +22,7 @@ a non-`OK` status.
 ## Step 1 — validate the spec
 
 ```bash
-python3 run_studio.py validate work/episode.json
+python3 universal_toolbook/run_studio.py validate work/episode.json
 ```
 
 Read the JSON it prints: `duration_sec`, `scene_count`, `settings_used`, `sound_events`,
@@ -30,13 +30,13 @@ Read the JSON it prints: `duration_sec`, `scene_count`, `settings_used`, `sound_
 If a verbatim script was supplied, pass it too so word-for-word preservation is enforced:
 
 ```bash
-python3 run_studio.py validate work/episode.json --script path/to/script.txt
+python3 universal_toolbook/run_studio.py validate work/episode.json --script path/to/script.txt
 ```
 
 ## Step 2 — 1080p stills (the cheap QA loop)
 
 ```bash
-python3 run_studio.py stills work/episode.json --out-dir work/stills --width 1920 --height 1080
+python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills --width 1920 --height 1080
 ```
 
 One PNG per scene, named `<sceneId>_<environment>.png`. `--limit N` renders only the first N
@@ -51,7 +51,7 @@ is normal and cheap; a full render with an overlap in it is neither.
 ## Step 3 — draft render (timing, boards, cuts, audio)
 
 ```bash
-python3 run_studio.py render work/episode.json --out /tmp/draft/film_draft.mp4 \
+python3 universal_toolbook/run_studio.py render work/episode.json --out /tmp/draft/film_draft.mp4 \
   --draft --voice auto --workers 2 --chunk-sec 20
 ```
 
@@ -72,7 +72,7 @@ FF=$(python3 -c "import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())")
 ## Step 4 — master render
 
 ```bash
-python3 run_studio.py render work/episode.json --out output/final_film_1080p.mp4 \
+python3 universal_toolbook/run_studio.py render work/episode.json --out output/final_film_1080p.mp4 \
   --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 ```
 
@@ -128,9 +128,9 @@ PY
 - Handing the video to a human who can't download binaries:
 
 ```bash
-python3 tools/serve_deliverables.py 8000 output         # Range-capable static server
-python3 run_studio.py player output/final_film_1080p.mp4 --out output/player.html
-python3 tools/build_storyboard_svg.py output/final_film_1080p.mp4 --out outputs/storyboard.svg
+python3 universal_toolbook/tools/serve_deliverables.py 8000 output         # Range-capable static server
+python3 universal_toolbook/run_studio.py player output/final_film_1080p.mp4 --out output/player.html
+python3 universal_toolbook/tools/build_storyboard_svg.py output/final_film_1080p.mp4 --out outputs/storyboard.svg
 ```
 
 The SVG storyboard is **text** — captions, cross-fades and stills inline — so it renders

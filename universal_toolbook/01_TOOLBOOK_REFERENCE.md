@@ -155,9 +155,9 @@ Write dialogue in short, one-breath sentences if you want broadcast-style single
 
 ```bash
 pip install piper-tts
-python3 tools/fetch_piper_voices.py check                       # is offline voiceover ready?
-python3 tools/fetch_piper_voices.py install --from-dir ~/voices # copies .onnx + .onnx.json
-python3 run_studio.py render work/episode.json --out out.mp4 --voice piper   # force offline
+python3 universal_toolbook/tools/fetch_piper_voices.py check                       # is offline voiceover ready?
+python3 universal_toolbook/tools/fetch_piper_voices.py install --from-dir ~/voices # copies .onnx + .onnx.json
+python3 universal_toolbook/run_studio.py render work/episode.json --out out.mp4 --voice piper   # force offline
 ```
 
 Voice resolution: `PIPER_VOICE_DIR` → `~/.cache/piper_voices` → `assets/voices/`. Edge voice ids in
@@ -172,7 +172,7 @@ voice directory can be addressed directly as `"voice": "piper:en_GB-semaine-medi
 `engine/canvas_backend.js` renders through **either** `node-canvas` (Cairo/Pango, needs a native
 build) **or** `@napi-rs/canvas` (prebuilt binaries, no system libraries), whichever resolves first.
 Both are declared as `optionalDependencies`, so `npm install` succeeds on a machine that can only
-build one of them, and `python3 run_studio.py check` accepts either.
+build one of them, and `python3 universal_toolbook/run_studio.py check` accepts either.
 
 ---
 
