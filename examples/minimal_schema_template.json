@@ -1,0 +1,120 @@
+{
+  "title": "Dynamic Script Visual Story",
+  "thesis": "Core takeaway derived directly from the provided script.",
+  "bgm": "auto",
+  "subtitles_mode": "cinema",
+  "cast": {
+    "char_1": {
+      "name": "ROLE 1",
+      "color": "#f1f5f9",
+      "coat_color": "#1e3a5f",
+      "style": "cel",
+      "build": "standard",
+      "eyes": true,
+      "expression": "curious",
+      "accessories": ["coat", "glasses"],
+      "scale": 1.62
+    },
+    "char_2": {
+      "name": "ROLE 2",
+      "color": "#e2e8f0",
+      "coat_color": "#334155",
+      "scarf_color": "#d97706",
+      "style": "cel",
+      "build": "athletic",
+      "eyes": true,
+      "expression": "determined",
+      "accessories": ["coat", "scarf"],
+      "scale": 1.62
+    }
+  },
+  "scenes": [
+    {
+      "id": "S01",
+      "chapter": "Opening Premise",
+      "mood": "focus",
+      "setting": {
+        "sky": ["#071224", "#122a48"],
+        "floor_color": "#060e1a",
+        "light_color": "#38bdf8",
+        "backdrop": "windows",
+        "weather": "clear",
+        "lighting": "skylights"
+      },
+      "duration": 8.0,
+      "narration": "Exact verbatim sentences from the first beat of the user's provided script.",
+      "accent_words": ["verbatim", "script"],
+      "camera": { "zoom_from": 1.0, "zoom_to": 1.04, "pan_from": -0.01, "pan_to": 0.01 },
+      "props": [],
+      "characters": [
+        {
+          "id": "char_1",
+          "show_name": true,
+          "beats": [
+            { "start": 0.0, "end": 3.5, "action": "walk", "fromX": 0.12, "toX": 0.38 },
+            { "start": 3.5, "end": 8.0, "action": "talk_explain", "x": 0.38, "facing": 1 }
+          ]
+        },
+        {
+          "id": "char_2",
+          "show_name": true,
+          "x": 0.62,
+          "facing": -1,
+          "action": "listen_nod"
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "mood": "focus",
+      "setting": {
+        "sky": ["#050e18", "#0c2236"],
+        "floor_color": "#050c14",
+        "light_color": "#22d3ee",
+        "backdrop": "grid",
+        "weather": "particles",
+        "lighting": "spotlights"
+      },
+      "duration": 9.0,
+      "narration": "Exact verbatim sentences from the second beat of the user's provided script proving the main idea.",
+      "accent_words": ["proving", "idea"],
+      "board": {
+        "type": "line_graph",
+        "title": "Visual Proof Derived From Script",
+        "x": 0.46,
+        "y": 65,
+        "w": 880,
+        "h": 390,
+        "accent": "#22d3ee",
+        "cue_on": "proving the main",
+        "hold_sec": 6.5,
+        "build_dur": 2.6,
+        "series": [
+          { "label": "BASELINE", "color": "#fb7185", "points": [0.2, 0.65, 0.35, 0.18] },
+          { "label": "MECHANISM", "color": "#34d399", "points": [0.15, 0.25, 0.55, 0.92] }
+        ]
+      },
+      "characters": [
+        {
+          "id": "char_2",
+          "x": 0.35,
+          "facing": 1,
+          "action": "point_board",
+          "targetX": 0.60,
+          "targetY": 300
+        },
+        {
+          "id": "char_1",
+          "x": 0.18,
+          "facing": 1,
+          "action": "listen_nod"
+        }
+      ]
+    }
+  ],
+  "outro": {
+    "duration": 4.0,
+    "title": "Main Idea Summary From Script",
+    "accent_color": "#38bdf8"
+  }
+}

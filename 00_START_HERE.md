@@ -1,0 +1,56 @@
+# Universal Animation Toolbook v3 (16:9 Cinema & Hand-Inked Parchment Video Engine)
+
+A clean, modular, AI-agnostic animation and audio production engine designed to run inside **any AI coding/agent workspace** or locally via **Node.js + Python**.
+
+Provide **any AI** with:
+1. `Universal_Animation_Toolbook.zip`
+2. The prompt in `MASTER_PROMPT.md`
+3. Your script or story topic
+
+The AI autonomously designs **custom characters (with hairstyles, articulated hands, grounded shoes, and biomechanical posture)**, **unified z-depth environments & furniture/vehicle occlusion**, **speech-locked 2D camera cuts & visual charts**, **multi-cast neural voiceover with dead-air compaction**, **non-flickering glowing subtitles**, **sidechain-ducked Creative Commons BGM**, and **synchronized foley SFX**, rendering a **razor-sharp, zero-grain `1920x1080` (`30 fps`) `.mp4` film**.
+
+---
+
+## Core V3 Capabilities
+
+- **Dual Visual Style Engines**:
+  1. **Atmospheric Cinema Cel Style (`style: "cel"` / `"glossy"` / `"flat"`)** — Expressive characters with curved thoracic spine posture (`-1.0..+1.0`), tapered limbs, articulated wrists & expressive hands (`relaxed`, `open`, `point`, `fist`, `grip`, `clasp`, `embrace`), grounded shoes with heel-toe roll, 12 hairstyles (`hair`, `hair_color`), neck/ear/nose/iris/catchlight micro-details, 7 body builds, and 18 accessories.
+  2. **Warm Parchment & Hand-Inked Stick Style (`parchment_*` backdrops or `style: "parchment"`)** — Aged cream/kraft paper canvas with soft sepia vignette, curved-spine charcoal-ink stick figures with forearm-aligned hands + thumb loops, pitched shoes, expressive cartoon acting, and bold black + crimson typography.
+- **Unified Z-Depth Occlusion & Dual-Actor Choreography (60 Actions)**:
+  - **Paired World-Space Interactions**: Standing `hug` & `hug_kneel` render via 3-pass interleaved limb occlusion (`back_arm -> bodies -> front_arm`); `handshake`, `high_five`, and `handoff` lock palms to the exact world-space midpoint; listeners naturally track the active speaker's eye-line.
+  - **Automatic Two-Plane Furniture Occlusion**: Seated/lectern characters (`desk`, `clean_desk`, `messy_desk`, `cafe_table`, `judge_table`, `podium`) automatically tuck knees/thighs behind tabletops while rendering typing/gesturing hands cleanly on top of the surface.
+  - **Multi-Lane Moving Vehicles**: `passing_car` and `passing_bus` support `lane: "back" | "front"` (or numeric `z`) to sweep behind or in front of sidewalk characters with rotating wheel spokes and headlights.
+  - **Biomechanical Locomotion**: Directional `walk`, true airborne `run` (`airLift`), tread-locked IK `climb_stairs` / `descend_stairs`, 4-phase `jump`, `trip_stumble`, and `fall_down` (`0.000px` bone stretch, `0.000px` stance foot slip).
+- **Natural Voice Pacing, Speech-Locked Boards & Speech-Locked Camera Cuts**:
+  - `voice_engine.py` synthesizes multi-cast `edge-tts` dialogue at crisp conversational pace (`+2%` default), compacts sluggish mid-sentence TTS silences while preserving exact `WordBoundary` sync, and snaps both `board` (`cue_on` / `hide_on` / smart auto-hide) and `camera_shots` (`cue_on` / `end_on`) to exact spoken phrases.
+- **Non-Flickering Cinema Subtitles & Multi-Word Keyword Highlights**:
+  - Supports single-word and **multi-word phrase** `accent_words` (`"9 PM"`, `"no excuses"`), clean speaker pill badges (`DANIEL:`), gap-bridged active-word golden/accent glow capsules (zero `strokeText` smear, zero inter-word strobe), and persistent keyword underlines.
+- **Bundled Creative Commons BGM Library (`assets/bgm/`)**: 7 normalized stereo MP3 tracks (`CC0` & `CC BY 4.0`) with automatic mood scoring, dynamic multi-act switching, and automatic license attribution in `*_chapters.txt`.
+
+---
+
+## Quick CLI Commands
+
+```bash
+# 1. Verify Node, Python, fonts, FFmpeg, and bundled BGM tracks (auto-installs missing deps)
+python3 run_studio.py check
+
+# 2. Run automated JS + Python V3 test suites
+node tests/run_all_tests.js
+python3 tests/test_studio_pipeline.py
+
+# 3. List bundled Creative Commons BGM tracks & mood keywords
+python3 run_studio.py bgm-list
+
+# 4. Validate an episode JSON specification (and optional verbatim script match)
+python3 run_studio.py validate examples/minimal_schema_template.json
+python3 run_studio.py validate examples/minimal_parchment_template.json
+
+# 5. Render 1920x1080 PNG scene stills for visual QA before full video encoding
+python3 run_studio.py stills work/episode.json --out-dir work/stills --width 1920 --height 1080 --limit 8
+
+# 6. Render full 1920x1080 @ 30fps voiced MP4 with parallel workers (always use --preset veryfast)
+python3 run_studio.py render work/episode.json --out output/final_1080p.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume
+```
+
+See `01_TOOLBOOK_REFERENCE.md` for the complete V3 JSON specification.
