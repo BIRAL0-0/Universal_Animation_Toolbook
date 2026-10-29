@@ -49,8 +49,20 @@ If a voice mode produces no speech at all, the render is **not** reported as a c
 
 The same `voiced` / `warnings` fields are copied into `<film>_validation_report.json`, so a
 downstream check can refuse a silent file without re-reading the console. Never deliver a
-master whose report says `"voiced": false`; fix the backend (`pip install piper-tts`,
-`python3 universal_toolbook/tools/fetch_piper_voices.py install`) and re-render.
+master whose report says `"voiced": false`; fix the backend and re-render:
+
+```bash
+pip install piper-tts
+python3 universal_toolbook/tools/fetch_piper_voices.py install          # huggingface.co
+python3 universal_toolbook/tools/fetch_piper_voices.py install \
+    --github 007-Akira/Project-Rocky --github-path voices               # github-only network
+python3 universal_toolbook/tools/fetch_piper_voices.py check            # expect true
+```
+
+`install` understands three sources: the canonical Hugging Face repository (voices nested by
+language / region / name / quality, derived automatically from the voice id), a flat mirror via
+`--url-base`, and a public GitHub repository via `--github` (handy when huggingface.co is
+blocked, since GitHub serves the same MIT/CC0 voice files). `--dry-run` shows the exact URLs.
 
 ## 5.2 Picking voices so they are distinguishable
 

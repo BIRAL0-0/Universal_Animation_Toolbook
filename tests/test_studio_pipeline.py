@@ -19,6 +19,7 @@ from engine.voice_engine import (
     align_scene_cameras_to_speech,
     compact_internal_silences_with_words,
 )
+from tools.fetch_piper_voices import hf_relpath
 from tools.script_helper import segment_user_script, verify_script_fidelity
 
 sys.path.insert(0, str(ROOT.parent))
@@ -124,6 +125,12 @@ def main() -> int:
     assert missing_edge, "voice diagnosis must never be empty when no backend produced speech"
     assert any("pip install" in line for line in missing_edge), missing_edge
     assert any("edge-tts is not installed" in line for line in missing_edge), missing_edge
+    # 3b. The documented voice install command must resolve real canonical URLs, not a guess:
+    #     huggingface.co/rhasspy/piper-voices nests voices as <lang>/<lang_REGION>/<name>/<quality>.
+    assert hf_relpath("en_US-ryan-medium") == "en/en_US/ryan/medium", hf_relpath("en_US-ryan-medium")
+    assert hf_relpath("en_GB-alan-medium") == "en/en_GB/alan/medium", hf_relpath("en_GB-alan-medium")
+    assert hf_relpath("en_US-amy-low") == "en/en_US/amy/low", hf_relpath("en_US-amy-low")
+
     with_edge = _voice_diagnosis({"edge_tts": True})
     assert any("no internet" in line for line in with_edge), with_edge
     assert any("piper-tts" in line for line in with_edge), with_edge
@@ -133,6 +140,7 @@ def main() -> int:
             {
                 "py_tests": "PASSED",
                 "voice_failure_diagnosis": "PASSED",
+                "canonical_voice_url_layout": "PASSED",
                 "bgm_tracks_verified": len(catalog),
                 "script_mood_matching": "PASSED",
                 "silence_compactor_verified": True,

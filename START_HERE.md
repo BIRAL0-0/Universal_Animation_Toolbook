@@ -33,8 +33,16 @@ this environment and you must use offline voices:
 
 ```bash
 pip install piper-tts
-python3 universal_toolbook/tools/fetch_piper_voices.py install --from-dir /path/to/piper_voices
+python3 universal_toolbook/tools/fetch_piper_voices.py install                       # huggingface.co hosts the voices
+python3 universal_toolbook/tools/fetch_piper_voices.py install \
+    --github 007-Akira/Project-Rocky --github-path voices    # when only github.com is reachable
+python3 universal_toolbook/tools/fetch_piper_voices.py install --from-dir /path/to/piper_voices  # offline copy
 ```
+
+`install --dry-run` prints the URLs it would fetch without downloading anything. The first
+command fails in a few seconds (not minutes) when huggingface.co is blocked, and prints both
+alternatives — verified end to end here: 4 files, `check` → `offline_voiceover_ready: true`, then
+`--voice auto` renders with real narration.
 
 ## 3. Make a film
 
