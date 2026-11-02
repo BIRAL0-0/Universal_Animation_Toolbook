@@ -11,7 +11,11 @@ const { FLOOR_Y, drawEnvironment, drawSoftGlow } = require('./environments');
 const { drawWorldProp, drawWorldBoard, drawForegroundLayer } = require('./world_props_and_boards');
 const { evaluateCharacterState, resolveSceneInteractions } = require('./motion_library');
 const { compileEpisode } = require('./episode');
-const { computePortraitViewport, fitBoardToPortraitViewport } = require('./portrait_framing');
+const {
+  computePortraitViewport,
+  computeLandscapePropZoomScale,
+  fitBoardToPortraitViewport,
+} = require('./portrait_framing');
 const {
   DEFAULT_SCREEN_VIEWPORT,
   normalizeScreenViewport,
@@ -1329,9 +1333,16 @@ function renderEpisodeFrame(ctx, outW, outH, episode, frameIdx) {
   }
 
   const landscape = containRect(BASE_W, BASE_H, width, height);
+  const cameraZoomScale = computeLandscapePropZoomScale(episode, frameIdx, {
+    baseWidth: BASE_W,
+    floorY: FLOOR_Y,
+    findSceneAtFrame,
+    evaluateSceneCamera,
+    evaluateSceneSpeechState,
+  });
   ctx.save();
   ctx.setTransform(landscape.scale, 0, 0, landscape.scale, landscape.x, landscape.y);
-  renderBaseEpisodeFrame(ctx, episode, frameIdx, DEFAULT_SCREEN_VIEWPORT);
+  renderBaseEpisodeFrame(ctx, episode, frameIdx, DEFAULT_SCREEN_VIEWPORT, cameraZoomScale);
   ctx.restore();
   return { orientation: 'landscape', width, height, ...landscape };
 }

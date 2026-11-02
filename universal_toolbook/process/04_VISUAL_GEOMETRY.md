@@ -2,7 +2,8 @@
 
 All world coordinates below are in the **1920×1080 authoring stage**. The renderer can deliver
 that stage as 16:9 landscape or a subject-aware 9:16 portrait crop; it uses one uniform scale and
-never distorts character or prop geometry. Portrait output has its own safe crop and typography rules below.
+never distorts character or prop geometry. Landscape camera pushes ease back when an on-screen
+held object would clip at the frame edge. Portrait output has its own safe crop and typography rules below.
 
 ```
 y=0    ┌──────────────────────────────────────────┐

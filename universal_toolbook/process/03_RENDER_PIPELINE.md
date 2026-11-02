@@ -45,8 +45,9 @@ python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work
 
 One PNG per scene, named `<sceneId>_<environment>.png`. `--limit N` renders only the first N
 scenes, which is handy while iterating. Inspect the stills in every requested output aspect ratio;
-portrait framing follows the active speaker or configured `portrait_focus`, includes held props,
-and uniformly fits nearby narration-led groups; boards are repositioned inside the portrait safe area.
+landscape camera pushes protect held props at the frame edge, while portrait framing follows the
+active speaker or configured `portrait_focus`, includes held props, and uniformly fits nearby
+narration-led groups; boards are repositioned inside the portrait safe area.
 
 **Stills are sampled near the start of each scene**, so a board cued later in the scene will
 NOT be in the still. That is expected; boards are verified from the draft instead (Step 3).

@@ -362,8 +362,55 @@ function computePortraitViewport(episode, frameIdx, outW, outH, {
   return { left, width, centerX: left + width * 0.5, right: left + width, cameraZoomScale };
 }
 
+/** Keep held-object compositions within the landscape stage when an authored camera push would clip them. */
+function computeLandscapePropZoomScale(episode, frameIdx, {
+  baseWidth = 1920,
+  floorY = 855,
+  safeMargin = 12,
+  minCameraScale = 0.68,
+  findSceneAtFrame,
+  evaluateSceneCamera,
+  evaluateSceneSpeechState,
+} = {}) {
+  const hit = findSceneAtFrame(episode, frameIdx);
+  if (hit.type === 'outro') return 1;
+  const scene = hit.scene;
+  const globalT = frameIdx / episode.fps;
+  const ts = Math.max(0, Math.min(scene.duration, globalT - scene.startSec));
+  const camera = evaluateSceneCamera(scene, ts);
+  const speechState = evaluateSceneSpeechState(scene, ts);
+  const entries = [];
+  const importantHeldItems = ['heldUmbrella', 'heldBlueprint', 'heldDrawing', 'heldPhone', 'heldCup', 'heldPen', 'pushedBoulder'];
+
+  for (const actor of (scene.characters || [])) {
+    if (actor.from_t !== undefined && ts < actor.from_t) continue;
+    if (actor.to_t !== undefined && ts > actor.to_t) continue;
+    const state = evaluateCharacterState(actor, ts, scene.duration, globalT, baseWidth, floorY, speechState);
+    entries.push({ actor, state, screenX: screenWorldX(state.x, camera, baseWidth) });
+  }
+  resolveSceneInteractions(entries, globalT, speechState);
+  for (const entry of entries) entry.screenX = screenWorldX(entry.state.x, camera, baseWidth);
+
+  const canvasCenterX = baseWidth * 0.5;
+  const maximumRadius = canvasCenterX - Math.max(0, safeMargin);
+  let cameraScale = 1;
+  for (const entry of entries) {
+    if (!importantHeldItems.some((key) => entry.state[key])) continue;
+    const bounds = actorCompositionBounds(entry, camera, baseWidth);
+    if (bounds.right <= 0 || bounds.left >= baseWidth) continue;
+    if (bounds.left < safeMargin && canvasCenterX > bounds.left) {
+      cameraScale = Math.min(cameraScale, maximumRadius / (canvasCenterX - bounds.left));
+    }
+    if (bounds.right > baseWidth - safeMargin && bounds.right > canvasCenterX) {
+      cameraScale = Math.min(cameraScale, maximumRadius / (bounds.right - canvasCenterX));
+    }
+  }
+  return Math.max(minCameraScale, Math.min(1, cameraScale));
+}
+
 module.exports = {
   computePortraitViewport,
+  computeLandscapePropZoomScale,
   boardPortraitBounds,
   fitBoardToPortraitViewport,
 };

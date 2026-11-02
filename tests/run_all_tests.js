@@ -28,7 +28,11 @@ const {
 } = require('../universal_toolbook/engine/episode');
 const { renderEpisodeFrame } = require('../universal_toolbook/engine/video_renderer');
 const { containRect, coverRect } = require('../universal_toolbook/engine/render_layout');
-const { computePortraitViewport, fitBoardToPortraitViewport } = require('../universal_toolbook/engine/portrait_framing');
+const {
+  computePortraitViewport,
+  computeLandscapePropZoomScale,
+  fitBoardToPortraitViewport,
+} = require('../universal_toolbook/engine/portrait_framing');
 
 registerFonts();
 
@@ -343,6 +347,47 @@ const widerGroupViewport = computePortraitViewport({ fps: 30, scenes: [widerGrou
 });
 assert.strictEqual(widerGroupViewport.width, 607.5, 'Crowded portrait groups should avoid oversized letterboxed crops');
 assert(widerGroupViewport.centerX < 900, 'When the full group cannot fit, framing should retain the nearby focal actor and important prop');
+
+const landscapeCamera = { zoom: 1.2, panX: 0, focusX: 960, focusY: 0.64 * 1080 };
+const landscapePropActor = {
+  id: 'landscape_edge_umbrella',
+  scale: 1.62,
+  beats: [{ start: 0, end: 8, action: 'hold_umbrella', x: 0.92, facing: 1, umbrella_color: '#ef4444' }],
+};
+const landscapePropScene = {
+  duration: 8, startSec: 0, characters: [landscapePropActor], boards: [], props: [], lineTimings: [],
+  portraitFocus: null, portraitFocusX: null,
+};
+const landscapePropScale = computeLandscapePropZoomScale({ fps: 30, scenes: [landscapePropScene] }, 150, {
+  baseWidth: 1920,
+  baseHeight: 1080,
+  floorY: 855,
+  findSceneAtFrame: () => ({ type: 'scene', scene: landscapePropScene }),
+  evaluateSceneCamera: () => landscapeCamera,
+  evaluateSceneSpeechState: () => noSpeech,
+});
+assert(landscapePropScale < 1, 'Landscape camera pushes should ease back when a held prop reaches the frame edge');
+const safeLandscapeActor = {
+  ...landscapePropActor,
+  beats: [{ start: 0, end: 8, action: 'hold_umbrella', x: 0.5, facing: 1, umbrella_color: '#ef4444' }],
+};
+const safeLandscapeScene = { ...landscapePropScene, characters: [safeLandscapeActor] };
+const safeLandscapeScale = computeLandscapePropZoomScale({ fps: 30, scenes: [safeLandscapeScene] }, 150, {
+  baseWidth: 1920,
+  floorY: 855,
+  findSceneAtFrame: () => ({ type: 'scene', scene: safeLandscapeScene }),
+  evaluateSceneCamera: () => landscapeCamera,
+  evaluateSceneSpeechState: () => noSpeech,
+});
+assert.strictEqual(safeLandscapeScale, 1, 'Landscape framing should preserve authored zoom when held props already fit');
+const landscapePropState = evaluateCharacterState(landscapePropActor, 5, 8, 5, 1920, 855, noSpeech);
+const landscapeUmbrella = landscapePropState.heldUmbrella;
+const landscapeUmbrellaCenter = landscapeUmbrella.x + Math.sin(landscapeUmbrella.tilt || 0) * 62 * landscapePropState.s;
+const landscapeUmbrellaHalfWidth = (88 * (Math.abs(Math.cos(landscapeUmbrella.tilt || 0)) + Math.abs(Math.sin(landscapeUmbrella.tilt || 0))) + 5)
+  * landscapePropState.s * landscapeCamera.zoom * landscapePropScale;
+const landscapeProjectedRight = 960 + landscapePropScale * (960 + landscapeCamera.zoom * (landscapeUmbrellaCenter - landscapeCamera.focusX) - 960)
+  + landscapeUmbrellaHalfWidth;
+assert(landscapeProjectedRight <= 1908, 'Landscape framing should bring held umbrellas inside the safe frame edge');
 
 const speakerSpec = JSON.parse(JSON.stringify(spec));
 speakerSpec.scenes[0].line_timings = [
