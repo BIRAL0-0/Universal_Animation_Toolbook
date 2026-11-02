@@ -800,14 +800,6 @@ function renderCharacterPass(ctx, entry, drawMode, parchmentMode, activeLight, s
 
 function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREEN_VIEWPORT, cameraZoomScale = 1) {
   const globalT = frameIdx / episode.fps;
-  if (outW !== BASE_W || outH !== BASE_H) setFrame(outW, outH);
-  const scaleFactor = outW / BASE_W;
-
-  ctx.save();
-  if (scaleFactor !== 1) {
-    ctx.scale(scaleFactor, scaleFactor);
-  }
-
   const frame = normalizeScreenViewport(viewport);
   const hit = findSceneAtFrame(episode, frameIdx);
   if (hit.type === 'outro') {
