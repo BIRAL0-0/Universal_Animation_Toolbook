@@ -12,12 +12,12 @@ single-subject close frame. Short-form can be either aspect when that is what de
 If the user has not specified a format and the choice would change the composition, ask before
 blocking. Render QA stills in every requested format.
 
-Short-form runtime target is **40–90 seconds total**, independent of aspect ratio. Use `--short-form`
-to validate that final speech-locked range without changing the selected orientation; set
-`--aspect-ratio 16:9` for landscape or `9:16` for portrait (the default without a flag is 16:9).
-`--shorts` is specifically the YouTube Shorts profile: it selects 9:16 and applies the same runtime
-gate. Aspect ratio never changes authored episode geometry by stretching; portrait reframes around
-the active speaker or an optional scene-level `portrait_focus` / `portrait_focus_x`.
+Generic short-form targets **40–90 seconds**, independent of aspect ratio. Use `--short-form` to
+validate that speech-locked range without changing orientation; set `--aspect-ratio 16:9` for
+landscape or `9:16` for portrait (default is 16:9). `--shorts` is the vertical YouTube Shorts
+profile: it selects 9:16 and accepts any positive final runtime up to **180 seconds (3 minutes)**,
+including very short clips. Aspect ratio never changes authored geometry by stretching; portrait
+reframes around the active speaker or an optional scene-level `portrait_focus` / `portrait_focus_x`.
 
 ## 1.1 Pick the visual style
 
@@ -68,10 +68,10 @@ So a 15-word narration line ≈ 6 s. If a scene's dialogue totals 40 words, decl
 gets stretched and your `camera_shots`/`beats` timings drift; an oversized one leaves silence.
 
 Declared `duration` is a *planning* number. Expect the final master to land a little under the
-sum of declared scene durations. For a 40–90 second short-form target, let speech retiming settle,
-then use `--short-form` to check the final duration inclusively before video encoding. It reports
-an error rather than truncating or rewriting dialogue when the runtime is out of range. Use
-`--shorts` instead when delivering specifically to vertical YouTube Shorts.
+sum of declared scene durations. For a generic 40–90 second short-form target, let speech retiming
+settle, then use `--short-form` to check the final duration inclusively before encoding. For
+vertical YouTube Shorts, use `--shorts`; any positive final duration up to and including 180 seconds
+is accepted. Either gate reports an error rather than truncating or rewriting dialogue.
 
 ## 1.4 Cast the speakers
 

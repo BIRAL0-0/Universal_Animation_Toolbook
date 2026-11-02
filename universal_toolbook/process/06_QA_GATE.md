@@ -32,7 +32,7 @@ For **each** still:
 python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out /tmp/draft/film_draft.mp4 \
   --draft --voice auto --workers 2 --chunk-sec 20
 # Pair either aspect (--aspect-ratio 16:9 or 9:16) with --short-form for the 40–90 s gate.
-# --shorts is the platform-specific 9:16 profile and also applies that duration gate.
+# --shorts selects 9:16 and validates a positive duration up to 180 s (3 minutes).
 ```
 
 - [ ] For every board: frame at `cue_on + 1.5 s` → panel fully built, populated, in-band

@@ -62,7 +62,7 @@ function actorCompositionBounds(entry, camera, baseWidth) {
     const sin = Math.abs(Math.sin(tilt));
     if (umbrella.open) {
       // Open canopy is about 176×176 authoring pixels, with its center above the grip by the shaft offset.
-      const canopyCenterOffset = finiteNumber(umbrella.shaftLength, 108) - 88 * 0.52;
+      const canopyCenterOffset = finiteNumber(umbrella.shaftLength, 136) - 88 * 0.52;
       const centerX = Number(umbrella.x) + Math.sin(tilt) * canopyCenterOffset * scale;
       const halfWidth = (88 * (cos + sin) + 5) * scale;
       includeWorldX(centerX, halfWidth);

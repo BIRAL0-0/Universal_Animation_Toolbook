@@ -71,9 +71,9 @@ python3 universal_toolbook/run_studio.py stills work/episode.json \
     --out-dir work/stills_portrait --width 1080 --height 1920
 ```
 
-Short-form runtime targets 40–90 seconds independently of aspect ratio. Use `--short-form`
-with `--aspect-ratio 16:9` or `9:16` to enforce the duration; `--shorts` is reserved for
-vertical YouTube Shorts delivery and selects 9:16.
+Generic short-form targets 40–90 seconds independently of aspect ratio. Use `--short-form`
+with `--aspect-ratio 16:9` or `9:16`; `--shorts` selects vertical 9:16 and accepts any positive
+runtime through 180 seconds (3 minutes).
 
 `--voice auto` is required here: the Edge endpoint is unreachable, so the engine falls back to
 the three installed Piper voices and reports what actually ran in `voice_backend`.

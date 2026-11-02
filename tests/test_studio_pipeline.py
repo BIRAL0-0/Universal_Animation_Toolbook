@@ -70,7 +70,10 @@ def main() -> int:
     assert _is_short_form_duration(40) and _is_short_form_duration(90)
     assert not _is_short_form_duration(39.99) and not _is_short_form_duration(90.01)
     assert not _is_short_form_duration(float("nan"))
-    assert _is_shorts_duration(40) and _is_shorts_duration(90)
+    assert _is_shorts_duration(0.01) and _is_shorts_duration(40)
+    assert _is_shorts_duration(90) and _is_shorts_duration(180)
+    assert not _is_shorts_duration(0) and not _is_shorts_duration(-1)
+    assert not _is_shorts_duration(180.01) and not _is_shorts_duration(float("nan"))
 
     # 1. Verify all 7 bundled Creative Commons / NCS-style BGM tracks exist & load
     catalog = load_bgm_catalog()

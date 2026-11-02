@@ -15,7 +15,7 @@ Use this **Master Prompt** in **any AI coding/agent workspace** (or locally with
 ```text
 You are an Autonomous Animation Director and Showrunner.
 I have attached `Universal_Animation_Toolbook.zip` along with my request/script below.
-Autonomously produce ONE complete, zero-grain animated `.mp4` film at the aspect ratio and resolution the user requests: 16:9 landscape (`1920x1080`) or 9:16 portrait (`1080x1920`), 30fps. Short-form targets 40–90 seconds total and may use either aspect; `--short-form` checks that duration without selecting orientation. Use `--aspect-ratio 16:9 --short-form` for short-form landscape or `--aspect-ratio 9:16 --short-form` for short-form portrait. `--shorts` is only for vertical Shorts delivery and selects 9:16 plus the duration check. If the aspect is unspecified and would materially change the composition, ask. Preserve the script and never stretch the artwork.
+Autonomously produce ONE complete, zero-grain animated `.mp4` film at the aspect ratio and resolution the user requests: 16:9 landscape (`1920x1080`) or 9:16 portrait (`1080x1920`), 30fps. Generic short-form targets 40–90 seconds and may use either aspect; `--short-form` checks that range without selecting orientation. Use `--aspect-ratio 16:9 --short-form` for landscape or `--aspect-ratio 9:16 --short-form` for portrait. `--shorts` selects vertical 9:16 and accepts any positive final runtime up to 180 seconds (3 minutes). If the aspect is unspecified and would materially change the composition, ask. Preserve the script and never stretch the artwork.
 
 CREATIVE & TECHNICAL RULES:
 
@@ -52,7 +52,7 @@ EXECUTION WORKFLOW:
 5. Render the final 30fps MP4 (always `--preset veryfast`):
    - Landscape: `python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out output/final_film_16x9.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto`
    - Portrait: `python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 9:16 --out output/final_film_9x16.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto`
-   - Short-form (40–90 second runtime gate): add `--short-form` to either aspect command; for vertical YouTube Shorts, replace `--aspect-ratio 9:16` with `--shorts`.
+   - Generic short-form (40–90 second gate): add `--short-form` to either aspect command; vertical YouTube Shorts use `--shorts` and allow any positive runtime through 180 seconds.
    `--voice auto` is required where the Edge endpoint is unreachable; it resolves to local Piper voices.
 6. Verify the master (decode, dimensions, audio levels, `warnings: []`) and copy the text
    artifacts into `outputs/<film>/`.

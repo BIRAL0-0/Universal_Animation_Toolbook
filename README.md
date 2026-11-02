@@ -80,10 +80,10 @@ python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work
 ```
 
 `--short-form` checks the speech-locked final duration and exits with
-`INVALID_SHORT_FORM_DURATION` if it is outside 40–90 seconds; it does not select an aspect ratio.
-`--shorts` is the vertical 9:16 profile and reports `INVALID_SHORTS_DURATION` on a failed gate.
-For deliberate framing, a scene can set `"portrait_focus": "character_id"` (or `"board"`) /
-`"portrait_focus_x": 0.0..1.0`.
+`INVALID_SHORT_FORM_DURATION` unless it is 40–90 seconds; it does not select an aspect ratio.
+`--shorts` is the vertical 9:16 profile and accepts any positive duration up to 180 seconds
+(3 minutes), reporting `INVALID_SHORTS_DURATION` otherwise. For deliberate framing, a scene can
+set `"portrait_focus": "character_id"` (or `"board"`) / `"portrait_focus_x": 0.0..1.0`.
 
 ## Reference films (episode specs, not renders)
 

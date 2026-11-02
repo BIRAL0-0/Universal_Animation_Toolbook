@@ -133,7 +133,7 @@ function drawHeldAccessoriesAndCallouts(g, state, joints, actor, sceneAccent, gl
     g.rotate(tilt || 0);
 
     if (open) {
-      const shaftLen = (Number(shaftLength) > 0 ? Number(shaftLength) : 108) * s;
+      const shaftLen = (Number(shaftLength) > 0 ? Number(shaftLength) : 136) * s;
       const canopyR = 88 * s;
       const topY = -shaftLen;
       if (isRed) {

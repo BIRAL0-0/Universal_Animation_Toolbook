@@ -50,8 +50,8 @@ python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio
 python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_9x16 --width 1080 --height 1920
 # inspect every still and every board cue, fix, repeat the target-aspect render
 python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out output/final_film_16x9.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
-# Choose --aspect-ratio 16:9 or 9:16 independently; add --short-form for the 40–90s gate.
-# --shorts is specifically 9:16 YouTube Shorts plus that duration gate.
+# Choose --aspect-ratio 16:9 or 9:16 independently; --short-form checks 40–90s without changing it.
+# --shorts selects 9:16 and accepts any positive runtime through 180s (3 minutes).
 ```
 
 The loop that matters is **stills → look → fix → stills**, at the target aspect ratio. Rendering the

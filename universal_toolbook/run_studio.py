@@ -56,7 +56,7 @@ def _resolve_aspect_ratio(aspect_ratio: Optional[str], shorts: bool = False) -> 
 
 
 def _is_short_form_duration(duration_sec: float) -> bool:
-    """The short-form target runtime is 40–90 seconds, inclusive, independent of aspect ratio."""
+    """Generic short-form target is 40–90 seconds, inclusive, independent of aspect ratio."""
     try:
         seconds = float(duration_sec)
         return math.isfinite(seconds) and 40.0 <= seconds <= 90.0
@@ -64,8 +64,13 @@ def _is_short_form_duration(duration_sec: float) -> bool:
         return False
 
 
-# Keep the old private helper name available for existing scripts/tests.
-_is_shorts_duration = _is_short_form_duration
+def _is_shorts_duration(duration_sec: float) -> bool:
+    """YouTube Shorts accepts any positive duration through 180 seconds (3 minutes), inclusive."""
+    try:
+        seconds = float(duration_sec)
+        return math.isfinite(seconds) and 0.0 < seconds <= 180.0
+    except (TypeError, ValueError):
+        return False
 
 
 def ensure_dependencies(auto_install: bool = True) -> Dict[str, Any]:
@@ -441,22 +446,37 @@ def cmd_render(args: argparse.Namespace) -> int:
     comp_wrap = _compile_episode_via_node(retimed_ep_file, width, height, args.subtitles)
     compiled = comp_wrap["episode"]
     chapters_txt = comp_wrap["chaptersTxt"]
-    if short_form and not _is_short_form_duration(compiled["totalDuration"]):
-        status = "INVALID_SHORTS_DURATION" if args.shorts else "INVALID_SHORT_FORM_DURATION"
-        print(
-            json.dumps(
-                {
-                    "status": status,
-                    "duration_sec": round(float(compiled["totalDuration"]), 3),
-                    "aspect_ratio": aspect_ratio,
-                    "required_range_sec": [40, 90],
-                    "hint": "Short-form duration is measured after speech retiming. Adjust dialogue/pacing; --short-form enforces 40–90 seconds without changing aspect ratio, while --shorts additionally selects 9:16.",
-                },
-                indent=2,
-            ),
-            file=sys.stderr,
+    if short_form:
+        duration_sec = float(compiled["totalDuration"])
+        duration_valid = (
+            _is_shorts_duration(duration_sec) if args.shorts else _is_short_form_duration(duration_sec)
         )
-        return 2
+        if not duration_valid:
+            if args.shorts:
+                status = "INVALID_SHORTS_DURATION"
+                duration_policy = "Shorts duration must be greater than 0 and at most 180 seconds (3 minutes)."
+                duration_range = [0, 180]
+                range_bounds = {"minimum": "exclusive", "maximum": "inclusive"}
+            else:
+                status = "INVALID_SHORT_FORM_DURATION"
+                duration_policy = "Short-form duration must be from 40 to 90 seconds, inclusive."
+                duration_range = [40, 90]
+                range_bounds = {"minimum": "inclusive", "maximum": "inclusive"}
+            print(
+                json.dumps(
+                    {
+                        "status": status,
+                        "duration_sec": round(duration_sec, 3),
+                        "aspect_ratio": aspect_ratio,
+                        "required_range_sec": duration_range,
+                        "range_bounds": range_bounds,
+                        "hint": duration_policy,
+                    },
+                    indent=2,
+                ),
+                file=sys.stderr,
+            )
+            return 2
 
     total_frames = int(compiled["totalFrames"])
     fps = int(compiled["fps"])
@@ -779,7 +799,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     pr.add_argument(
         "--shorts", action="store_true",
-        help="YouTube Shorts profile: selects 9:16 and validates final speech-locked runtime is 40–90 seconds.",
+        help="YouTube Shorts profile: selects 9:16 and allows any positive final runtime up to 180 seconds.",
     )
     pr.add_argument("--draft", action="store_true", help="Fast preview: 960x540 (landscape) or 540x960 (portrait)")
     pr.add_argument("--full", action="store_true", help="Full master: 1920x1080 landscape or 1080x1920 portrait")

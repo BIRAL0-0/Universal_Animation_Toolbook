@@ -154,4 +154,4 @@ prioritize its speaker. Set `portrait_focus`/`portrait_focus_x` for a deliberate
 composition, then inspect that portrait still.
 Use `--aspect-ratio 9:16` for portrait (or `16:9` for landscape) at any runtime. Add
 `--short-form` to enforce a 40–90 second speech-locked duration without changing the aspect;
-`--shorts` selects the vertical 9:16 profile and applies the same runtime gate.
+`--shorts` selects the vertical 9:16 profile and accepts any positive runtime up to 180 seconds.

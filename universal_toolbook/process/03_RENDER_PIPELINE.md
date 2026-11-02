@@ -47,7 +47,8 @@ One PNG per scene, named `<sceneId>_<environment>.png`. `--limit N` renders only
 scenes, which is handy while iterating. Inspect the stills in every requested output aspect ratio;
 landscape camera pushes protect held props at the frame edge, while portrait framing follows the
 active speaker or configured `portrait_focus`, includes held props, and uniformly fits nearby
-narration-led groups; boards are repositioned inside the portrait safe area.
+narration-led groups; boards are repositioned inside the portrait safe area. Open umbrellas use a
+136 px shaft so the canopy clears the holder's face; render bounds use that same geometry.
 
 **Stills are sampled near the start of each scene**, so a board cued later in the scene will
 NOT be in the still. That is expected; boards are verified from the draft instead (Step 3).
@@ -91,7 +92,7 @@ python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect
 python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 9:16 --short-form \
   --out output/short_portrait.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 
-# For delivery specifically to YouTube Shorts, --shorts is shorthand for 9:16 plus the duration gate.
+# For YouTube Shorts, --shorts selects 9:16 and accepts any positive runtime through 180 seconds.
 python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts \
   --out output/youtube_shorts.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 ```
@@ -101,7 +102,7 @@ python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts
 | `--aspect-ratio 16:9` | 1920×1080 @ 30 fps landscape master; this remains the default |
 | `--aspect-ratio 9:16` | 1080×1920 @ 30 fps portrait master; aspect-preserving subject crop, no stretch |
 | `--short-form` | Strict inclusive 40–90 second final-duration check; does not select an aspect ratio |
-| `--shorts` | YouTube Shorts profile: selects 9:16 and applies the same duration check |
+| `--shorts` | YouTube Shorts profile: selects 9:16 and accepts any positive duration up to 180 seconds (3 minutes) |
 | `--preset veryfast` | the documented encode path; slower presets blow the time budget for no visible gain on flat vector art |
 | `--crf 24` | visually transparent on this art style, keeps files ~8 MB/min |
 | `--chunk-sec 45` | chunk length for parallel workers; shorter = more overhead, longer = worse resume granularity |

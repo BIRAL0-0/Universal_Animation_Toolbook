@@ -54,7 +54,7 @@ python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio
 
 # 5b. Render short-form and enforce the 40–90 s speech-locked duration (orientation is separate)
 python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 16:9 --short-form --out output/final_short_landscape.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume
-# For short-form portrait, use --aspect-ratio 9:16 --short-form; for YouTube Shorts, use --shorts.
+# Portrait generic short-form uses --aspect-ratio 9:16 --short-form; --shorts selects 9:16 and allows any positive duration up to 180 s.
 
 # 6. Offline neural voices (only needed when the Edge endpoint is unreachable)
 pip install piper-tts
@@ -68,9 +68,9 @@ python3 universal_toolbook/run_studio.py render examples/cel_two_inch_bridge_epi
     --chunk-sec 45 --workers 2 --resume --voice auto
 ```
 
-Short-form films target 40–90 seconds, independently of aspect ratio. Use `--short-form` with
-`--aspect-ratio 16:9` or `9:16` to validate the runtime without changing orientation; `--shorts`
-is reserved for vertical YouTube Shorts delivery (9:16 plus the same duration gate).
+Generic short-form targets 40–90 seconds, independently of aspect ratio. Use `--short-form` with
+`--aspect-ratio 16:9` or `9:16` to validate that range without changing orientation. `--shorts`
+selects vertical 9:16 and accepts any positive duration up to 180 seconds (3 minutes).
 
 ## Where to start a new film
 

@@ -267,6 +267,15 @@ function assertHeldObjectFitsPortrait(action, actorId, boundsForState, label, be
     .map((point) => screenX(point[0]));
   const left = Math.min(...actorXs, object.left);
   const right = Math.max(...actorXs, object.right);
+  if (state.heldUmbrella?.open) {
+    const item = state.heldUmbrella;
+    const tilt = item.tilt || 0;
+    const canopyBottomY = item.y + Math.cos(tilt) * (
+      -item.shaftLength + 88 * 0.52 - 88 * Math.sin(0.04 * Math.PI)
+    ) * state.s;
+    const faceTopY = rig.world.head[1] - BONES.HEAD_R * state.s;
+    assert(canopyBottomY <= faceTopY - 6 * state.s, `${label} canopy should clear the holder's face`);
+  }
   assert(viewport.left <= left - 8, `${label} and actor should fit inside the portrait crop's left safe margin`);
   assert(viewport.right >= right + 8, `${label} and actor should fit inside the portrait crop's right safe margin`);
   assert(viewport.width <= 1920, 'Object-aware portrait crop must stay within the authored stage');
@@ -274,11 +283,19 @@ function assertHeldObjectFitsPortrait(action, actorId, boundsForState, label, be
 assertHeldObjectFitsPortrait('hold_umbrella', 'umbrella_holder', (state, screenX) => {
   const item = state.heldUmbrella;
   const tilt = item.tilt || 0;
-  const canopyCenterOffset = (item.shaftLength || 108) - 88 * 0.52;
+  const canopyCenterOffset = (item.shaftLength || 136) - 88 * 0.52;
   const center = screenX(item.x + Math.sin(tilt) * canopyCenterOffset * state.s);
   const halfWidth = (88 * (Math.abs(Math.cos(tilt)) + Math.abs(Math.sin(tilt))) + 5) * state.s * portraitCamera.zoom;
   return { left: center - halfWidth, right: center + halfWidth };
 }, 'Open umbrella');
+assertHeldObjectFitsPortrait('walk_umbrella', 'umbrella_walker', (state, screenX) => {
+  const item = state.heldUmbrella;
+  const tilt = item.tilt || 0;
+  const canopyCenterOffset = item.shaftLength - 88 * 0.52;
+  const center = screenX(item.x + Math.sin(tilt) * canopyCenterOffset * state.s);
+  const halfWidth = (88 * (Math.abs(Math.cos(tilt)) + Math.abs(Math.sin(tilt))) + 5) * state.s * portraitCamera.zoom;
+  return { left: center - halfWidth, right: center + halfWidth };
+}, 'Walking open umbrella');
 assertHeldObjectFitsPortrait('offer_umbrella', 'umbrella_offerer', (state, screenX) => {
   const item = state.heldUmbrella;
   const tilt = item.tilt || 0;
@@ -319,7 +336,8 @@ const groupScaleX = (x) => 960 + groupViewport.cameraZoomScale * (960 + groupCam
 const umbrellaState = evaluateCharacterState(groupActors[0], 5, 8, 5, 1920, 855, noSpeech);
 const umbrellaItem = umbrellaState.heldUmbrella;
 const umbrellaTilt = umbrellaItem.tilt || 0;
-const umbrellaCenter = umbrellaItem.x + Math.sin(umbrellaTilt) * 62 * umbrellaState.s;
+const umbrellaCenterOffset = (umbrellaItem.shaftLength || 136) - 88 * 0.52;
+const umbrellaCenter = umbrellaItem.x + Math.sin(umbrellaTilt) * umbrellaCenterOffset * umbrellaState.s;
 const umbrellaHalfWidth = (88 * (Math.abs(Math.cos(umbrellaTilt)) + Math.abs(Math.sin(umbrellaTilt))) + 5) * umbrellaState.s * groupCamera.zoom * groupViewport.cameraZoomScale;
 const listenerState = evaluateCharacterState(groupActors[1], 5, 8, 5, 1920, 855, noSpeech);
 const listenerRig = skeleton(listenerState.x, listenerState.fy, listenerState.s, listenerState.pose, listenerState.flip);

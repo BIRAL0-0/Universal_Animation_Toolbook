@@ -7,10 +7,10 @@ This reference defines the complete JSON schema compiled by `engine/episode.js` 
 Aspect ratio is a render-time delivery choice, independent of episode JSON and script length. The
 same spec can be rendered as 16:9 landscape (1920×1080) or 9:16 portrait (1080×1920); the renderer
 preserves geometry and reframes rather than stretching. Choose the aspect according to the script
-and destination. For short-form delivery, target 40–90 seconds total; `--short-form` checks the
-final speech-locked runtime (inclusive) without selecting an aspect ratio. Pair it with
-`--aspect-ratio 16:9` or `9:16` (default is 16:9). `--shorts` specifically selects 9:16 and applies
-the same gate for vertical YouTube Shorts.
+and destination. Generic short-form targets 40–90 seconds; `--short-form` checks that final
+speech-locked range without selecting an aspect ratio. Pair it with `--aspect-ratio 16:9` or
+`9:16` (default is 16:9). `--shorts` selects vertical 9:16 and accepts any positive runtime up to
+180 seconds (3 minutes), so very short Shorts are valid.
 
 ```bash
 python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 16:9 --short-form --out output/short_16x9.mp4 --full
