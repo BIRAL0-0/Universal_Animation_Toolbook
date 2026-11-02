@@ -247,6 +247,63 @@ def _make_sfx_clip(sfx_type: str) -> np.ndarray:
             note += harm * amp * np.exp(-1.05 * t)
         return (note * attack * 0.18).astype(np.float32)
 
+    # --- "The Wall You Agreed With" foley -------------------------------------------------
+    if sfx_type == "body_thud":
+        # Flat impact: a 92 Hz body drop plus a short wooden knock. Reads as "wall, not door".
+        n = int(0.42 * SAMPLE_RATE)
+        t = np.arange(n, dtype=np.float32) / SAMPLE_RATE
+        body = np.sin(2.0 * np.pi * (92.0 - 34.0 * t) * t) * np.exp(-9.5 * t)
+        knock = rng.normal(0.0, 1.0, n).astype(np.float32) * np.exp(-42.0 * t) * 0.30
+        knock = np.convolve(knock, np.ones(6, dtype=np.float32) / 6.0, mode="same")
+        return ((body * 0.62 + knock) * 0.42).astype(np.float32)
+
+    if sfx_type == "trombone_sad":
+        # Four descending muted-trombone notes ("wah wah wah waaah"). Harmonics + vibrato,
+        # no sample, so it stays inside the synthesized-foley convention of this mixer.
+        n = int(1.85 * SAMPLE_RATE)
+        t = np.arange(n, dtype=np.float32) / SAMPLE_RATE
+        out = np.zeros(n, dtype=np.float32)
+        notes = [(233.08, 0.00, 0.34), (220.00, 0.38, 0.34), (207.65, 0.76, 0.34), (174.61, 1.14, 0.70)]
+        for f0, t0, dur in notes:
+            i0 = int(t0 * SAMPLE_RATE)
+            m = min(n - i0, int(dur * SAMPLE_RATE))
+            if m <= 0:
+                continue
+            tt = np.arange(m, dtype=np.float32) / SAMPLE_RATE
+            vib = np.sin(2.0 * np.pi * 5.4 * tt) * (0.9 + 2.4 * (tt / dur))
+            glide = 1.0 - 0.06 * (tt / dur) ** 2
+            ph = 2.0 * np.pi * f0 * glide * tt + vib
+            tone = (
+                np.sin(ph) * 0.52
+                + np.sin(2.0 * ph) * 0.26
+                + np.sin(3.0 * ph) * 0.13
+                + np.sin(4.0 * ph) * 0.06
+            )
+            env = np.minimum(1.0, tt / 0.045) * np.exp(-2.1 * tt / dur)
+            env[-int(0.06 * SAMPLE_RATE):] *= np.linspace(1.0, 0.0, min(m, int(0.06 * SAMPLE_RATE)))
+            out[i0 : i0 + m] += (tone * env * 0.30).astype(np.float32)
+        return (out * 0.55).astype(np.float32)
+
+    if sfx_type == "record_scratch":
+        # A hand dragging a needle backwards: band-limited noise chopped by a fast gate.
+        n = int(0.46 * SAMPLE_RATE)
+        t = np.arange(n, dtype=np.float32) / SAMPLE_RATE
+        noise = rng.normal(0.0, 1.0, n).astype(np.float32)
+        noise = np.convolve(noise, np.ones(4, dtype=np.float32) / 4.0, mode="same")
+        gate = 0.5 + 0.5 * np.sin(2.0 * np.pi * (34.0 + 90.0 * t) * t)
+        env = np.minimum(1.0, t / 0.012) * np.exp(-5.2 * t)
+        scratch = noise * (0.35 + 0.65 * gate) * env
+        return (scratch * 0.60).astype(np.float32)
+
+    if sfx_type == "beat_drop":
+        # Kick + sub + a bright transient. Marks the cut into the montage.
+        n = int(1.30 * SAMPLE_RATE)
+        t = np.arange(n, dtype=np.float32) / SAMPLE_RATE
+        kick = np.sin(2.0 * np.pi * (150.0 * np.exp(-9.0 * t) + 42.0) * t) * np.exp(-5.0 * t)
+        sub = np.sin(2.0 * np.pi * 41.2 * t) * np.exp(-2.4 * t) * 0.45
+        click = rng.normal(0.0, 1.0, n).astype(np.float32) * np.exp(-95.0 * t) * 0.22
+        return ((kick * 0.62 + sub + click) * 0.40).astype(np.float32)
+
     if sfx_type == "chapter_chime":
         n = int(0.90 * SAMPLE_RATE)
         t = np.arange(n, dtype=np.float32) / SAMPLE_RATE

@@ -1,0 +1,14 @@
+{
+  "valid": true,
+  "duration": 46,
+  "frames": 1380,
+  "dimensions": [
+    1080,
+    1920
+  ],
+  "fps": 30,
+  "film_grain": false,
+  "voiced": true,
+  "voice_backend": "piper-offline:en_US-ryan-medium",
+  "warnings": []
+}

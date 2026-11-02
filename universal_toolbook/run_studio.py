@@ -411,6 +411,10 @@ def cmd_render(args: argparse.Namespace) -> int:
     out_mp4 = Path(args.out).resolve()
     out_mp4.parent.mkdir(parents=True, exist_ok=True)
 
+    if getattr(args, "portrait", False):
+        width, height = (540, 960) if args.draft else (1080, 1920)
+    else:
+        width, height = (960, 540) if args.draft else (1920, 1080)
     crf = 18 if args.draft else args.crf
     preset = "veryfast" if args.draft else args.preset
 
@@ -825,6 +829,8 @@ def build_parser() -> argparse.ArgumentParser:
     pr.add_argument("--workers", type=int, default=0, help="Parallel chunk render workers (0 = auto)")
     pr.add_argument("--max-chunks", type=int, default=0)
     pr.add_argument("--resume", action="store_true")
+    pr.add_argument("--portrait", action="store_true",
+                    help="Vertical 9:16 master (1080x1920) for Shorts/Reels")
 
     pa = sub.add_parser("player", help="Create self-contained HTML5 player + download wrapper")
     pa.add_argument("mp4")

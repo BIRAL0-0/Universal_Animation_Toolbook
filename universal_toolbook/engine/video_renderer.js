@@ -6,8 +6,21 @@ const { spawn } = require('child_process');
 const { createCanvas, rawFrameBytes, rawPixelFormat } = require('./canvas_backend');
 
 const { registerFonts } = require('./font');
+const { drawWallProp } = require('./impossible_wall');
 const { clamp, lerp, ease, eio, eo, ca, hexToRgb, mixRgb, rgbCss, BONES, drawFigure } = require('./character_rig');
-const { FLOOR_Y, drawEnvironment, drawSoftGlow } = require('./environments');
+const { FLOOR_Y: FLOOR_Y_LANDSCAPE, drawEnvironment, drawSoftGlow } = require('./environments');
+// Mutable so a portrait frame can move the ground line down with the taller canvas.
+let FLOOR_Y = FLOOR_Y_LANDSCAPE;
+const FLOOR_RATIO = FLOOR_Y_LANDSCAPE / 1080;
+
+/** Re-target the authoring space (and the ground line) to a new frame size. */
+function setFrame(w, h) {
+  BASE_W = w;
+  BASE_H = h;
+  // Portrait keeps the ground line lower in the frame (more headroom above), landscape keeps the
+  // original 855/1080 ratio so every existing film renders byte-identically.
+  FLOOR_Y = h > w ? Math.round(h * 0.82) : Math.round(h * FLOOR_RATIO);
+}
 const { drawWorldProp, drawWorldBoard, drawForegroundLayer } = require('./world_props_and_boards');
 const { evaluateCharacterState, resolveSceneInteractions } = require('./motion_library');
 const { compileEpisode } = require('./episode');
@@ -35,8 +48,11 @@ const {
   drawParchmentIntertitle,
 } = require('./parchment_ink_style');
 
-const BASE_W = 1920;
-const BASE_H = 1080;
+// Authoring space. Landscape by default; `setFrame()` swaps it to a portrait canvas (1080x1920)
+// for vertical/Shorts cuts. Every layout constant below is derived from these two numbers, so a
+// portrait render reframes instead of cropping.
+let BASE_W = 1920;
+let BASE_H = 1080;
 const portraitScratchByContext = new WeakMap();
 
 const SPLIT_FURNITURE_TYPES = new Set([
@@ -712,6 +728,20 @@ function evaluateSceneSpeechState(sc, ts) {
   return { activeSpeaker, activeLine, talkAmount, viseme, hasCharacterDialogue };
 }
 
+/**
+ * Draw every `ink_caption` prop in screen space, ignoring the scene camera.
+ *
+ * Captions carry the film's text beats, so they must never pan, zoom, or clip at the frame edge.
+ */
+function drawScreenCaptionPass(g, sc, ts) {
+  const props = Array.isArray(sc.props) ? sc.props : [];
+  for (const prop of props) {
+    if (prop && prop.type === 'ink_caption') {
+      drawWallProp(g, prop, BASE_W, FLOOR_Y, ts, ts, prop.scale ?? 1.0, BASE_H);
+    }
+  }
+}
+
 function renderCharacterPass(ctx, entry, drawMode, parchmentMode, activeLight, speechState, globalT) {
   const { actor, state } = entry;
   const actorIsSpeaking = Boolean(
@@ -770,6 +800,14 @@ function renderCharacterPass(ctx, entry, drawMode, parchmentMode, activeLight, s
 
 function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREEN_VIEWPORT, cameraZoomScale = 1) {
   const globalT = frameIdx / episode.fps;
+  if (outW !== BASE_W || outH !== BASE_H) setFrame(outW, outH);
+  const scaleFactor = outW / BASE_W;
+
+  ctx.save();
+  if (scaleFactor !== 1) {
+    ctx.scale(scaleFactor, scaleFactor);
+  }
+
   const frame = normalizeScreenViewport(viewport);
   const hit = findSceneAtFrame(episode, frameIdx);
   if (hit.type === 'outro') {
@@ -802,7 +840,7 @@ function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREE
 
   // 1. Render custom parametric setting OR built-in environment (ZERO grain!)
   const envInfo = parchmentMode
-    ? drawParchmentEnvironment(ctx, sc.setting, globalT, ts, panX, FLOOR_Y)
+    ? drawParchmentEnvironment(ctx, sc.setting, globalT, ts, panX, FLOOR_Y, BASE_W, BASE_H)
     : drawEnvironment(ctx, sc.setting || sc.environment, globalT, panX, sc.accentColor);
   const activeLight = sc.accentColor || envInfo.lightColor;
 
@@ -1164,6 +1202,13 @@ function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREE
     }
   }
 
+  // Screen-space story captions. These are PROPS in the spec but must not live in world space:
+  // a camera zoom would drag them off-frame and clip the text. Drawn after the camera restore,
+  // before subtitles, so a caption always outranks the line art underneath it.
+  if (parchmentMode) {
+    drawScreenCaptionPass(ctx, sc, ts);
+  }
+
   if (parchmentMode) {
     drawParchmentSubtitle(ctx, sc.subtitles, ts, episode.subtitlesMode, frame);
   } else {
@@ -1446,6 +1491,7 @@ function renderSceneStills({ episode, outDir, width = 1920, height = 1080, scene
   const paths = [];
   for (const sc of picked) {
     const midFrame = sc.startFrame + Math.floor((sc.endFrame - sc.startFrame) * 0.58);
+    setFrame(width, height);
     renderEpisodeFrame(ctx, width, height, episode, midFrame);
     const outPath = path.join(outDir, `${sc.id}_${sc.environment}.png`);
     fs.writeFileSync(outPath, canvas.toBuffer('image/png'));
@@ -1530,6 +1576,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+  setFrame,
   BASE_W,
   BASE_H,
   renderEpisodeFrame,

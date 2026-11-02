@@ -504,11 +504,15 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
       s,
       flip: wm.flip,
       pose: wm.pose,
-      pushedBoulder: {
-        x: (bx + dir * 56 * s) / W,
-        scale: s,
-        label: beat.boulder_label || beat.label || 'FRICTION',
-      },
+      // `hide_boulder: true` keeps the push gesture but drops the prop, for beats where the
+      // character is shoving something that already exists in the scene (a wall, a door).
+      pushedBoulder: beat.hide_boulder
+        ? null
+        : {
+            x: (bx + dir * 56 * s) / W,
+            scale: s,
+            label: beat.boulder_label || beat.label || 'FRICTION',
+          },
     };
   }
 

@@ -1,0 +1,23 @@
+{
+  "container": {
+    "file": "outputs/the_wall_you_agreed_with/the_wall_you_agreed_with_1080x1920.mp4",
+    "bytes": 6383920,
+    "sha256": "889886520b712e9b0d1a5c5eed7be58d2b048a7adb563ff191c601ed421f08ef",
+    "resolution": "1080x1920",
+    "fps": 30,
+    "duration_sec": 46.0,
+    "frames": 1380,
+    "video": "h264 High yuv420p 905 kb/s",
+    "audio": "aac LC 44100 Hz stereo 196 kb/s",
+    "full_decode": "clean (0 errors, 0 warnings)"
+  },
+  "mix": {
+    "true_peak_dbfs": -2.88,
+    "program_rms_dbfs": -20.67,
+    "clipping_samples": 0,
+    "narration_median_dbfs": -15.76,
+    "bed_median_dbfs": -34.57,
+    "narration_over_bed_db": 18.82,
+    "speech_total_sec": 10.25
+  }
+}

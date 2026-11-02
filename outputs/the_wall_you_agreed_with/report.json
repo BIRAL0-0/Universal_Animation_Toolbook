@@ -1,0 +1,133 @@
+{
+  "status": "COMPLETE",
+  "title": "The Wall You Agreed With",
+  "output_mp4": "/home/user/Universal_Animation_Toolbook/output/wall_short_1080x1920.mp4",
+  "size_mb": 6.088,
+  "resolution": "1080x1920",
+  "fps": 30,
+  "film_grain": false,
+  "duration_sec": 46,
+  "duration_min": 0.77,
+  "scene_count": 6,
+  "voice_backend": "piper-offline:en_US-ryan-medium",
+  "voiced": true,
+  "voice_mode": "piper",
+  "voice_diagnosis": [],
+  "warnings": [],
+  "audio": {
+    "wav_path": "/home/user/Universal_Animation_Toolbook/output/.work_wall_short_1080x1920/master_audio.wav",
+    "duration_sec": 46.0,
+    "voiced_scenes": 6,
+    "sfx_events": 110,
+    "peak_dbfs": -2.87,
+    "bgm": {
+      "mode": "dynamic_cc",
+      "tracks_used": [
+        {
+          "id": "electronic_drive",
+          "file": "electronic_drive.mp3",
+          "title": "Catalyst",
+          "artist": "Scott Buckley",
+          "license": "CC BY 4.0",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Catalyst.oga",
+          "moods": [
+            "focus",
+            "analytical",
+            "tech",
+            "science",
+            "business",
+            "systems"
+          ],
+          "keywords": [
+            "system",
+            "data",
+            "code",
+            "tech",
+            "algorithm",
+            "science",
+            "build",
+            "engineer",
+            "process",
+            "strategy",
+            "economy",
+            "market",
+            "future",
+            "ai"
+          ],
+          "description": "Crisp modern electronic pulse and cinematic synth drive for tech, science, business, and analytical storytelling.",
+          "duration_sec": 179.08,
+          "size_mb": 2.05
+        },
+        {
+          "id": "reflective_piano",
+          "file": "reflective_piano.mp3",
+          "title": "Where Stars Fall",
+          "artist": "Scott Buckley",
+          "license": "CC BY 4.0",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Where_Stars_Fall.oga",
+          "moods": [
+            "reflective",
+            "emotional",
+            "philosophy",
+            "psychology",
+            "essay"
+          ],
+          "keywords": [
+            "mind",
+            "life",
+            "meaning",
+            "psychology",
+            "emotion",
+            "memory",
+            "human",
+            "philosophy",
+            "lonely",
+            "think",
+            "soul",
+            "story",
+            "time"
+          ],
+          "description": "Deep reflective piano and ambient pads for psychology, philosophy, biography, and emotional video essays.",
+          "duration_sec": 179.18,
+          "size_mb": 2.05
+        },
+        {
+          "id": "upbeat_ncs_synth",
+          "file": "upbeat_ncs_synth.mp3",
+          "title": "Regeneration",
+          "artist": "QuarksUnited",
+          "license": "CC BY 3.0",
+          "source_url": "https://commons.wikimedia.org/wiki/File:QuarksUnited_-_Regeneration_(Trance).opus",
+          "moods": [
+            "energetic",
+            "upbeat",
+            "inspiring",
+            "action",
+            "ncs"
+          ],
+          "keywords": [
+            "energy",
+            "fast",
+            "challenge",
+            "win",
+            "game",
+            "creator",
+            "launch",
+            "momentum",
+            "speed",
+            "sport",
+            "fitness",
+            "action",
+            "power"
+          ],
+          "description": "High-energy NCS-style melodic electronic synth track for upbeat, action-driven, or energetic creator scripts.",
+          "duration_sec": 180.0,
+          "size_mb": 2.06
+        }
+      ],
+      "credits_text": "Music: \"Catalyst\" by Scott Buckley (CC BY 4.0) \u2014 https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Catalyst.oga\nMusic: \"Where Stars Fall\" by Scott Buckley (CC BY 4.0) \u2014 https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Where_Stars_Fall.oga\nMusic: \"Regeneration\" by QuarksUnited (CC BY 3.0) \u2014 https://commons.wikimedia.org/wiki/File:QuarksUnited_-_Regeneration_(Trance).opus"
+    }
+  },
+  "chapters_file": "/home/user/Universal_Animation_Toolbook/output/wall_short_1080x1920_chapters.txt",
+  "elapsed_sec": 36.09
+}

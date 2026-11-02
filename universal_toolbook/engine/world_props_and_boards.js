@@ -5,6 +5,9 @@ const { drawSoftGlow } = require('./environments');
 // Harbor-beacon prop extension (lighthouse, lamp mechanism, boats, fog, oil flask, workbench).
 // Drawn in its own module so this file keeps one dispatch line; see engine/beacon_harbor.js.
 const { BEACON_PROPS, drawBeaconProp } = require('./beacon_harbor');
+// Wall-fable set: ghost wall, impact/ripple FX, chalk door, crates, big captions.
+const { WALL_PROPS, drawWallProp } = require('./impossible_wall');
+const WALL_PROP_SET = new Set(WALL_PROPS);
 const BEACON_PROP_SET = new Set(BEACON_PROPS);
 
 const K = (t, a, b) => (b <= a ? 1 : clamp((t - a) / (b - a)));
@@ -43,6 +46,7 @@ const SUPPORTED_PROPS = Object.freeze([
   'curtain_window',
   'park_tree',
   ...BEACON_PROPS,
+  ...WALL_PROPS,
 ]);
 
 const SUPPORTED_BOARDS = Object.freeze([
@@ -71,6 +75,15 @@ function drawWorldProp(g, prop, W, floorY, t, sceneAccent = '#38bdf8', sceneT = 
   if (BEACON_PROP_SET.has(prop.type)) {
     if (propPass === 'front_only') return;
     drawBeaconProp(g, prop, W, floorY, t, ts, s);
+    return;
+  }
+
+  // Wall-fable set, same single-dispatch pattern.
+  if (WALL_PROP_SET.has(prop.type)) {
+    if (propPass === 'front_only') return;
+    // Captions are screen-space (see drawScreenCaptionPass in video_renderer.js).
+    if (prop.type === 'ink_caption') return;
+    drawWallProp(g, prop, W, floorY, t, ts, s);
     return;
   }
 
