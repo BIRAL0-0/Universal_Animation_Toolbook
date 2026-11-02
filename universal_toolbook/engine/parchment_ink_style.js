@@ -1107,7 +1107,7 @@ function drawInkStickFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
 /**
  * Stick-House Top Headline Banner (matching sddefault.jpg bold black + crimson emphasis!)
  */
-function drawParchmentHeadline(g, chapterTitle, ts) {
+function drawParchmentHeadline(g, chapterTitle, ts, viewport = { left: 0, width: 1920, centerX: 960 }) {
   if (!chapterTitle || ts > 4.4) return;
   const enter = eo(clamp(ts / 0.45));
   const exit = ts > 3.6 ? 1 - ease(clamp((ts - 3.6) / 0.8)) : 1;
@@ -1131,20 +1131,34 @@ function drawParchmentHeadline(g, chapterTitle, ts) {
 
   g.save();
   g.globalAlpha = vis;
-  g.font = 'bold 42px PopB';
+  const frameLeft = Number(viewport.left) || 0;
+  const frameWidth = Math.max(1, Math.min(1920, Number(viewport.width) || 1920));
+  const centerX = Number.isFinite(Number(viewport.centerX)) ? Number(viewport.centerX) : frameLeft + frameWidth * 0.5;
+  const maxTextW = Math.max(120, frameWidth - 96);
+  let fontSize = 42;
+  let w1 = 0;
+  let w2 = 0;
+  while (fontSize > 16) {
+    g.font = `bold ${fontSize}px PopB`;
+    w1 = g.measureText(blackPart).width;
+    w2 = g.measureText(redPart).width;
+    if (w1 + w2 <= maxTextW) break;
+    fontSize -= 1;
+  }
+  g.font = `bold ${fontSize}px PopB`;
+  w1 = g.measureText(blackPart).width;
+  w2 = g.measureText(redPart).width;
   g.textBaseline = 'middle';
-  const w1 = g.measureText(blackPart).width;
-  const w2 = g.measureText(redPart).width;
   const totalW = w1 + w2;
-  const startX = 960 - totalW * 0.5;
+  const startX = centerX - totalW * 0.5;
   const y = lerp(52, 74, enter);
 
   // Soft paper plate: the chapter headline is screen-space, so background line art (window frames,
   // lamps, clocks) can drift behind it during camera moves. A low-alpha cream wash keeps the ink
   // legible without reading as a visible card.
-  const plateW = totalW + 76;
+  const plateW = Math.min(frameWidth - 16, totalW + 76);
   const plateH = 74;
-  const plateX = 960 - plateW * 0.5;
+  const plateX = centerX - plateW * 0.5;
   const plateY = y - plateH * 0.5;
   const plateGrad = g.createLinearGradient(plateX, 0, plateX + plateW, 0);
   plateGrad.addColorStop(0, 'rgba(247, 238, 219, 0)');
@@ -1169,7 +1183,7 @@ function drawParchmentHeadline(g, chapterTitle, ts) {
 /**
  * Parchment-styled Cinema Subtitles (warm cream pill, dark ink words, crimson highlights)
  */
-function drawParchmentSubtitle(g, subtitles, ts, mode = 'cinema') {
+function drawParchmentSubtitle(g, subtitles, ts, mode = 'cinema', viewport = { left: 0, width: 1920, centerX: 960 }) {
   if (mode === 'off' || !Array.isArray(subtitles) || subtitles.length === 0) return;
   let active = null;
   for (const sub of subtitles) {
@@ -1189,8 +1203,11 @@ function drawParchmentSubtitle(g, subtitles, ts, mode = 'cinema') {
   g.globalAlpha = alpha;
   g.font = 'bold 30px PopB';
   g.textBaseline = 'middle';
+  const frameLeft = Number(viewport.left) || 0;
+  const frameWidth = Math.max(1, Math.min(1920, Number(viewport.width) || 1920));
+  const centerX = Number.isFinite(Number(viewport.centerX)) ? Number(viewport.centerX) : frameLeft + frameWidth * 0.5;
 
-  const maxLineW = 1360;
+  const maxLineW = Math.max(140, Math.min(1360, frameWidth - 80));
   const spaceW = g.measureText(' ').width;
   const lines = [];
   let curLine = [];
@@ -1219,13 +1236,13 @@ function drawParchmentSubtitle(g, subtitles, ts, mode = 'cinema') {
   g.strokeStyle = 'rgba(26, 22, 18, 0.42)';
   g.lineWidth = 2.2;
   g.beginPath();
-  g.roundRect(960 - maxW * 0.5, centerY - totalH * 0.5, maxW, totalH, 14);
+  g.roundRect(centerX - maxW * 0.5, centerY - totalH * 0.5, maxW, totalH, 14);
   g.fill();
   g.stroke();
 
   g.textAlign = 'left';
   lines.forEach((line, lIdx) => {
-    let x = 960 - line.width * 0.5;
+    let x = centerX - line.width * 0.5;
     const y = centerY - ((lines.length - 1) * lineH) * 0.5 + lIdx * lineH + 1;
 
     let activeIdx = -1;
@@ -1278,7 +1295,7 @@ function drawParchmentSubtitle(g, subtitles, ts, mode = 'cinema') {
 /**
  * Warm Parchment Closing Intertitle (ink black + crimson payoff quote)
  */
-function drawParchmentIntertitle(g, intertitle, ts) {
+function drawParchmentIntertitle(g, intertitle, ts, viewport = { left: 0, width: 1920, centerX: 960 }) {
   if (!intertitle || ts < (intertitle.start_at ?? 0)) return;
   const iu = ease(clamp((ts - (intertitle.start_at ?? 0)) / 0.85));
   g.save();
@@ -1287,15 +1304,26 @@ function drawParchmentIntertitle(g, intertitle, ts) {
   g.drawImage(bg, 0, 0);
 
   const lines = intertitle.lines || [];
+  const frameLeft = Number(viewport.left) || 0;
+  const frameWidth = Math.max(1, Math.min(1920, Number(viewport.width) || 1920));
+  const centerX = Number.isFinite(Number(viewport.centerX)) ? Number(viewport.centerX) : frameLeft + frameWidth * 0.5;
+  const maxTextW = Math.max(140, frameWidth - 80);
   const lh = 64;
   const y0 = 540 - ((lines.length - 1) * lh) * 0.5;
   lines.forEach((ln, idx) => {
     const isLast = idx === lines.length - 1 && lines.length > 1;
-    g.font = isLast ? 'bold 46px PopB' : 'bold 38px PopB';
+    let size = isLast ? 46 : 38;
+    const weight = 'bold';
+    while (size > 18) {
+      g.font = `${weight} ${size}px PopB`;
+      if (g.measureText(String(ln)).width <= maxTextW) break;
+      size -= 1;
+    }
+    g.font = `${weight} ${size}px PopB`;
     g.fillStyle = isLast ? CRIMSON : INK;
     g.textAlign = 'center';
     g.textBaseline = 'middle';
-    g.fillText(String(ln), 960, y0 + idx * lh);
+    g.fillText(String(ln), centerX, y0 + idx * lh, maxTextW);
   });
   g.restore();
 }

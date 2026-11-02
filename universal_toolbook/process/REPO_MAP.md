@@ -34,7 +34,9 @@ Universal_Animation_Toolbook/
 │   │   └── episode_minimal.json     ★ validated 2-scene episode that renders as-is
 │   │
 │   ├── engine/                      ★ THE RENDERER — where a frame is actually drawn
-│   │   ├── video_renderer.js           frame compositor: camera, z-order, subtitles, chapters, grain switch
+│   │   ├── video_renderer.js           frame compositor: aspect-preserving output, camera, z-order, overlays
+│   │   ├── render_layout.js             shared output geometry, viewport, and text-fit helpers
+│   │   ├── portrait_framing.js          speaker-aware 9:16 crop and safe-area board placement
 │   │   ├── episode.js                  timeline: beats → tracks, speech-driven retiming, cue resolution
 │   │   ├── character_rig.js            bodies, faces, hair, accessories, IK, walk cycles
 │   │   ├── motion_library.js           the 60 actions (walk, sit, point, hand off, …)
@@ -108,7 +110,7 @@ Run from the folder that contains `universal_toolbook/` and address the kit expl
 python3 universal_toolbook/run_studio.py check
 python3 universal_toolbook/run_studio.py validate work/episode.json
 python3 universal_toolbook/run_studio.py render examples/cel_two_inch_bridge_episode.json \
-  --out output/final_film_1080p.mp4 --full --preset veryfast --crf 24 \
+  --aspect-ratio 16:9 --out output/final_film_16x9.mp4 --full --preset veryfast --crf 24 \
   --chunk-sec 45 --workers 2 --resume --voice auto
 ```
 

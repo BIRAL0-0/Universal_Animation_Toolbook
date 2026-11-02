@@ -6,8 +6,8 @@ Commands:
   check      Verify Node/Python/FFmpeg/fonts/BGM & run zero-grain render smoke check
   bgm-list   List bundled Creative Commons / NCS-style BGM tracks & mood keywords
   validate   Validate episode JSON (and optional 100% source script word fidelity)
-  stills     Render razor-sharp 1920x1080 PNG scene stills for visual QA
-  render     Synthesize voiceover, render zero-grain 16:9 video, mix CC/NCS BGM & foley
+  stills     Render razor-sharp scene stills for landscape or portrait visual QA
+  render     Synthesize voiceover, render zero-grain 16:9 or 9:16 video, mix CC/NCS BGM & foley
   player     Package an MP4 into a self-contained HTML5 video player + download file
 """
 
@@ -31,6 +31,26 @@ from typing import Any, Dict, List, Optional, Tuple
 
 STUDIO_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(STUDIO_ROOT))
+
+
+def _render_dimensions(aspect_ratio: str, draft: bool = False) -> Tuple[int, int]:
+    """Choose 16:9 landscape or 9:16 portrait output without changing either axis independently."""
+    sizes = {
+        "16:9": ((960, 540), (1920, 1080)),
+        "9:16": ((540, 960), (1080, 1920)),
+    }
+    if aspect_ratio not in sizes:
+        raise ValueError(f"Unsupported aspect ratio {aspect_ratio!r}; choose 16:9 or 9:16.")
+    return sizes[aspect_ratio][0 if draft else 1]
+
+
+def _is_shorts_duration(duration_sec: float) -> bool:
+    """Shorts profile targets the user's requested 40–90 second range, inclusive."""
+    try:
+        seconds = float(duration_sec)
+        return math.isfinite(seconds) and 40.0 <= seconds <= 90.0
+    except (TypeError, ValueError):
+        return False
 
 
 def ensure_dependencies(auto_install: bool = True) -> Dict[str, Any]:
@@ -353,6 +373,16 @@ def _voice_diagnosis(deps: Dict[str, Any]) -> List[str]:
 
 
 def cmd_render(args: argparse.Namespace) -> int:
+    if args.shorts and args.aspect_ratio not in (None, "9:16"):
+        print("--shorts always renders 9:16; remove --aspect-ratio or set it to 9:16.", file=sys.stderr)
+        return 2
+    aspect_ratio = "9:16" if args.shorts else (args.aspect_ratio or "16:9")
+    try:
+        width, height = _render_dimensions(aspect_ratio, args.draft)
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+
     t0 = time.time()
     deps = ensure_dependencies(auto_install=True)
     ffmpeg_bin = deps["ffmpeg"]
@@ -361,7 +391,6 @@ def cmd_render(args: argparse.Namespace) -> int:
     out_mp4 = Path(args.out).resolve()
     out_mp4.parent.mkdir(parents=True, exist_ok=True)
 
-    width, height = (960, 540) if args.draft else (1920, 1080)
     crf = 18 if args.draft else args.crf
     preset = "veryfast" if args.draft else args.preset
 
@@ -398,6 +427,20 @@ def cmd_render(args: argparse.Namespace) -> int:
     comp_wrap = _compile_episode_via_node(retimed_ep_file, width, height, args.subtitles)
     compiled = comp_wrap["episode"]
     chapters_txt = comp_wrap["chaptersTxt"]
+    if args.shorts and not _is_shorts_duration(compiled["totalDuration"]):
+        print(
+            json.dumps(
+                {
+                    "status": "INVALID_SHORTS_DURATION",
+                    "duration_sec": round(float(compiled["totalDuration"]), 3),
+                    "required_range_sec": [40, 90],
+                    "hint": "Shorts are retimed to synthesized speech; adjust scene dialogue/pacing or render with --aspect-ratio 9:16 without the --shorts duration gate.",
+                },
+                indent=2,
+            ),
+            file=sys.stderr,
+        )
+        return 2
 
     total_frames = int(compiled["totalFrames"])
     fps = int(compiled["fps"])
@@ -545,6 +588,8 @@ def cmd_render(args: argparse.Namespace) -> int:
                 "duration": compiled["totalDuration"],
                 "frames": compiled["totalFrames"],
                 "dimensions": [width, height],
+                "aspect_ratio": aspect_ratio,
+                "output_profile": "shorts" if args.shorts else ("portrait" if aspect_ratio == "9:16" else "landscape"),
                 "fps": fps,
                 "film_grain": False,
                 "voiced": vo_backend != "text-led",
@@ -562,6 +607,8 @@ def cmd_render(args: argparse.Namespace) -> int:
         "output_mp4": str(out_mp4),
         "size_mb": round(out_mp4.stat().st_size / (1024 * 1024), 3),
         "resolution": f"{width}x{height}",
+        "aspect_ratio": aspect_ratio,
+        "output_profile": "shorts" if args.shorts else ("portrait" if aspect_ratio == "9:16" else "landscape"),
         "fps": fps,
         "film_grain": False,
         "duration_sec": compiled["totalDuration"],
@@ -694,18 +741,26 @@ def build_parser() -> argparse.ArgumentParser:
     pv.add_argument("episode")
     pv.add_argument("--script", default=None, help="Optional raw script file to verify 100% fidelity")
 
-    ps = sub.add_parser("stills", help="Render 1920x1080 PNG scene stills for visual QA")
+    ps = sub.add_parser("stills", help="Render landscape or portrait PNG scene stills for visual QA")
     ps.add_argument("episode")
     ps.add_argument("--out-dir", default="output/stills")
     ps.add_argument("--width", type=int, default=1920)
     ps.add_argument("--height", type=int, default=1080)
     ps.add_argument("--limit", type=int, default=12)
 
-    pr = sub.add_parser("render", help="Render complete voiced 16:9 story MP4 with CC/NCS BGM")
+    pr = sub.add_parser("render", help="Render a voiced 16:9 landscape or 9:16 portrait MP4")
     pr.add_argument("episode")
     pr.add_argument("--out", default="output/story_episode.mp4")
-    pr.add_argument("--draft", action="store_true", help="Fast 960x540 @ 30fps preview")
-    pr.add_argument("--full", action="store_true", help="Full 1920x1080 @ 30fps master (default)")
+    pr.add_argument(
+        "--aspect-ratio", "--aspect", dest="aspect_ratio", choices=["16:9", "9:16"], default=None,
+        help="Output composition: 16:9 landscape (default) or 9:16 portrait. Geometry is preserved; frames are reframed, never stretched.",
+    )
+    pr.add_argument(
+        "--shorts", action="store_true",
+        help="9:16 portrait profile; validates final speech-locked runtime is between 40 and 90 seconds.",
+    )
+    pr.add_argument("--draft", action="store_true", help="Fast preview: 960x540 (landscape) or 540x960 (portrait)")
+    pr.add_argument("--full", action="store_true", help="Full master: 1920x1080 landscape or 1080x1920 portrait")
     pr.add_argument(
         "--bgm",
         default=None,

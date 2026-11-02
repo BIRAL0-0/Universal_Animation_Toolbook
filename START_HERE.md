@@ -5,8 +5,9 @@ resolves from here; nothing is implied.
 
 ## 1. What this repository is
 
-`universal_toolbook/` renders a film from a single JSON spec: 1920×1080, 30 fps, zero grain,
-multi-voice narration, Creative Commons music, synchronised foley. Everything else in the
+`universal_toolbook/` renders a film from a single JSON spec in either 1920×1080 landscape or
+1080×1920 portrait at 30 fps, with zero grain, multi-voice narration, Creative Commons music and
+synchronised foley. The renderer reframes, never stretches; everything else in the
 repository is a film, a test, or a result.
 
 ```
@@ -57,9 +58,20 @@ python3 universal_toolbook/run_studio.py stills work/episode.json \
 python3 universal_toolbook/run_studio.py render work/episode.json \
     --out /tmp/draft/film.mp4 --draft --voice auto --workers 2 --chunk-sec 20
 python3 universal_toolbook/run_studio.py render work/episode.json \
-    --out output/final_film_1080p.mp4 --full --preset veryfast \
+    --out output/final_film_16x9.mp4 --aspect-ratio 16:9 --full --preset veryfast \
     --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
+
+# Render the same script as a vertical Short (the final speech-locked runtime must be 40–90 s)
+python3 universal_toolbook/run_studio.py render work/short_episode.json \
+    --out output/final_short.mp4 --shorts --full --preset veryfast --voice auto
+
+# Portrait QA stills: inspect the crop/safe areas before encoding
+python3 universal_toolbook/run_studio.py stills work/episode.json \
+    --out-dir work/stills_portrait --width 1080 --height 1920
 ```
+
+Short-form runtime targets 40–90 seconds, but choose landscape or portrait from the requested
+composition/platform; a short landscape delivery uses `--aspect-ratio 16:9`, not `--shorts`.
 
 `--voice auto` is required here: the Edge endpoint is unreachable, so the engine falls back to
 the three installed Piper voices and reports what actually ran in `voice_backend`.
@@ -88,7 +100,7 @@ so you can catch it before rendering; `--voice none` is the only way to ask for 
 ## 5. Five rules that are never optional
 
 1. `validate` must print `warnings: []`.
-2. Render 1080p stills and **look at them** before any full render.
+2. Render full-resolution stills in the requested aspect ratio (landscape, portrait, or both) and **look at them** before any full render.
 3. Film grain stays off.
 4. Never overwrite an existing master — use a new filename and say so.
 5. Report only numbers that came out of a file the run produced.

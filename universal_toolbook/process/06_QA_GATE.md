@@ -10,7 +10,9 @@ The definition of "finished". Every box is ticked **on a rendered frame**, never
 - [ ] `duration_sec`, `scene_count`, `sound_events` match the plan
 - [ ] If a verbatim script was supplied: validated against it, 100 % preserved
 
-## 1 — 1080p stills — anatomy, occlusion, subtitles, framing
+## 1 — Full-resolution stills — anatomy, occlusion, subtitles, framing
+
+Render and inspect every requested output aspect ratio: 1920×1080 for 16:9 and/or 1080×1920 for 9:16. Portrait framing may crop a non-focused actor; it must keep the intended subject and critical graphics visible.
 
 For **each** still:
 
@@ -18,17 +20,18 @@ For **each** still:
 - [ ] Nobody floats: shoes on the floor line (y 855) or on the furniture their pose expects
 - [ ] Seated poses only on seated beats, with a desk/chair under them
 - [ ] Name tags clear of boards, props and the chapter strip
-- [ ] Subtitle card clear of faces and props; no text touching the outer 5 %
-- [ ] Nothing cropped by the frame edge (props, trees, clocks, calendars)
+- [ ] Subtitle card clear of faces and props; no text touching the target aspect's safe margins
+- [ ] No unintended crops of focal characters or critical graphics; portrait may crop a distant secondary actor
 - [ ] Background is not an empty black field; floor has ground or set dressing
 - [ ] Character colours read apart: two figures are distinguishable at thumbnail size
-- [ ] Any board is inside y ≈ 104 … 272 and not over a tag or a face
+- [ ] Any board fits its requested viewport and is not over a tag or a face
 
 ## 2 — Draft — timing, boards, cuts
 
 ```bash
-python3 universal_toolbook/run_studio.py render work/episode.json --out /tmp/draft/film_draft.mp4 \
+python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out /tmp/draft/film_draft.mp4 \
   --draft --voice auto --workers 2 --chunk-sec 20
+# Choose --aspect-ratio 9:16 for portrait, or --shorts for the 40–90 second Shorts gate.
 ```
 
 - [ ] For every board: frame at `cue_on + 1.5 s` → panel fully built, populated, in-band
@@ -45,13 +48,12 @@ python3 universal_toolbook/run_studio.py render work/episode.json --out /tmp/dra
 ## 3 — Master
 
 ```bash
-python3 universal_toolbook/run_studio.py render work/episode.json --out output/final_film_1080p.mp4 \
+python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out output/final_film_16x9.mp4 \
   --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 ```
 
-- [ ] `final_film_1080p_validation_report.json` → `valid: true`, `film_grain: false`,
-      `voiced: true`, `warnings: []`, `frames ≈ duration × 30`
-- [ ] `ffprobe` → 1920×1080, 30 fps, h264 + aac
+- [ ] `<film_stem>_validation_report.json` (e.g. `final_film_16x9_validation_report.json` or `final_film_9x16_validation_report.json`) → `valid: true`, `film_grain: false`, `voiced: true`, `warnings: []`, `frames ≈ duration × 30`
+- [ ] `ffprobe` → requested dimensions (1920×1080 landscape or 1080×1920 portrait), 30 fps, h264 + aac
 - [ ] `ffmpeg -v error -i out.mp4 -f null -` prints nothing (full decode)
 - [ ] Audio peak ≤ −1 dBFS, RMS −16 … −19 dBFS (parse `master_audio.wav`)
 - [ ] Spot-check ≥ 10 frames across the timeline: start, each scene head, each board, ending

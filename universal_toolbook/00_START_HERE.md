@@ -1,4 +1,4 @@
-# Universal Animation Toolbook v3 (16:9 Cinema & Hand-Inked Parchment Video Engine)
+# Universal Animation Toolbook v3 (16:9 Landscape & 9:16 Portrait Video Engine)
 
 A clean, modular, AI-agnostic animation and audio production engine designed to run inside **any AI coding/agent workspace** or locally via **Node.js + Python**.
 
@@ -7,7 +7,7 @@ Provide **any AI** with:
 2. The prompt in `MASTER_PROMPT.md`
 3. Your script or story topic
 
-The AI autonomously designs **custom characters (with hairstyles, articulated hands, grounded shoes, and biomechanical posture)**, **unified z-depth environments & furniture/vehicle occlusion**, **speech-locked 2D camera cuts & visual charts**, **multi-cast neural voiceover with dead-air compaction**, **non-flickering glowing subtitles**, **sidechain-ducked Creative Commons BGM**, and **synchronized foley SFX**, rendering a **razor-sharp, zero-grain `1920x1080` (`30 fps`) `.mp4` film**.
+The AI autonomously designs **custom characters (with hairstyles, articulated hands, grounded shoes, and biomechanical posture)**, **unified z-depth environments & furniture/vehicle occlusion**, **speech-locked 2D camera cuts & visual charts**, **multi-cast neural voiceover with dead-air compaction**, **non-flickering glowing subtitles**, **sidechain-ducked Creative Commons BGM**, and **synchronized foley SFX**, rendering a **zero-grain `1920x1080` landscape or `1080x1920` portrait (`30 fps`) `.mp4`**. Portrait output uses subject-aware framing and safe-zone layout; it never stretches the art.
 
 ---
 
@@ -45,11 +45,15 @@ python3 universal_toolbook/run_studio.py bgm-list
 cp universal_toolbook/templates/episode_minimal.json work/episode.json
 python3 universal_toolbook/run_studio.py validate work/episode.json
 
-# 4. Render 1920x1080 PNG scene stills for visual QA before full video encoding
-python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills --width 1920 --height 1080 --limit 8
+# 4. Render QA stills in the requested output aspect ratio before encoding
+python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_landscape --width 1920 --height 1080 --limit 8
+python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_portrait --width 1080 --height 1920 --limit 8
 
-# 5. Render full 1920x1080 @ 30fps voiced MP4 with parallel workers (always use --preset veryfast)
-python3 universal_toolbook/run_studio.py render work/episode.json --out output/final_1080p.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume
+# 5. Render full 16:9 landscape @ 30fps (use --aspect-ratio 9:16 for portrait)
+python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out output/final_landscape.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume
+
+# 5b. Render a 9:16 Short and enforce the requested 40–90 second speech-locked duration
+python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts --out output/final_short.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume
 
 # 6. Offline neural voices (only needed when the Edge endpoint is unreachable)
 pip install piper-tts
@@ -59,9 +63,12 @@ python3 universal_toolbook/tools/fetch_piper_voices.py install --from-dir /path/
 # 7. Reference films: complete episode specs to copy structure and pacing from
 python3 universal_toolbook/run_studio.py validate examples/cel_two_inch_bridge_episode.json
 python3 universal_toolbook/run_studio.py render examples/cel_two_inch_bridge_episode.json \
-    --out output/final_film_1080p.mp4 --full --preset veryfast --crf 24 \
+    --out output/final_film_16x9.mp4 --aspect-ratio 16:9 --full --preset veryfast --crf 24 \
     --chunk-sec 45 --workers 2 --resume --voice auto
 ```
+
+Short-form films target 40–90 seconds, independently of aspect ratio. Use `--shorts` only for a
+vertical Shorts delivery (9:16 plus duration gate); a landscape short uses `--aspect-ratio 16:9`.
 
 ## Where to start a new film
 

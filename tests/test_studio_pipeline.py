@@ -23,10 +23,29 @@ from tools.fetch_piper_voices import hf_relpath
 from tools.script_helper import segment_user_script, verify_script_fidelity
 
 sys.path.insert(0, str(ROOT.parent))
-from universal_toolbook.run_studio import _voice_diagnosis  # noqa: E402
+from universal_toolbook.run_studio import (  # noqa: E402
+    _is_shorts_duration,
+    _render_dimensions,
+    _voice_diagnosis,
+    build_parser,
+)
 
 
 def main() -> int:
+    # 0. Aspect-ratio profiles preserve 16:9 / 9:16 dimensions at draft and master sizes.
+    assert _render_dimensions("16:9") == (1920, 1080)
+    assert _render_dimensions("9:16") == (1080, 1920)
+    assert _render_dimensions("16:9", draft=True) == (960, 540)
+    assert _render_dimensions("9:16", draft=True) == (540, 960)
+    parser = build_parser()
+    portrait_args = parser.parse_args(["render", "episode.json", "--aspect", "9:16"])
+    shorts_args = parser.parse_args(["render", "episode.json", "--shorts"])
+    assert portrait_args.aspect_ratio == "9:16" and portrait_args.shorts is False
+    assert shorts_args.shorts is True and shorts_args.aspect_ratio is None
+    assert _is_shorts_duration(40) and _is_shorts_duration(90)
+    assert not _is_shorts_duration(39.99) and not _is_shorts_duration(90.01)
+    assert not _is_shorts_duration(float("nan"))
+
     # 1. Verify all 7 bundled Creative Commons / NCS-style BGM tracks exist & load
     catalog = load_bgm_catalog()
     assert len(catalog) == 7, f"Expected 7 bundled CC/NCS BGM tracks, got {len(catalog)}"

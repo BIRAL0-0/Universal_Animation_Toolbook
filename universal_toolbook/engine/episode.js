@@ -646,6 +646,22 @@ function compileEpisode(spec, options = {}) {
       moveDur: cam.move_dur !== undefined ? Number(cam.move_dur) : null,
     };
 
+    const portraitFocus = sc.portrait_focus !== undefined && sc.portrait_focus !== null
+      ? String(sc.portrait_focus)
+      : null;
+    let portraitFocusX = null;
+    if (sc.portrait_focus_x !== undefined) {
+      const rawPortraitFocusX = Number(sc.portrait_focus_x);
+      if (Number.isFinite(rawPortraitFocusX) && rawPortraitFocusX >= 0 && rawPortraitFocusX <= 1) {
+        portraitFocusX = rawPortraitFocusX;
+      } else {
+        warnings.push(`[${id}] portrait_focus_x must be a normalized value from 0 to 1; automatic portrait framing will be used.`);
+      }
+    }
+    if (portraitFocus && portraitFocus !== 'board' && !characters.some((ch) => String(ch.id) === portraitFocus)) {
+      warnings.push(`[${id}] portrait_focus "${portraitFocus}" does not match a character id or "board"; automatic portrait framing will be used.`);
+    }
+
     const cameraShots = Array.isArray(sc.camera_shots) && sc.camera_shots.length > 0
       ? sc.camera_shots.map((sh) => {
           const fx = sh.focus_x ?? sh.focusX ?? 0.5;
@@ -705,6 +721,8 @@ function compileEpisode(spec, options = {}) {
       boards: Array.isArray(sc.boards) ? sc.boards : (resolvedBoard ? [resolvedBoard] : []),
       camera,
       cameraShots,
+      portraitFocus,
+      portraitFocusX,
       sfx: Array.isArray(sc.sfx) ? sc.sfx : [],
     };
   });

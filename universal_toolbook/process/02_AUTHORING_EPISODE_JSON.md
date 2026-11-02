@@ -9,6 +9,12 @@ cp universal_toolbook/templates/episode_minimal.json work/episode.json
 python3 universal_toolbook/run_studio.py validate work/episode.json      # "warnings": []
 ```
 
+Delivery aspect is selected at render time; the same authored JSON can produce landscape and
+portrait masters. Use 16:9 or 9:16 according to the script and publishing requirement, not merely
+because a piece is short. For vertical composition, scenes may set `portrait_focus` to a cast id
+or `"board"`, or `portrait_focus_x` to a normalized stage x from 0 to 1. See
+`04_VISUAL_GEOMETRY.md` for how portrait focus and safe-area boards work.
+
 ---
 
 ## 2.1 Top level
@@ -84,6 +90,8 @@ See `05_AUDIO.md` for what actually happens to these names offline.
   "duration": 12.0,                         // planned length (speech retimes it)
   "min_duration": 10.0,
   "lead_in": 0.7, "tail_out": 0.6,
+  "portrait_focus": "hero",           // optional: character id or "board"
+  "portrait_focus_x": 0.42,           // optional: normalized stage x, overrides portrait_focus
   "props": [ { "type": "clock", "x": 0.88, "y": 110, "z": -12 } ],
   "camera_shots": [ … ],
   "characters":   [ … ],
@@ -120,12 +128,15 @@ See `05_AUDIO.md` for what actually happens to these names offline.
 
 First shot uses `start: 0`; every later shot uses `cue_on` with the **exact multi-word phrase**
 from the dialogue that motivates it. `zoom` 1.0–1.25 only; `focus_x/y` 0.3–0.7 keeps the frame
-from drifting off the cast.
+from drifting off the cast. In portrait output, `portrait_focus` / `portrait_focus_x` controls the
+separate 9:16 crop; automatic focus follows the speaking character when possible, without changing
+the authored camera or stretching the scene.
 
 ### `boards[]`
 
 ```jsonc
 { "type": "notebook_page", "x": 0.64, "y": 104, "w": 560, "h": 168,
+  "portrait_w": 520, "portrait_x": 0.5,  // optional 9:16 width and normalized horizontal center
   "build_dur": 1.1, "bold_first": true,
   "lines": ["THE PLAN, IN INK:", "Two weeks.", "Nobody will check."],
   "cue_on": "two weeks", "hold_sec": 5.5 }
@@ -134,6 +145,10 @@ from drifting off the cast.
 Board types: `notebook_page`, `stat_cards`, `bar_chart`, `line_graph`, `flow_chain`,
 `cycle_loop`, `iceberg`, `checklist_card`, `sketch_card`, `child_drawing`, `phone_card`,
 `obsessive_rule_card`, … (full list in the reference). Keep `y: 104`, `h: 168`, `build_dur ≤ 1.2`.
+The portrait compositor automatically fits each board into its visible crop. Optional `portrait_w`
+(authored-stage width) and `portrait_x` (authored-stage or normalized `0..1` center) override the
+automatic width and horizontal placement for portrait renders only; the whole board, including its
+text, is scaled uniformly.
 
 ### `dialogue[]`
 

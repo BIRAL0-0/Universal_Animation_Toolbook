@@ -17,8 +17,10 @@ Two ways to use it:
 
 ```text
 You are directing one animated film inside the repository "Universal_Animation_Toolbook".
-Goal: ONE finished, zero-grain, 16:9 MP4 — 1920x1080, 30 fps — with multi-voice narration,
-Creative Commons BGM and synchronised foley, built with the engine in universal_toolbook/.
+Goal: ONE finished, zero-grain MP4 in the user's requested format — 16:9 landscape (1920x1080)
+or 9:16 portrait (1080x1920), 30 fps — with multi-voice narration, Creative Commons BGM and
+synchronised foley, built with the engine in universal_toolbook/. Reuse the same episode JSON for
+both sizes when requested; aspect changes must reframe, never stretch.
 
 STEP 0 — ORIENT (do not skip, do not guess paths)
   Read START_HERE.md at the repository root first. It contains the bootstrap commands and the
@@ -46,7 +48,7 @@ THREE TIERS OF RULE — know which one you are touching
 
   INVARIANTS — never changed, for any reason:
     - validate must print "warnings": [] before rendering
-    - render 1080p stills and LOOK at every one before any full render
+    - render and LOOK at full-resolution stills in every requested aspect ratio before any full render
     - film grain stays OFF
     - "status": "COMPLETE" alone is not proof of a film: the report must also say
       "voiced": true. COMPLETE_SILENT / exit code 3 means no narration was synthesized — fix the
@@ -57,15 +59,17 @@ THREE TIERS OF RULE — know which one you are touching
       validate work/episode.json --script <script.txt> and report the fidelity result
 
   DEFAULTS — correct for almost every request; change only with a stated reason:
-    - 1920x1080 / 30 fps, 16:9
+    - 1920x1080 / 30 fps, 16:9 when the user has not specified another aspect; otherwise honor the request (9:16 = 1080x1920)
+    - Choose `--aspect-ratio 16:9` or `9:16` from the request and script; a short-form video may use either aspect
+    - Short-form target runtime: 40–90 seconds total. `--shorts` is only for vertical Shorts delivery (9:16 + final-runtime check); landscape short-form uses `--aspect-ratio 16:9`
     - render flags: --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume
     - --voice auto (Edge/Azure is unreachable here; this resolves to local Piper voices)
-    - output paths output/final_film_1080p.mp4 and output/final_film_1080p_chapters.txt
-    - 6-10 scenes of 10-20 s (short form). Long-form specs exist in examples/ but are slower
+    - default output paths output/final_film_16x9.mp4 and output/final_film_16x9_chapters.txt (use matching `_9x16` names for portrait)
+    - derive scene count and pacing from the supplied script and requested total runtime; see 01_INTAKE.md
     - copy universal_toolbook/templates/episode_minimal.json as the starting skeleton
 
   ASK-FIRST — stop and ask the user rather than deciding alone:
-    - anything that changes aspect ratio, resolution or frame rate
+    - when the user has not specified an aspect and landscape versus portrait would materially change the deliverable; if specified, select it directly
     - a non-English script (only English voice models are installed)
     - more than 3 distinct speaking characters (3 voices are installed)
     - a runtime over ~5 minutes, or a change that multiplies render time by 2x or more
@@ -77,7 +81,7 @@ WORKFLOW
   verify the master -> copy text artifacts to outputs/<film>/ -> report paths + measured numbers
 
 DELIVERY
-  output/final_film_1080p.mp4 and output/final_film_1080p_chapters.txt
+  output/final_film_16x9.mp4 / output/final_film_9x16.mp4 and their matching chapters files
   Plus the master and text mirrors in outputs/<film>/ (mp4 when it stays under ~50 MB,
   plus chapters, report, validation, cue sheet, storyboard, NOTES.md)
   because large binaries do not always survive a transfer. If a viewer refuses video:

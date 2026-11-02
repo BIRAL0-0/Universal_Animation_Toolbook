@@ -2,6 +2,21 @@
 
 This reference defines the complete JSON schema compiled by `engine/episode.js` and rendered by `run_studio.py`. Characters, hairstyles, hands, shoes, voices, settings, z-depth props, speech-locked boards, speech-locked camera moves, glowing subtitles, SFX, and BGM are **100% parameter-driven from JSON**.
 
+## Output framing and short-form profiles
+
+Aspect ratio is a render-time delivery choice, independent of episode JSON and script length. The
+same spec can be rendered as 16:9 landscape (1920×1080) or 9:16 portrait (1080×1920); the renderer
+preserves geometry and reframes rather than stretching. Choose the aspect according to the script
+and destination. For short-form delivery, target 40–90 seconds total; `--shorts` specifically
+selects 9:16 and checks the final speech-locked runtime (inclusive). A short landscape film or a
+portrait film outside that range uses `--aspect-ratio` without the Shorts duration gate.
+
+```bash
+python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out output/film_16x9.mp4 --full
+python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 9:16 --out output/film_9x16.mp4 --full
+python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts --out output/short_9x16.mp4 --full
+```
+
 ---
 
 ## 1. Top-Level Episode Schema
@@ -105,6 +120,22 @@ Shots can either specify fixed `start`/`end` seconds OR snap directly to spoken 
 ]
 ```
 
+### Per-scene portrait framing (`portrait_focus`, `portrait_focus_x`)
+
+```json
+{
+  "portrait_focus": "lead",
+  "portrait_focus_x": 0.42
+}
+```
+
+These optional fields live on a scene. `portrait_focus` names a character id or `"board"`;
+otherwise the automatic crop eases toward the active character speaker when possible. Set
+`portrait_focus_x` to a normalized authored-stage position from `0` to `1` when narration needs a
+specific point of interest; it takes precedence over `portrait_focus`. Portrait framing affects
+only 9:16 output, and inactive characters outside the crop may not be visible. Inspect portrait
+stills before rendering the master.
+
 ### Unified Z-Depth Layering & Automatic Furniture / Embrace Occlusion
 - Every prop, board, vehicle, and character accepts optional numeric `"z"` (default: boards `-18`, back lane `-12`, standard props `-4`, characters `0`, front lane `+18`) or `"layer": "far_back" | "back" | "mid" | "front" | "far_front"`.
 - **Split-Depth Furniture**: When a character sits/stands at `"desk"`, `"clean_desk"`, `"messy_desk"`, `"cafe_table"`, `"judge_table"`, or `"podium"`, the renderer automatically splits the prop into `back_only` (chair behind character) and `front_only` (tabletop over legs/waist, underneath typing/gesturing hands).
@@ -113,6 +144,7 @@ Shots can either specify fixed `start`/`end` seconds OR snap directly to spoken 
 ### Speech-Locked In-World Boards (`board` or `boards`) — Safe-Zone Clamped & Auto-Hiding
 - **Types (`13`)**: `"stat_cards"` (`cards: [{ "value": "9 PM", "label": "..." }]`), `"line_graph"`, `"flow_chain"`, `"bar_chart"`, `"cycle_loop"`, `"iceberg"`, `"checklist_card"`, `"notebook_page"`, `"sketch_card"`, `"child_drawing"`, `"phone_card"`, `"obsessive_rule_card"`, `"photo_back_card"`.
 - **`x`, `y`, `w`, `h`**: Accept EITHER normalized `0..1` viewport fractions OR pixel values, automatically clamped inside safe screen margins so boards never clip edges or overlap subtitles.
+- **Portrait-only overrides**: `portrait_w` sets an authored-stage width; `portrait_x` sets its authored-stage horizontal center (normalized `0..1` or pixels). Omit both to fit and center the board automatically. Reframing scales the complete board uniformly, including typography.
 - **Timing**: Set `"cue_on": "multi-word spoken phrase"` and `"hide_on": "closing phrase"` (or `"hold_sec": 6.0`). Unless `"persist": true` is set, boards automatically fade out after a clean reading window (`build_dur + 4.0s`) rather than lingering for the rest of the scene.
 
 ### All 60 Zero-Stretch Biomechanical Actions (`action` / `beats[j].action`)
