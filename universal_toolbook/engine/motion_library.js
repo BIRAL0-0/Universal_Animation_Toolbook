@@ -1108,6 +1108,8 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
         y: sk.world.al[2][1],
         color: beat.umbrella_color || '#1e293b',
         open: Boolean(beat.umbrella_open),
+        // Raise an offered open canopy clear of the recipient's face while the hand stays on the grip.
+        shaftLength: beat.umbrella_open ? 136 : 108,
         tilt: facing * (beat.umbrella_open ? 0.10 : 0.36),
         facing,
       },

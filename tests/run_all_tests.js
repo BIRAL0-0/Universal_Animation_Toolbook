@@ -28,7 +28,7 @@ const {
 } = require('../universal_toolbook/engine/episode');
 const { renderEpisodeFrame } = require('../universal_toolbook/engine/video_renderer');
 const { containRect, coverRect } = require('../universal_toolbook/engine/render_layout');
-const { fitBoardToPortraitViewport } = require('../universal_toolbook/engine/portrait_framing');
+const { computePortraitViewport, fitBoardToPortraitViewport } = require('../universal_toolbook/engine/portrait_framing');
 
 registerFonts();
 
@@ -230,6 +230,120 @@ assert(portraitLayout.viewport.width >= 1080 * (540 / 960) - 1, 'Portrait source
 assert(portraitLayout.viewport.width <= 1920, 'Portrait crop must stay within the authored stage');
 assert(portraitLayout.viewport.centerX >= portraitLayout.viewport.left);
 assert(portraitLayout.viewport.centerX <= portraitLayout.viewport.right);
+
+// Held objects (not only the speaker's body) are part of the portrait composition envelope.
+const portraitCamera = { zoom: 1.28, panX: 0, focusX: 0.56 * 1920, focusY: 0.64 * 1080 };
+const noSpeech = { activeSpeaker: null, activeLine: null, hasCharacterDialogue: false };
+function assertHeldObjectFitsPortrait(action, actorId, boundsForState, label, beatOverrides = {}) {
+  const actor = {
+    id: actorId,
+    scale: 1.62,
+    beats: [{ start: 0, end: 8, action, x: 0.62, facing: 1, umbrella_color: '#ef4444', ...beatOverrides }],
+  };
+  const scene = {
+    duration: 8, startSec: 0, characters: [actor], boards: [], props: [], lineTimings: [],
+    portraitFocus: null, portraitFocusX: null,
+  };
+  const episode = { fps: 30, scenes: [scene] };
+  const viewport = computePortraitViewport(episode, 150, 540, 960, {
+    baseWidth: 1920,
+    baseHeight: 1080,
+    floorY: 855,
+    findSceneAtFrame: () => ({ type: 'scene', scene }),
+    evaluateSceneCamera: () => portraitCamera,
+    evaluateSceneSpeechState: () => noSpeech,
+  });
+  const state = evaluateCharacterState(actor, 5, 8, 5, 1920, 855, noSpeech);
+  const screenX = (x) => 960 + portraitCamera.zoom * (x - portraitCamera.focusX - portraitCamera.panX);
+  const object = boundsForState(state, screenX);
+  const rig = skeleton(state.x, state.fy, state.s, state.pose, state.flip);
+  const actorXs = [rig.world.head, rig.world.hip, rig.world.spineMid, rig.world.shoulder]
+    .concat(rig.world.ll, rig.world.lr, rig.world.al, rig.world.ar)
+    .filter((point) => Array.isArray(point))
+    .map((point) => screenX(point[0]));
+  const left = Math.min(...actorXs, object.left);
+  const right = Math.max(...actorXs, object.right);
+  assert(viewport.left <= left - 8, `${label} and actor should fit inside the portrait crop's left safe margin`);
+  assert(viewport.right >= right + 8, `${label} and actor should fit inside the portrait crop's right safe margin`);
+  assert(viewport.width <= 1920, 'Object-aware portrait crop must stay within the authored stage');
+}
+assertHeldObjectFitsPortrait('hold_umbrella', 'umbrella_holder', (state, screenX) => {
+  const item = state.heldUmbrella;
+  const tilt = item.tilt || 0;
+  const canopyCenterOffset = (item.shaftLength || 108) - 88 * 0.52;
+  const center = screenX(item.x + Math.sin(tilt) * canopyCenterOffset * state.s);
+  const halfWidth = (88 * (Math.abs(Math.cos(tilt)) + Math.abs(Math.sin(tilt))) + 5) * state.s * portraitCamera.zoom;
+  return { left: center - halfWidth, right: center + halfWidth };
+}, 'Open umbrella');
+assertHeldObjectFitsPortrait('offer_umbrella', 'umbrella_offerer', (state, screenX) => {
+  const item = state.heldUmbrella;
+  const tilt = item.tilt || 0;
+  const canopyCenterOffset = item.shaftLength - 88 * 0.52;
+  const center = screenX(item.x + Math.sin(tilt) * canopyCenterOffset * state.s);
+  const halfWidth = (88 * (Math.abs(Math.cos(tilt)) + Math.abs(Math.sin(tilt))) + 5) * state.s * portraitCamera.zoom;
+  return { left: center - halfWidth, right: center + halfWidth };
+}, 'Offered umbrella', { umbrella_open: true });
+assertHeldObjectFitsPortrait('hold_drawing', 'drawing_holder', (state, screenX) => {
+  const item = state.heldDrawing;
+  const angle = (item.facing || 1) * 0.16;
+  const center = screenX(item.x);
+  const halfWidth = (14 * Math.abs(Math.cos(angle)) + 11 * Math.abs(Math.sin(angle)) + 3) * state.s * portraitCamera.zoom;
+  return { left: center - halfWidth, right: center + halfWidth };
+}, 'Held drawing');
+
+const groupCamera = { zoom: 1.2, panX: 0, focusX: 960, focusY: 0.64 * 1080 };
+const groupActors = [
+  { id: 'group_umbrella', scale: 1.62, beats: [{ start: 0, end: 8, action: 'hold_umbrella', x: 0.38, facing: 1 }] },
+  { id: 'group_listener', scale: 1.62, beats: [{ start: 0, end: 8, action: 'idle_stand', x: 0.63, facing: -1 }] },
+];
+const groupScene = {
+  duration: 8, startSec: 0, characters: groupActors, boards: [], props: [], lineTimings: [],
+  portraitFocus: null, portraitFocusX: null,
+};
+const groupEpisode = { fps: 30, scenes: [groupScene] };
+const groupViewport = computePortraitViewport(groupEpisode, 150, 540, 960, {
+  baseWidth: 1920,
+  baseHeight: 1080,
+  floorY: 855,
+  findSceneAtFrame: () => ({ type: 'scene', scene: groupScene }),
+  evaluateSceneCamera: () => groupCamera,
+  evaluateSceneSpeechState: () => noSpeech,
+});
+assert(groupViewport.cameraZoomScale < 1, 'Wide narration-led groups should zoom out uniformly to preserve all actors and props');
+assert.strictEqual(groupViewport.width, 607.5, 'Portrait group framing should remain full-bleed at the native 9:16 crop');
+const groupScaleX = (x) => 960 + groupViewport.cameraZoomScale * (960 + groupCamera.zoom * (x - groupCamera.focusX) - 960);
+const umbrellaState = evaluateCharacterState(groupActors[0], 5, 8, 5, 1920, 855, noSpeech);
+const umbrellaItem = umbrellaState.heldUmbrella;
+const umbrellaTilt = umbrellaItem.tilt || 0;
+const umbrellaCenter = umbrellaItem.x + Math.sin(umbrellaTilt) * 62 * umbrellaState.s;
+const umbrellaHalfWidth = (88 * (Math.abs(Math.cos(umbrellaTilt)) + Math.abs(Math.sin(umbrellaTilt))) + 5) * umbrellaState.s * groupCamera.zoom * groupViewport.cameraZoomScale;
+const listenerState = evaluateCharacterState(groupActors[1], 5, 8, 5, 1920, 855, noSpeech);
+const listenerRig = skeleton(listenerState.x, listenerState.fy, listenerState.s, listenerState.pose, listenerState.flip);
+const listenerPoints = [listenerRig.world.head, listenerRig.world.hip, listenerRig.world.spineMid, listenerRig.world.shoulder]
+  .concat(listenerRig.world.ll, listenerRig.world.lr, listenerRig.world.al, listenerRig.world.ar)
+  .filter((point) => Array.isArray(point));
+const listenerRight = groupScaleX(Math.max(...listenerPoints.map((point) => point[0])))
+  + 12 * listenerState.s * groupCamera.zoom * groupViewport.cameraZoomScale;
+assert(groupViewport.left <= groupScaleX(umbrellaCenter) - umbrellaHalfWidth - 8, 'Portrait group crop must include the complete held umbrella');
+assert(groupViewport.right >= listenerRight + 8, 'Portrait group crop must include the neighboring listener');
+
+const widerGroupActors = [
+  { id: 'near_prop', scale: 1.62, beats: [{ start: 0, end: 8, action: 'hold_umbrella', x: 0.34, facing: 1 }] },
+  { id: 'group_focus', scale: 1.62, beats: [{ start: 0, end: 8, action: 'idle_stand', x: 0.5, facing: -1 }] },
+  { id: 'farther_extra', scale: 1.62, beats: [{ start: 0, end: 8, action: 'idle_stand', x: 0.68, facing: -1 }] },
+];
+const widerGroupScene = { ...groupScene, characters: widerGroupActors };
+const widerGroupViewport = computePortraitViewport({ fps: 30, scenes: [widerGroupScene] }, 150, 540, 960, {
+  baseWidth: 1920,
+  baseHeight: 1080,
+  floorY: 855,
+  findSceneAtFrame: () => ({ type: 'scene', scene: widerGroupScene }),
+  evaluateSceneCamera: () => groupCamera,
+  evaluateSceneSpeechState: () => noSpeech,
+});
+assert.strictEqual(widerGroupViewport.width, 607.5, 'Crowded portrait groups should avoid oversized letterboxed crops');
+assert(widerGroupViewport.centerX < 900, 'When the full group cannot fit, framing should retain the nearby focal actor and important prop');
+
 const speakerSpec = JSON.parse(JSON.stringify(spec));
 speakerSpec.scenes[0].line_timings = [
   { speaker: 'char_1', text: 'First speaker.', start: 0.2, end: 1.7 },

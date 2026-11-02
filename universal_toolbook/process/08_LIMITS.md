@@ -61,7 +61,7 @@ and benchmark on the target machine.
 ## Visual
 
 - **Two characters per scene** is the practical maximum; three collides constantly at 1920.
-- Portrait output eases toward the active speaker when possible; otherwise it chooses a scene focus character. A second character far outside the 9:16 crop may not be visible in that shot. Set scene `portrait_focus` to a character id or `"board"`, or `portrait_focus_x` to a normalized `0..1` value when the script needs a different subject. Portrait boards are uniformly scaled/repositioned inside the safe crop; optional board fields `portrait_w` / `portrait_x` override that fit.
+- Portrait output eases toward the active speaker when possible; otherwise it chooses a scene focus character. During narration-led group shots it considers up to three nearby actors and their carried props, uniformly zooming out the scene; if the full group would need excessive shrinkage, it prioritizes the closer focal pair and a distant actor may be off-screen. Set scene `portrait_focus` to a character id or `"board"`, or `portrait_focus_x` to a normalized `0..1` value for a deliberate alternate composition. Portrait boards are uniformly scaled/repositioned inside the safe crop; optional board fields `portrait_w` / `portrait_x` override that fit.
 - **60 actions**, 12 hairstyles, 18 accessories, 12 preset environments plus parametric
   settings — enough for interiors, streets, weather, dawn/dusk, but no crowd scenes, no
   vehicles other than the `passing_car` / `passing_bus` props.

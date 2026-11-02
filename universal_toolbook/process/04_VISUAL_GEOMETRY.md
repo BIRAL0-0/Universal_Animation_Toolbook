@@ -117,7 +117,11 @@ is never spoken verbatim, the cue silently never fires.
 
 Render the same episode spec in either size; do not edit the base `1920×1080` coordinates to fake
 portrait. The renderer uses an aspect-preserving crop, eases between active character speakers
-when available, and otherwise focuses the character closest to the authored camera focus.
+when available, and otherwise focuses the character closest to the authored camera focus. Its
+composition bounds include the character rig and carried objects, not just the actor's center. For
+narration-led group shots, up to three nearby actors are considered; if the full group would require
+excessive shrinkage, framing prioritizes the closer focal pair instead of adding letterbox bars. The
+scene is uniformly zoomed out only as much as needed for a full-bleed 9:16 crop. No axis is stretched.
 Subtitles and chapter labels are fitted to the visible crop, and boards are uniformly scaled and
 repositioned inside its safe area.
 
@@ -143,8 +147,9 @@ Scene-level framing fields are optional; automatic focus remains the default:
 }
 ```
 
-In a multi-character scene, a portrait crop intentionally prioritizes one subject; an inactive
-actor far outside the vertical field may be off-screen. Set `portrait_focus`/`portrait_focus_x`
-when a different character or prop is essential to the narration, then inspect that portrait still.
+In a multi-character scene, automatic portrait framing keeps nearby actors together during
+narration, but a distant secondary actor may still be off-screen; active dialogue continues to
+prioritize its speaker. Set `portrait_focus`/`portrait_focus_x` for a deliberate alternate
+composition, then inspect that portrait still.
 Use `--aspect-ratio 9:16` for any portrait runtime, or `--shorts` to additionally enforce a
 40–90 second speech-locked final duration.

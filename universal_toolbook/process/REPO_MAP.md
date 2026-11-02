@@ -36,7 +36,7 @@ Universal_Animation_Toolbook/
 │   ├── engine/                      ★ THE RENDERER — where a frame is actually drawn
 │   │   ├── video_renderer.js           frame compositor: aspect-preserving output, camera, z-order, overlays
 │   │   ├── render_layout.js             shared output geometry, viewport, and text-fit helpers
-│   │   ├── portrait_framing.js          speaker-aware 9:16 crop and safe-area board placement
+│   │   ├── portrait_framing.js          prop/group-aware 9:16 framing and safe-area board placement
 │   │   ├── episode.js                  timeline: beats → tracks, speech-driven retiming, cue resolution
 │   │   ├── character_rig.js            bodies, faces, hair, accessories, IK, walk cycles
 │   │   ├── motion_library.js           the 60 actions (walk, sit, point, hand off, …)
