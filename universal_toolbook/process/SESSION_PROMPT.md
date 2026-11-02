@@ -61,7 +61,7 @@ THREE TIERS OF RULE — know which one you are touching
   DEFAULTS — correct for almost every request; change only with a stated reason:
     - 1920x1080 / 30 fps, 16:9 when the user has not specified another aspect; otherwise honor the request (9:16 = 1080x1920)
     - Choose `--aspect-ratio 16:9` or `9:16` from the request and script; a short-form video may use either aspect
-    - Short-form target runtime: 40–90 seconds total. `--shorts` is only for vertical Shorts delivery (9:16 + final-runtime check); landscape short-form uses `--aspect-ratio 16:9`
+    - Short-form target runtime: 40–90 seconds total, independent of aspect. Use `--short-form` for the runtime check with `--aspect-ratio 16:9` or `9:16`; `--shorts` is specifically vertical YouTube Shorts (9:16 + the same check).
     - render flags: --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume
     - --voice auto (Edge/Azure is unreachable here; this resolves to local Piper voices)
     - default output paths output/final_film_16x9.mp4 and output/final_film_16x9_chapters.txt (use matching `_9x16` names for portrait)

@@ -69,19 +69,21 @@ python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio
 python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 9:16 \
     --out output/film_portrait.mp4 --full --voice auto
 
-# Shorts profile: 9:16 plus a verified 40–90 second final runtime
-python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts \
-    --out output/film_shorts.mp4 --full --voice auto
+# Short-form landscape or portrait: the gate does not select orientation
+python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 16:9 --short-form \
+    --out output/film_short_landscape.mp4 --full --voice auto
+# Use --aspect-ratio 9:16 --short-form for portrait; --shorts is the 9:16 YouTube Shorts profile.
 
 # Inspect the portrait crop before encoding
 python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_portrait \
     --width 1080 --height 1920
 ```
 
-`--shorts` checks the speech-locked final duration and exits with `INVALID_SHORTS_DURATION`
-if it is outside 40–90 seconds. Use `--aspect-ratio 9:16` when a portrait video is not a Short
-or when a different runtime is required. For deliberate framing, a scene can set
-`"portrait_focus": "character_id"` (or `"board"`) / `"portrait_focus_x": 0.0..1.0`.
+`--short-form` checks the speech-locked final duration and exits with
+`INVALID_SHORT_FORM_DURATION` if it is outside 40–90 seconds; it does not select an aspect ratio.
+`--shorts` is the vertical 9:16 profile and reports `INVALID_SHORTS_DURATION` on a failed gate.
+For deliberate framing, a scene can set `"portrait_focus": "character_id"` (or `"board"`) /
+`"portrait_focus_x": 0.0..1.0`.
 
 ## Reference films (episode specs, not renders)
 

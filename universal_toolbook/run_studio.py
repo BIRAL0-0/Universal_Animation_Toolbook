@@ -44,13 +44,28 @@ def _render_dimensions(aspect_ratio: str, draft: bool = False) -> Tuple[int, int
     return sizes[aspect_ratio][0 if draft else 1]
 
 
-def _is_shorts_duration(duration_sec: float) -> bool:
-    """Shorts profile targets the user's requested 40–90 second range, inclusive."""
+def _resolve_aspect_ratio(aspect_ratio: Optional[str], shorts: bool = False) -> str:
+    """Resolve output orientation; the short-form runtime gate does not affect this choice."""
+    if shorts and aspect_ratio not in (None, "9:16"):
+        raise ValueError(
+            "--shorts selects 9:16; use --short-form with --aspect-ratio 16:9 for landscape short-form."
+        )
+    if shorts:
+        return "9:16"
+    return aspect_ratio or "16:9"
+
+
+def _is_short_form_duration(duration_sec: float) -> bool:
+    """The short-form target runtime is 40–90 seconds, inclusive, independent of aspect ratio."""
     try:
         seconds = float(duration_sec)
         return math.isfinite(seconds) and 40.0 <= seconds <= 90.0
     except (TypeError, ValueError):
         return False
+
+
+# Keep the old private helper name available for existing scripts/tests.
+_is_shorts_duration = _is_short_form_duration
 
 
 def ensure_dependencies(auto_install: bool = True) -> Dict[str, Any]:
@@ -373,15 +388,14 @@ def _voice_diagnosis(deps: Dict[str, Any]) -> List[str]:
 
 
 def cmd_render(args: argparse.Namespace) -> int:
-    if args.shorts and args.aspect_ratio not in (None, "9:16"):
-        print("--shorts always renders 9:16; remove --aspect-ratio or set it to 9:16.", file=sys.stderr)
-        return 2
-    aspect_ratio = "9:16" if args.shorts else (args.aspect_ratio or "16:9")
     try:
+        aspect_ratio = _resolve_aspect_ratio(args.aspect_ratio, args.shorts)
         width, height = _render_dimensions(aspect_ratio, args.draft)
     except ValueError as exc:
         print(str(exc), file=sys.stderr)
         return 2
+    short_form = bool(args.short_form or args.shorts)
+    output_profile = "shorts" if args.shorts else ("portrait" if aspect_ratio == "9:16" else "landscape")
 
     t0 = time.time()
     deps = ensure_dependencies(auto_install=True)
@@ -427,14 +441,16 @@ def cmd_render(args: argparse.Namespace) -> int:
     comp_wrap = _compile_episode_via_node(retimed_ep_file, width, height, args.subtitles)
     compiled = comp_wrap["episode"]
     chapters_txt = comp_wrap["chaptersTxt"]
-    if args.shorts and not _is_shorts_duration(compiled["totalDuration"]):
+    if short_form and not _is_short_form_duration(compiled["totalDuration"]):
+        status = "INVALID_SHORTS_DURATION" if args.shorts else "INVALID_SHORT_FORM_DURATION"
         print(
             json.dumps(
                 {
-                    "status": "INVALID_SHORTS_DURATION",
+                    "status": status,
                     "duration_sec": round(float(compiled["totalDuration"]), 3),
+                    "aspect_ratio": aspect_ratio,
                     "required_range_sec": [40, 90],
-                    "hint": "Shorts are retimed to synthesized speech; adjust scene dialogue/pacing or render with --aspect-ratio 9:16 without the --shorts duration gate.",
+                    "hint": "Short-form duration is measured after speech retiming. Adjust dialogue/pacing; --short-form enforces 40–90 seconds without changing aspect ratio, while --shorts additionally selects 9:16.",
                 },
                 indent=2,
             ),
@@ -589,7 +605,8 @@ def cmd_render(args: argparse.Namespace) -> int:
                 "frames": compiled["totalFrames"],
                 "dimensions": [width, height],
                 "aspect_ratio": aspect_ratio,
-                "output_profile": "shorts" if args.shorts else ("portrait" if aspect_ratio == "9:16" else "landscape"),
+                "output_profile": output_profile,
+                "short_form": short_form,
                 "fps": fps,
                 "film_grain": False,
                 "voiced": vo_backend != "text-led",
@@ -608,7 +625,8 @@ def cmd_render(args: argparse.Namespace) -> int:
         "size_mb": round(out_mp4.stat().st_size / (1024 * 1024), 3),
         "resolution": f"{width}x{height}",
         "aspect_ratio": aspect_ratio,
-        "output_profile": "shorts" if args.shorts else ("portrait" if aspect_ratio == "9:16" else "landscape"),
+        "output_profile": output_profile,
+        "short_form": short_form,
         "fps": fps,
         "film_grain": False,
         "duration_sec": compiled["totalDuration"],
@@ -756,8 +774,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Output composition: 16:9 landscape (default) or 9:16 portrait. Geometry is preserved; frames are reframed, never stretched.",
     )
     pr.add_argument(
+        "--short-form", action="store_true",
+        help="Validate final speech-locked runtime is 40–90 seconds without changing the selected aspect ratio.",
+    )
+    pr.add_argument(
         "--shorts", action="store_true",
-        help="9:16 portrait profile; validates final speech-locked runtime is between 40 and 90 seconds.",
+        help="YouTube Shorts profile: selects 9:16 and validates final speech-locked runtime is 40–90 seconds.",
     )
     pr.add_argument("--draft", action="store_true", help="Fast preview: 960x540 (landscape) or 540x960 (portrait)")
     pr.add_argument("--full", action="store_true", help="Full master: 1920x1080 landscape or 1080x1920 portrait")

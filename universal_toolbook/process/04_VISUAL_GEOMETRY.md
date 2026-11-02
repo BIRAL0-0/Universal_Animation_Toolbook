@@ -152,5 +152,6 @@ In a multi-character scene, automatic portrait framing keeps nearby actors toget
 narration, but a distant secondary actor may still be off-screen; active dialogue continues to
 prioritize its speaker. Set `portrait_focus`/`portrait_focus_x` for a deliberate alternate
 composition, then inspect that portrait still.
-Use `--aspect-ratio 9:16` for any portrait runtime, or `--shorts` to additionally enforce a
-40–90 second speech-locked final duration.
+Use `--aspect-ratio 9:16` for portrait (or `16:9` for landscape) at any runtime. Add
+`--short-form` to enforce a 40–90 second speech-locked duration without changing the aspect;
+`--shorts` selects the vertical 9:16 profile and applies the same runtime gate.

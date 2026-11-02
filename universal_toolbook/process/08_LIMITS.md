@@ -17,15 +17,17 @@ deliver. Numbers below are measured in this environment, not estimated.
 
 | Case | Total runtime | How it is made |
 | --- | --- | --- |
-| **Shorts profile** | **40–90 s** | `--shorts` selects 9:16 and enforces the final speech-locked runtime, inclusive |
-| Portrait video (not a Short) | Any authored runtime | `--aspect-ratio 9:16`; no duration gate |
-| Landscape / long-form | Any authored runtime | `--aspect-ratio 16:9` (default); examples include a declared 520-second episode |
+| Short-form (either aspect) | **40–90 s** | `--short-form` enforces the final speech-locked runtime without choosing orientation; pair with `--aspect-ratio 16:9` or `9:16` |
+| **YouTube Shorts profile** | **40–90 s** | `--shorts` selects 9:16 and enforces the same final-runtime gate |
+| Portrait or landscape (any length) | Any authored runtime | `--aspect-ratio 9:16` or `16:9`; 16:9 is the default |
+| Long-form | Any authored runtime | Choose the aspect with `--aspect-ratio`; examples include a declared 520-second episode |
 | Very long | — | Not benchmarked beyond existing examples; render time scales linearly and chunk resume becomes essential |
 
 Runtime is set by the **speech**, not by the declared `duration` field: scenes are retimed to
 the generated audio. Plan on `words ÷ 2.5` seconds per line plus pauses, then add ~1.3 s per
-scene for lead-in/tail-out. `--shorts` checks that final duration after speech retiming and exits
-before video encoding if it is outside 40–90 seconds; it does not silently truncate the script.
+scene for lead-in/tail-out. `--short-form` checks the final duration after speech retiming and
+exits before video encoding if it is outside 40–90 seconds; `--shorts` adds the 9:16 YouTube
+Shorts profile. Neither option silently truncates the script.
 
 Measured on this machine (2 vCPU, `--workers 2`); the table below uses landscape samples:
 

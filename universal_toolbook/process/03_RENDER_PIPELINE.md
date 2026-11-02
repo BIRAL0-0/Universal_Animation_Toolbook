@@ -83,22 +83,25 @@ FF=$(python3 -c "import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())")
 ## Step 4 — master render
 
 ```bash
-# Landscape delivery (short-form may also be landscape; aspect is separate from runtime)
-python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 \
-  --out output/final_film_16x9.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
+# Short-form landscape: runtime gate does not change the selected 16:9 aspect
+python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 16:9 --short-form \
+  --out output/short_landscape.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 
-# 9:16 Shorts profile; validates final speech-locked duration is 40–90 seconds
+# Short-form portrait: same runtime gate, with 9:16 selected independently
+python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 9:16 --short-form \
+  --out output/short_portrait.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
+
+# For delivery specifically to YouTube Shorts, --shorts is shorthand for 9:16 plus the duration gate.
 python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts \
-  --out output/final_shorts_9x16.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
-
-# Use --aspect-ratio 9:16 instead of --shorts for portrait videos with another runtime.
+  --out output/youtube_shorts.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 ```
 
 | Flag | Why this value |
 | --- | --- |
 | `--aspect-ratio 16:9` | 1920×1080 @ 30 fps landscape master; this remains the default |
 | `--aspect-ratio 9:16` | 1080×1920 @ 30 fps portrait master; aspect-preserving subject crop, no stretch |
-| `--shorts` | shorthand for 9:16 plus a strict inclusive 40–90 second final-duration check |
+| `--short-form` | Strict inclusive 40–90 second final-duration check; does not select an aspect ratio |
+| `--shorts` | YouTube Shorts profile: selects 9:16 and applies the same duration check |
 | `--preset veryfast` | the documented encode path; slower presets blow the time budget for no visible gain on flat vector art |
 | `--crf 24` | visually transparent on this art style, keeps files ~8 MB/min |
 | `--chunk-sec 45` | chunk length for parallel workers; shorter = more overhead, longer = worse resume granularity |

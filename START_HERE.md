@@ -61,17 +61,19 @@ python3 universal_toolbook/run_studio.py render work/episode.json \
     --out output/final_film_16x9.mp4 --aspect-ratio 16:9 --full --preset veryfast \
     --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 
-# Render the same script as a vertical Short (the final speech-locked runtime must be 40–90 s)
+# Render short-form without coupling its 40–90 s gate to orientation (this example is landscape)
 python3 universal_toolbook/run_studio.py render work/short_episode.json \
-    --out output/final_short.mp4 --shorts --full --preset veryfast --voice auto
+    --aspect-ratio 16:9 --short-form --out output/final_short.mp4 --full --preset veryfast --voice auto
+# For portrait short-form, use --aspect-ratio 9:16 --short-form; for YouTube Shorts, use --shorts.
 
 # Portrait QA stills: inspect the crop/safe areas before encoding
 python3 universal_toolbook/run_studio.py stills work/episode.json \
     --out-dir work/stills_portrait --width 1080 --height 1920
 ```
 
-Short-form runtime targets 40–90 seconds, but choose landscape or portrait from the requested
-composition/platform; a short landscape delivery uses `--aspect-ratio 16:9`, not `--shorts`.
+Short-form runtime targets 40–90 seconds independently of aspect ratio. Use `--short-form`
+with `--aspect-ratio 16:9` or `9:16` to enforce the duration; `--shorts` is reserved for
+vertical YouTube Shorts delivery and selects 9:16.
 
 `--voice auto` is required here: the Edge endpoint is unreachable, so the engine falls back to
 the three installed Piper voices and reports what actually ran in `voice_backend`.

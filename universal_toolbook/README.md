@@ -27,15 +27,16 @@ back to local neural voices automatically.
 
 Reuse the same episode JSON and choose its delivery size at render time. Choose from the script and
 publishing requirement; short-form does not inherently mean portrait. The short-form target is
-40–90 seconds total. `--shorts` is specifically a vertical 9:16 profile with a final-runtime gate.
+40–90 seconds total. `--short-form` validates that runtime without selecting an aspect ratio; add
+`--aspect-ratio 16:9` or `9:16` explicitly (default is 16:9). `--shorts` is specifically a vertical
+9:16 profile with the same final-runtime gate.
 
 ```bash
-python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out output/landscape.mp4 --full
-python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 9:16 --out output/portrait.mp4 --full
-python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts --out output/short.mp4 --full
+python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 16:9 --short-form --out output/short_landscape.mp4 --full
+python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 9:16 --short-form --out output/short_portrait.mp4 --full
+python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts --out output/youtube_shorts.mp4 --full
 ```
 
-`--shorts` selects 9:16 and validates the final speech-locked runtime is 40–90 seconds.
 Portrait crops ease toward the active speaker when available; use scene `portrait_focus` or
 `portrait_focus_x` fields to direct framing. The renderer uses uniform scaling and safe-area
 layout, not independent width/height stretching.

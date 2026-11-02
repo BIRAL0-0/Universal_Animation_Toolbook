@@ -31,7 +31,8 @@ For **each** still:
 ```bash
 python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out /tmp/draft/film_draft.mp4 \
   --draft --voice auto --workers 2 --chunk-sec 20
-# Choose --aspect-ratio 9:16 for portrait, or --shorts for the 40–90 second Shorts gate.
+# Pair either aspect (--aspect-ratio 16:9 or 9:16) with --short-form for the 40–90 s gate.
+# --shorts is the platform-specific 9:16 profile and also applies that duration gate.
 ```
 
 - [ ] For every board: frame at `cue_on + 1.5 s` → panel fully built, populated, in-band
