@@ -23,3 +23,8 @@ universal_toolbook/package-lock.json.partial
 # Renders, QA frames and delivery bundles are build artifacts, not source
 output/
 work/
+
+# Duplicated download copies (source of truth lives in outputs/)
+downloads/*.mp4
+downloads/*.zip
+downloads/poster.jpg
