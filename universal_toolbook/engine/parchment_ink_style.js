@@ -13,6 +13,8 @@
 const { createCanvas } = require('./canvas_backend');
 const { BONES, clamp, lerp, ease, eo, ca, skeleton, applyPostureToPose } = require('./character_rig');
 const { HARBOR_BACKDROPS, drawBeaconBackdrop, keeperGate } = require('./beacon_harbor');
+// "The Wall You Agreed With" stage (empty parchment + ghost wall); same extension pattern.
+const { WALL_BACKDROPS, drawWallBackdrop } = require('./impossible_wall');
 
 const INK = '#1a1612';
 const INK_SOFT = 'rgba(26, 22, 18, 0.55)';
@@ -204,7 +206,7 @@ function drawParchmentHorizon(g, floorY, fromX = -260, toX = 2180, gapStart = nu
 /**
  * Render one of the 6 rich hand-inked Stick House environments
  */
-function drawParchmentEnvironment(g, setting, globalT, ts, panX, floorY = 835) {
+function drawParchmentEnvironment(g, setting, globalT, ts, panX, floorY = 835, W = 1920, H = 1080) {
   const kind = (setting && setting.backdrop) || 'parchment_studio';
 
   // Harbor-beacon set (see engine/beacon_harbor.js): the whole prop + backdrop extension for
@@ -212,6 +214,11 @@ function drawParchmentEnvironment(g, setting, globalT, ts, panX, floorY = 835) {
   // owning the shared ink vocabulary and every existing backdrop is untouched.
   if (HARBOR_BACKDROPS.includes(kind)) {
     return drawBeaconBackdrop(g, setting, globalT, ts, panX, floorY);
+  }
+
+  // Bare stage for the wall fable: deliberately empty, so the only object in frame is the wall.
+  if (WALL_BACKDROPS.includes(kind)) {
+    return drawWallBackdrop(g, setting, globalT, ts, floorY, W, H);
   }
 
   if (kind === 'parchment_studio') {
