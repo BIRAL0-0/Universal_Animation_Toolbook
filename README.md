@@ -1,7 +1,7 @@
 # Universal Animation Toolbook
 
-AI-agnostic 16:9 animation, neural voiceover and Creative Commons music pipeline.
-Give an AI agent the toolbook plus a script, and it renders a zero-grain `1920×1080 @ 30fps` MP4.
+AI-agnostic 16:9 landscape and 9:16 portrait animation, neural voiceover and Creative Commons music pipeline.
+Give an AI agent the toolbook plus a script, and it can render zero-grain `1920×1080` landscape or `1080×1920` portrait MP4s at 30fps. The renderer preserves geometry and reframes portrait shots instead of stretching them.
 
 ```
 Universal_Animation_Toolbook/
@@ -46,12 +46,42 @@ python3 universal_toolbook/run_studio.py validate work/episode.json
 python3 universal_toolbook/run_studio.py stills work/episode.json \
     --out-dir work/stills --width 1920 --height 1080          # look at these before rendering
 python3 universal_toolbook/run_studio.py render work/episode.json \
-    --out output/final_film_1080p.mp4 --full --preset veryfast \
+    --out output/final_film_16x9.mp4 --full --preset veryfast \
     --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 ```
 
 `--voice auto` is required where the Edge endpoint is unreachable: the engine falls back to
 local Piper voices (`universal_toolbook/tools/fetch_piper_voices.py`).
+
+## Choose the delivery format
+
+The same episode JSON can be rendered in either orientation. Select the aspect from the script and
+delivery requirement—short-form does not automatically mean portrait. Landscape remains the
+default; portrait uses a subject-aware crop, keeps subtitles/boards inside the safe area, and never
+scales X and Y independently. Short-form episodes target 40–90 seconds total.
+
+```bash
+# 16:9 landscape master (default), e.g. long-form YouTube
+python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 \
+    --out output/film_landscape.mp4 --full --voice auto
+
+# 9:16 portrait master
+python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 9:16 \
+    --out output/film_portrait.mp4 --full --voice auto
+
+# Shorts profile: 9:16 plus a verified 40–90 second final runtime
+python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts \
+    --out output/film_shorts.mp4 --full --voice auto
+
+# Inspect the portrait crop before encoding
+python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_portrait \
+    --width 1080 --height 1920
+```
+
+`--shorts` checks the speech-locked final duration and exits with `INVALID_SHORTS_DURATION`
+if it is outside 40–90 seconds. Use `--aspect-ratio 9:16` when a portrait video is not a Short
+or when a different runtime is required. For deliberate framing, a scene can set
+`"portrait_focus": "character_id"` (or `"board"`) / `"portrait_focus_x": 0.0..1.0`.
 
 ## Reference films (episode specs, not renders)
 

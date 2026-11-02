@@ -4,7 +4,7 @@
 > repository root — bootstrap commands and the reading order in one place.
 
 Everything here is **film-agnostic**. It does not describe any particular story; it describes
-how to turn *any* script into a finished 1080p `.mp4` with this engine. If you are a fresh
+how to turn *any* script into a finished 16:9 landscape or 9:16 portrait `.mp4` with this engine. If you are a fresh
 session that was handed a script and has never seen this repository, read these in order:
 
 | # | File | Read it when |
@@ -44,15 +44,17 @@ Companion material already in the repo:
 python3 universal_toolbook/run_studio.py check                                     # env, fonts, ffmpeg, BGM, voices
 cp universal_toolbook/templates/episode_minimal.json work/episode.json             # then author it
 python3 universal_toolbook/run_studio.py validate work/episode.json                # must print warnings: []
-python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills --width 1920 --height 1080
-python3 universal_toolbook/run_studio.py render work/episode.json --out /tmp/draft/film.mp4 --draft --voice auto
-# inspect every still and every board cue, fix, repeat the two lines above
-python3 universal_toolbook/run_studio.py render work/episode.json --out output/final_film_1080p.mp4 \
-  --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
+python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_16x9 --width 1920 --height 1080
+python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out /tmp/draft/film.mp4 --draft --voice auto
+# For portrait, also inspect a 1080x1920 still/draft; fix framing and repeat
+python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_9x16 --width 1080 --height 1920
+# inspect every still and every board cue, fix, repeat the target-aspect render
+python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out output/final_film_16x9.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
+# Use --aspect-ratio 9:16 and a matching output name for portrait; use --shorts for a 40–90s gate.
 ```
 
-The loop that matters is **stills → look → fix → stills**. Rendering the master is the last
-10 % of the work; 90 % is catching overlaps at 1920×1080 before paying for the encode.
+The loop that matters is **stills → look → fix → stills**, at the target aspect ratio. Rendering the
+master is the last 10 % of the work; catch framing and safe-area issues before paying for the encode.
 
 ## Ground rules
 

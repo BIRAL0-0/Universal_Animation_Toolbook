@@ -27,6 +27,8 @@ const {
   buildSubtitlesFromLineTimings,
 } = require('../universal_toolbook/engine/episode');
 const { renderEpisodeFrame } = require('../universal_toolbook/engine/video_renderer');
+const { containRect, coverRect } = require('../universal_toolbook/engine/render_layout');
+const { fitBoardToPortraitViewport } = require('../universal_toolbook/engine/portrait_framing');
 
 registerFonts();
 
@@ -197,6 +199,52 @@ const pSpec = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'minim
 const pEp = compileEpisode(pSpec);
 assert.strictEqual(pEp.warnings.length, 0);
 renderEpisodeFrame(g, 960, 540, pEp, 15);
+
+// 10. Verify 9:16 portrait adaptation uses a subject-aware crop and uniform (never stretched) scaling.
+const portraitFit = containRect(1920, 1080, 1080, 1920);
+assert(Math.abs(portraitFit.width / portraitFit.height - 16 / 9) < 1e-10, 'Portrait contain must preserve source aspect ratio');
+const portraitCover = coverRect(1920, 1080, 1080, 1920);
+assert(Math.abs(portraitCover.width / portraitCover.height - 16 / 9) < 1e-10, 'Portrait background cover must preserve source aspect ratio');
+const portraitCrop = { left: 650, width: 608, centerX: 954, right: 1258 };
+const sourceBoard = { type: 'line_graph', x: 0.46, y: 104, w: 880, h: 390 };
+const fittedBoard = fitBoardToPortraitViewport(sourceBoard, portraitCrop);
+const boardTransform = fittedBoard._portraitTransform;
+const sourceBoardLeft = sourceBoard.x * 1920;
+const displayedBoardLeft = boardTransform.translateX + sourceBoardLeft * boardTransform.scale;
+const displayedBoardRight = displayedBoardLeft + sourceBoard.w * boardTransform.scale;
+assert(displayedBoardLeft >= portraitCrop.left + 12, 'Portrait board must remain inside the crop safe margin');
+assert(displayedBoardRight <= portraitCrop.right - 12, 'Portrait board must not overflow the crop');
+assert(Math.abs((sourceBoard.w * boardTransform.scale) / (sourceBoard.h * boardTransform.scale) - sourceBoard.w / sourceBoard.h) < 1e-10, 'Portrait board scaling must preserve its proportions');
+const portraitSpec = JSON.parse(JSON.stringify(spec));
+portraitSpec.scenes[0].portrait_focus = 'char_1';
+portraitSpec.scenes[0].portrait_focus_x = 0.42;
+const portraitEp = compileEpisode(portraitSpec, { width: 540, height: 960 });
+assert.strictEqual(portraitEp.scenes[0].portraitFocus, 'char_1');
+assert.strictEqual(portraitEp.scenes[0].portraitFocusX, 0.42);
+assert.strictEqual(portraitEp.warnings.length, 0, 'Valid explicit portrait framing must compile without warnings');
+const portraitCanvas = createCanvas(540, 960);
+const portraitCtx = portraitCanvas.getContext('2d');
+const portraitLayout = renderEpisodeFrame(portraitCtx, 540, 960, portraitEp, 15);
+assert.strictEqual(portraitLayout.orientation, 'portrait');
+assert(portraitLayout.viewport.width >= 1080 * (540 / 960) - 1, 'Portrait source crop must cover the 9:16 field of view');
+assert(portraitLayout.viewport.width <= 1920, 'Portrait crop must stay within the authored stage');
+assert(portraitLayout.viewport.centerX >= portraitLayout.viewport.left);
+assert(portraitLayout.viewport.centerX <= portraitLayout.viewport.right);
+const speakerSpec = JSON.parse(JSON.stringify(spec));
+speakerSpec.scenes[0].line_timings = [
+  { speaker: 'char_1', text: 'First speaker.', start: 0.2, end: 1.7 },
+  { speaker: 'char_2', text: 'Second speaker.', start: 2.0, end: 4.0 },
+];
+const speakerEp = compileEpisode(speakerSpec, { width: 540, height: 960 });
+const beforeSpeakerChange = renderEpisodeFrame(portraitCtx, 540, 960, speakerEp, 59).viewport.centerX;
+const firstSpeakerChangeFrame = renderEpisodeFrame(portraitCtx, 540, 960, speakerEp, 60).viewport.centerX;
+const nextSpeakerChangeFrame = renderEpisodeFrame(portraitCtx, 540, 960, speakerEp, 61).viewport.centerX;
+const settledSpeakerFrame = renderEpisodeFrame(portraitCtx, 540, 960, speakerEp, 78).viewport.centerX;
+assert(Math.abs(firstSpeakerChangeFrame - beforeSpeakerChange) < 40, 'Portrait crop should ease, not jump, when dialogue changes speaker');
+assert(Math.abs(nextSpeakerChangeFrame - firstSpeakerChangeFrame) < 40, 'Speaker-following portrait crop should move smoothly across adjacent frames');
+assert(Math.abs(settledSpeakerFrame - beforeSpeakerChange) > 120, 'Portrait framing should settle on the new active speaker');
+const portraitPixels = portraitCtx.getImageData(270, 480, 1, 1).data;
+assert.strictEqual(portraitPixels[3], 255, 'Portrait renderer must produce an opaque full-frame image');
 
 console.log(
   JSON.stringify(

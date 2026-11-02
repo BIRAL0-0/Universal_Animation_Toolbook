@@ -1,7 +1,8 @@
 # 04 — VISUAL GEOMETRY (the pixel rules)
 
-All numbers below are in **1080p space** (1920×1080). They are the difference between "renders
-fine" and "looks broken", and every one of them was learned by looking at a bad frame.
+All world coordinates below are in the **1920×1080 authoring stage**. The renderer can deliver
+that stage as 16:9 landscape or a subject-aware 9:16 portrait crop; it uses one uniform scale and
+never distorts character or prop geometry. Portrait output has its own safe crop and typography rules below.
 
 ```
 y=0    ┌──────────────────────────────────────────┐
@@ -111,3 +112,39 @@ is never spoken verbatim, the cue silently never fires.
   the other actor.
 - `focus_x` 0.30–0.70, `focus_y` 0.52–0.64 (eyes-level band). Outside that you crop heads.
 - Two camera shots per scene minimum; a scene with one static shot reads as a slide.
+
+## 4.9 Portrait / Shorts composition (9:16)
+
+Render the same episode spec in either size; do not edit the base `1920×1080` coordinates to fake
+portrait. The renderer uses an aspect-preserving crop, eases between active character speakers
+when available, and otherwise focuses the character closest to the authored camera focus.
+Subtitles and chapter labels are fitted to the visible crop, and boards are uniformly scaled and
+repositioned inside its safe area.
+
+```bash
+# Review the intended vertical composition before the final render
+python3 universal_toolbook/run_studio.py stills work/episode.json \
+  --out-dir work/stills_9x16 --width 1080 --height 1920
+
+# Optional per-scene override: choose a cast id, "board", or a normalized x focus
+```
+
+Scene-level framing fields are optional; automatic focus remains the default:
+
+```jsonc
+{
+  "portrait_focus": "lead",       // a character id, or "board"
+  "portrait_focus_x": 0.42,        // normalized stage x, 0..1; overrides the id
+  "board": {
+    "type": "line_graph",
+    "portrait_w": 520,             // optional authoring-stage width; uniformly scaled with the board
+    "portrait_x": 0.5              // optional normalized or authoring-stage center x
+  }
+}
+```
+
+In a multi-character scene, a portrait crop intentionally prioritizes one subject; an inactive
+actor far outside the vertical field may be off-screen. Set `portrait_focus`/`portrait_focus_x`
+when a different character or prop is essential to the narration, then inspect that portrait still.
+Use `--aspect-ratio 9:16` for any portrait runtime, or `--shorts` to additionally enforce a
+40–90 second speech-locked final duration.

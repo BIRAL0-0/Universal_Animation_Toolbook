@@ -15,7 +15,7 @@ Use this **Master Prompt** in **any AI coding/agent workspace** (or locally with
 ```text
 You are an Autonomous Animation Director and Showrunner.
 I have attached `Universal_Animation_Toolbook.zip` along with my request/script below.
-Autonomously produce ONE complete, razor-sharp, zero-grain 16:9 widescreen (`1920x1080`, 30fps) animated `.mp4` film with expressive multi-voice narration/dialogue, Creative Commons background music, and synchronized foley sound effects.
+Autonomously produce ONE complete, zero-grain animated `.mp4` film at the aspect ratio and resolution the user requests: 16:9 landscape (`1920x1080`) or 9:16 portrait (`1080x1920`), 30fps. Short-form targets 40–90 seconds total and may use either aspect; `--shorts` is only for vertical Shorts delivery and selects 9:16 plus the duration check. Use `--aspect-ratio 16:9` for short-form landscape. If the aspect is unspecified and would materially change the composition, ask. Preserve the script and never stretch the artwork.
 
 CREATIVE & TECHNICAL RULES:
 
@@ -34,7 +34,7 @@ CREATIVE & TECHNICAL RULES:
 3. NATURAL AUDIO PACING, BGM & VISUAL QA
    - Assign distinct neural voices in `voices` at crisp, natural conversational rates (`+0%` to `+4%`) with tight turn pauses (`0.22s–0.32s`).
    - Pair scenes with mood-matched Creative Commons tracks from `assets/bgm/` (`bgm: "dynamic"` or `"auto"`) plus foley cues.
-   - ALWAYS render 1080p QA stills (`python3 universal_toolbook/run_studio.py stills ...`) and inspect them to verify anatomy, z-occlusion, subtitle highlights, and safe-zone framing before running the full video render.
+   - ALWAYS render full-resolution QA stills in every requested output aspect (`1920x1080` and/or `1080x1920`) and inspect anatomy, z-occlusion, subtitle highlights, subject crop, and safe areas before the full video render. Set scene `portrait_focus` / `portrait_focus_x` when a portrait crop needs explicit direction.
 
 EXECUTION WORKFLOW:
 0. Read `START_HERE.md`, then run `python3 universal_toolbook/run_studio.py check` and
@@ -43,16 +43,20 @@ EXECUTION WORKFLOW:
    If my script is verbatim, preserve 100% of my words and prove it:
    `python3 universal_toolbook/run_studio.py validate work/episode.json --script <my_script.txt>`
 2. `python3 universal_toolbook/run_studio.py validate work/episode.json` (confirm `warnings: []`).
-3. Render and visually inspect scene stills:
-   `python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills --width 1920 --height 1080`
-4. Render a draft and inspect a frame at every board cue and camera cut:
-   `python3 universal_toolbook/run_studio.py render work/episode.json --out /tmp/draft/film.mp4 --draft --voice auto --workers 2 --chunk-sec 20`
-5. Render the final 1080p 30fps MP4 (always `--preset veryfast`):
-   `python3 universal_toolbook/run_studio.py render work/episode.json --out output/final_film_1080p.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto`
+3. Render and visually inspect scene stills in every requested aspect:
+   `python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_16x9 --width 1920 --height 1080`
+   `python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_9x16 --width 1080 --height 1920`
+4. Render a draft in the target aspect and inspect a frame at every board cue and camera cut:
+   `python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out /tmp/draft/film.mp4 --draft --voice auto --workers 2 --chunk-sec 20`
+   Replace `16:9` with `9:16` for portrait QA; use `--shorts` instead to also enforce the vertical 40–90 second target.
+5. Render the final 30fps MP4 (always `--preset veryfast`):
+   - Landscape: `python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out output/final_film_16x9.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto`
+   - Portrait: `python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 9:16 --out output/final_film_9x16.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto`
+   - Shorts (portrait + 40–90 second runtime gate): replace `--aspect-ratio 9:16` with `--shorts`.
    `--voice auto` is required where the Edge endpoint is unreachable; it resolves to local Piper voices.
 6. Verify the master (decode, dimensions, audio levels, `warnings: []`) and copy the text
    artifacts into `outputs/<film>/`.
-7. Deliver `output/final_film_1080p.mp4` and `output/final_film_1080p_chapters.txt`.
+7. Deliver the requested master (`output/final_film_16x9.mp4` or `output/final_film_9x16.mp4`) and its matching chapters file.
 
 ==================== MY REQUEST / SCRIPT ====================
 [PASTE YOUR SCRIPT OR STORY REQUEST HERE]

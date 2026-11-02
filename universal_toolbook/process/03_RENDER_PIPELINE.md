@@ -33,14 +33,20 @@ If a verbatim script was supplied, pass it too so word-for-word preservation is 
 python3 universal_toolbook/run_studio.py validate work/episode.json --script path/to/script.txt
 ```
 
-## Step 2 — 1080p stills (the cheap QA loop)
+## Step 2 — full-resolution stills in the delivery aspect ratio (the cheap QA loop)
 
 ```bash
-python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills --width 1920 --height 1080
+# Render landscape QA stills for a 16:9 delivery
+python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_16x9 --width 1920 --height 1080
+
+# Render portrait QA stills for a 9:16 delivery (same spec, no stretching)
+python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_9x16 --width 1080 --height 1920
 ```
 
 One PNG per scene, named `<sceneId>_<environment>.png`. `--limit N` renders only the first N
-scenes, which is handy while iterating.
+scenes, which is handy while iterating. Inspect the stills in every requested output aspect ratio;
+portrait framing follows the active speaker or configured `portrait_focus` and repositions boards
+inside the portrait safe area.
 
 **Stills are sampled near the start of each scene**, so a board cued later in the scene will
 NOT be in the still. That is expected; boards are verified from the draft instead (Step 3).
@@ -51,7 +57,7 @@ is normal and cheap; a full render with an overlap in it is neither.
 ## Step 3 — draft render (timing, boards, cuts, audio)
 
 ```bash
-python3 universal_toolbook/run_studio.py render work/episode.json --out /tmp/draft/film_draft.mp4 \
+python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out /tmp/draft/film_draft.mp4 \
   --draft --voice auto --workers 2 --chunk-sec 20
 ```
 
@@ -59,7 +65,7 @@ Exit code **3** with `"status": "COMPLETE_SILENT"` means the render did encode, 
 backend produced speech — `"voice_diagnosis"` names what is missing. Fix it and re-render rather
 than inspecting a silent draft (see `05_AUDIO.md`).
 
-`--draft` = 960×540, same timeline, ~1 minute for a 2-minute film. Use it to check:
+`--draft` = 960×540 in landscape or 540×960 in portrait, with the same timeline. Use the aspect matching the requested master to check:
 
 - every board at `cue_on + 1.5 s` → fully built, inside the safe band, not over a name tag;
 - every camera cut at `cue_on + 2.5 s` → framing landed;
@@ -76,13 +82,22 @@ FF=$(python3 -c "import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())")
 ## Step 4 — master render
 
 ```bash
-python3 universal_toolbook/run_studio.py render work/episode.json --out output/final_film_1080p.mp4 \
-  --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
+# Landscape delivery (short-form may also be landscape; aspect is separate from runtime)
+python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 \
+  --out output/final_film_16x9.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
+
+# 9:16 Shorts profile; validates final speech-locked duration is 40–90 seconds
+python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts \
+  --out output/final_shorts_9x16.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
+
+# Use --aspect-ratio 9:16 instead of --shorts for portrait videos with another runtime.
 ```
 
 | Flag | Why this value |
 | --- | --- |
-| `--full` | 1920×1080 @ 30 fps master (default, but be explicit) |
+| `--aspect-ratio 16:9` | 1920×1080 @ 30 fps landscape master; this remains the default |
+| `--aspect-ratio 9:16` | 1080×1920 @ 30 fps portrait master; aspect-preserving subject crop, no stretch |
+| `--shorts` | shorthand for 9:16 plus a strict inclusive 40–90 second final-duration check |
 | `--preset veryfast` | the documented encode path; slower presets blow the time budget for no visible gain on flat vector art |
 | `--crf 24` | visually transparent on this art style, keeps files ~8 MB/min |
 | `--chunk-sec 45` | chunk length for parallel workers; shorter = more overhead, longer = worse resume granularity |
@@ -93,12 +108,12 @@ python3 universal_toolbook/run_studio.py render work/episode.json --out output/f
 ### What it writes
 
 ```
-output/final_film_1080p.mp4                     the master
-output/final_film_1080p_chapters.txt            chapters + auto-generated CC credits
-output/final_film_1080p_report.json             resolution, fps, duration, voice_backend, BGM, sfx, credits
-output/final_film_1080p_validation_report.json  {valid, frames, dimensions, fps, film_grain, warnings}
-output/final_film_1080p_visual_audio_cues.json  every foley/visual cue
-output/.work_final_film_1080p/master_audio.wav  the mixed audio (for measurement)
+output/final_film_16x9.mp4                     the master
+output/final_film_16x9_chapters.txt            chapters + auto-generated CC credits
+output/final_film_16x9_report.json             resolution, fps, duration, voice_backend, BGM, sfx, credits
+output/final_film_16x9_validation_report.json  {valid, frames, dimensions, fps, film_grain, warnings}
+output/final_film_16x9_visual_audio_cues.json  every foley/visual cue
+output/.work_final_film_16x9/master_audio.wav  the mixed audio (for measurement)
 ```
 
 If you kill a render, re-run the **same command**: `--resume` picks the finished chunks up.
@@ -109,12 +124,12 @@ frames.
 
 ```bash
 FF=$(python3 -c "import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())")
-cat output/final_film_1080p_validation_report.json
-"$FF" -hide_banner -i output/final_film_1080p.mp4 2>&1 | grep -E "Duration|Stream"
-"$FF" -v error -i output/final_film_1080p.mp4 -f null - && echo FULL_DECODE_OK
+cat output/final_film_16x9_validation_report.json
+"$FF" -hide_banner -i output/final_film_16x9.mp4 2>&1 | grep -E "Duration|Stream"
+"$FF" -v error -i output/final_film_16x9.mp4 -f null - && echo FULL_DECODE_OK
 python3 - <<'PY'
 import wave, audioop, math
-w = wave.open("output/.work_final_film_1080p/master_audio.wav", "rb")
+w = wave.open("output/.work_final_film_16x9/master_audio.wav", "rb")
 d = w.readframes(w.getnframes())
 print("channels", w.getnchannels(), "rate", w.getframerate(), "dur", round(w.getnframes()/w.getframerate(), 2))
 print("peak dBFS", round(20*math.log10(audioop.max(d, w.getsampwidth())/32768.0), 2))
@@ -126,15 +141,15 @@ PY
 
 ## Step 6 — deliver
 
-- Master + chapters as agreed (default `output/final_film_1080p.mp4` and `…_chapters.txt`).
+- Master + chapters as agreed (default `output/final_film_16x9.mp4` and `…_chapters.txt`).
 - Copy the text artifacts into `outputs/` (see `outputs/README.md`) so results survive a
   channel that can't carry video.
 - Handing the video to a human who can't download binaries:
 
 ```bash
 python3 universal_toolbook/tools/serve_deliverables.py 8000 output         # Range-capable static server
-python3 universal_toolbook/run_studio.py player output/final_film_1080p.mp4 --out output/player.html
-python3 universal_toolbook/tools/build_storyboard_svg.py output/final_film_1080p.mp4 --out outputs/storyboard.svg
+python3 universal_toolbook/run_studio.py player output/final_film_16x9.mp4 --out output/player.html
+python3 universal_toolbook/tools/build_storyboard_svg.py output/final_film_16x9.mp4 --out outputs/storyboard.svg
 ```
 
 The SVG storyboard is **text** — captions, cross-fades and stills inline — so it renders

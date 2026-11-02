@@ -10,7 +10,7 @@ Keep it generic: one sub-folder per finished film.
 ```
 outputs/
   <film-slug>/
-    the_<film>_1080p.mp4 the master, ~8 MB at 1080p/crf 24 (see the size rule below)
+    the_<film>_<aspect>.mp4 the master (`_16x9` landscape or `_9x16` portrait; see the size rule below)
     chapters.txt        chapter timestamps + generated CC music credits
     report.json         resolution, fps, duration, voice_backend, BGM tracks, sfx count
     validation.json     {valid, frames, dimensions, fps, film_grain, voiced, warnings}
@@ -28,8 +28,8 @@ the master is then rebuilt with the command recorded in that folder's `NOTES.md`
 
 1. **One master, and only the master.** A film folder may carry its finished `.mp4`; it may not
    carry `work/` frames, `.work_*/` intermediates, `.gif` previews or `.webm` re-encodes. Keep the
-   file under ~50 MB (git hosts warn there and reject past 100 MB): 1080p at `--crf 24` runs about
-   8 MB per two minutes, so this is easy to honour. Anything larger ships as text plus the rebuild
+   file under ~50 MB (git hosts warn there and reject past 100 MB): full-resolution 16:9 and 9:16
+   masters have the same pixel count, and `--crf 24` runs about 8 MB per two minutes here, so this is easy to honour. Anything larger ships as text plus the rebuild
    command in `NOTES.md`.
 2. Always record in `NOTES.md`:
    - the master's path, byte size and `sha256sum`;
@@ -41,15 +41,19 @@ the master is then rebuilt with the command recorded in that folder's `NOTES.md`
 ## Producing the text set
 
 ```bash
-OUT=outputs/<film-slug>
+FILM=your-film-slug
+ASPECT=16x9                              # use 9x16 for portrait
+OUT="outputs/$FILM"
+MASTER="output/final_film_${ASPECT}.mp4"
+STEM=${MASTER%.mp4}
 mkdir -p "$OUT"
-cp output/final_film_1080p.mp4                       "$OUT/the_two_inch_bridge_1080p.mp4"  # optional, <50 MB
-cp output/final_film_1080p_chapters.txt              "$OUT/chapters.txt"
-cp output/final_film_1080p_report.json               "$OUT/report.json"
-cp output/final_film_1080p_validation_report.json    "$OUT/validation.json"
-cp output/final_film_1080p_visual_audio_cues.json    "$OUT/cues.json"
-python3 universal_toolbook/tools/build_storyboard_svg.py output/final_film_1080p.mp4 --out "$OUT/storyboard.svg"
-sha256sum output/final_film_1080p.mp4
+cp "$MASTER"                           "$OUT/the_${FILM}_${ASPECT}.mp4"  # optional, <50 MB
+cp "${STEM}_chapters.txt"               "$OUT/chapters.txt"
+cp "${STEM}_report.json"                 "$OUT/report.json"
+cp "${STEM}_validation_report.json"      "$OUT/validation.json"
+cp "${STEM}_visual_audio_cues.json"      "$OUT/cues.json"
+python3 universal_toolbook/tools/build_storyboard_svg.py "$MASTER" --out "$OUT/storyboard.svg"
+sha256sum "$MASTER"
 ```
 
 ## Getting the actual video to a human, in order of reliability
@@ -62,7 +66,7 @@ sha256sum output/final_film_1080p.mp4
 3. **Serve it.** `python3 universal_toolbook/tools/serve_deliverables.py 8000 output`, open the preview from
    inside the app (not a raw URL in an external tab). Range requests are supported, so seeking
    and downloads work.
-4. **Wrap it.** `python3 universal_toolbook/run_studio.py player output/final_film_1080p.mp4 --out output/player.html`.
+4. **Wrap it.** `python3 universal_toolbook/run_studio.py player output/final_film_16x9.mp4 --out output/player.html`.
 5. **Show the SVG storyboard** above — it renders where video is refused.
 6. If none of those reach the reader, the text set in this folder plus the rebuild command is
    the deliverable.

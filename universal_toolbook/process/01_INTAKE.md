@@ -3,6 +3,21 @@
 Nothing in this file is about a specific film. It is the decision procedure that runs before
 a single line of `episode.json` is written.
 
+## Delivery target — decide before blocking
+
+Choose the output aspect from the script's composition and delivery requirement, not from duration
+alone. Use **16:9** for landscape platforms, wide two-character staging, or a cinematic master;
+use **9:16** when the requested destination is a vertical feed or the shot design benefits from a
+single-subject close frame. Short-form can be either aspect when that is what delivery requires.
+If the user has not specified a format and the choice would change the composition, ask before
+blocking. Render QA stills in every requested format.
+
+Short-form runtime target is **40–90 seconds total**. `--shorts` is specifically the portrait
+Shorts profile: it selects 9:16 and enforces that final speech-locked range. For short-form
+landscape use `--aspect-ratio 16:9`; for portrait content outside that runtime use `--aspect-ratio
+9:16`. Aspect ratio never changes the authored episode geometry by stretching; portrait reframes
+around the active speaker or an optional scene-level `portrait_focus` / `portrait_focus_x`.
+
 ## 1.1 Pick the visual style
 
 | Style value | Look | Use for |
@@ -20,19 +35,20 @@ Rule of thumb: if the script has weather, cities, machines or tension → **cel*
 
 One scene = one location + one continuous stretch of time. Practical targets:
 
-| Metric | Value | Why |
+| Metric | Practical guidance | Why |
 | --- | --- | --- |
-| Scene length | 10–20 s | shorter feels rushed, longer needs a camera move |
-| Scenes per minute | 4–6 | 8 scenes ≈ 1:40–2:10 finished |
-| Lines per scene | 3–6 | each line is ~3–5 s of speech |
-| Characters per scene | 2 (max 3) | 3+ on a 1920 frame collides constantly |
+| Short-form runtime | **40–90 s total** | The overall delivery target, not a per-scene duration |
+| Scene length/count | Script-driven; often 4–8 scenes for short-form | Give each scene one location and one meaningful change; keep the whole runtime in range |
+| Dialogue per scene | Enough for its story beat; each line is ~3–5 s | Speech retimes scenes, so budget from words and pauses rather than a fixed line count |
+| Characters per scene | 2 (max 3) | Three or more can collide in landscape and a portrait crop may show only the focus actor |
 
-> **These are the short-form defaults, not the engine's limits.** The bundled long-form specs
-> (`examples/discipline_vs_obsession_episode.json` — 9 scenes, 48–74 s each, 520 s declared;
-> `examples/red_umbrella_episode.json` — 9 scenes up to 40 s) prove longer scenes work, at the
-> cost of render time and of much harder camera/beat timing. If a script is a one-act piece or
-> a video essay, budget 30–60 s per scene and keep a camera move inside each one so it never
-> reads as a slide. See `08_LIMITS.md` for the measured cost.
+> **Use the script to set scene lengths.** Count speech and allow for pauses plus roughly 1.3 s of
+> lead-in/tail-out per scene; a 40–90 s short-form film will often need compact scenes rather than
+> the earlier 10–20 s default. The bundled long-form specs (`examples/discipline_vs_obsession_episode.json`
+> — 9 scenes, 48–74 s each, 520 s declared; `examples/red_umbrella_episode.json` — 9 scenes up to
+> 40 s) prove longer scenes work, at the cost of render time and harder camera/beat timing. For a
+> one-act piece or video essay, budget 30–60 s per scene and keep camera movement active so the
+> shot never reads as a slide. See `08_LIMITS.md` for measured render cost.
 
 Write down for each scene: **id, chapter title, location, who is on screen, what changes**
 (a fact is revealed / a decision is made / a thing breaks). A scene where nothing changes is
@@ -51,7 +67,9 @@ So a 15-word narration line ≈ 6 s. If a scene's dialogue totals 40 words, decl
 gets stretched and your `camera_shots`/`beats` timings drift; an oversized one leaves silence.
 
 Declared `duration` is a *planning* number. Expect the final master to land a little under the
-sum of declared scene durations.
+sum of declared scene durations. For the 40–90 second Shorts profile, let speech retiming settle,
+then use `--shorts` to check the final duration inclusively before video encoding. It reports an
+error rather than truncating or rewriting dialogue when the runtime is out of range.
 
 ## 1.4 Cast the speakers
 

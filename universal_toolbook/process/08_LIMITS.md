@@ -7,32 +7,40 @@ deliver. Numbers below are measured in this environment, not estimated.
 
 | Property | Value | Changeable? |
 | --- | --- | --- |
-| Resolution | 1920×1080 | **No** — the compositor is written for 16:9 at this size |
+| Resolution | 1920×1080 landscape or 1080×1920 portrait | **Yes** — choose with `--aspect-ratio 16:9` or `--aspect-ratio 9:16` |
 | Frame rate | 30 fps | No |
 | Container / codec | MP4, H.264 High + AAC 44.1 kHz stereo | Yes, via ffmpeg flags |
 | Film grain | off (asserted by the test suite) | Not exposed — this build is zero-grain by design |
-| Aspect ratios | 16:9 only | 9:16 / 1:1 / 4:5 are **not supported** |
+| Aspect ratios | 16:9 and 9:16 | Square, 4:5, and arbitrary output ratios are not supported by the CLI |
 
 ## Length and pace
 
-| Case | Scenes | Scene length | How it is made |
-| --- | --- | --- | --- |
-| **Short form (default)** | 6–10 | **10–20 s** | the target for `01_INTAKE.md`; ~1:40–2:10 finished |
-| Long form | 8–9 | 40–75 s | possible; `examples/discipline_vs_obsession_episode.json` is 9 scenes / 520 s declared |
-| Very long | — | — | not proven; render time scales linearly and chunk resume becomes essential |
+| Case | Total runtime | How it is made |
+| --- | --- | --- |
+| **Shorts profile** | **40–90 s** | `--shorts` selects 9:16 and enforces the final speech-locked runtime, inclusive |
+| Portrait video (not a Short) | Any authored runtime | `--aspect-ratio 9:16`; no duration gate |
+| Landscape / long-form | Any authored runtime | `--aspect-ratio 16:9` (default); examples include a declared 520-second episode |
+| Very long | — | Not benchmarked beyond existing examples; render time scales linearly and chunk resume becomes essential |
 
 Runtime is set by the **speech**, not by the declared `duration` field: scenes are retimed to
 the generated audio. Plan on `words ÷ 2.5` seconds per line plus pauses, then add ~1.3 s per
-scene for lead-in/tail-out.
+scene for lead-in/tail-out. `--shorts` checks that final duration after speech retiming and exits
+before video encoding if it is outside 40–90 seconds; it does not silently truncate the script.
 
-Measured on this machine (2 vCPU, `--workers 2`):
+Measured on this machine (2 vCPU, `--workers 2`); the table below uses landscape samples:
 
 | Pass | 2-minute film | 8.5-minute film |
 | --- | --- | --- |
 | `check` | 2 s | 2 s |
 | `stills` | ~2 s | ~3 s |
-| draft render (960×540) | ~50 s | (not attempted) |
-| master (1080p, `veryfast`, `crf 24`) | ~90 s | scale linearly, expect ~7 min |
+| draft render (960×540 landscape) | ~50 s | (not attempted) |
+| master (1920×1080 landscape, `veryfast`, `crf 24`) | ~90 s | scale linearly, expect ~7 min |
+
+A separate two-scene, 44-second **no-voice draft smoke** on this machine took 23.35 s in portrait
+(540×960) and 8.43 s in landscape (960×540), including pipeline startup and muxing. This is not a
+voiced-master benchmark. Portrait currently renders the authored 1920×1080 stage before cropping
+and compositing, so draft output dimensions do not reduce that geometry pass; budget extra time
+and benchmark on the target machine.
 
 ## Voice
 
@@ -53,6 +61,7 @@ Measured on this machine (2 vCPU, `--workers 2`):
 ## Visual
 
 - **Two characters per scene** is the practical maximum; three collides constantly at 1920.
+- Portrait output eases toward the active speaker when possible; otherwise it chooses a scene focus character. A second character far outside the 9:16 crop may not be visible in that shot. Set scene `portrait_focus` to a character id or `"board"`, or `portrait_focus_x` to a normalized `0..1` value when the script needs a different subject. Portrait boards are uniformly scaled/repositioned inside the safe crop; optional board fields `portrait_w` / `portrait_x` override that fit.
 - **60 actions**, 12 hairstyles, 18 accessories, 12 preset environments plus parametric
   settings — enough for interiors, streets, weather, dawn/dusk, but no crowd scenes, no
   vehicles other than the `passing_car` / `passing_bus` props.
@@ -86,7 +95,8 @@ Measured on this machine (2 vCPU, `--workers 2`):
 
 | Request | Reality |
 | --- | --- |
-| Vertical / square cut | Not supported — 16:9 only |
+| 9:16 vertical cut | Supported at 1080×1920 with subject-aware crop and safe-area text/boards |
+| Square / 4:5 cut | Not supported in the current CLI |
 | 4K | Not supported |
 | A specific real person's likeness or voice | Not supported |
 | Precise lip sync to a supplied audio file | Not supported — speech is generated, not ingested |
