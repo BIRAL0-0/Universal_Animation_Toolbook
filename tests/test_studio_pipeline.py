@@ -18,6 +18,8 @@ from engine.voice_engine import (
     align_scene_board_to_speech,
     align_scene_cameras_to_speech,
     compact_internal_silences_with_words,
+    _attach_source_text,
+    _compact_piper_line,
 )
 from tools.fetch_piper_voices import hf_relpath
 from tools.script_helper import segment_user_script, verify_script_fidelity
@@ -110,27 +112,53 @@ def main() -> int:
     fidelity = verify_script_fidelity(custom_script, parsed)
     assert fidelity["exact_word_match"] is True, f"Script mismatch: {fidelity}"
 
-    # 5. Verify V3 internal TTS silence compactor trims mid-sentence dead air & shifts WordBoundary timestamps
+    # 5. Silence cleanup trims TTS dead air, keeps punctuation pauses, and shifts word sync.
     sr = 44100
     with tempfile.TemporaryDirectory() as td:
-        wav_path = Path(td) / "test_pause.wav"
-        # 0.40s tone + 0.85s internal silence + 0.40s tone = 1.65s total
         tone = [4000 if (i % 40) < 20 else -4000 for i in range(int(0.40 * sr))]
         sil = [0] * int(0.85 * sr)
-        pcm = tone + sil + tone
-        with wave.open(str(wav_path), "wb") as wf:
-            wf.setnchannels(1)
-            wf.setsampwidth(2)
-            wf.setframerate(sr)
-            wf.writeframes(struct.pack(f"<{len(pcm)}h", *pcm))
         words_in = [
             {"word": "First", "start": 0.05, "end": 0.38},
             {"word": "Second", "start": 1.25, "end": 1.60},
         ]
+
+        def write_gap_wav(path: Path) -> None:
+            pcm = tone + sil + tone  # 0.40s tone + 0.85s gap + 0.40s tone = 1.65s
+            with wave.open(str(path), "wb") as wf:
+                wf.setnchannels(1)
+                wf.setsampwidth(2)
+                wf.setframerate(sr)
+                wf.writeframes(struct.pack(f"<{len(pcm)}h", *pcm))
+
+        wav_path = Path(td) / "test_pause.wav"
+        write_gap_wav(wav_path)
         new_dur, words_out = compact_internal_silences_with_words(wav_path, words_in)
-        assert new_dur < 1.10, f"Expected internal 0.85s silence to compact below 1.10s, got {new_dur}"
+        assert new_dur < 1.00, f"Expected unpunctuated 0.85s TTS dead air to compact, got {new_dur}"
         assert abs(words_out[0]["start"] - 0.05) < 0.01
-        assert words_out[1]["start"] < 0.72, f"Expected second word timestamp to shift earlier, got {words_out[1]}"
+        assert words_out[1]["start"] < 0.60, f"Expected the second word timestamp to shift with audio, got {words_out[1]}"
+
+        for index, (punctuated, lower, upper) in enumerate([
+            ("First,", 1.00, 1.10),   # keep a short clause pause
+            ("First.", 1.18, 1.28),  # retain a clearer sentence boundary
+            ("First...", 1.62, 1.68),  # ellipsis is explicitly intentional; leave it intact
+        ]):
+            punct_path = Path(td) / f"pause_{index}.wav"
+            write_gap_wav(punct_path)
+            punct_words = _attach_source_text(
+                [
+                    {"word": "First", "start": 0.05, "end": 0.38},
+                    {"word": "Second", "start": 1.25, "end": 1.60},
+                ],
+                f"{punctuated} Second",
+            )
+            punct_dur, _ = compact_internal_silences_with_words(punct_path, punct_words)
+            assert lower <= punct_dur <= upper, f"Unexpected pause handling after {punctuated!r}: {punct_dur}"
+
+        piper_path = Path(td) / "piper_uncompacted.wav"
+        write_gap_wav(piper_path)
+        piper_dur, piper_words = _compact_piper_line(piper_path, "First word", 1.65)
+        assert piper_dur < 1.00, f"Piper post-processing should compact TTS dead air, got {piper_dur}"
+        assert len(piper_words) == 2 and abs(piper_words[1]["start"] - 0.52) < 0.10, piper_words
 
     # 6. Verify V3 speech-locked board & camera `cue_on` / `hide_on` (never misfires on earlier stopwords!)
     mock_words = [
