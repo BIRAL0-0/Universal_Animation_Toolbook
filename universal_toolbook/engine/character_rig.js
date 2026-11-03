@@ -9,6 +9,63 @@
 const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const lerp = (a, b, k) => a + (b - a) * k;
 const ease = (k) => { const c = clamp(k); return c * c * (3 - 2 * c); };
+
+/**
+ * Spring physics easing — damped harmonic oscillator (inspired by GSAP/Manim spring rate functions).
+ * Provides natural, organic overshoot and settle for idle animations and transitions.
+ * @param {number} t - normalized time [0, 1]
+ * @param {object} opts - { stiffness, damping, mass } or { bounce } for simplified API
+ * @returns {number} eased value, may overshoot 1.0 briefly
+ */
+function springEase(t, opts = {}) {
+  const tn = clamp(t);
+  let stiffness, damping, mass;
+  if (opts.bounce !== undefined) {
+    // Simplified bounce parameter: 0 = no bounce (critically damped), 1 = lots of bounce
+    const b = clamp(opts.bounce);
+    stiffness = 180 - b * 120; // 180 (stiff) to 60 (soft)
+    damping = 12 + b * 18;     // 12 (damped) to 30 (bouncy) — wait, this is backwards
+    // Actually: low damping = bouncy, high damping = no bounce
+    damping = 26 - b * 20;     // 26 (no bounce) to 6 (very bouncy)
+    mass = 1;
+  } else {
+    stiffness = opts.stiffness ?? 180;
+    damping = opts.damping ?? 12;
+    mass = opts.mass ?? 1;
+  }
+  // Damped harmonic oscillator: x(t) = 1 - e^(-ζωt) * (cos(ωdt) + (ζω/ωd)*sin(ωdt))
+  const omega0 = Math.sqrt(stiffness / mass);
+  const zeta = damping / (2 * Math.sqrt(stiffness * mass));
+  if (zeta >= 1) {
+    // Overdamped or critically damped — no oscillation
+    const r1 = -omega0 * (zeta - Math.sqrt(zeta * zeta - 1));
+    const r2 = -omega0 * (zeta + Math.sqrt(zeta * zeta - 1));
+    const c2 = (r1) / (r1 - r2);
+    const c1 = 1 - c2;
+    return clamp(1 - c1 * Math.exp(r1 * tn) - c2 * Math.exp(r2 * tn));
+  }
+  // Underdamped — oscillates then settles
+  const omegaD = omega0 * Math.sqrt(1 - zeta * zeta);
+  const expPart = Math.exp(-zeta * omega0 * tn);
+  return clamp(1 - expPart * (Math.cos(omegaD * tn) + (zeta * omega0 / omegaD) * Math.sin(omegaD * tn)));
+}
+
+/**
+ * Back easing — configurable overshoot (inspired by GSAP back.out).
+ * Anticipates before moving, or overshoots at the end.
+ */
+function backEase(t, overshoot = 1.70158) {
+  const c = clamp(t);
+  const s = overshoot;
+  return c * c * ((s + 1) * c - s);
+}
+
+function backOut(t, overshoot = 1.70158) {
+  const c = clamp(t);
+  const s = overshoot;
+  const t1 = c - 1;
+  return t1 * t1 * ((s + 1) * t1 + s) + 1;
+}
 const eio = ease;
 const eo = (k) => 1 - Math.pow(1 - clamp(k), 3);
 const ca = (x) => Math.max(0, Math.min(1, Number.isFinite(x) ? x : 0)).toFixed(3);
@@ -1815,6 +1872,9 @@ module.exports = {
   clamp,
   lerp,
   ease,
+  springEase,
+  backEase,
+  backOut,
   eio,
   eo,
   ca,

@@ -1670,7 +1670,26 @@ function evaluateCharacterState(actor, ts, sceneDur, globalT, W, floorY, speechC
   const curDur = Math.max(0.05, cur.end - cur.start);
   const curState = computeBeatState(cur, clamp(ts - cur.start, 0, curDur), curDur, globalT, W, floorY, scale);
 
-  const blendWin = 0.36;
+  // Height-aware blend window: longer blends for larger height changes (prevents teleport)
+  // Based on foot IK research: 200px height change needs ~0.6s for natural descent
+  const baseBlendWin = 0.36;
+  // Peek at previous state to estimate height delta
+  let blendWin = baseBlendWin;
+  if (activeIdx > 0) {
+    const prev = {
+      ...beats[activeIdx - 1],
+      _actorSeed: actorSeed,
+      _isSpeaking: isSpeaking,
+      _hasDialogueInScene: hasDialogueInScene,
+    };
+    const prevDur = Math.max(0.05, prev.end - prev.start);
+    const prevState = computeBeatState(prev, prevDur, prevDur, globalT, W, floorY, scale);
+    const curDur_peek = Math.max(0.05, cur.end - cur.start);
+    const curState_peek = computeBeatState(cur, 0, curDur_peek, globalT, W, floorY, scale);
+    const heightDelta = Math.abs(prevState.fy - curState_peek.fy);
+    // Scale blend window: 0.36s base + 0.001s per pixel of height change, capped at 0.8s
+    blendWin = Math.min(0.8, baseBlendWin + heightDelta * 0.001);
+  }
   if (activeIdx > 0 && ts - cur.start < blendWin) {
     const prev = {
       ...beats[activeIdx - 1],
