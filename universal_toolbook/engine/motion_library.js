@@ -214,36 +214,41 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
   }
 
   if (action === 'climb_stairs' || action === 'descend_stairs') {
-    // Exact world-space step-tread IK matching `stairs` prop geometry (`sw = 88*stairScale`, `sh = 42*stairScale`)
+    // Exact world-space step-tread IK matching `stairs` prop geometry
+    // Supports `step_offset` to chain consecutive climb beats without snap-back.
     const descending = action === 'descend_stairs';
     const steps = Math.max(2, Number(beat.steps || 5));
     const stScale = Number(beat.stair_scale ?? beat.prop_scale ?? s);
-    const sw = 88 * stScale;
-    const sh = 42 * stScale;
+    // Match the stairs prop defaults (step_width=72, step_height=46)
+    const sw = (beat.step_width ?? 72) * stScale;
+    const sh = (beat.step_height ?? 46) * stScale;
     const stairDir = beat.stair_dir === 'left' ? -1 : (beat.stair_dir === 'right' ? 1 : facing);
     const moveDir = descending ? -stairDir : stairDir;
     const moveFlip = moveDir < 0;
 
+    // `step_offset` allows consecutive climb beats to continue from where the previous ended
+    const stepOffset = Number(beat.step_offset ?? 0);
+
     // `fromX` is the base of step 0 (`prop.x * W` of the stairs prop)
     const basePx = beat.stairs_x !== undefined ? beat.stairs_x * W : fromX;
     const treadPt = (idx) => {
-      if (idx < 0) {
+      const adjusted = idx - stepOffset;
+      if (adjusted < 0) {
         return [basePx - stairDir * sw * 0.42, gY];
       }
-      const clampedIdx = Math.min(steps - 1, idx);
       return [
-        basePx + stairDir * (clampedIdx + 0.50) * sw,
-        gY - (clampedIdx + 1) * sh,
+        basePx + stairDir * (adjusted + 0.50) * sw,
+        gY - (adjusted + 1) * sh,
       ];
     };
 
-    const totalTransitions = steps; // floor (-1) -> step 0 -> ... -> step (steps - 1)
-    const prog = ease(u) * totalTransitions;
-    const k = Math.min(totalTransitions - 1, Math.floor(prog));
+    const totalTransitions = steps;
+    const prog = ease(u) * totalTransitions + stepOffset;
+    const k = Math.min(totalTransitions - 1 + stepOffset, Math.floor(prog));
     const sf = prog - k; // 0..1 within single step transition
 
-    const srcIdx = descending ? (steps - 1 - k) : (k - 1);
-    const dstIdx = descending ? (steps - 2 - k) : k;
+    const srcIdx = descending ? (steps - 1 - (k - stepOffset)) : (k - 1);
+    const dstIdx = descending ? (steps - 2 - (k - stepOffset)) : k;
     const prevIdx = descending ? Math.min(steps - 1, srcIdx + 1) : (srcIdx - 1);
 
     const stancePt = treadPt(srcIdx);

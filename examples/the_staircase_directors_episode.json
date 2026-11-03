@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "title": "The Staircase — Director's Cut",
+=======
+  "title": "The Staircase \u2014 Director's Cut",
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
   "channel_name": "",
   "thesis": "You don't need the perfect moment. You need to begin.",
   "style": "cel",
@@ -19,7 +23,11 @@
       "style": "cel",
       "color": "#e2e8f0",
       "build": "standard",
+<<<<<<< HEAD
       "hair": "short_neat",
+=======
+      "hair": "short_swept",
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
       "hair_color": "#94a3b8",
       "shoe_color": "#475569",
       "eyes": true,
@@ -32,7 +40,11 @@
       "style": "cel",
       "color": "#f1f5f9",
       "build": "standard",
+<<<<<<< HEAD
       "hair": "short_neat",
+=======
+      "hair": "short_swept",
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
       "hair_color": "#94a3b8",
       "shoe_color": "#475569",
       "eyes": true,
@@ -55,7 +67,14 @@
       "tail_out": 0.6,
       "portrait_focus_x": 0.5,
       "setting": {
+<<<<<<< HEAD
         "sky": ["#010102", "#08080c"],
+=======
+        "sky": [
+          "#010102",
+          "#08080c"
+        ],
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
         "floor_color": "#0a0a0e",
         "light_color": "#fbbf24",
         "backdrop": "minimal",
@@ -68,6 +87,7 @@
           "x": 0.5,
           "scale": 2.2,
           "z": -16
+<<<<<<< HEAD
         },
         {
           "type": "goal_silhouette",
@@ -75,6 +95,8 @@
           "y": 90,
           "scale": 0.8,
           "z": -22
+=======
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
         }
       ],
       "camera_shots": [
@@ -219,7 +241,14 @@
       "tail_out": 0.7,
       "portrait_focus_x": 0.5,
       "setting": {
+<<<<<<< HEAD
         "sky": ["#020204", "#08080c"],
+=======
+        "sky": [
+          "#020204",
+          "#08080c"
+        ],
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
         "floor_color": "#0c0c10",
         "light_color": "#fbbf24",
         "backdrop": "minimal",
@@ -232,6 +261,7 @@
           "x": 0.5,
           "scale": 2.4,
           "z": -18
+<<<<<<< HEAD
         },
         {
           "type": "goal_silhouette",
@@ -239,6 +269,8 @@
           "y": 80,
           "scale": 0.5,
           "z": -24
+=======
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
         }
       ],
       "camera_shots": [
@@ -361,12 +393,20 @@
       "dialogue": [
         {
           "speaker": "narrator",
+<<<<<<< HEAD
           "text": "Same talent — not much.",
+=======
+          "text": "Same talent \u2014 not much.",
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
           "pause_after": 0.3
         },
         {
           "speaker": "narrator",
+<<<<<<< HEAD
           "text": "The staircase didn't care about their résumés.",
+=======
+          "text": "The staircase didn't care about their r\u00e9sum\u00e9s.",
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
           "pause_after": 0.35
         },
         {
@@ -409,7 +449,14 @@
       "tail_out": 0.7,
       "portrait_focus": "climber",
       "setting": {
+<<<<<<< HEAD
         "sky": ["#020204", "#0a0a10"],
+=======
+        "sky": [
+          "#020204",
+          "#0a0a10"
+        ],
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
         "floor_color": "#0c0c10",
         "light_color": "#fbbf24",
         "backdrop": "minimal",
@@ -441,6 +488,7 @@
           "y": 290,
           "scale": 0.85,
           "z": -8
+<<<<<<< HEAD
         },
         {
           "type": "goal_silhouette",
@@ -448,6 +496,8 @@
           "y": 90,
           "scale": 0.55,
           "z": -22
+=======
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
         }
       ],
       "camera_shots": [
@@ -662,7 +712,11 @@
         },
         {
           "speaker": "narrator",
+<<<<<<< HEAD
           "text": "Not a napkin sketch — a system.",
+=======
+          "text": "Not a napkin sketch \u2014 a system.",
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
           "pause_after": 0.3
         },
         {
@@ -715,7 +769,14 @@
       "tail_out": 0.7,
       "portrait_focus": "climber",
       "setting": {
+<<<<<<< HEAD
         "sky": ["#040408", "#0c0c14"],
+=======
+        "sky": [
+          "#040408",
+          "#0c0c14"
+        ],
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
         "floor_color": "#0a0a10",
         "light_color": "#fbbf24",
         "backdrop": "minimal",
@@ -731,6 +792,7 @@
           "z": -16
         },
         {
+<<<<<<< HEAD
           "type": "goal_silhouette",
           "x": 0.55,
           "y": 70,
@@ -738,6 +800,8 @@
           "z": -22
         },
         {
+=======
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
           "type": "bench",
           "x": 0.22,
           "z": -6
@@ -986,7 +1050,14 @@
       "tail_out": 0.7,
       "portrait_focus_x": 0.5,
       "setting": {
+<<<<<<< HEAD
         "sky": ["#020204", "#08080c"],
+=======
+        "sky": [
+          "#020204",
+          "#08080c"
+        ],
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
         "floor_color": "#08080c",
         "light_color": "#fbbf24",
         "backdrop": "minimal",
@@ -1001,6 +1072,7 @@
           "z": -16
         },
         {
+<<<<<<< HEAD
           "type": "goal_silhouette",
           "x": 0.5,
           "y": 80,
@@ -1008,6 +1080,8 @@
           "z": -22
         },
         {
+=======
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
           "type": "clock",
           "x": 0.3,
           "y": 360,
@@ -1245,7 +1319,11 @@
         },
         {
           "speaker": "narrator",
+<<<<<<< HEAD
           "text": "Both facing the same impossible gap — from different heights.",
+=======
+          "text": "Both facing the same impossible gap \u2014 from different heights.",
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
           "pause_after": 0.4
         },
         {
@@ -1278,7 +1356,14 @@
       "tail_out": 0.8,
       "portrait_focus_x": 0.5,
       "setting": {
+<<<<<<< HEAD
         "sky": ["#060608", "#1a1408"],
+=======
+        "sky": [
+          "#060608",
+          "#1a1408"
+        ],
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
         "floor_color": "#0c0c10",
         "light_color": "#fbbf24",
         "backdrop": "horizon",
@@ -1291,6 +1376,7 @@
           "x": 0.46,
           "scale": 1.4,
           "z": -14
+<<<<<<< HEAD
         },
         {
           "type": "goal_silhouette",
@@ -1298,6 +1384,8 @@
           "y": 60,
           "scale": 0.5,
           "z": -22
+=======
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
         }
       ],
       "camera_shots": [
@@ -1485,7 +1573,14 @@
       "tail_out": 1.0,
       "portrait_focus_x": 0.5,
       "setting": {
+<<<<<<< HEAD
         "sky": ["#010102", "#040406"],
+=======
+        "sky": [
+          "#010102",
+          "#040406"
+        ],
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
         "floor_color": "#060608",
         "light_color": "#fbbf24",
         "backdrop": "minimal",
@@ -1498,6 +1593,7 @@
           "x": 0.5,
           "scale": 1.6,
           "z": -16
+<<<<<<< HEAD
         },
         {
           "type": "goal_silhouette",
@@ -1505,6 +1601,8 @@
           "y": 80,
           "scale": 0.55,
           "z": -24
+=======
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
         }
       ],
       "camera_shots": [
@@ -1718,4 +1816,8 @@
       ]
     }
   ]
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)

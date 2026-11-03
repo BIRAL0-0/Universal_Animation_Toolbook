@@ -198,19 +198,26 @@ function drawWorldProp(g, prop, W, floorY, t, sceneAccent = '#38bdf8', sceneT = 
       g.fillText(prop.label, px, floorY - bh * 0.42);
     }
   } else if (prop.type === 'stairs') {
-    const steps = prop.steps || 5;
-    const sw = 88 * s, sh = 42 * s;
+    const steps = prop.steps || 8;
+    const sw = (prop.step_width || 72) * s;
+    const sh = (prop.step_height || 46) * s;
     const dir = prop.dir === 'left' ? -1 : 1;
     for (let i = 0; i < steps; i++) {
       const sx = dir > 0 ? px + i * sw : px - (i + 1) * sw;
       const h = (i + 1) * sh;
-      g.fillStyle = i === steps - 1 ? accent : '#334155';
-      g.globalAlpha = i === steps - 1 ? 0.85 : 1.0;
-      g.fillRect(sx, floorY - h, sw, h);
+      // Gradient: lower steps darker, upper steps lighter for depth
+      const depthT = i / Math.max(1, steps - 1);
+      const stepGrey = Math.round(36 + depthT * 28);
+      g.fillStyle = i === steps - 1 ? accent : `rgb(${stepGrey}, ${stepGrey + 6}, ${stepGrey + 16})`;
+      g.globalAlpha = i === steps - 1 ? 0.75 : 1.0;
+      // Rounded step edges for cleaner look
+      g.beginPath();
+      g.roundRect(sx, floorY - h, sw - 1, h, [3 * s, 3 * s, 0, 0]);
+      g.fill();
       g.globalAlpha = 1.0;
       g.strokeStyle = '#0f172a';
-      g.lineWidth = 2.5;
-      g.strokeRect(sx, floorY - h, sw, h);
+      g.lineWidth = 2.0;
+      g.stroke();
     }
   } else if (prop.type === 'signpost') {
     const postHeight = Number(prop.post_height ?? 250) * s;
