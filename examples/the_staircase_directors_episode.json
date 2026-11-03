@@ -1,0 +1,1823 @@
+{
+<<<<<<< HEAD
+  "title": "The Staircase — Director's Cut",
+=======
+  "title": "The Staircase \u2014 Director's Cut",
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+  "channel_name": "",
+  "thesis": "You don't need the perfect moment. You need to begin.",
+  "style": "cel",
+  "bgm": "dynamic",
+  "subtitles_mode": "cinema",
+  "outro": false,
+  "voices": {
+    "narrator": {
+      "voice": "en-US-GuyNeural",
+      "rate": "-5%",
+      "pitch": "-1Hz"
+    }
+  },
+  "cast": {
+    "waiter": {
+      "name": "WAITER",
+      "style": "cel",
+      "color": "#e2e8f0",
+      "build": "standard",
+<<<<<<< HEAD
+      "hair": "short_neat",
+=======
+      "hair": "short_swept",
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+      "hair_color": "#94a3b8",
+      "shoe_color": "#475569",
+      "eyes": true,
+      "expression": "hopeful",
+      "posture": -0.15,
+      "scale": 1.55
+    },
+    "climber": {
+      "name": "CLIMBER",
+      "style": "cel",
+      "color": "#f1f5f9",
+      "build": "standard",
+<<<<<<< HEAD
+      "hair": "short_neat",
+=======
+      "hair": "short_swept",
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+      "hair_color": "#94a3b8",
+      "shoe_color": "#475569",
+      "eyes": true,
+      "expression": "determined",
+      "posture": 0.2,
+      "scale": 1.55
+    }
+  },
+  "scenes": [
+    {
+      "id": "S01",
+      "chapter": "Cold Open | The End First",
+      "mood": "tension",
+      "bgm": "suspense_tension",
+      "bgm_gain": 0.78,
+      "accent_color": "#fbbf24",
+      "duration": 8.0,
+      "min_duration": 7.0,
+      "lead_in": 0.6,
+      "tail_out": 0.6,
+      "portrait_focus_x": 0.5,
+      "setting": {
+<<<<<<< HEAD
+        "sky": ["#010102", "#08080c"],
+=======
+        "sky": [
+          "#010102",
+          "#08080c"
+        ],
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+        "floor_color": "#0a0a0e",
+        "light_color": "#fbbf24",
+        "backdrop": "minimal",
+        "weather": "stars",
+        "lighting": "horizon_glow"
+      },
+      "props": [
+        {
+          "type": "stairs",
+          "x": 0.5,
+          "scale": 2.2,
+          "z": -16
+<<<<<<< HEAD
+        },
+        {
+          "type": "goal_silhouette",
+          "x": 0.5,
+          "y": 90,
+          "scale": 0.8,
+          "z": -22
+=======
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.0,
+          "zoom_to": 1.05,
+          "focus_x": 0.5,
+          "focus_y": 0.35,
+          "cut": true
+        },
+        {
+          "cue_on": "almost never",
+          "zoom_from": 1.05,
+          "zoom_to": 1.1,
+          "focus_x": 0.5,
+          "focus_y": 0.65,
+          "move_dur": 1.4,
+          "cut": true
+        },
+        {
+          "cue_on": "same dream",
+          "zoom_from": 1.08,
+          "zoom_to": 1.04,
+          "focus_x": 0.5,
+          "focus_y": 0.58,
+          "move_dur": 1.2,
+          "cut": false,
+          "blend_sec": 0.4
+        }
+      ],
+      "characters": [
+        {
+          "id": "waiter",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.0,
+              "action": "idle_stand",
+              "x": 0.38,
+              "facing": 1,
+              "expression": "exhausted"
+            },
+            {
+              "start": 3.0,
+              "end": 7.0,
+              "action": "idle_stand",
+              "x": 0.38,
+              "facing": 1,
+              "expression": "hopeful"
+            }
+          ]
+        },
+        {
+          "id": "climber",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.0,
+              "action": "idle_stand",
+              "x": 0.62,
+              "facing": 1,
+              "expression": "exhausted"
+            },
+            {
+              "start": 3.0,
+              "end": 7.0,
+              "action": "idle_stand",
+              "x": 0.62,
+              "facing": 1,
+              "expression": "determined"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "notebook_page",
+          "x": 0.5,
+          "y": 104,
+          "w": 620,
+          "h": 140,
+          "build_dur": 1.0,
+          "bold_first": true,
+          "portrait_w": 500,
+          "portrait_x": 0.5,
+          "lines": [
+            "BOTH WANT",
+            "THE SAME FUTURE."
+          ],
+          "cue_on": "same dream",
+          "hold_sec": 3.5
+        }
+      ],
+      "accent_words": [
+        "almost didn't",
+        "almost never",
+        "same dream"
+      ],
+      "sfx": [
+        {
+          "type": "wind_gust",
+          "at": 0.5,
+          "pan": 0.0
+        },
+        {
+          "type": "clock_tick",
+          "at": 5.5,
+          "pan": 0.0
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "She almost didn't make it.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "And he almost never started.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "Two people. Same dream. Same starting line.",
+          "pause_after": 0.4
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "chapter": "Act One | The Identical Start",
+      "mood": "reflective",
+      "bgm": "reflective_piano",
+      "bgm_gain": 0.88,
+      "accent_color": "#fbbf24",
+      "duration": 22.0,
+      "min_duration": 20.0,
+      "lead_in": 0.8,
+      "tail_out": 0.7,
+      "portrait_focus_x": 0.5,
+      "setting": {
+<<<<<<< HEAD
+        "sky": ["#020204", "#08080c"],
+=======
+        "sky": [
+          "#020204",
+          "#08080c"
+        ],
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+        "floor_color": "#0c0c10",
+        "light_color": "#fbbf24",
+        "backdrop": "minimal",
+        "weather": "stars",
+        "lighting": "horizon_glow"
+      },
+      "props": [
+        {
+          "type": "stairs",
+          "x": 0.5,
+          "scale": 2.4,
+          "z": -18
+<<<<<<< HEAD
+        },
+        {
+          "type": "goal_silhouette",
+          "x": 0.5,
+          "y": 80,
+          "scale": 0.5,
+          "z": -24
+=======
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.0,
+          "zoom_to": 1.06,
+          "focus_x": 0.5,
+          "focus_y": 0.55,
+          "cut": true
+        },
+        {
+          "cue_on": "same height",
+          "zoom_from": 1.06,
+          "zoom_to": 1.12,
+          "focus_x": 0.42,
+          "focus_y": 0.62,
+          "move_dur": 2.2,
+          "cut": true
+        },
+        {
+          "cue_on": "clock started",
+          "zoom_from": 1.1,
+          "zoom_to": 1.04,
+          "focus_x": 0.5,
+          "focus_y": 0.58,
+          "move_dur": 2.5,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "waiter",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 10.0,
+              "action": "idle_stand",
+              "x": 0.38,
+              "facing": 1,
+              "expression": "hopeful"
+            },
+            {
+              "start": 10.0,
+              "end": 20.0,
+              "action": "pace_think",
+              "x": 0.38,
+              "facing": 1,
+              "expression": "worried"
+            }
+          ]
+        },
+        {
+          "id": "climber",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 10.0,
+              "action": "idle_stand",
+              "x": 0.62,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 10.0,
+              "end": 20.0,
+              "action": "walk",
+              "from_x": 0.58,
+              "to_x": 0.64,
+              "facing": 1,
+              "expression": "focused"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "notebook_page",
+          "x": 0.5,
+          "y": 104,
+          "w": 560,
+          "h": 140,
+          "build_dur": 1.0,
+          "bold_first": true,
+          "portrait_w": 480,
+          "portrait_x": 0.5,
+          "lines": [
+            "THE CLOCK",
+            "STARTED."
+          ],
+          "cue_on": "clock started",
+          "hold_sec": 5.0
+        }
+      ],
+      "accent_words": [
+        "same talent",
+        "same height",
+        "clock started",
+        "most stories end"
+      ],
+      "sfx": [
+        {
+          "type": "clock_tick",
+          "at": 12.0,
+          "pan": -0.2
+        },
+        {
+          "type": "clock_tick",
+          "at": 14.0,
+          "pan": 0.2
+        },
+        {
+          "type": "clock_tick",
+          "at": 16.0,
+          "pan": 0.0
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+<<<<<<< HEAD
+          "text": "Same talent — not much.",
+=======
+          "text": "Same talent \u2014 not much.",
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+<<<<<<< HEAD
+          "text": "The staircase didn't care about their résumés.",
+=======
+          "text": "The staircase didn't care about their r\u00e9sum\u00e9s.",
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "The first step was the same height for both.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "The staircase doesn't lower itself for anyone.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "So they stood there. And the clock started.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "And this is where most stories end.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "Two people at the bottom of something huge, waiting for a sign.",
+          "pause_after": 0.5
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "chapter": "Act Two | The Divergence",
+      "mood": "focus",
+      "bgm": "chill_focus",
+      "bgm_gain": 0.9,
+      "accent_color": "#fbbf24",
+      "duration": 35.0,
+      "min_duration": 32.0,
+      "lead_in": 0.8,
+      "tail_out": 0.7,
+      "portrait_focus": "climber",
+      "setting": {
+<<<<<<< HEAD
+        "sky": ["#020204", "#0a0a10"],
+=======
+        "sky": [
+          "#020204",
+          "#0a0a10"
+        ],
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+        "floor_color": "#0c0c10",
+        "light_color": "#fbbf24",
+        "backdrop": "minimal",
+        "weather": "clear",
+        "lighting": "spotlights"
+      },
+      "props": [
+        {
+          "type": "stairs",
+          "x": 0.68,
+          "scale": 1.8,
+          "z": -16
+        },
+        {
+          "type": "clean_desk",
+          "x": 0.28,
+          "z": -4
+        },
+        {
+          "type": "clock",
+          "x": 0.18,
+          "y": 340,
+          "scale": 1.1,
+          "z": 4
+        },
+        {
+          "type": "wall_calendar",
+          "x": 0.12,
+          "y": 290,
+          "scale": 0.85,
+          "z": -8
+<<<<<<< HEAD
+        },
+        {
+          "type": "goal_silhouette",
+          "x": 0.68,
+          "y": 90,
+          "scale": 0.55,
+          "z": -22
+=======
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.02,
+          "zoom_to": 1.07,
+          "focus_x": 0.46,
+          "focus_y": 0.58,
+          "cut": true
+        },
+        {
+          "cue_on": "first step",
+          "zoom_from": 1.08,
+          "zoom_to": 1.14,
+          "focus_x": 0.65,
+          "focus_y": 0.56,
+          "move_dur": 2.2,
+          "cut": true
+        },
+        {
+          "cue_on": "stars to align",
+          "zoom_from": 1.12,
+          "zoom_to": 1.06,
+          "focus_x": 0.32,
+          "focus_y": 0.6,
+          "move_dur": 2.0,
+          "cut": true
+        },
+        {
+          "cue_on": "gap was already",
+          "zoom_from": 1.06,
+          "zoom_to": 1.02,
+          "focus_x": 0.5,
+          "focus_y": 0.58,
+          "move_dur": 2.5,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "waiter",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 8.0,
+              "action": "check_watch",
+              "x": 0.28,
+              "facing": 1,
+              "expression": "worried"
+            },
+            {
+              "start": 8.0,
+              "end": 18.0,
+              "action": "pace_think",
+              "x": 0.28,
+              "facing": 1,
+              "expression": "worried"
+            },
+            {
+              "start": 18.0,
+              "end": 33.0,
+              "action": "head_in_hands",
+              "x": 0.28,
+              "facing": 1,
+              "expression": "exhausted",
+              "seated": true
+            }
+          ]
+        },
+        {
+          "id": "climber",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 10.0,
+              "action": "climb_stairs",
+              "stairs_x": 0.68,
+              "steps": 3,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 10.0,
+              "end": 16.0,
+              "action": "trip_stumble",
+              "x": 0.65,
+              "facing": 1,
+              "expression": "tense"
+            },
+            {
+              "start": 16.0,
+              "end": 26.0,
+              "action": "climb_stairs",
+              "stairs_x": 0.68,
+              "steps": 4,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 26.0,
+              "end": 33.0,
+              "action": "stand_up_resolve",
+              "x": 0.65,
+              "facing": 1,
+              "expression": "determined"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "notebook_page",
+          "x": 0.28,
+          "y": 104,
+          "w": 480,
+          "h": 140,
+          "build_dur": 1.0,
+          "bold_first": true,
+          "portrait_w": 440,
+          "portrait_x": 0.28,
+          "lines": [
+            "WAITING FOR",
+            "THE RIGHT TIME."
+          ],
+          "cue_on": "stars to align",
+          "hold_sec": 18.0
+        },
+        {
+          "type": "notebook_page",
+          "x": 0.72,
+          "y": 104,
+          "w": 480,
+          "h": 140,
+          "build_dur": 1.0,
+          "bold_first": true,
+          "portrait_w": 440,
+          "portrait_x": 0.72,
+          "lines": [
+            "STARTING BEFORE",
+            "FEELING READY."
+          ],
+          "cue_on": "first step",
+          "hold_sec": 18.0
+        },
+        {
+          "type": "stat_cards",
+          "x": 0.5,
+          "y": 104,
+          "w": 560,
+          "h": 140,
+          "build_dur": 0.9,
+          "portrait_w": 500,
+          "portrait_x": 0.5,
+          "cue_on": "gap was already",
+          "hold_sec": 5.0,
+          "cards": [
+            {
+              "value": "VISIBLE",
+              "label": "THE GAP WAS ALREADY"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "needed a plan",
+        "first step",
+        "stars to align",
+        "climbing in the dark",
+        "pathetic compounds",
+        "gap was already"
+      ],
+      "sfx": [
+        {
+          "type": "clock_tick",
+          "at": 1.0,
+          "pan": -0.3
+        },
+        {
+          "type": "clock_tick",
+          "at": 3.0,
+          "pan": -0.25
+        },
+        {
+          "type": "paper_slide",
+          "at": 6.0,
+          "pan": -0.35
+        },
+        {
+          "type": "footstep",
+          "at": 12.0,
+          "pan": 0.25
+        },
+        {
+          "type": "footstep",
+          "at": 18.0,
+          "pan": 0.3
+        },
+        {
+          "type": "wind_gust",
+          "at": 22.0,
+          "pan": 0.1
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "He needed a plan. A real plan.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+<<<<<<< HEAD
+          "text": "Not a napkin sketch — a system.",
+=======
+          "text": "Not a napkin sketch \u2014 a system.",
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "He researched the perfect shoe. He didn't own shoes.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "She grabbed the first step and fell on her face.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "He was waiting for the stars to align.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "She was climbing in the dark.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "His plan was perfect. Her progress was pathetic.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "But pathetic compounds.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "Sixty seconds in, the gap was already visible.",
+          "pause_after": 0.5
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "chapter": "Act Three | The Grind",
+      "mood": "tension",
+      "bgm": "suspense_tension",
+      "bgm_gain": 0.86,
+      "accent_color": "#fbbf24",
+      "duration": 42.0,
+      "min_duration": 38.0,
+      "lead_in": 0.8,
+      "tail_out": 0.7,
+      "portrait_focus": "climber",
+      "setting": {
+<<<<<<< HEAD
+        "sky": ["#040408", "#0c0c14"],
+=======
+        "sky": [
+          "#040408",
+          "#0c0c14"
+        ],
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+        "floor_color": "#0a0a10",
+        "light_color": "#fbbf24",
+        "backdrop": "minimal",
+        "weather": "rain",
+        "rain_intensity": 0.7,
+        "lighting": "horizon_glow"
+      },
+      "props": [
+        {
+          "type": "stairs",
+          "x": 0.55,
+          "scale": 2.2,
+          "z": -16
+        },
+        {
+<<<<<<< HEAD
+          "type": "goal_silhouette",
+          "x": 0.55,
+          "y": 70,
+          "scale": 0.5,
+          "z": -22
+        },
+        {
+=======
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+          "type": "bench",
+          "x": 0.22,
+          "z": -6
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.04,
+          "zoom_to": 1.1,
+          "focus_x": 0.55,
+          "focus_y": 0.58,
+          "cut": true
+        },
+        {
+          "cue_on": "wind hit",
+          "zoom_from": 1.1,
+          "zoom_to": 1.18,
+          "focus_x": 0.52,
+          "focus_y": 0.54,
+          "move_dur": 2.2,
+          "cut": true
+        },
+        {
+          "cue_on": "stairs broke",
+          "zoom_from": 1.16,
+          "zoom_to": 1.1,
+          "focus_x": 0.58,
+          "focus_y": 0.56,
+          "move_dur": 2.0,
+          "cut": true
+        },
+        {
+          "cue_on": "hit a wall",
+          "zoom_from": 1.1,
+          "zoom_to": 1.04,
+          "focus_x": 0.5,
+          "focus_y": 0.58,
+          "move_dur": 2.5,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "waiter",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 12.0,
+              "action": "check_watch",
+              "x": 0.22,
+              "facing": 1,
+              "expression": "skeptical"
+            },
+            {
+              "start": 12.0,
+              "end": 22.0,
+              "action": "cross_arms_skeptical",
+              "x": 0.22,
+              "facing": 1,
+              "expression": "skeptical"
+            },
+            {
+              "start": 22.0,
+              "end": 40.0,
+              "action": "head_in_hands",
+              "x": 0.22,
+              "facing": 1,
+              "expression": "exhausted",
+              "seated": true
+            }
+          ]
+        },
+        {
+          "id": "climber",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 10.0,
+              "action": "climb_stairs",
+              "stairs_x": 0.55,
+              "steps": 4,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 10.0,
+              "end": 16.0,
+              "action": "trip_stumble",
+              "x": 0.55,
+              "facing": 1,
+              "expression": "tense"
+            },
+            {
+              "start": 16.0,
+              "end": 28.0,
+              "action": "climb_stairs",
+              "stairs_x": 0.55,
+              "steps": 5,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 28.0,
+              "end": 34.0,
+              "action": "stand_up_resolve",
+              "x": 0.55,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 34.0,
+              "end": 40.0,
+              "action": "look_horizon",
+              "x": 0.55,
+              "facing": 1,
+              "expression": "hopeful"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "notebook_page",
+          "x": 0.5,
+          "y": 104,
+          "w": 640,
+          "h": 140,
+          "build_dur": 1.0,
+          "bold_first": true,
+          "portrait_w": 500,
+          "portrait_x": 0.5,
+          "lines": [
+            "THE GAP DOESN'T",
+            "CLOSE ITSELF."
+          ],
+          "cue_on": "jump into the gap",
+          "hold_sec": 6.0
+        }
+      ],
+      "accent_words": [
+        "wind hit",
+        "hidden tax",
+        "stairs broke",
+        "couldn't go back",
+        "hit a wall",
+        "jump into the gap"
+      ],
+      "sfx": [
+        {
+          "type": "wind_gust",
+          "at": 2.0,
+          "pan": -0.3
+        },
+        {
+          "type": "wind_gust",
+          "at": 8.0,
+          "pan": 0.2
+        },
+        {
+          "type": "footstep",
+          "at": 14.0,
+          "pan": 0.1
+        },
+        {
+          "type": "footstep",
+          "at": 20.0,
+          "pan": 0.15
+        },
+        {
+          "type": "paper_slide",
+          "at": 25.0,
+          "pan": -0.25
+        },
+        {
+          "type": "wind_gust",
+          "at": 32.0,
+          "pan": 0.0
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "The wind hit her at step fifty.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "It didn't hit him at all.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "That's the hidden tax of staying at the bottom.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "You never face the storms, so you never learn to stand in them.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "The stairs broke under her. Literally.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "The path was falling apart behind her.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "She couldn't go back even if she wanted to.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "She hit a wall. The kind where effort stops mattering.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "But she didn't need the stairs to be complete.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "She needed to be willing to jump into the gap.",
+          "pause_after": 0.5
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "chapter": "Act Four | The Twist",
+      "mood": "tension",
+      "bgm": "suspense_tension",
+      "bgm_gain": 0.82,
+      "accent_color": "#fbbf24",
+      "duration": 35.0,
+      "min_duration": 32.0,
+      "lead_in": 0.8,
+      "tail_out": 0.7,
+      "portrait_focus_x": 0.5,
+      "setting": {
+<<<<<<< HEAD
+        "sky": ["#020204", "#08080c"],
+=======
+        "sky": [
+          "#020204",
+          "#08080c"
+        ],
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+        "floor_color": "#08080c",
+        "light_color": "#fbbf24",
+        "backdrop": "minimal",
+        "weather": "particles",
+        "lighting": "spotlights"
+      },
+      "props": [
+        {
+          "type": "stairs",
+          "x": 0.5,
+          "scale": 2.0,
+          "z": -16
+        },
+        {
+<<<<<<< HEAD
+          "type": "goal_silhouette",
+          "x": 0.5,
+          "y": 80,
+          "scale": 0.55,
+          "z": -22
+        },
+        {
+=======
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+          "type": "clock",
+          "x": 0.3,
+          "y": 360,
+          "scale": 1.2,
+          "z": 4
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.02,
+          "zoom_to": 1.06,
+          "focus_x": 0.5,
+          "focus_y": 0.56,
+          "cut": true
+        },
+        {
+          "cue_on": "staircase moved",
+          "zoom_from": 1.08,
+          "zoom_to": 1.14,
+          "focus_x": 0.45,
+          "focus_y": 0.58,
+          "move_dur": 0.4,
+          "cut": true
+        },
+        {
+          "zoom_from": 1.14,
+          "zoom_to": 1.1,
+          "focus_x": 0.55,
+          "focus_y": 0.6,
+          "move_dur": 0.4,
+          "cut": false,
+          "blend_sec": 0.2
+        },
+        {
+          "zoom_from": 1.1,
+          "zoom_to": 1.14,
+          "focus_x": 0.48,
+          "focus_y": 0.56,
+          "move_dur": 0.4,
+          "cut": false,
+          "blend_sec": 0.2
+        },
+        {
+          "cue_on": "started disappearing",
+          "zoom_from": 1.12,
+          "zoom_to": 1.04,
+          "focus_x": 0.5,
+          "focus_y": 0.58,
+          "move_dur": 2.5,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "waiter",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 8.0,
+              "action": "check_watch",
+              "x": 0.3,
+              "facing": 1,
+              "expression": "worried"
+            },
+            {
+              "start": 8.0,
+              "end": 18.0,
+              "action": "pace_think",
+              "x": 0.3,
+              "facing": 1,
+              "expression": "tense"
+            },
+            {
+              "start": 18.0,
+              "end": 33.0,
+              "action": "head_in_hands",
+              "x": 0.3,
+              "facing": 1,
+              "expression": "exhausted",
+              "seated": true
+            }
+          ]
+        },
+        {
+          "id": "climber",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 10.0,
+              "action": "climb_stairs",
+              "stairs_x": 0.55,
+              "steps": 3,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 10.0,
+              "end": 16.0,
+              "action": "trip_stumble",
+              "x": 0.55,
+              "facing": 1,
+              "expression": "tense"
+            },
+            {
+              "start": 16.0,
+              "end": 24.0,
+              "action": "stand_up_resolve",
+              "x": 0.55,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 24.0,
+              "end": 33.0,
+              "action": "climb_stairs",
+              "stairs_x": 0.55,
+              "steps": 4,
+              "facing": 1,
+              "expression": "focused"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "notebook_page",
+          "x": 0.5,
+          "y": 104,
+          "w": 660,
+          "h": 140,
+          "build_dur": 1.0,
+          "bold_first": true,
+          "portrait_w": 520,
+          "portrait_x": 0.5,
+          "lines": [
+            "THE STAIRS",
+            "ARE DISAPPEARING."
+          ],
+          "cue_on": "started disappearing",
+          "hold_sec": 8.0
+        },
+        {
+          "type": "stat_cards",
+          "x": 0.5,
+          "y": 104,
+          "w": 560,
+          "h": 140,
+          "build_dur": 0.9,
+          "portrait_w": 500,
+          "portrait_x": 0.5,
+          "cue_on": "own steps",
+          "hold_sec": 6.0,
+          "cards": [
+            {
+              "value": "HER OWN",
+              "label": "STEPS FROM WRECKAGE"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "staircase moved",
+        "started disappearing",
+        "being erased",
+        "didn't negotiate",
+        "impossible gap",
+        "nobody posts",
+        "own steps"
+      ],
+      "sfx": [
+        {
+          "type": "clock_tick",
+          "at": 1.0,
+          "pan": -0.2
+        },
+        {
+          "type": "clock_tick",
+          "at": 2.5,
+          "pan": 0.2
+        },
+        {
+          "type": "clock_tick",
+          "at": 4.0,
+          "pan": -0.15
+        },
+        {
+          "type": "wind_gust",
+          "at": 10.0,
+          "pan": 0.0
+        },
+        {
+          "type": "paper_slide",
+          "at": 18.0,
+          "pan": -0.3
+        },
+        {
+          "type": "wind_gust",
+          "at": 25.0,
+          "pan": 0.15
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "And then the staircase moved.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "The bottom steps started disappearing.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "His perfect starting line was being erased.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "The universe didn't negotiate.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "The bottom fell out from under him.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "The top stretched away from her.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+<<<<<<< HEAD
+          "text": "Both facing the same impossible gap — from different heights.",
+=======
+          "text": "Both facing the same impossible gap \u2014 from different heights.",
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "This is the part nobody posts on social media.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "She stopped waiting for the staircase to fix itself.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "She started building her own steps from the wreckage.",
+          "pause_after": 0.5
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "chapter": "Act Five | The Resolution",
+      "mood": "reflective",
+      "bgm": "triumph_horizon",
+      "bgm_gain": 0.9,
+      "accent_color": "#fbbf24",
+      "duration": 35.0,
+      "min_duration": 32.0,
+      "lead_in": 0.8,
+      "tail_out": 0.8,
+      "portrait_focus_x": 0.5,
+      "setting": {
+<<<<<<< HEAD
+        "sky": ["#060608", "#1a1408"],
+=======
+        "sky": [
+          "#060608",
+          "#1a1408"
+        ],
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+        "floor_color": "#0c0c10",
+        "light_color": "#fbbf24",
+        "backdrop": "horizon",
+        "weather": "clear",
+        "lighting": "sun_orb"
+      },
+      "props": [
+        {
+          "type": "stairs",
+          "x": 0.46,
+          "scale": 1.4,
+          "z": -14
+<<<<<<< HEAD
+        },
+        {
+          "type": "goal_silhouette",
+          "x": 0.46,
+          "y": 60,
+          "scale": 0.5,
+          "z": -22
+=======
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.0,
+          "zoom_to": 1.06,
+          "focus_x": 0.5,
+          "focus_y": 0.54,
+          "cut": true
+        },
+        {
+          "cue_on": "last five steps",
+          "zoom_from": 1.06,
+          "zoom_to": 1.12,
+          "focus_x": 0.6,
+          "focus_y": 0.5,
+          "move_dur": 2.2,
+          "cut": true
+        },
+        {
+          "cue_on": "finally did",
+          "zoom_from": 1.1,
+          "zoom_to": 1.04,
+          "focus_x": 0.35,
+          "focus_y": 0.6,
+          "move_dur": 2.5,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "waiter",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 10.0,
+              "action": "idle_stand",
+              "x": 0.32,
+              "facing": 1,
+              "expression": "worried"
+            },
+            {
+              "start": 10.0,
+              "end": 18.0,
+              "action": "walk",
+              "from_x": 0.28,
+              "to_x": 0.38,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 18.0,
+              "end": 33.0,
+              "action": "climb_stairs",
+              "stairs_x": 0.38,
+              "steps": 3,
+              "facing": 1,
+              "expression": "focused"
+            }
+          ]
+        },
+        {
+          "id": "climber",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 14.0,
+              "action": "look_horizon",
+              "x": 0.62,
+              "facing": 1,
+              "expression": "calm"
+            },
+            {
+              "start": 14.0,
+              "end": 22.0,
+              "action": "stand_up_resolve",
+              "x": 0.62,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 22.0,
+              "end": 33.0,
+              "action": "look_horizon",
+              "x": 0.62,
+              "facing": 1,
+              "expression": "hopeful"
+            }
+          ]
+        }
+      ],
+      "boards": [],
+      "accent_words": [
+        "last five steps",
+        "built them from her failures",
+        "finally did",
+        "platform that was already gone",
+        "might not hold",
+        "left the light on",
+        "terrified alive"
+      ],
+      "sfx": [
+        {
+          "type": "footstep",
+          "at": 12.0,
+          "pan": 0.05
+        },
+        {
+          "type": "footstep",
+          "at": 16.0,
+          "pan": -0.1
+        },
+        {
+          "type": "wind_gust",
+          "at": 20.0,
+          "pan": 0.0
+        },
+        {
+          "type": "footstep",
+          "at": 25.0,
+          "pan": -0.05
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "The last five steps weren't part of the original staircase.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "She built them from her failures.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "From the steps she'd fallen on, the gaps she'd jumped.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "And he finally did the thing he'd been rehearsing for.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "He let go of the platform that was already gone.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "He reached for the step that might not hold.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "She didn't pull him up. She couldn't.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "But she left the light on.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "He started climbing toward it. Ugly. Slow. Terrified. Alive.",
+          "pause_after": 0.6
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "chapter": "Act Six | Begin",
+      "mood": "reflective",
+      "bgm": "reflective_piano",
+      "bgm_gain": 0.85,
+      "accent_color": "#fbbf24",
+      "duration": 33.0,
+      "min_duration": 30.0,
+      "lead_in": 0.8,
+      "tail_out": 1.0,
+      "portrait_focus_x": 0.5,
+      "setting": {
+<<<<<<< HEAD
+        "sky": ["#010102", "#040406"],
+=======
+        "sky": [
+          "#010102",
+          "#040406"
+        ],
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+        "floor_color": "#060608",
+        "light_color": "#fbbf24",
+        "backdrop": "minimal",
+        "weather": "stars",
+        "lighting": "horizon_glow"
+      },
+      "props": [
+        {
+          "type": "stairs",
+          "x": 0.5,
+          "scale": 1.6,
+          "z": -16
+<<<<<<< HEAD
+        },
+        {
+          "type": "goal_silhouette",
+          "x": 0.5,
+          "y": 80,
+          "scale": 0.55,
+          "z": -24
+=======
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.0,
+          "zoom_to": 1.05,
+          "focus_x": 0.5,
+          "focus_y": 0.56,
+          "cut": true
+        },
+        {
+          "cue_on": "perfect moment",
+          "zoom_from": 1.05,
+          "zoom_to": 1.1,
+          "focus_x": 0.5,
+          "focus_y": 0.54,
+          "move_dur": 2.2,
+          "cut": true
+        },
+        {
+          "cue_on": "terrifying step",
+          "zoom_from": 1.1,
+          "zoom_to": 1.04,
+          "focus_x": 0.5,
+          "focus_y": 0.58,
+          "move_dur": 2.5,
+          "cut": false,
+          "blend_sec": 0.6
+        }
+      ],
+      "characters": [
+        {
+          "id": "climber",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 12.0,
+              "action": "idle_stand",
+              "x": 0.5,
+              "facing": 1,
+              "expression": "neutral"
+            },
+            {
+              "start": 12.0,
+              "end": 22.0,
+              "action": "walk",
+              "from_x": 0.45,
+              "to_x": 0.55,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 22.0,
+              "end": 31.0,
+              "action": "look_horizon",
+              "x": 0.5,
+              "facing": 1,
+              "expression": "hopeful"
+            }
+          ]
+        },
+        {
+          "id": "waiter",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 12.0,
+              "action": "idle_stand",
+              "x": 0.5,
+              "facing": 1,
+              "expression": "neutral"
+            },
+            {
+              "start": 12.0,
+              "end": 22.0,
+              "action": "walk",
+              "from_x": 0.45,
+              "to_x": 0.55,
+              "facing": 1,
+              "expression": "worried"
+            },
+            {
+              "start": 22.0,
+              "end": 31.0,
+              "action": "look_horizon",
+              "x": 0.5,
+              "facing": 1,
+              "expression": "curious"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "notebook_page",
+          "x": 0.5,
+          "y": 104,
+          "w": 680,
+          "h": 140,
+          "build_dur": 1.0,
+          "bold_first": true,
+          "portrait_w": 520,
+          "portrait_x": 0.5,
+          "lines": [
+            "YOU DON'T NEED",
+            "THE PERFECT MOMENT."
+          ],
+          "cue_on": "perfect moment",
+          "hide_on": "terrifying step",
+          "hold_sec": 6.0
+        },
+        {
+          "type": "stat_cards",
+          "x": 0.5,
+          "y": 104,
+          "w": 480,
+          "h": 140,
+          "build_dur": 0.8,
+          "portrait_w": 440,
+          "portrait_x": 0.5,
+          "cue_on": "terrifying step",
+          "hold_sec": 8.0,
+          "cards": [
+            {
+              "value": "BEGIN",
+              "label": "YOU NEED TO"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "stick figures",
+        "perfect moment",
+        "doesn't care",
+        "stars to align",
+        "terrifying step",
+        "not monday",
+        "staircase resets"
+      ],
+      "sfx": [
+        {
+          "type": "wind_gust",
+          "at": 8.0,
+          "pan": 0.0
+        },
+        {
+          "type": "footstep",
+          "at": 15.0,
+          "pan": 0.0
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Here's where I stop telling you a story about stick figures.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "And start telling you the truth.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "You're standing at the bottom of something right now.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "You've got seventeen reasons why next month makes more sense.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "The perfect moment is a myth invented by people afraid to start.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "The staircase doesn't care about your readiness.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "You don't need the stars to align.",
+          "pause_after": 0.25
+        },
+        {
+          "speaker": "narrator",
+          "text": "You need to take the first ugly, terrifying step.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "Right now. Not Monday. Not January. Now.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "The staircase resets. Every morning. Every Monday.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "Which stick figure are you going to be today?",
+          "pause_after": 0.9
+        }
+      ]
+    }
+  ]
+<<<<<<< HEAD
+}
+=======
+}
+>>>>>>> 808937e (Fix limb joint sharpness, staircase scaling, climb_stairs continuity)

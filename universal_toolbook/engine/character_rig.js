@@ -1177,6 +1177,8 @@ function drawFaceExpression(g, hd, hr, s, rawExpression = 'neutral', anim = {}) 
 
 function buildTaperedChainPolygon(points, widths) {
   // Construct left and right offset contour points for a 2-segment (3-point) limb `[p0, p1, p2]`
+  // Rounded joint: the knee/elbow point is replaced by a small arc so the limb has smooth
+  // organic corners instead of sharp V-shapes when bent.
   const [p0, p1, p2] = points;
   const [r0, r1, r2] = widths.map((w) => w * 0.5);
 
@@ -1188,32 +1190,46 @@ function buildTaperedChainPolygon(points, widths) {
   };
   const n01 = segNormal(p0, p1);
   const n12 = segNormal(p1, p2);
-  let nmX = n01[0] + n12[0];
-  let nmY = n01[1] + n12[1];
-  const nmL = Math.hypot(nmX, nmY);
-  if (nmL < 1e-3) {
-    nmX = n01[0];
-    nmY = n01[1];
-  } else {
-    const scale = clamp(1 / Math.max(0.55, nmL * 0.5), 1.0, 1.35);
-    nmX = (nmX / nmL) * scale;
-    nmY = (nmY / nmL) * scale;
-  }
+
+  // Compute the angle between the two segments to determine joint roundness
+  const seg1Angle = Math.atan2(p1[1] - p0[1], p1[0] - p0[0]);
+  const seg2Angle = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]);
+  const jointBend = Math.abs(Math.atan2(Math.sin(seg2Angle - seg1Angle), Math.cos(seg2Angle - seg1Angle)));
+  // Inset distance along each segment from p1 where the arc starts (larger bend = more inset for visible arc)
+  const insetFactor = clamp(jointBend / Math.PI, 0, 1);
+  const arcInset = r1 * (0.45 + 0.55 * insetFactor);
+
+  // Points where the arc meets each segment (inset from p1 along each segment direction)
+  const seg1Len = Math.max(1e-4, Math.hypot(p1[0] - p0[0], p1[1] - p0[1]));
+  const seg2Len = Math.max(1e-4, Math.hypot(p2[0] - p1[0], p2[1] - p1[1]));
+  const t1 = clamp(arcInset / seg1Len, 0, 0.45);
+  const t2 = clamp(arcInset / seg2Len, 0, 0.45);
+  const j01 = [p0[0] + (p1[0] - p0[0]) * (1 - t1), p0[1] + (p1[1] - p0[1]) * (1 - t1)];
+  const j12 = [p1[0] + (p2[0] - p1[0]) * t2, p1[1] + (p2[1] - p1[1]) * t2];
+
+  // Normals at the arc endpoints (use segment normals — consistent with the rest of the limb)
+  const n_j01 = n01;
+  const n_j12 = n12;
 
   return {
     left: [
       [p0[0] + n01[0] * r0, p0[1] + n01[1] * r0],
-      [p1[0] + nmX * r1, p1[1] + nmY * r1],
+      [j01[0] + n_j01[0] * r1, j01[1] + n_j01[1] * r1],
+      [j12[0] + n_j12[0] * r1, j12[1] + n_j12[1] * r1],
       [p2[0] + n12[0] * r2, p2[1] + n12[1] * r2],
     ],
     right: [
       [p2[0] - n12[0] * r2, p2[1] - n12[1] * r2],
-      [p1[0] - nmX * r1, p1[1] - nmY * r1],
+      [j12[0] - n_j12[0] * r1, j12[1] - n_j12[1] * r1],
+      [j01[0] - n_j01[0] * r1, j01[1] - n_j01[1] * r1],
       [p0[0] - n01[0] * r0, p0[1] - n01[1] * r0],
     ],
     r0,
     r1,
     r2,
+    // Store the joint arc center and radius for rounded knee rendering
+    jointCenter: p1,
+    jointRadius: r1 * (0.85 + 0.35 * insetFactor),
   };
 }
 
@@ -1224,14 +1240,27 @@ function drawTaperedLimb(g, points, widths, colors) {
   const ang0 = Math.atan2(poly.left[0][1] - p0[1], poly.left[0][0] - p0[0]);
   const ang2 = Math.atan2(poly.right[0][1] - p2[1], poly.right[0][0] - p2[0]);
 
+  // 4-point polygon: [ankle, kneeStart, kneeEnd, hip] on each side, with a rounded arc at the knee
   const tracePath = () => {
     g.beginPath();
     g.moveTo(poly.left[0][0], poly.left[0][1]);
     g.lineTo(poly.left[1][0], poly.left[1][1]);
-    g.lineTo(poly.left[2][0], poly.left[2][1]);
+    // Rounded knee arc: sweep from left knee-start around the joint to left knee-end
+    const jc = poly.jointCenter;
+    const jr = poly.jointRadius;
+    // Angle from joint center to left[1] (where arc starts on left side)
+    const arcStartAngL = Math.atan2(poly.left[1][1] - jc[1], poly.left[1][0] - jc[0]);
+    // Angle from joint center to left[2] (where arc ends on left side, continuing to hip)
+    const arcEndAngL = Math.atan2(poly.left[2][1] - jc[1], poly.left[2][0] - jc[0]);
+    g.arc(jc[0], jc[1], jr, arcStartAngL, arcEndAngL, false);
+    g.lineTo(poly.left[3][0], poly.left[3][1]);
     g.arc(p2[0], p2[1], poly.r2, ang2 + Math.PI, ang2, false);
     g.lineTo(poly.right[1][0], poly.right[1][1]);
-    g.lineTo(poly.right[2][0], poly.right[2][1]);
+    // Rounded knee arc on right side (reverse direction)
+    const arcStartAngR = Math.atan2(poly.right[1][1] - jc[1], poly.right[1][0] - jc[0]);
+    const arcEndAngR = Math.atan2(poly.right[2][1] - jc[1], poly.right[2][0] - jc[0]);
+    g.arc(jc[0], jc[1], jr, arcStartAngR, arcEndAngR, false);
+    g.lineTo(poly.right[3][0], poly.right[3][1]);
     g.arc(p0[0], p0[1], poly.r0, ang0 + Math.PI, ang0, false);
     g.closePath();
   };
@@ -1250,8 +1279,12 @@ function drawTaperedLimb(g, points, widths, colors) {
     g.strokeStyle = `rgba(${rimCol[0]},${rimCol[1]},${rimCol[2]},${rimAlpha.toFixed(3)})`;
     g.lineWidth = Math.max(1.2, widths[1] * 0.16);
     g.beginPath();
-    g.moveTo(poly.right[2][0], poly.right[2][1]);
-    g.lineTo(poly.right[1][0], poly.right[1][1]);
+    // Rim highlight traces the outer (right/forward) contour including rounded knee
+    g.moveTo(poly.right[3][0], poly.right[3][1]);
+    g.lineTo(poly.right[2][0], poly.right[2][1]);
+    g.arc(poly.jointCenter[0], poly.jointCenter[1], poly.jointRadius,
+      Math.atan2(poly.right[2][1] - poly.jointCenter[1], poly.right[2][0] - poly.jointCenter[0]),
+      Math.atan2(poly.right[1][1] - poly.jointCenter[1], poly.right[1][0] - poly.jointCenter[0]), false);
     g.lineTo(poly.right[0][0], poly.right[0][1]);
     g.stroke();
   }
