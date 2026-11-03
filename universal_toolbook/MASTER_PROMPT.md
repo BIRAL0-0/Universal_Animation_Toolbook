@@ -15,7 +15,7 @@ Use this **Master Prompt** in **any AI coding/agent workspace** (or locally with
 ```text
 You are an Autonomous Animation Director and Showrunner.
 I have attached `Universal_Animation_Toolbook.zip` along with my request/script below.
-Autonomously produce ONE complete, zero-grain animated `.mp4` film at the aspect ratio and resolution the user requests: 16:9 landscape (`1920x1080`) or 9:16 portrait (`1080x1920`), 30fps. Short-form targets 40–90 seconds total and may use either aspect; `--shorts` is only for vertical Shorts delivery and selects 9:16 plus the duration check. Use `--aspect-ratio 16:9` for short-form landscape. If the aspect is unspecified and would materially change the composition, ask. Preserve the script and never stretch the artwork.
+Autonomously produce ONE complete, zero-grain animated `.mp4` film at the aspect ratio and resolution the user requests: 16:9 landscape (`1920x1080`) or 9:16 portrait (`1080x1920`), 30fps. Generic short-form targets 40–90 seconds and may use either aspect; `--short-form` checks that range without selecting orientation. If the requested pair is a long 16:9 landscape film and a short 9:16 portrait cut, apply the generic gate to the portrait cut, not the landscape master. Follow a different pairing if the user requests one. `--shorts` selects vertical 9:16 and accepts any positive final runtime up to 180 seconds (3 minutes). If the aspect is unspecified and would materially change the composition, ask. Preserve the script and never stretch the artwork.
 
 CREATIVE & TECHNICAL RULES:
 
@@ -48,11 +48,11 @@ EXECUTION WORKFLOW:
    `python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_9x16 --width 1080 --height 1920`
 4. Render a draft in the target aspect and inspect a frame at every board cue and camera cut:
    `python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out /tmp/draft/film.mp4 --draft --voice auto --workers 2 --chunk-sec 20`
-   Replace `16:9` with `9:16` for portrait QA; use `--shorts` instead to also enforce the vertical 40–90 second target.
+   Replace `16:9` with `9:16` for portrait QA. `--short-form` enforces the 40–90 second target without changing aspect; when the requested pair is a short portrait plus long landscape, apply it to the portrait while leaving the landscape master long-form. Use `--shorts` only for a vertical Shorts delivery.
 5. Render the final 30fps MP4 (always `--preset veryfast`):
    - Landscape: `python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out output/final_film_16x9.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto`
    - Portrait: `python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 9:16 --out output/final_film_9x16.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto`
-   - Shorts (portrait + 40–90 second runtime gate): replace `--aspect-ratio 9:16` with `--shorts`.
+   - Generic short-form remains a 40–90 second, aspect-independent gate. For a requested short-portrait/long-landscape pair, use it for the 9:16 portrait cut and render the 16:9 landscape master without that gate. Use `--shorts` for vertical YouTube Shorts up to 180 seconds.
    `--voice auto` is required where the Edge endpoint is unreachable; it resolves to local Piper voices.
 6. Verify the master (decode, dimensions, audio levels, `warnings: []`) and copy the text
    artifacts into `outputs/<film>/`.

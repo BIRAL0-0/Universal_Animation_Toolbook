@@ -45,8 +45,10 @@ python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work
 
 One PNG per scene, named `<sceneId>_<environment>.png`. `--limit N` renders only the first N
 scenes, which is handy while iterating. Inspect the stills in every requested output aspect ratio;
-portrait framing follows the active speaker or configured `portrait_focus` and repositions boards
-inside the portrait safe area.
+landscape camera pushes protect held props at the frame edge, while portrait framing follows the
+active speaker or configured `portrait_focus`, includes held props, and uniformly fits nearby
+narration-led groups; boards are repositioned inside the portrait safe area. Open umbrellas use a
+136 px shaft so the canopy clears the holder's face; render bounds use that same geometry.
 
 **Stills are sampled near the start of each scene**, so a board cued later in the scene will
 NOT be in the still. That is expected; boards are verified from the draft instead (Step 3).
@@ -82,28 +84,35 @@ FF=$(python3 -c "import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())")
 ## Step 4 — master render
 
 ```bash
-# Landscape delivery (short-form may also be landscape; aspect is separate from runtime)
+# Long-form 16:9 landscape master (no short-form duration gate)
 python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 \
-  --out output/final_film_16x9.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
+  --out output/long_landscape.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 
-# 9:16 Shorts profile; validates final speech-locked duration is 40–90 seconds
+# Short 9:16 portrait cut (generic inclusive 40–90 second gate)
+python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 9:16 --short-form \
+  --out output/short_portrait.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
+
+# For YouTube Shorts, --shorts selects 9:16 and accepts any positive runtime through 180 seconds.
 python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts \
-  --out output/final_shorts_9x16.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
-
-# Use --aspect-ratio 9:16 instead of --shorts for portrait videos with another runtime.
+  --out output/youtube_shorts.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 ```
 
 | Flag | Why this value |
 | --- | --- |
 | `--aspect-ratio 16:9` | 1920×1080 @ 30 fps landscape master; this remains the default |
 | `--aspect-ratio 9:16` | 1080×1920 @ 30 fps portrait master; aspect-preserving subject crop, no stretch |
-| `--shorts` | shorthand for 9:16 plus a strict inclusive 40–90 second final-duration check |
+| `--short-form` | Strict inclusive 40–90 second final-duration check; does not select an aspect ratio |
+| `--shorts` | YouTube Shorts profile: selects 9:16 and accepts any positive duration up to 180 seconds (3 minutes) |
 | `--preset veryfast` | the documented encode path; slower presets blow the time budget for no visible gain on flat vector art |
 | `--crf 24` | visually transparent on this art style, keeps files ~8 MB/min |
 | `--chunk-sec 45` | chunk length for parallel workers; shorter = more overhead, longer = worse resume granularity |
 | `--workers 2` | matches the CPU budget of the sandbox; more workers thrash |
 | `--resume` | re-uses finished chunks in `output/.work_<name>/` — always leave it on |
 | `--voice auto` | **required here**; Edge/Azure TTS is unreachable, so it falls back to local Piper |
+
+The example delivery pair is a **long 16:9 landscape** and a **short 9:16 portrait**. Generic
+`--short-form` remains aspect-independent; use a different pairing only when the delivery request
+calls for it.
 
 ### What it writes
 

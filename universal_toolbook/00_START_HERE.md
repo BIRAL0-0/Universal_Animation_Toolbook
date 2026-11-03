@@ -49,11 +49,12 @@ python3 universal_toolbook/run_studio.py validate work/episode.json
 python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_landscape --width 1920 --height 1080 --limit 8
 python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_portrait --width 1080 --height 1920 --limit 8
 
-# 5. Render full 16:9 landscape @ 30fps (use --aspect-ratio 9:16 for portrait)
+# 5. Render the long 16:9 landscape master @ 30fps (no short-form gate)
 python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out output/final_landscape.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume
 
-# 5b. Render a 9:16 Short and enforce the requested 40–90 second speech-locked duration
-python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts --out output/final_short.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume
+# 5b. Render the short 9:16 portrait cut with the inclusive 40–90 s gate
+python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 9:16 --short-form --out output/final_short_portrait.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume
+# The generic gate does not choose an aspect ratio; --shorts selects 9:16 and allows any positive runtime up to 180 s.
 
 # 6. Offline neural voices (only needed when the Edge endpoint is unreachable)
 pip install piper-tts
@@ -67,8 +68,10 @@ python3 universal_toolbook/run_studio.py render examples/cel_two_inch_bridge_epi
     --chunk-sec 45 --workers 2 --resume --voice auto
 ```
 
-Short-form films target 40–90 seconds, independently of aspect ratio. Use `--shorts` only for a
-vertical Shorts delivery (9:16 plus duration gate); a landscape short uses `--aspect-ratio 16:9`.
+Generic short-form targets 40–90 seconds, independently of aspect ratio. In this guide's example
+pair, `--short-form` is combined with `--aspect-ratio 9:16` for the short portrait; the long
+landscape master uses 16:9 without the duration gate. `--shorts` selects vertical 9:16 and accepts
+any positive duration up to 180 seconds (3 minutes).
 
 ## Where to start a new film
 

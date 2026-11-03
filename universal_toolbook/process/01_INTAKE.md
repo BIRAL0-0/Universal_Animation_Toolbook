@@ -9,14 +9,17 @@ Choose the output aspect from the script's composition and delivery requirement,
 alone. Use **16:9** for landscape platforms, wide two-character staging, or a cinematic master;
 use **9:16** when the requested destination is a vertical feed or the shot design benefits from a
 single-subject close frame. Short-form can be either aspect when that is what delivery requires.
-If the user has not specified a format and the choice would change the composition, ask before
-blocking. Render QA stills in every requested format.
+If a brief specifies a short portrait plus a long landscape, honor that pair; do not create a short
+landscape deliverable unless requested. This pairing choice does not change the aspect-independent
+`--short-form` gate. If the user has not specified a format and the choice would
+change the composition, ask before blocking. Render QA stills in every requested format.
 
-Short-form runtime target is **40–90 seconds total**. `--shorts` is specifically the portrait
-Shorts profile: it selects 9:16 and enforces that final speech-locked range. For short-form
-landscape use `--aspect-ratio 16:9`; for portrait content outside that runtime use `--aspect-ratio
-9:16`. Aspect ratio never changes the authored episode geometry by stretching; portrait reframes
-around the active speaker or an optional scene-level `portrait_focus` / `portrait_focus_x`.
+Generic short-form targets **40–90 seconds**, independent of aspect ratio. Use `--short-form` to
+validate that speech-locked range without changing orientation; set `--aspect-ratio 16:9` for
+landscape or `9:16` for portrait (default is 16:9). `--shorts` is the vertical YouTube Shorts
+profile: it selects 9:16 and accepts any positive final runtime up to **180 seconds (3 minutes)**,
+including very short clips. Aspect ratio never changes authored geometry by stretching; portrait
+reframes around the active speaker or an optional scene-level `portrait_focus` / `portrait_focus_x`.
 
 ## 1.1 Pick the visual style
 
@@ -67,9 +70,10 @@ So a 15-word narration line ≈ 6 s. If a scene's dialogue totals 40 words, decl
 gets stretched and your `camera_shots`/`beats` timings drift; an oversized one leaves silence.
 
 Declared `duration` is a *planning* number. Expect the final master to land a little under the
-sum of declared scene durations. For the 40–90 second Shorts profile, let speech retiming settle,
-then use `--shorts` to check the final duration inclusively before video encoding. It reports an
-error rather than truncating or rewriting dialogue when the runtime is out of range.
+sum of declared scene durations. For a generic 40–90 second short-form target, let speech retiming
+settle, then use `--short-form` to check the final duration inclusively before encoding. For
+vertical YouTube Shorts, use `--shorts`; any positive final duration up to and including 180 seconds
+is accepted. Either gate reports an error rather than truncating or rewriting dialogue.
 
 ## 1.4 Cast the speakers
 

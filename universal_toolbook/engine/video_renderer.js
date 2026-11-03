@@ -11,7 +11,11 @@ const { FLOOR_Y, drawEnvironment, drawSoftGlow } = require('./environments');
 const { drawWorldProp, drawWorldBoard, drawForegroundLayer } = require('./world_props_and_boards');
 const { evaluateCharacterState, resolveSceneInteractions } = require('./motion_library');
 const { compileEpisode } = require('./episode');
-const { computePortraitViewport, fitBoardToPortraitViewport } = require('./portrait_framing');
+const {
+  computePortraitViewport,
+  computeLandscapePropZoomScale,
+  fitBoardToPortraitViewport,
+} = require('./portrait_framing');
 const {
   DEFAULT_SCREEN_VIEWPORT,
   normalizeScreenViewport,
@@ -120,7 +124,7 @@ function drawHeldAccessoriesAndCallouts(g, state, joints, actor, sceneAccent, gl
   }
 
   if (state.heldUmbrella) {
-    const { x, y, color, open, tilt, facing, shaking } = state.heldUmbrella;
+    const { x, y, color, open, tilt, facing, shaking, shaftLength } = state.heldUmbrella;
     const uCol = color || '#ef4444';
     const isRed = uCol.toLowerCase() === '#ef4444' || uCol.toLowerCase() === '#e11d48';
     const isBlack = uCol.toLowerCase() === '#1e293b' || uCol.toLowerCase() === '#0f172a';
@@ -129,7 +133,7 @@ function drawHeldAccessoriesAndCallouts(g, state, joints, actor, sceneAccent, gl
     g.rotate(tilt || 0);
 
     if (open) {
-      const shaftLen = 108 * s;
+      const shaftLen = (Number(shaftLength) > 0 ? Number(shaftLength) : 136) * s;
       const canopyR = 88 * s;
       const topY = -shaftLen;
       if (isRed) {
@@ -764,7 +768,7 @@ function renderCharacterPass(ctx, entry, drawMode, parchmentMode, activeLight, s
   });
 }
 
-function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREEN_VIEWPORT) {
+function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREEN_VIEWPORT, cameraZoomScale = 1) {
   const globalT = frameIdx / episode.fps;
   const frame = normalizeScreenViewport(viewport);
   const hit = findSceneAtFrame(episode, frameIdx);
@@ -776,7 +780,8 @@ function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREE
 
   const sc = hit.scene;
   const ts = clamp(globalT - sc.startSec, 0, sc.duration);
-  const { zoom, panX, focusX, focusY } = evaluateSceneCamera(sc, ts);
+  const { zoom: sceneZoom, panX, focusX, focusY } = evaluateSceneCamera(sc, ts);
+  const zoom = sceneZoom * Math.max(0.05, Number(cameraZoomScale) || 1);
   const speechState = evaluateSceneSpeechState(sc, ts);
 
   const parchmentMode = isParchmentScene(sc);
@@ -1321,16 +1326,23 @@ function renderEpisodeFrame(ctx, outW, outH, episode, frameIdx) {
     scratch.context.setTransform(1, 0, 0, 1, 0, 0);
     clearContext(scratch.context, BASE_W, BASE_H, '#03050a');
     scratch.context.save();
-    renderBaseEpisodeFrame(scratch.context, episode, frameIdx, viewport);
+    renderBaseEpisodeFrame(scratch.context, episode, frameIdx, viewport, viewport.cameraZoomScale || 1);
     scratch.context.restore();
     compositePortraitFrame(ctx, scratch.canvas, viewport, width, height);
     return { orientation: 'portrait', width, height, viewport };
   }
 
   const landscape = containRect(BASE_W, BASE_H, width, height);
+  const cameraZoomScale = computeLandscapePropZoomScale(episode, frameIdx, {
+    baseWidth: BASE_W,
+    floorY: FLOOR_Y,
+    findSceneAtFrame,
+    evaluateSceneCamera,
+    evaluateSceneSpeechState,
+  });
   ctx.save();
   ctx.setTransform(landscape.scale, 0, 0, landscape.scale, landscape.x, landscape.y);
-  renderBaseEpisodeFrame(ctx, episode, frameIdx, DEFAULT_SCREEN_VIEWPORT);
+  renderBaseEpisodeFrame(ctx, episode, frameIdx, DEFAULT_SCREEN_VIEWPORT, cameraZoomScale);
   ctx.restore();
   return { orientation: 'landscape', width, height, ...landscape };
 }

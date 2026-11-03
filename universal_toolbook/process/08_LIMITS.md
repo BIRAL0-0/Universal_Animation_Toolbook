@@ -17,15 +17,17 @@ deliver. Numbers below are measured in this environment, not estimated.
 
 | Case | Total runtime | How it is made |
 | --- | --- | --- |
-| **Shorts profile** | **40–90 s** | `--shorts` selects 9:16 and enforces the final speech-locked runtime, inclusive |
-| Portrait video (not a Short) | Any authored runtime | `--aspect-ratio 9:16`; no duration gate |
-| Landscape / long-form | Any authored runtime | `--aspect-ratio 16:9` (default); examples include a declared 520-second episode |
+| Generic short-form (aspect-independent) | **40–90 s** | `--short-form` enforces the final speech-locked runtime without choosing orientation; the example pair here applies it to the short 9:16 portrait, while the 16:9 landscape master is long-form |
+| **YouTube Shorts profile** | **>0–180 s** | `--shorts` selects 9:16 and accepts any positive final runtime through 3 minutes, inclusive at 180 s |
+| Portrait or landscape (any length) | Any authored runtime | `--aspect-ratio 9:16` or `16:9`; 16:9 is the default |
+| Long-form | Any authored runtime | Choose the aspect with `--aspect-ratio`; examples include a declared 520-second episode |
 | Very long | — | Not benchmarked beyond existing examples; render time scales linearly and chunk resume becomes essential |
 
 Runtime is set by the **speech**, not by the declared `duration` field: scenes are retimed to
 the generated audio. Plan on `words ÷ 2.5` seconds per line plus pauses, then add ~1.3 s per
-scene for lead-in/tail-out. `--shorts` checks that final duration after speech retiming and exits
-before video encoding if it is outside 40–90 seconds; it does not silently truncate the script.
+scene for lead-in/tail-out. `--short-form` checks the final duration after speech retiming and
+exits before encoding unless it is 40–90 seconds. `--shorts` selects 9:16 and checks that the
+final duration is greater than 0 and no more than 180 seconds. Neither option truncates dialogue.
 
 Measured on this machine (2 vCPU, `--workers 2`); the table below uses landscape samples:
 
@@ -61,7 +63,7 @@ and benchmark on the target machine.
 ## Visual
 
 - **Two characters per scene** is the practical maximum; three collides constantly at 1920.
-- Portrait output eases toward the active speaker when possible; otherwise it chooses a scene focus character. A second character far outside the 9:16 crop may not be visible in that shot. Set scene `portrait_focus` to a character id or `"board"`, or `portrait_focus_x` to a normalized `0..1` value when the script needs a different subject. Portrait boards are uniformly scaled/repositioned inside the safe crop; optional board fields `portrait_w` / `portrait_x` override that fit.
+- Landscape camera pushes ease back only when a visible held object would clip at the frame edge; actors fully outside the authored frame are not pulled into view. Portrait output eases toward the active speaker when possible; otherwise it chooses a scene focus character. During narration-led group shots it considers up to three nearby actors and their carried props, uniformly zooming out the scene; if the full group would need excessive shrinkage, it prioritizes the closer focal pair and a distant actor may be off-screen. Set scene `portrait_focus` to a character id or `"board"`, or `portrait_focus_x` to a normalized `0..1` value for a deliberate alternate composition. Portrait boards are uniformly scaled/repositioned inside the safe crop; optional board fields `portrait_w` / `portrait_x` override that fit.
 - **60 actions**, 12 hairstyles, 18 accessories, 12 preset environments plus parametric
   settings — enough for interiors, streets, weather, dawn/dusk, but no crowd scenes, no
   vehicles other than the `passing_car` / `passing_bus` props.

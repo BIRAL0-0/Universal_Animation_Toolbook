@@ -155,6 +155,8 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
         y: sk.world.al[2][1],
         color: beat.umbrella_color || '#ef4444',
         open: beat.umbrella_open !== false,
+        // Keep the open canopy above the holder's face across body scales and portrait crops.
+        shaftLength: beat.umbrella_open === false ? 108 : 136,
         tilt: (beat.umbrella_tilt ?? -0.06) * dir,
         facing: dir,
       },
@@ -1049,6 +1051,7 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
         y: sk.world.al[2][1],
         color: beat.umbrella_color || '#ef4444',
         open: beat.umbrella_open !== false,
+        shaftLength: beat.umbrella_open === false ? 108 : 136,
         tilt: (beat.umbrella_tilt ?? (shelter ? 0.18 : 0.0)) * facing,
         facing,
       },
@@ -1078,6 +1081,7 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
         y: sk.world.al[2][1],
         color: beat.umbrella_color || '#ef4444',
         open: u < 0.22,
+        shaftLength: u < 0.22 ? 136 : 108,
         tilt: facing * (0.95 + shake * 0.8),
         facing,
         shaking: u >= 0.25 && u <= 0.85,
@@ -1108,6 +1112,8 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
         y: sk.world.al[2][1],
         color: beat.umbrella_color || '#1e293b',
         open: Boolean(beat.umbrella_open),
+        // Raise an offered open canopy clear of the recipient's face while the hand stays on the grip.
+        shaftLength: beat.umbrella_open ? 136 : 108,
         tilt: facing * (beat.umbrella_open ? 0.10 : 0.36),
         facing,
       },

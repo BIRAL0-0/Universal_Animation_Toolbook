@@ -56,20 +56,21 @@ local Piper voices (`universal_toolbook/tools/fetch_piper_voices.py`).
 ## Choose the delivery format
 
 The same episode JSON can be rendered in either orientation. Select the aspect from the script and
-delivery requirement—short-form does not automatically mean portrait. Landscape remains the
+delivery requirement; short-form does not inherently mean portrait. Landscape remains the
 default; portrait uses a subject-aware crop, keeps subtitles/boards inside the safe area, and never
-scales X and Y independently. Short-form episodes target 40–90 seconds total.
+scales X and Y independently. The example delivery pair here is a long 16:9 landscape film and a
+40–90 second 9:16 portrait cut. The generic `--short-form` gate remains aspect-independent.
 
 ```bash
-# 16:9 landscape master (default), e.g. long-form YouTube
+# Long-form 16:9 landscape master (default); no short-form gate
 python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 \
     --out output/film_landscape.mp4 --full --voice auto
 
-# 9:16 portrait master
-python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 9:16 \
-    --out output/film_portrait.mp4 --full --voice auto
+# Short 9:16 portrait cut (inclusive 40–90 second gate)
+python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 9:16 --short-form \
+    --out output/film_short_portrait.mp4 --full --voice auto
 
-# Shorts profile: 9:16 plus a verified 40–90 second final runtime
+# Vertical YouTube Shorts profile (any positive runtime through 180 seconds)
 python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts \
     --out output/film_shorts.mp4 --full --voice auto
 
@@ -78,9 +79,12 @@ python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work
     --width 1080 --height 1920
 ```
 
-`--shorts` checks the speech-locked final duration and exits with `INVALID_SHORTS_DURATION`
-if it is outside 40–90 seconds. Use `--aspect-ratio 9:16` when a portrait video is not a Short
-or when a different runtime is required. For deliberate framing, a scene can set
+`--short-form` checks the speech-locked final duration and exits with
+`INVALID_SHORT_FORM_DURATION` unless it is 40–90 seconds; it does not select an aspect ratio. The
+example pair above uses that gate for the short portrait, while the landscape master is long-form.
+Other aspect/runtime pairings remain available when the delivery calls for them. `--shorts` selects
+vertical 9:16 and accepts any positive duration up to 180 seconds (3 minutes), reporting
+`INVALID_SHORTS_DURATION` otherwise. For deliberate framing, a scene can set
 `"portrait_focus": "character_id"` (or `"board"`) / `"portrait_focus_x": 0.0..1.0`.
 
 ## Reference films (episode specs, not renders)

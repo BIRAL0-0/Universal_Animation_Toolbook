@@ -25,17 +25,21 @@ back to local neural voices automatically.
 
 ## Output aspect ratios
 
-Reuse the same episode JSON and choose its delivery size at render time. Choose from the script and
-publishing requirement; short-form does not inherently mean portrait. The short-form target is
-40–90 seconds total. `--shorts` is specifically a vertical 9:16 profile with a final-runtime gate.
+Reuse the same episode JSON and choose its delivery size at render time. The example delivery
+pair here is a long 16:9 landscape film and a 40–90 second 9:16 portrait cut. Generic
+`--short-form` enforces that duration range without selecting an aspect ratio; other pairings remain
+available when requested. `--shorts` selects the vertical 9:16 profile and accepts any positive
+final runtime up to 180 seconds (3 minutes).
 
 ```bash
-python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out output/landscape.mp4 --full
-python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 9:16 --out output/portrait.mp4 --full
-python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts --out output/short.mp4 --full
+# Long-form landscape (no short-form duration gate)
+python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out output/long_landscape.mp4 --full
+# Short portrait (generic inclusive 40–90 second gate)
+python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 9:16 --short-form --out output/short_portrait.mp4 --full
+# Vertical YouTube Shorts profile
+python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts --out output/youtube_shorts.mp4 --full
 ```
 
-`--shorts` selects 9:16 and validates the final speech-locked runtime is 40–90 seconds.
 Portrait crops ease toward the active speaker when available; use scene `portrait_focus` or
 `portrait_focus_x` fields to direct framing. The renderer uses uniform scaling and safe-area
 layout, not independent width/height stretching.

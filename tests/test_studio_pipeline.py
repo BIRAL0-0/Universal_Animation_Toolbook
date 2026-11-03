@@ -25,7 +25,9 @@ from tools.script_helper import segment_user_script, verify_script_fidelity
 sys.path.insert(0, str(ROOT.parent))
 from universal_toolbook.run_studio import (  # noqa: E402
     _is_shorts_duration,
+    _is_short_form_duration,
     _render_dimensions,
+    _resolve_aspect_ratio,
     _voice_diagnosis,
     build_parser,
 )
@@ -39,12 +41,40 @@ def main() -> int:
     assert _render_dimensions("9:16", draft=True) == (540, 960)
     parser = build_parser()
     portrait_args = parser.parse_args(["render", "episode.json", "--aspect", "9:16"])
+    short_default_args = parser.parse_args(["render", "episode.json", "--short-form"])
+    # Keep the generic duration gate aspect-independent; this is not the reference delivery pair.
+    generic_landscape_args = parser.parse_args(
+        ["render", "episode.json", "--aspect-ratio", "16:9", "--short-form"]
+    )
+    short_portrait_args = parser.parse_args(
+        ["render", "episode.json", "--aspect-ratio", "9:16", "--short-form"]
+    )
     shorts_args = parser.parse_args(["render", "episode.json", "--shorts"])
     assert portrait_args.aspect_ratio == "9:16" and portrait_args.shorts is False
+    assert short_default_args.short_form and not short_default_args.shorts
+    assert _resolve_aspect_ratio(
+        short_default_args.aspect_ratio, short_default_args.shorts
+    ) == "16:9"
+    assert _resolve_aspect_ratio(
+        generic_landscape_args.aspect_ratio, generic_landscape_args.shorts
+    ) == "16:9"
+    assert _resolve_aspect_ratio(
+        short_portrait_args.aspect_ratio, short_portrait_args.shorts
+    ) == "9:16"
     assert shorts_args.shorts is True and shorts_args.aspect_ratio is None
-    assert _is_shorts_duration(40) and _is_shorts_duration(90)
-    assert not _is_shorts_duration(39.99) and not _is_shorts_duration(90.01)
-    assert not _is_shorts_duration(float("nan"))
+    assert _resolve_aspect_ratio(shorts_args.aspect_ratio, shorts_args.shorts) == "9:16"
+    try:
+        _resolve_aspect_ratio("16:9", shorts=True)
+        raise AssertionError("--shorts must reject an explicit landscape aspect")
+    except ValueError:
+        pass
+    assert _is_short_form_duration(40) and _is_short_form_duration(90)
+    assert not _is_short_form_duration(39.99) and not _is_short_form_duration(90.01)
+    assert not _is_short_form_duration(float("nan"))
+    assert _is_shorts_duration(0.01) and _is_shorts_duration(40)
+    assert _is_shorts_duration(90) and _is_shorts_duration(180)
+    assert not _is_shorts_duration(0) and not _is_shorts_duration(-1)
+    assert not _is_shorts_duration(180.01) and not _is_shorts_duration(float("nan"))
 
     # 1. Verify all 7 bundled Creative Commons / NCS-style BGM tracks exist & load
     catalog = load_bgm_catalog()
