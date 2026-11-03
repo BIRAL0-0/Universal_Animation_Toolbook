@@ -61,19 +61,20 @@ python3 universal_toolbook/run_studio.py render work/episode.json \
     --out output/final_film_16x9.mp4 --aspect-ratio 16:9 --full --preset veryfast \
     --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 
-# Render short-form without coupling its 40–90 s gate to orientation (this example is landscape)
+# Short portrait cut (40–90 s); the long landscape master above has no short-form gate
 python3 universal_toolbook/run_studio.py render work/short_episode.json \
-    --aspect-ratio 16:9 --short-form --out output/final_short.mp4 --full --preset veryfast --voice auto
-# For portrait short-form, use --aspect-ratio 9:16 --short-form; for YouTube Shorts, use --shorts.
+    --aspect-ratio 9:16 --short-form --out output/final_short_portrait.mp4 --full --preset veryfast --voice auto
+# --short-form does not choose an aspect ratio; --shorts selects 9:16 and allows any positive runtime up to 180 s.
 
 # Portrait QA stills: inspect the crop/safe areas before encoding
 python3 universal_toolbook/run_studio.py stills work/episode.json \
     --out-dir work/stills_portrait --width 1080 --height 1920
 ```
 
-Generic short-form targets 40–90 seconds independently of aspect ratio. Use `--short-form`
-with `--aspect-ratio 16:9` or `9:16`; `--shorts` selects vertical 9:16 and accepts any positive
-runtime through 180 seconds (3 minutes).
+Generic short-form targets 40–90 seconds independently of aspect ratio. This guide's example
+pair is a short 9:16 portrait cut and a long 16:9 landscape master; use `--short-form` only on the
+short cut in this pairing. `--shorts` selects vertical 9:16 and accepts any positive runtime through
+180 seconds (3 minutes).
 
 `--voice auto` is required here: the Edge endpoint is unreachable, so the engine falls back to
 the three installed Piper voices and reports what actually ran in `voice_backend`.

@@ -42,7 +42,8 @@ def main() -> int:
     parser = build_parser()
     portrait_args = parser.parse_args(["render", "episode.json", "--aspect", "9:16"])
     short_default_args = parser.parse_args(["render", "episode.json", "--short-form"])
-    short_landscape_args = parser.parse_args(
+    # Keep the generic duration gate aspect-independent; this is not the reference delivery pair.
+    generic_landscape_args = parser.parse_args(
         ["render", "episode.json", "--aspect-ratio", "16:9", "--short-form"]
     )
     short_portrait_args = parser.parse_args(
@@ -55,7 +56,7 @@ def main() -> int:
         short_default_args.aspect_ratio, short_default_args.shorts
     ) == "16:9"
     assert _resolve_aspect_ratio(
-        short_landscape_args.aspect_ratio, short_landscape_args.shorts
+        generic_landscape_args.aspect_ratio, generic_landscape_args.shorts
     ) == "16:9"
     assert _resolve_aspect_ratio(
         short_portrait_args.aspect_ratio, short_portrait_args.shorts

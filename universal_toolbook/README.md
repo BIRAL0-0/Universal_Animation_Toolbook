@@ -25,15 +25,18 @@ back to local neural voices automatically.
 
 ## Output aspect ratios
 
-Reuse the same episode JSON and choose its delivery size at render time. Choose from the script and
-publishing requirement; short-form does not inherently mean portrait. Generic `--short-form`
-targets 40–90 seconds without selecting an aspect ratio; add `--aspect-ratio 16:9` or `9:16`
-explicitly (default is 16:9). `--shorts` is the vertical 9:16 profile and accepts any positive
+Reuse the same episode JSON and choose its delivery size at render time. The example delivery
+pair here is a long 16:9 landscape film and a 40–90 second 9:16 portrait cut. Generic
+`--short-form` enforces that duration range without selecting an aspect ratio; other pairings remain
+available when requested. `--shorts` selects the vertical 9:16 profile and accepts any positive
 final runtime up to 180 seconds (3 minutes).
 
 ```bash
-python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 16:9 --short-form --out output/short_landscape.mp4 --full
+# Long-form landscape (no short-form duration gate)
+python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out output/long_landscape.mp4 --full
+# Short portrait (generic inclusive 40–90 second gate)
 python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 9:16 --short-form --out output/short_portrait.mp4 --full
+# Vertical YouTube Shorts profile
 python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts --out output/youtube_shorts.mp4 --full
 ```
 

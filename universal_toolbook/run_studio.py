@@ -48,7 +48,8 @@ def _resolve_aspect_ratio(aspect_ratio: Optional[str], shorts: bool = False) -> 
     """Resolve output orientation; the short-form runtime gate does not affect this choice."""
     if shorts and aspect_ratio not in (None, "9:16"):
         raise ValueError(
-            "--shorts selects 9:16; use --short-form with --aspect-ratio 16:9 for landscape short-form."
+            "--shorts selects 9:16; for landscape output, omit --shorts and set --aspect-ratio 16:9. "
+            "--short-form checks only the 40–90 second runtime and does not select orientation."
         )
     if shorts:
         return "9:16"

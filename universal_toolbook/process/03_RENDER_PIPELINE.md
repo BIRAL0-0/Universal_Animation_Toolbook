@@ -84,11 +84,11 @@ FF=$(python3 -c "import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())")
 ## Step 4 — master render
 
 ```bash
-# Short-form landscape: runtime gate does not change the selected 16:9 aspect
-python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 16:9 --short-form \
-  --out output/short_landscape.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
+# Long-form 16:9 landscape master (no short-form duration gate)
+python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 \
+  --out output/long_landscape.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 
-# Short-form portrait: same runtime gate, with 9:16 selected independently
+# Short 9:16 portrait cut (generic inclusive 40–90 second gate)
 python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 9:16 --short-form \
   --out output/short_portrait.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 
@@ -109,6 +109,10 @@ python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts
 | `--workers 2` | matches the CPU budget of the sandbox; more workers thrash |
 | `--resume` | re-uses finished chunks in `output/.work_<name>/` — always leave it on |
 | `--voice auto` | **required here**; Edge/Azure TTS is unreachable, so it falls back to local Piper |
+
+The example delivery pair is a **long 16:9 landscape** and a **short 9:16 portrait**. Generic
+`--short-form` remains aspect-independent; use a different pairing only when the delivery request
+calls for it.
 
 ### What it writes
 

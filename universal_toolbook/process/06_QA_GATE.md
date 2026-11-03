@@ -29,10 +29,13 @@ For **each** still:
 ## 2 — Draft — timing, boards, cuts
 
 ```bash
+# Long landscape draft (no short-form duration gate)
 python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out /tmp/draft/film_draft.mp4 \
   --draft --voice auto --workers 2 --chunk-sec 20
-# Pair either aspect (--aspect-ratio 16:9 or 9:16) with --short-form for the 40–90 s gate.
-# --shorts selects 9:16 and validates a positive duration up to 180 s (3 minutes).
+# Short portrait draft (generic inclusive 40–90 s gate)
+python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 9:16 --short-form \
+  --out /tmp/draft/short_portrait.mp4 --draft --voice auto --workers 2 --chunk-sec 20
+# --short-form itself stays aspect-independent; --shorts selects 9:16 up to 180 s (3 minutes).
 ```
 
 - [ ] For every board: frame at `cue_on + 1.5 s` → panel fully built, populated, in-band

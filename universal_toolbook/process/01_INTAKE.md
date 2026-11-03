@@ -9,8 +9,10 @@ Choose the output aspect from the script's composition and delivery requirement,
 alone. Use **16:9** for landscape platforms, wide two-character staging, or a cinematic master;
 use **9:16** when the requested destination is a vertical feed or the shot design benefits from a
 single-subject close frame. Short-form can be either aspect when that is what delivery requires.
-If the user has not specified a format and the choice would change the composition, ask before
-blocking. Render QA stills in every requested format.
+If a brief specifies a short portrait plus a long landscape, honor that pair; do not create a short
+landscape deliverable unless requested. This pairing choice does not change the aspect-independent
+`--short-form` gate. If the user has not specified a format and the choice would
+change the composition, ask before blocking. Render QA stills in every requested format.
 
 Generic short-form targets **40–90 seconds**, independent of aspect ratio. Use `--short-form` to
 validate that speech-locked range without changing orientation; set `--aspect-ratio 16:9` for

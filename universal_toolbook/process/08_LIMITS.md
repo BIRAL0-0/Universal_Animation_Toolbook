@@ -17,7 +17,7 @@ deliver. Numbers below are measured in this environment, not estimated.
 
 | Case | Total runtime | How it is made |
 | --- | --- | --- |
-| Short-form (either aspect) | **40–90 s** | `--short-form` enforces the final speech-locked runtime without choosing orientation; pair with `--aspect-ratio 16:9` or `9:16` |
+| Generic short-form (aspect-independent) | **40–90 s** | `--short-form` enforces the final speech-locked runtime without choosing orientation; the example pair here applies it to the short 9:16 portrait, while the 16:9 landscape master is long-form |
 | **YouTube Shorts profile** | **>0–180 s** | `--shorts` selects 9:16 and accepts any positive final runtime through 3 minutes, inclusive at 180 s |
 | Portrait or landscape (any length) | Any authored runtime | `--aspect-ratio 9:16` or `16:9`; 16:9 is the default |
 | Long-form | Any authored runtime | Choose the aspect with `--aspect-ratio`; examples include a declared 520-second episode |

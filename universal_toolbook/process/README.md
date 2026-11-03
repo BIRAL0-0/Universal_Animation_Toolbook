@@ -50,7 +50,8 @@ python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio
 python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_9x16 --width 1080 --height 1920
 # inspect every still and every board cue, fix, repeat the target-aspect render
 python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out output/final_film_16x9.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
-# Choose --aspect-ratio 16:9 or 9:16 independently; --short-form checks 40–90s without changing it.
+# Example pairing: long 16:9 landscape + short 9:16 portrait; the gate itself is aspect-neutral.
+python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 9:16 --short-form --out output/short_portrait.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 # --shorts selects 9:16 and accepts any positive runtime through 180s (3 minutes).
 ```
 
