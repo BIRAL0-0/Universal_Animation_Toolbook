@@ -25,6 +25,7 @@ const SUPPORTED_PROPS = Object.freeze([
   'cafe_table',
   'ankle_chain',
   'goal_silhouette',
+  'goal_orb',
   'pedestal',
   'books',
   'umbrella_stand',
@@ -198,26 +199,41 @@ function drawWorldProp(g, prop, W, floorY, t, sceneAccent = '#38bdf8', sceneT = 
       g.fillText(prop.label, px, floorY - bh * 0.42);
     }
   } else if (prop.type === 'stairs') {
+    // Each step is a single sh-tall block (tread + riser as one unit), offset by sw.
+    // This draws a true staircase silhouette — NOT a bar chart.
     const steps = prop.steps || 8;
     const sw = (prop.step_width || 72) * s;
     const sh = (prop.step_height || 46) * s;
     const dir = prop.dir === 'left' ? -1 : 1;
+    // Step colors: darker riser, lighter tread, subtle grey gradient rising
+    const baseGrey = 22;
     for (let i = 0; i < steps; i++) {
       const sx = dir > 0 ? px + i * sw : px - (i + 1) * sw;
-      const h = (i + 1) * sh;
-      // Gradient: lower steps darker, upper steps lighter for depth
+      const stepTopY = floorY - (i + 1) * sh;
+      const stepBotY = floorY - i * sh;
+      // Each block is exactly sh tall — proper staircase silhouette
       const depthT = i / Math.max(1, steps - 1);
-      const stepGrey = Math.round(36 + depthT * 28);
-      g.fillStyle = i === steps - 1 ? accent : `rgb(${stepGrey}, ${stepGrey + 6}, ${stepGrey + 16})`;
-      g.globalAlpha = i === steps - 1 ? 0.75 : 1.0;
-      // Rounded step edges for cleaner look
-      g.beginPath();
-      g.roundRect(sx, floorY - h, sw - 1, h, [3 * s, 3 * s, 0, 0]);
-      g.fill();
-      g.globalAlpha = 1.0;
-      g.strokeStyle = '#0f172a';
-      g.lineWidth = 2.0;
-      g.stroke();
+      // Riser (vertical face): darker grey
+      const riserGrey = Math.round(baseGrey + depthT * 30);
+      // Tread (horizontal top): lighter grey
+      const treadGrey = Math.round(baseGrey + 18 + depthT * 30);
+      // Draw riser (front face)
+      g.fillStyle = `rgb(${riserGrey}, ${riserGrey + 4}, ${riserGrey + 10})`;
+      g.fillRect(sx + 1, stepTopY, sw - 3, sh);
+      // Draw tread (top surface) — slightly lighter
+      g.fillStyle = `rgb(${treadGrey}, ${treadGrey + 6}, ${treadGrey + 14})`;
+      g.fillRect(sx, stepTopY, sw, Math.max(2, 4 * s));
+      // Thin outline on each step — matches minimalist spec
+      g.strokeStyle = `rgba(180, 180, 190, ${0.18 + depthT * 0.18})`;
+      g.lineWidth = 1.2;
+      g.strokeRect(sx + 1, stepTopY, sw - 3, sh);
+    }
+    // Top step: subtle white highlight (NOT yellow — yellow reserved for orb/sunrise/chest/BEGIN)
+    if (steps > 0) {
+      const topSx = dir > 0 ? px + (steps - 1) * sw : px - steps * sw;
+      const topY = floorY - steps * sh;
+      g.fillStyle = 'rgba(220, 220, 230, 0.22)';
+      g.fillRect(topSx, topY, sw, Math.max(2, 3 * s));
     }
   } else if (prop.type === 'signpost') {
     const postHeight = Number(prop.post_height ?? 250) * s;
@@ -491,6 +507,35 @@ function drawWorldProp(g, prop, W, floorY, t, sceneAccent = '#38bdf8', sceneT = 
       g.stroke();
       g.restore();
     }
+  } else if (prop.type === 'goal_orb') {
+    // Soft yellow glowing orb — the goal at the top of the staircase
+    const orbX = prop.x * W;
+    const orbY = prop.y || 180;
+    const orbR = prop.size || 36;
+    const pulse = 1.0 + 0.06 * Math.sin(t * 2.2);
+    const glowR = orbR * 3.5 * pulse;
+    const orbRgb = hexToRgb(prop.color || '#fbbf24'); // yellow default
+    // Outer glow
+    const orbGrad = g.createRadialGradient(orbX, orbY, 2, orbX, orbY, glowR);
+    orbGrad.addColorStop(0, `rgba(${orbRgb[0]},${orbRgb[1]},${orbRgb[2]},0.38)`);
+    orbGrad.addColorStop(0.4, `rgba(${orbRgb[0]},${orbRgb[1]},${orbRgb[2]},0.12)`);
+    orbGrad.addColorStop(1, `rgba(${orbRgb[0]},${orbRgb[1]},${orbRgb[2]},0)`);
+    g.save();
+    g.fillStyle = orbGrad;
+    g.beginPath();
+    g.arc(orbX, orbY, glowR, 0, Math.PI * 2);
+    g.fill();
+    // Core orb
+    g.fillStyle = `rgba(${orbRgb[0]},${orbRgb[1]},${orbRgb[2]},0.92)`;
+    g.beginPath();
+    g.arc(orbX, orbY, orbR * pulse, 0, Math.PI * 2);
+    g.fill();
+    // Bright inner highlight
+    g.fillStyle = `rgba(255,255,240,${ca(0.55)})`;
+    g.beginPath();
+    g.arc(orbX - orbR * 0.15, orbY - orbR * 0.15, orbR * 0.35 * pulse, 0, Math.PI * 2);
+    g.fill();
+    g.restore();
   } else if (prop.type === 'goal_silhouette') {
     const gy = floorY - (prop.elevation || 210 * s);
     drawSoftGlow(g, px, gy - 85 * s, 165 * s, '#f59e0b', 0.36);
