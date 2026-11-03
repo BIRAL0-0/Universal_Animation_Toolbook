@@ -5,7 +5,7 @@ Speech-Locked Visual Boards & Speech-Locked Camera Cuts Engine (v3).
 
 Supports:
   1. Multi-speaker `scene.dialogue` arrays with distinct neural voices & crisp conversational pacing
-  2. Internal TTS dead-air compactor (`compact_internal_silences_with_words`) that eliminates sluggish mid-sentence TTS gaps while keeping `WordBoundary` timestamps 100% locked
+  2. Punctuation-aware internal TTS dead-air compactor for Edge, Piper, and OS voices, with exact word-time shifts after audio edits
   3. Exact post-reveal `cue_on` / `hide_on` speech-locked timing for `board` / `boards` AND `camera_shots`
   4. Classic single-string `scene.narration`, external `--voice-dir`, or offline OS TTS fallback
   5. Fully offline neural fallback via **Piper** (`piper-tts` + local `.onnx` voices, see `tools/fetch_piper_voices.py`)
@@ -98,17 +98,58 @@ def trim_leading_trailing_silence(wav_path: Path, threshold: int = 240) -> float
     return dur
 
 
+def _pause_floor_after_word(words: List[Dict[str, Any]], midpoint: float, default: float) -> Optional[float]:
+    """Return a punctuation-aware pause floor; ``None`` means an explicit ellipsis pause is kept."""
+    previous: Optional[Dict[str, Any]] = None
+    previous_start = float("-inf")
+    for word in words:
+        try:
+            start = float(word.get("start", 0.0))
+        except (TypeError, ValueError):
+            continue
+        if start <= midpoint and start >= previous_start:
+            previous = word
+            previous_start = start
+
+    if previous is None:
+        return default
+    token = str(previous.get("source_text") or previous.get("word") or "").rstrip(
+        "\"'”’)]}"
+    )
+    if token.endswith(("...", "…")):
+        return None
+    if re.search(r"[.!?]+$", token):
+        return max(default, 0.42)
+    if re.search(r"[,;:]$", token):
+        return max(default, 0.24)
+    if re.search(r"[—–-]$", token):
+        return max(default, 0.30)
+    return default
+
+
+def _attach_source_text(words: List[Dict[str, Any]], text: str) -> List[Dict[str, Any]]:
+    """Retain source punctuation even if a TTS backend omits punctuation in word events."""
+    source_tokens = [token for token in re.split(r"\s+", text.strip()) if token]
+    if len(source_tokens) == len(words):
+        return [{**word, "source_text": source_tokens[i]} for i, word in enumerate(words)]
+    return [
+        {**word, "source_text": word.get("source_text") or word.get("word", "")}
+        for word in words
+    ]
+
+
 def compact_internal_silences_with_words(
     wav_path: Path,
     words: List[Dict[str, Any]],
     max_silence_sec: float = 0.32,
-    target_silence_sec: float = 0.22,
+    target_silence_sec: float = 0.12,
     threshold: int = 220,
 ) -> Tuple[float, List[Dict[str, Any]]]:
-    """
-    Eliminate sluggish internal TTS pauses (> `max_silence_sec`) inside a synthesized clip
-    by compacting them to `target_silence_sec` while shifting subsequent `WordBoundary` offsets
-    by the exact removed sample delta!
+    """Trim long unpunctuated TTS dead air while retaining punctuation pauses and exact word sync.
+
+    Runs longer than ``max_silence_sec`` are reduced to ``target_silence_sec`` by default.
+    Commas keep at least 240 ms, sentence punctuation at least 420 ms, and an explicit ellipsis
+    keeps its full pause. Word timestamps are shifted by the exact number of removed samples.
     """
     with wave.open(str(wav_path), "rb") as wf:
         params = wf.getparams()
@@ -129,13 +170,15 @@ def compact_internal_silences_with_words(
     silent_flags = []
     for b in range(n_blocks):
         chunk = samples[b * win : (b + 1) * win]
-        peak = max(abs(chunk[0]), abs(chunk[len(chunk) // 2]), max(abs(v) for v in chunk[::4]))
-        silent_flags.append(peak < threshold)
+        probe = chunk[::4] or chunk
+        peak = max(abs(value) for value in probe)
+        rms = (sum(value * value for value in probe) / float(len(probe))) ** 0.5
+        # RMS avoids treating a few codec-noise spikes as speech while retaining real voiced blocks.
+        silent_flags.append(rms < threshold and peak < threshold * 3)
 
     max_blocks = int(round(max_silence_sec / 0.010))
-    keep_blocks = int(round(target_silence_sec / 0.010))
 
-    # Identify internal silent runs `[b0, b1)` strictly inside `(2, n_blocks - 2)` exceeding `max_blocks`
+    # Identify internal silent runs `[b0, b1)` strictly inside `(2, n_blocks - 2)`.
     cuts: List[Tuple[int, int]] = []  # sample ranges `[cut_start_sample, cut_end_sample)` to excise
     b = 2
     while b < n_blocks - 2:
@@ -146,12 +189,18 @@ def compact_internal_silences_with_words(
         while b_end < n_blocks - 2 and silent_flags[b_end]:
             b_end += 1
         run_len = b_end - b
-        if run_len > max_blocks and keep_blocks < run_len:
-            keep_half = keep_blocks // 2
-            c0 = (b + keep_half) * win
-            c1 = (b_end - (keep_blocks - keep_half)) * win
-            if c1 > c0:
-                cuts.append((c0, c1))
+        if run_len > max_blocks:
+            run_start_sec = b * win / float(sr)
+            run_end_sec = b_end * win / float(sr)
+            keep_sec = _pause_floor_after_word(words, (run_start_sec + run_end_sec) * 0.5, target_silence_sec)
+            if keep_sec is not None:
+                keep_blocks = min(run_len, int(round(keep_sec / 0.010)))
+                if keep_blocks < run_len:
+                    keep_half = keep_blocks // 2
+                    c0 = (b + keep_half) * win
+                    c1 = (b_end - (keep_blocks - keep_half)) * win
+                    if c1 > c0:
+                        cuts.append((c0, c1))
         b = b_end
 
     if not cuts:
@@ -159,14 +208,9 @@ def compact_internal_silences_with_words(
 
     out_samples: List[int] = []
     prev_s = 0
-    # Track cumulative removed time `(orig_sec_cut_end, cumulative_removed_sec)`
-    shifts: List[Tuple[float, float]] = []
-    removed_samples = 0
 
     for c0, c1 in cuts:
         out_samples.extend(samples[prev_s:c0])
-        removed_samples += (c1 - c0)
-        shifts.append((c1 / float(sr), removed_samples / float(sr)))
         prev_s = c1
     out_samples.extend(samples[prev_s:])
 
@@ -180,20 +224,20 @@ def compact_internal_silences_with_words(
 
     def _map_time(t_orig: float) -> float:
         delta = 0.0
-        for (c0, c1) in cuts:
+        for c0, c1 in cuts:
             t0 = c0 / float(sr)
             t1 = c1 / float(sr)
             if t_orig >= t1:
-                delta += (t1 - t0)
+                delta += t1 - t0
             elif t_orig > t0:
-                delta += (t_orig - t0)
+                delta += t_orig - t0
         return max(0.0, t_orig - delta)
 
     updated_words: List[Dict[str, Any]] = []
-    for w in words:
-        ws = round(_map_time(float(w["start"])), 3)
-        we = round(min(new_dur, max(ws + 0.04, _map_time(float(w["end"])))), 3)
-        updated_words.append({**w, "start": ws, "end": we})
+    for word in words:
+        ws = round(_map_time(float(word["start"])), 3)
+        we = round(min(new_dur, max(ws + 0.04, _map_time(float(word["end"])))), 3)
+        updated_words.append({**word, "start": ws, "end": we})
 
     return new_dur, updated_words
 
@@ -290,12 +334,15 @@ async def _batch_synthesize_lines(jobs: List[Dict[str, Any]], concurrency: int =
             and words_json.exists()
             and meta_txt.read_text(encoding="utf-8") == sig
         ):
-            job["ok"] = True
             job["dur"] = wav_duration_seconds(out_wav)
             try:
                 job["words"] = json.loads(words_json.read_text(encoding="utf-8"))
             except Exception:
                 job["words"] = _fallback_proportional_words(job["text"], job["dur"])
+            job["words"] = _attach_source_text(job["words"], job["text"])
+            job["dur"], job["words"] = compact_internal_silences_with_words(out_wav, job["words"])
+            words_json.write_text(json.dumps(job["words"]), encoding="utf-8")
+            job["ok"] = True
             return
 
         tmp_mp3 = out_wav.with_suffix(".mp3")
@@ -308,11 +355,12 @@ async def _batch_synthesize_lines(jobs: List[Dict[str, Any]], concurrency: int =
                     if tmp_mp3.exists() and tmp_mp3.stat().st_size >= 256:
                         dur, lead_trim = convert_to_mono_wav_ex(tmp_mp3, out_wav)
                         tmp_mp3.unlink(missing_ok=True)
+                        raw_words = _attach_source_text(raw_words, job["text"])
                         adjusted_words: List[Dict[str, Any]] = []
                         for w in raw_words:
                             ws = max(0.0, round(float(w["start"]) - lead_trim, 3))
                             we = min(round(dur, 3), max(round(ws + 0.04, 3), round(float(w["end"]) - lead_trim, 3)))
-                            adjusted_words.append({"word": w["word"], "start": ws, "end": we})
+                            adjusted_words.append({**w, "start": ws, "end": we})
                         if not adjusted_words:
                             adjusted_words = _fallback_proportional_words(job["text"], dur)
                         # Compact sluggish internal mid-clip TTS pauses while keeping WordBoundary sync exact!
@@ -538,6 +586,14 @@ def _refine_word_onsets_with_energy(
     return words
 
 
+def _compact_piper_line(wav_path: Path, text: str, dur: float) -> Tuple[float, List[Dict[str, Any]]]:
+    """Compact Piper dead air first, then estimate and acoustically refine timings on the edited audio."""
+    rough_words = _piper_word_timings(text, dur)
+    compacted_dur, _ = compact_internal_silences_with_words(wav_path, rough_words)
+    words = _piper_word_timings(text, compacted_dur)
+    return compacted_dur, _refine_word_onsets_with_energy(words, wav_path, compacted_dur)
+
+
 def _synthesize_piper_line(job: Dict[str, Any]) -> bool:
     """Synthesize one dialogue line with Piper into the job's WAV (+ cached word timings)."""
     out_wav: Path = job["wav"]
@@ -551,12 +607,10 @@ def _synthesize_piper_line(job: Dict[str, Any]) -> bool:
         and words_json.exists()
         and meta_txt.read_text(encoding="utf-8") == sig
     ):
+        cached_dur = wav_duration_seconds(out_wav)
+        job["dur"], job["words"] = _compact_piper_line(out_wav, job["text"], cached_dur)
+        words_json.write_text(json.dumps(job["words"]), encoding="utf-8")
         job["ok"] = True
-        job["dur"] = wav_duration_seconds(out_wav)
-        try:
-            job["words"] = json.loads(words_json.read_text(encoding="utf-8"))
-        except Exception:
-            job["words"] = _piper_word_timings(job["text"], job["dur"])
         return True
 
     model_id = _piper_model_id(job.get("piper_voice") or job.get("voice"))
@@ -582,7 +636,7 @@ def _synthesize_piper_line(job: Dict[str, Any]) -> bool:
         raw_wav.unlink(missing_ok=True)
         if dur <= 0.04:
             return False
-        words = _refine_word_onsets_with_energy(_piper_word_timings(job["text"], dur), out_wav, dur)
+        dur, words = _compact_piper_line(out_wav, job["text"], dur)
         meta_txt.write_text(sig, encoding="utf-8")
         words_json.write_text(json.dumps(words), encoding="utf-8")
         job["ok"] = True
@@ -617,6 +671,8 @@ def try_synthesize_os_tts(text: str, out_wav: Path) -> Optional[float]:
             )
             dur = convert_to_mono_wav(tmp_wav, out_wav)
             tmp_wav.unlink(missing_ok=True)
+            rough_words = _fallback_proportional_words(text, dur)
+            dur, _ = compact_internal_silences_with_words(out_wav, rough_words)
             return dur
         except Exception:
             tmp_wav.unlink(missing_ok=True)

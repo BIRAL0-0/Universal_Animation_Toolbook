@@ -75,6 +75,12 @@ blocked, since GitHub serves the same MIT/CC0 voice files). `--dry-run` shows th
 
 ## 5.3 Pacing
 
+For Edge, Piper, and OS-generated line audio, long internal TTS dead air is compacted without
+rewriting the words. Runs over **0.32 s** are reduced to about **0.12 s** when unpunctuated;
+commas retain at least **0.24 s**, sentence punctuation **0.42 s**, and an explicit ellipsis keeps
+its full pause. Word timings move with the audio. This improves pacing, not the voice model's
+acoustic quality. Configured pauses between dialogue lines remain separate and are not compacted.
+
 - `pause_after`: **0.22–0.32 s** between lines of the same conversation; 0.35–0.45 s at a
   scene turn (that gap is where the cut, the board and the BGM change land).
 - One sentence per `dialogue` entry. Two sentences in one entry produce a single long
