@@ -417,6 +417,49 @@ def build_master_soundtrack(
     if peak > 0.89:
         mix = np.tanh(mix / peak * 1.12) * 0.89
 
+    # Loudness normalisation toward the documented healthy band (process/05_AUDIO.md: peak
+    # -3..-1 dBFS, RMS -16..-19 dBFS). Measured on video-001 (KI-008): the mix sat at -24 dBFS RMS
+    # with a 22 dB crest factor, because brief transients (pings, plosives) pinned the peak while
+    # the narration body stayed ~20 dB lower. A peak ceiling alone cannot fix that, and an
+    # RMS-envelope compressor cannot either (a 50 ms RMS envelope never sees a 3 ms transient).
+    # So: (1) a fast-attack peak limiter tames the transients, then (2) make-up gain lifts the
+    # body into band. Make-up is bounded by the RMS target, by the -1 dBFS peak ceiling and by a
+    # hard +8 dB cap, so this stage can never clip and cannot rescue a broken silent mix.
+    mono_peak = np.max(np.abs(mix), axis=1) if mix.ndim == 2 else np.abs(mix)
+    rms_before = float(np.sqrt(np.mean(mix.astype(np.float64) ** 2))) if mix.size else 0.0
+    rms_dbfs_before = 20.0 * math.log10(max(1e-6, rms_before))
+    makeup_gain_db = 0.0
+    if rms_before > 1e-5:
+        hop = max(1, int(0.003 * SAMPLE_RATE))                     # 3 ms: fast enough to see transients
+        n_hops = len(mono_peak) // hop + 1
+        env = np.empty(n_hops, dtype=np.float64)
+        prev = 0.0
+        release = math.exp(-1.0 / (0.120 * SAMPLE_RATE / hop))    # 120 ms release
+        for i in range(n_hops):
+            blk = mono_peak[i * hop:(i + 1) * hop]
+            pk = float(blk.max()) if blk.size else prev
+            prev = max(pk, prev * release)
+            env[i] = prev
+        thr = 10.0 ** (-10.0 / 20.0)                              # -10 dBFS threshold
+        ratio = 6.0
+        with np.errstate(divide="ignore", invalid="ignore"):
+            g = np.where(env > thr, thr * (env / thr) ** (1.0 / ratio) / env, 1.0)
+        g = np.clip(np.nan_to_num(g, nan=1.0, posinf=1.0), 0.05, 1.0)
+        g_full = np.repeat(g, hop)[: len(mono_peak)]
+        mix = mix * (g_full[:, None] if mix.ndim == 2 else g_full)
+
+        target_dbfs = -17.5                                       # midpoint of the -16..-19 band
+        rms_now = float(np.sqrt(np.mean(mix.astype(np.float64) ** 2)))
+        gain_for_rms = 10.0 ** ((target_dbfs - 20.0 * math.log10(max(1e-6, rms_now))) / 20.0)
+        peak_now = float(np.max(np.abs(mix))) if mix.size else 0.0
+        gain_for_peak = (0.89 / peak_now) if peak_now > 1e-6 else 1.0
+        gain = max(1.0, min(gain_for_rms, gain_for_peak, 10.0 ** (8.0 / 20.0)))
+        if gain > 1.0:
+            mix = mix * gain
+            makeup_gain_db = round(20.0 * math.log10(gain), 2)
+    rms_after = float(np.sqrt(np.mean(mix.astype(np.float64) ** 2))) if mix.size else 0.0
+    rms_dbfs_after = 20.0 * math.log10(max(1e-6, rms_after))
+
     fade_out_n = min(int(0.85 * SAMPLE_RATE), total_samples // 6)
     if fade_out_n > 0:
         f_curve = np.linspace(1.0, 0.0, fade_out_n, dtype=np.float32)
@@ -437,6 +480,11 @@ def build_master_soundtrack(
         "voiced_scenes": voiced_scenes,
         "sfx_events": len(events),
         "peak_dbfs": round(20.0 * math.log10(max(1e-5, float(np.max(np.abs(mix))))), 2),
+        # KI-008: reports must carry RMS or the documented band cannot be gated on. Earlier
+        # shipped films recorded peak only, which is how a -24 dBFS mix went unnoticed.
+        "rms_dbfs": round(rms_dbfs_after, 2),
+        "rms_dbfs_before_makeup": round(rms_dbfs_before, 2),
+        "loudness_makeup_gain_db": makeup_gain_db,
         "bgm": bgm_meta,
     }
 

@@ -1,0 +1,118 @@
+{
+  "project": "video-001-twenty-three-minutes",
+  "title": "What If Every Notification Cost You 23 Minutes?",
+  "generated": "2026-11-09",
+  "_note": "Complete inventory of every asset this production consumes or emits, with licence and attribution where the licence requires it. The renderer echoes CC BY credits into the delivery chapters file automatically; this manifest is the authoritative record.",
+  "music": [
+    {
+      "track_id": "reflective_piano",
+      "file": "universal_toolbook/assets/bgm/reflective_piano.mp3",
+      "title": "Where Stars Fall",
+      "artist": "Scott Buckley",
+      "license": "CC BY 4.0",
+      "attribution_required": true,
+      "attribution": "\"Where Stars Fall\" by Scott Buckley, CC BY 4.0",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Where_Stars_Fall.oga",
+      "used_in_scenes": ["S01", "S06"]
+    },
+    {
+      "track_id": "chill_focus",
+      "file": "universal_toolbook/assets/bgm/chill_focus.mp3",
+      "title": "Softly",
+      "artist": "Loyalty Freak Music",
+      "license": "CC0 1.0 Public Domain",
+      "attribution_required": false,
+      "source_url": "https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_06_-_Softly.ogg",
+      "used_in_scenes": ["S02", "S03", "S08", "S09"]
+    },
+    {
+      "track_id": "suspense_tension",
+      "file": "universal_toolbook/assets/bgm/suspense_tension.mp3",
+      "title": "The Distant Sun (Monomyth 1)",
+      "artist": "Scott Buckley",
+      "license": "CC BY 4.0",
+      "attribution_required": true,
+      "attribution": "\"The Distant Sun (Monomyth 1)\" by Scott Buckley, CC BY 4.0",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Distant_Sun_(Monomyth_1).oga",
+      "used_in_scenes": ["S04", "S05", "S07"]
+    },
+    {
+      "track_id": "triumph_horizon",
+      "file": "universal_toolbook/assets/bgm/triumph_horizon.mp3",
+      "title": "The Restoration (Monomyth 12)",
+      "artist": "Scott Buckley",
+      "license": "CC BY 4.0",
+      "attribution_required": true,
+      "attribution": "\"The Restoration (Monomyth 12)\" by Scott Buckley, CC BY 4.0",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Restoration_(Monomyth_12).oga",
+      "used_in_scenes": ["S10"]
+    }
+  ],
+  "voices": [
+    {
+      "speaker": "narrator",
+      "engine": "Kokoro-82M int8 ONNX (kokoro-onnx)",
+      "voice": "am_michael",
+      "voice_set": "v0.19 (cache/tts/voices.npz)",
+      "model_licence": "open weights, downloaded SHA-256 verified via api.github.com git blobs",
+      "lines": 41
+    },
+    {
+      "speaker": "kai",
+      "engine": "Kokoro-82M int8 ONNX (kokoro-onnx)",
+      "voice": "am_liam",
+      "voice_set": "v1.0 (cache/tts/voices-v1.0-en.npz)",
+      "model_licence": "open weights, downloaded SHA-256 verified",
+      "lines": 4
+    },
+    {
+      "speaker": "sam",
+      "engine": "Kokoro-82M int8 ONNX (kokoro-onnx)",
+      "voice": "af_bella",
+      "voice_set": "v0.19 (cache/tts/voices.npz)",
+      "model_licence": "open weights, downloaded SHA-256 verified",
+      "lines": 1
+    }
+  ],
+  "fonts": [
+    {
+      "family": "Poppins",
+      "files": ["universal_toolbook/assets/Poppins-Regular.ttf", "universal_toolbook/assets/Poppins-Bold.ttf"],
+      "licence": "Open Font License (bundled with the repository)"
+    }
+  ],
+  "engine_assets_generated": [
+    "character rig: kai (cel, lean, textured_messy) — parameterised, no bitmap art",
+    "character rig: sam (cel, standard, bun) — parameterised, no bitmap art",
+    "environments: bedroom_late, mind_space, modern_office, tech_lab, sunrise_summit (procedural)",
+    "props: bed, curtain_window, clean_desk, messy_desk, digital_clock (procedural)",
+    "boards: stat_cards, phone_card, bar_chart, flow_chain, checklist_card (procedural)",
+    "foley: engine-derived from scene events (footsteps, key bed, pings, drawer)"
+  ],
+  "external_references_inspected": [
+    {
+      "kind": "YouTube reference video",
+      "url": "https://youtube.com/shorts/DRdfSzODnlM",
+      "use": "craft analysis only (metadata, chapters, transcript); no footage, characters, script or animation reproduced"
+    },
+    {
+      "kind": "YouTube reference video",
+      "url": "https://youtu.be/F-a7-UMsmKI",
+      "use": "craft analysis only; no footage, characters, script or animation reproduced"
+    },
+    {
+      "kind": "YouTube comparable (breakout)",
+      "url": "https://www.youtube.com/watch?v=iOSajvozN78",
+      "use": "market/format evidence only; nothing reproduced"
+    }
+  ],
+  "outputs": [
+    {"path": "final.mp4", "kind": "master, YouTube Shorts 9:16", "resolution": "1080x1920", "fps": 30},
+    {"path": "renders/final_16x9.mp4", "kind": "secondary, regular YouTube 16:9", "resolution": "1920x1080", "fps": 30},
+    {"path": "audio/master_audio.wav", "kind": "mixed master audio, for measurement"},
+    {"path": "assets/stills_9x16/", "kind": "portrait QA stills, one per scene"},
+    {"path": "assets/stills_16x9/", "kind": "landscape QA stills, one per scene"},
+    {"path": "assets/qa_frames/", "kind": "frames extracted from the final master for inspection"}
+  ],
+  "paid_services_used": []
+}

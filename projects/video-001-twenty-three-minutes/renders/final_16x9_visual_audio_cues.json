@@ -1,0 +1,551 @@
+[
+  {
+    "t": 5.525,
+    "type": "board_pop",
+    "pan": 0.10999999999999999
+  },
+  {
+    "t": 16.536,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 16.854,
+    "type": "step",
+    "pan": -0.37449999999887046,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 17.043,
+    "type": "step",
+    "pan": -0.34300000000033176,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 17.205,
+    "type": "step",
+    "pan": -0.31150000000021133,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 17.356,
+    "type": "step",
+    "pan": -0.2800000000027503,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 17.507,
+    "type": "step",
+    "pan": -0.24849999999978867,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 17.669,
+    "type": "step",
+    "pan": -0.21699999999966826,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 17.858,
+    "type": "step",
+    "pan": -0.18550000000112943,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 18.256,
+    "type": "step",
+    "pan": -0.15400000000000005,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 18.654,
+    "type": "step",
+    "pan": -0.18550000000112943,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 18.843,
+    "type": "step",
+    "pan": -0.21699999999966826,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 19.005,
+    "type": "step",
+    "pan": -0.24849999999978867,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 19.156,
+    "type": "step",
+    "pan": -0.2799999999972496,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 19.307,
+    "type": "step",
+    "pan": -0.31150000000021133,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 19.469,
+    "type": "step",
+    "pan": -0.34300000000033176,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 19.658,
+    "type": "step",
+    "pan": -0.37449999999887057,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 20.056,
+    "type": "step",
+    "pan": -0.40599999999999986,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 20.454,
+    "type": "step",
+    "pan": -0.37449999999887046,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 20.643,
+    "type": "step",
+    "pan": -0.34300000000033176,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 20.805,
+    "type": "step",
+    "pan": -0.31150000000021133,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 20.956,
+    "type": "step",
+    "pan": -0.2800000000027503,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 21.107,
+    "type": "step",
+    "pan": -0.24849999999978867,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 21.254,
+    "type": "board_pop",
+    "pan": 0.06600000000000006
+  },
+  {
+    "t": 21.269,
+    "type": "step",
+    "pan": -0.21699999999966826,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 21.458,
+    "type": "step",
+    "pan": -0.18550000000112943,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 21.856,
+    "type": "step",
+    "pan": -0.15400000000000005,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 22.254,
+    "type": "step",
+    "pan": -0.18550000000112943,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 22.443,
+    "type": "step",
+    "pan": -0.21699999999966826,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 22.605,
+    "type": "step",
+    "pan": -0.24849999999978867,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 22.756,
+    "type": "step",
+    "pan": -0.2799999999972496,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 22.907,
+    "type": "step",
+    "pan": -0.31150000000021133,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 23.069,
+    "type": "step",
+    "pan": -0.34300000000033176,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 23.258,
+    "type": "step",
+    "pan": -0.37449999999887057,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 23.656,
+    "type": "step",
+    "pan": -0.40599999999999986,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 24.054,
+    "type": "step",
+    "pan": -0.37449999999887046,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 24.243,
+    "type": "step",
+    "pan": -0.34300000000033176,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 24.405,
+    "type": "step",
+    "pan": -0.31150000000021133,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 24.556,
+    "type": "step",
+    "pan": -0.2800000000027503,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 24.707,
+    "type": "step",
+    "pan": -0.24849999999978867,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 24.869,
+    "type": "step",
+    "pan": -0.21699999999966826,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 25.058,
+    "type": "step",
+    "pan": -0.18550000000112943,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 25.456,
+    "type": "step",
+    "pan": -0.15400000000000005,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 25.723,
+    "type": "step",
+    "pan": -0.18550000000112943,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 25.85,
+    "type": "step",
+    "pan": -0.21699999999966826,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 25.958,
+    "type": "step",
+    "pan": -0.24849999999978867,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 26.059,
+    "type": "step",
+    "pan": -0.2799999999972496,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 26.161,
+    "type": "step",
+    "pan": -0.31150000000021133,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 26.269,
+    "type": "step",
+    "pan": -0.34300000000033176,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 26.396,
+    "type": "step",
+    "pan": -0.37449999999887057,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 26.663,
+    "type": "step",
+    "pan": -0.40599999999999986,
+    "actor": "kai",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 36.95,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 39.436,
+    "type": "phone_buzz",
+    "pan": 0.17600000000000005
+  },
+  {
+    "t": 50.664,
+    "type": "board_pop",
+    "pan": 0.08799999999999997
+  },
+  {
+    "t": 56.714,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 57.234,
+    "type": "phone_buzz",
+    "pan": 0.08799999999999997
+  },
+  {
+    "t": 62.484,
+    "type": "phone_buzz",
+    "pan": 0.15400000000000003
+  },
+  {
+    "t": 63.534,
+    "type": "board_pop",
+    "pan": 0.06600000000000006
+  },
+  {
+    "t": 73.392,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 75.765,
+    "type": "board_pop",
+    "pan": 0.022000000000000023
+  },
+  {
+    "t": 86.644,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 88.794,
+    "type": "board_pop",
+    "pan": 0.08799999999999997
+  },
+  {
+    "t": 99.269,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 102.925,
+    "type": "board_pop",
+    "pan": -0.043999999999999984
+  },
+  {
+    "t": 113.575,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 117.152,
+    "type": "phone_buzz",
+    "pan": 0.10999999999999999
+  },
+  {
+    "t": 125.575,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 126.606,
+    "type": "step",
+    "pan": 0.3873333333345795,
+    "actor": "sam",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 127.154,
+    "type": "step",
+    "pan": 0.3546666666659387,
+    "actor": "sam",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 127.638,
+    "type": "step",
+    "pan": 0.32200000000213913,
+    "actor": "sam",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 127.687,
+    "type": "board_pop",
+    "pan": 0.06600000000000006
+  },
+  {
+    "t": 128.122,
+    "type": "step",
+    "pan": 0.28933333333406136,
+    "actor": "sam",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 128.67,
+    "type": "step",
+    "pan": 0.2566666666654206,
+    "actor": "sam",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 129.781,
+    "type": "step",
+    "pan": 0.22400000000000003,
+    "actor": "sam",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 134.491,
+    "type": "step",
+    "pan": 0.2555000000011295,
+    "actor": "sam",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 134.897,
+    "type": "step",
+    "pan": 0.28699999999966824,
+    "actor": "sam",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 135.242,
+    "type": "step",
+    "pan": 0.3184999999997885,
+    "actor": "sam",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 135.566,
+    "type": "step",
+    "pan": 0.3499999999972496,
+    "actor": "sam",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 135.891,
+    "type": "step",
+    "pan": 0.38150000000021145,
+    "actor": "sam",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 136.236,
+    "type": "step",
+    "pan": 0.41300000000033155,
+    "actor": "sam",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 136.642,
+    "type": "step",
+    "pan": 0.44449999999887047,
+    "actor": "sam",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 137.495,
+    "type": "step",
+    "pan": 0.4759999999999999,
+    "actor": "sam",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 137.575,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 150.422,
+    "type": "board_pop",
+    "pan": 0.06600000000000006
+  },
+  {
+    "t": 154.287,
+    "type": "board_pop",
+    "pan": 0.022000000000000023
+  }
+]

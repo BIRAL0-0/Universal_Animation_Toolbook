@@ -3,6 +3,23 @@
 You are at the repository root. This page is the only orientation you need. Every path below
 resolves from here; nothing is implied.
 
+## 0. Before anything else — read the standing rules
+
+**[`AGENT_OPERATING_RULES.md`](AGENT_OPERATING_RULES.md)** is the permanent production contract.
+It defines **AUTOMATIC VIDEO CREATION MODE**: a bare request such as *"Create a new video."*
+already authorises the full research → prompt → script → animation → narration → render → QA
+workflow, with no need for the user to repeat the master prompt or walk you through stages.
+It also carries the house content rules (no channel name anywhere, English-only narration,
+Kokoro `am_michael` first, originality, evidence labelling) and the self-healing obligation.
+
+A new video is produced by copying
+**[`templates/MASTER_VIDEO_PRODUCTION_PROMPT.md`](templates/MASTER_VIDEO_PRODUCTION_PROMPT.md)**
+into a fresh folder under **[`projects/`](projects/)**, customising it with that video's research,
+and saving the finalised prompt *before* production begins. Recurring problems and fixes live in
+**[`docs/production/`](docs/production/)** (`KNOWN_ISSUES.md`, `LESSONS_LEARNED.md`,
+`PIPELINE_CHANGELOG.md`); the rules that keep the system honest are enforced by
+**[`tests/production/`](tests/production/)**.
+
 ## 1. What this repository is
 
 `universal_toolbook/` renders a film from a single JSON spec in either 1920×1080 landscape or
@@ -12,6 +29,10 @@ repository is a film, a test, or a result.
 
 ```
 universal_toolbook/   the production kit  (engine, assets, tools, procedure, template)
+templates/            MASTER_VIDEO_PRODUCTION_PROMPT.md — the reusable per-video prompt template
+projects/             one folder per finished production (prompt, research, scripts, MP4)
+docs/production/      KNOWN_ISSUES, LESSONS_LEARNED, PIPELINE_CHANGELOG — the self-healing log
+tests/production/     hygiene + integrity tests that enforce the standing rules
 examples/             five complete film specs — copy one to learn the shape
 tests/                engine regression suite (development only)
 outputs/              text results of finished films (chapters, reports, cue sheets)
@@ -22,20 +43,25 @@ work/                 your episode + QA stills (git-ignored)
 ## 2. Bootstrap (once per machine)
 
 ```bash
-python3 universal_toolbook/run_studio.py check      # expect: "status": "OK", 7 BGM tracks
+# from the repository root, once per machine. Modern distros refuse system pip (PEP 668),
+# so everything lives in the repo venv — never `pip install` into the system Python.
+python3 -m venv .venv
+.venv/bin/pip install --upgrade pip
+.venv/bin/pip install -r universal_toolbook/requirements.txt pyyaml
 npm install --prefix universal_toolbook             # 2D canvas backend
-pip install -r universal_toolbook/requirements.txt  # numpy, imageio-ffmpeg, edge-tts
-python3 universal_toolbook/tools/fetch_piper_voices.py check   # expect: offline_voiceover_ready true
+.venv/bin/python universal_toolbook/setup_tts.py    # Kokoro weights -> cache/tts (primary voices)
+.venv/bin/python universal_toolbook/run_studio.py check   # expect: "status": "OK", 7 BGM tracks
 ```
 
-If `check` is not `OK`, read `universal_toolbook/process/07_TROUBLESHOOTING.md` before doing
-anything else. If `offline_voiceover_ready` is false, the Edge TTS endpoint is unreachable in
-this environment and you must use offline voices:
+Kokoro is the **primary** narration backend (`am_michael` default, `af_bella` preferred secondary);
+`setup_tts.py` caches its weights locally so renders work air-gapped. If `check` is not `OK`, read
+`universal_toolbook/process/07_TROUBLESHOOTING.md` before doing anything else. Piper is a
+**fallback only** — use it solely when a line cannot be voiced by Kokoro:
 
 ```bash
-pip install piper-tts
-python3 universal_toolbook/tools/fetch_piper_voices.py install                       # huggingface.co hosts the voices
-python3 universal_toolbook/tools/fetch_piper_voices.py install \
+.venv/bin/pip install piper-tts
+.venv/bin/python universal_toolbook/tools/fetch_piper_voices.py install                       # huggingface.co hosts the voices
+.venv/bin/python universal_toolbook/tools/fetch_piper_voices.py install \
     --github 007-Akira/Project-Rocky --github-path voices    # when only github.com is reachable
 python3 universal_toolbook/tools/fetch_piper_voices.py install --from-dir /path/to/piper_voices  # offline copy
 ```

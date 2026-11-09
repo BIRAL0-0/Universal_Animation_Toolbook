@@ -67,7 +67,7 @@ After setup, `python3 universal_toolbook/run_studio.py check` must print
 | `film_grain` | false | Zero-grain by design; not exposed for enabling |
 | `subtitles_default` | `"cinema"` | Per-render override: `--subtitles cinema\|off` |
 | `bgm_default` | `"auto"` | Per-render override: `--bgm …` |
-| `voice_default` | `en-US-ChristopherNeural` | Fallback voice when a speaker has none |
+| `voice_default` | `am_michael` | Fallback voice when a speaker has none. Kokoro-first policy: Michael (`am_michael`) primary, Bella (`af_bella`) preferred secondary, other approved Kokoro voices when suitable, Piper only as last resort. Legacy Edge ids (`en-US-…Neural`) remain accepted for old examples only |
 | `channel_name` | `""` | Watermark; leave empty for a clean frame |
 
 ### Episode-level (per film, in `episode.json`)
