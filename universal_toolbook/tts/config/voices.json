@@ -1,0 +1,75 @@
+{
+  "_note": "Voice configuration for the self-hosted TTS subsystem. 'default_engine' is what generate_voiceover.py and the animation pipeline use when no --engine is given. Aliases map the pipeline's Edge-style voice names (and common shorthand) to native engine voice ids. Do not add voices here that the engine on this machine cannot actually speak — verify with `python3 universal_toolbook/generate_voiceover.py --voices`.",
+  "default_engine": "kokoro",
+  "engines": {
+    "kokoro": {
+      "_note": "Kokoro-82M int8 ONNX via the kokoro-onnx package. Weights are in cache/tts/ (downloaded by setup_tts.py). 11 voices in the v0.19 set. 24000 Hz output. No native word timings on this export — the subsystem applies the syllable-proportional + energy-refined fallback.",
+      "model": "cache/tts/kokoro.onnx",
+      "voices": "cache/tts/voices.npz",
+      "sample_rate": 24000,
+      "defaults": {
+        "voice": "af_bella",
+        "speed": 1.0,
+        "language": "en-us",
+        "sentence_pause": 0.25,
+        "clause_pause": 0.10
+      },
+      "aliases": {
+        "en-US-AndrewNeural": "am_michael",
+        "en-US-GuyNeural": "am_adam",
+        "en-US-EricNeural": "am_michael",
+        "en-US-JennyNeural": "af_bella",
+        "en-US-AriaNeural": "af_sky",
+        "en-US-AnaNeural": "af_nicole",
+        "en-US-EmmaNeural": "bf_emma",
+        "en-US-SofiaNeural": "af_bella",
+        "en-GB-RyanNeural": "am_michael",
+        "en-GB-LibbyNeural": "af_nicole",
+        "narrator": "af_bella",
+        "host": "af_bella"
+      }
+    },
+    "piper": {
+      "_note": "Piper (piper1-gpl) medium-quality voices from the 007-Akira/Project-Rocky GitHub mirror (the repo's standard offline fallback). Voices live in ~/.cache/piper_voices. 22050 Hz output. Native phoneme-level alignments are available.",
+      "voice_dir": "~/.cache/piper_voices",
+      "sample_rate": 22050,
+      "defaults": {
+        "voice": "en_US-ryan-medium",
+        "speed": 1.0
+      },
+      "aliases": {
+        "en-US-AndrewNeural": "en_US-ryan-medium",
+        "en-US-GuyNeural": "en_US-ryan-medium",
+        "en-US-EricNeural": "en_US-ryan-medium",
+        "en-US-JennyNeural": "en_GB-alan-medium",
+        "en-GB-LibbyNeural": "en_GB-alan-medium",
+        "narrator": "en_US-ryan-medium",
+        "host": "en_US-ryan-medium"
+      }
+    },
+    "edge": {
+      "_note": "Microsoft Edge TTS. Kept ONLY as a fallback for machines where the sandbox network allows speech.platform.bing.com. Proprietary cloud service — not free-tier guaranteed, not self-hosted. In this Arena sandbox it is unreachable and synthesis fails per line (the pipeline then falls through to the offline engines).",
+      "defaults": {
+        "voice": "en-US-AndrewNeural",
+        "speed": 1.0
+      },
+      "aliases": {}
+    }
+  },
+  "processing": {
+    "_note": "Applied by generate_voiceover.py (processing on by default) and process_audio.py. Chain: resample -> peak pre-pass -> RMS loudness normalize -> soft peak limit. The RMS target (-16 dBFS, matching the repo's narration QC band -16..-19 dBFS) is the PRIMARY loudness control so every segment sits at the same level; the peak pre-pass only LOWERS peaks above -1 dBFS (it never amplifies) and the soft limit at -0.5 dBFS is the safety net. No compression. Originals are always kept alongside processed files.",
+    "resample_rate": 44100,
+    "normalize_peak_dbfs": -1.0,
+    "normalize_rms_dbfs": -16.0,
+    "limit_dbfs": -0.5,
+    "mp3_bitrate_kbps": 192
+  },
+  "segmentation": {
+    "_note": "How text is split into segments. Paragraph break = blank line. Sentences end at . ! ? … — ; clauses at , ; : and ( ). max_segment_chars guards engine chunk limits by splitting long sentences at clause boundaries.",
+    "paragraph_pause_s": 0.6,
+    "sentence_pause_s": 0.25,
+    "clause_pause_s": 0.1,
+    "max_segment_chars": 220,
+    "min_segment_chars": 2
+  }
+}

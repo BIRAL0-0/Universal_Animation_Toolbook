@@ -58,6 +58,8 @@ RUNTIME_PREFIXES = (
     "assets/voices/",
     "universal_toolbook/assets/voices/",
     "~/.cache/",
+    # TTS model weights (downloaded by setup_tts.py, git-ignored)
+    "cache/",
     "outputs/storyboard",
 )
 
@@ -65,6 +67,8 @@ PLACEHOLDER = ("<", ">", "{", "}", "*", "…", "...", "/path/to", "your_", "my_"
 
 IGNORE_EXACT = {
     "focus_x/y", "y/n", "and/or", "24/7", "TCP/IP", "S01.wav", "S07.wav",
+    # GitHub owner/repo identifiers (external mirrors, not repository paths):
+    "007-Akira/Project-Rocky",  # Piper voice mirror used by fetch_piper_voices.py --github
 }
 
 CMD_RE = re.compile(r"(?:python3|node)\s+([^\s`'\"|&;)]+)")
