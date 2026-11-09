@@ -7,9 +7,9 @@ Mission 2 (2026-11-09) adds on top of mission 1:
 * **44 selectable Kokoro voices** — the 11-voice v0.19 set plus the 33-voice
   English v1.0 set (23 new voices under plain names, 10 re-recordings as
   `<name>_v1` for A/B), downloaded as pinned `.pt` files and converted
-  torch-free by `tools/convert_kokoro_v1_voices.py`.
+  torch-free by `universal_toolbook/tools/convert_kokoro_v1_voices.py`.
 * **`am_michael` primary default**, explicit selection policy in
-  `tts/config/voices.json` (one run = one voice, deterministic, clear
+  `universal_toolbook/tts/config/voices.json` (one run = one voice, deterministic, clear
   fallback with manifest recording).
 * **Piper `speed` wired to the native `length_scale`** (default 1.0
   unchanged), fallback-only by policy.

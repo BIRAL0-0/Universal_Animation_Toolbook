@@ -178,7 +178,7 @@ class KokoroProvider(TTSProvider):
         if req in self._known_voices():
             return req
         # last resort: the configured default voice (reported via voice_fallback)
-        return self.cfg.get("defaults", {}).get("voice", "af_bella")
+        return self.cfg.get("defaults", {}).get("voice", "am_michael")
 
     def voice_fallback(self, requested: str) -> Optional[str]:
         """The fallback voice a request resolves to, or ``None`` if no
@@ -189,7 +189,7 @@ class KokoroProvider(TTSProvider):
             return None
         if req in self._known_voices():
             return None
-        return self.cfg.get("defaults", {}).get("voice", "af_bella")
+        return self.cfg.get("defaults", {}).get("voice", "am_michael")
 
     def _known_voices(self) -> List[str]:
         if self._engine is None:

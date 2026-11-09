@@ -79,7 +79,7 @@ Design rules enforced by the package:
     names (`am_michael`, `af_bella`, ...).
   * `voices-v1.0-en.npz` — 33-voice English v1.0 set (17.2 MB), downloaded as
     pinned `.pt` tensor files and converted torch-free by
-    `tools/convert_kokoro_v1_voices.py`. The 23 v1.0-only voices load under
+    `universal_toolbook/tools/convert_kokoro_v1_voices.py`. The 23 v1.0-only voices load under
     their plain names (`af_heart`, `am_onyx`, `bf_alice`, ...); the 10
     v1.0 re-recordings whose names collide with v0.19 voices load with a
     `_v1` suffix (`am_michael_v1`, `af_bella_v1`, ...) so the plain names
@@ -117,7 +117,7 @@ Design rules enforced by the package:
 * Not chosen as default: not self-hosted, not guaranteed free, and the
   motivation for this work was to move off it.
 
-## 3a. Voice selection policy (`tts/config/voices.json` → `selection`)
+## 3a. Voice selection policy (`universal_toolbook/tts/config/voices.json` → `selection`)
 
 The selection rules are data, not code — they live in `voices.json` and are
 enforced deterministically:
