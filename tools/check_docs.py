@@ -58,6 +58,8 @@ RUNTIME_PREFIXES = (
     "assets/voices/",
     "universal_toolbook/assets/voices/",
     "~/.cache/",
+    # TTS model weights (downloaded by setup_tts.py, git-ignored)
+    "cache/",
     "outputs/storyboard",
 )
 
