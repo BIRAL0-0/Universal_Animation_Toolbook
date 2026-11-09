@@ -65,7 +65,7 @@ beyond the documented rate range.
 - Natural progression with at least one tonal shift per ~30 s for retention.
 - An ending that re-frames or pays off the opening (loop potential: a coda that connects
   back to the cold open is a known pattern in this repo's films — see
-  `outputs/the_staircase/`).
+  `examples/the_staircase_episode.json`).
 - Enough detail per scene to animate it: who is on screen, what changes, what object proves
   the point, what the camera does. (This is the intake stage's per-scene table —
   [`universal_toolbook/process/01_INTAKE.md`](../../universal_toolbook/process/01_INTAKE.md) §1.6.)

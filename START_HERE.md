@@ -145,4 +145,4 @@ python3 tests/test_studio_pipeline.py  # pipeline + speech-lock checks
 
 A finished run also drops text artifacts into `outputs/<film>/` — see
 [`outputs/README.md`](outputs/README.md) and the worked example in
-[`outputs/the_beacon_that_kept_time/NOTES.md`](outputs/the_beacon_that_kept_time/NOTES.md).
+[`outputs/two_inch_bridge_cel/NOTES.md`](outputs/two_inch_bridge_cel/NOTES.md).
