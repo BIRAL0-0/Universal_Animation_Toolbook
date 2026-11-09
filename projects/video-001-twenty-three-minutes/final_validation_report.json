@@ -1,0 +1,18 @@
+{
+  "valid": true,
+  "dimensions_match_aspect": true,
+  "duration": 158.957,
+  "frames": 4769,
+  "dimensions": [
+    1080,
+    1920
+  ],
+  "aspect_ratio": "9:16",
+  "output_profile": "shorts",
+  "short_form": true,
+  "fps": 30,
+  "film_grain": false,
+  "voiced": true,
+  "voice_backend": "kokoro-offline:af_bella,am_liam,am_michael",
+  "warnings": []
+}

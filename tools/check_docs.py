@@ -14,9 +14,13 @@ Rules (deliberately narrow, to avoid flagging prose):
   4. A claim resolves only from the repo root or from the doc's own folder. There is no
      kit-relative fallback on purpose: every quoted path must be unambiguous for a reader
      sitting at the repository root.
+  5. A claim may carry a symbol suffix -- `tests/production/test_x.py::test_y` -- which claims
+     both that the file exists and that the symbol is defined in it. The suffix is verified,
+     not ignored: a doc pointing at a renamed test fails the check.
 
 Runtime artifacts (files a render produces) are listed in ALLOW_MISSING. Anything under a
-runtime directory -- `output/`, `work/`, `node_modules/`, `.venv/` -- is created by the pipeline
+runtime directory -- `output/`, `work/`, `node_modules/`, `.venv/`, or a per-film resumable
+chunk cache (`.work_*`) at any depth -- is created by the pipeline
 and is deliberately absent from a fresh clone, so a reference to it is not a broken path. That
 distinction is why this check passes in a checkout with a render in it and must also pass in a
 bare clone: `git clone <repo> /tmp/x && python3 tools/check_docs.py` is the real test.
@@ -52,6 +56,7 @@ ALLOW_MISSING = {
 RUNTIME_PREFIXES = (
     "output/",
     "work/",
+    ".work_",          # resumable chunk caches + intermediate mixes (git-ignored, per-film)
     "node_modules/",
     "universal_toolbook/node_modules/",
     ".venv/",
@@ -119,7 +124,10 @@ def is_runtime(token: str) -> bool:
     t = token.strip().rstrip(".,;:")
     if t.rstrip("/") in {"output", "work", "node_modules", ".venv", "assets/voices"}:
         return True
-    return t.startswith(RUNTIME_PREFIXES)
+    if t.startswith(RUNTIME_PREFIXES):
+        return True
+    # a resumable chunk cache at any depth (renders/.work_<stem>/, <project>/.work_<stem>/)
+    return any(part.startswith(".work_") for part in t.split("/"))
 
 
 def resolve(token: str, doc: Path) -> bool:
@@ -131,6 +139,17 @@ def resolve(token: str, doc: Path) -> bool:
     # ambiguous for a reader and is reported.
     candidates = [ROOT / t, doc.parent / t]
     return any(c.exists() for c in candidates)
+
+
+def symbol_claim_problem(token: str, path_part: str, symbol: str, doc: Path) -> str | None:
+    """Rule 5: a `file::symbol` claim asserts the symbol is defined in that file."""
+    host = next((c for c in (ROOT / path_part, doc.parent / path_part) if c.is_file()), None)
+    if host is None:
+        return f"symbol not found in file -> {token}"
+    body = host.read_text(encoding="utf-8", errors="replace")
+    if symbol not in body:
+        return f"symbol not found in file -> {token}"
+    return None
 
 
 def main() -> int:
@@ -162,11 +181,17 @@ def main() -> int:
                 if not is_claim(token):
                     continue
                 claims += 1
-                if not resolve(token, doc):
-                    if is_runtime(token):
+                path_part, sep, symbol = token.partition("::")
+                if not resolve(path_part, doc):
+                    if not sep and is_runtime(path_part):
                         runtime.append(f"{rel}: {token}")
                     else:
                         problems.append(f"{rel}: path not found -> {token}")
+                elif sep:
+                    # Rule 5: `file::symbol` also claims the symbol lives in that file.
+                    prob = symbol_claim_problem(token, path_part, symbol, doc)
+                    if prob:
+                        problems.append(f"{rel}: {prob}")
 
         # 2b: commands inside fenced blocks (the reading lists and copy-paste blocks)
         for fence in FENCE_RE.finditer(text):

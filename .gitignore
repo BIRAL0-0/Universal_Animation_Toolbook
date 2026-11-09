@@ -32,3 +32,6 @@ work/
 
 
 downloads/poster.jpg
+
+# resumable render chunk caches + intermediate mixes (regenerable, hundreds of MB)
+.work_*/

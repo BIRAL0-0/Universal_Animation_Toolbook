@@ -410,7 +410,14 @@ def _voice_diagnosis(deps: Dict[str, Any]) -> List[str]:
 
 def cmd_render(args: argparse.Namespace) -> int:
     try:
+        # Legacy `--portrait` is an alias for requesting 9:16. An explicit --aspect-ratio always
+        # wins, because silently letting two flags disagree produced landscape pixels behind a
+        # 9:16 label once (see docs/production/KNOWN_ISSUES.md KI-007).
+        if getattr(args, "portrait", False) and args.aspect_ratio in (None, ""):
+            args.aspect_ratio = "9:16"
         aspect_ratio = _resolve_aspect_ratio(args.aspect_ratio, args.shorts)
+        # _render_dimensions is the single source of truth for output pixels. Nothing below may
+        # overwrite it; the KI-007 bug was a legacy branch doing exactly that.
         width, height = _render_dimensions(aspect_ratio, args.draft)
     except ValueError as exc:
         print(str(exc), file=sys.stderr)
@@ -426,10 +433,6 @@ def cmd_render(args: argparse.Namespace) -> int:
     out_mp4 = Path(args.out).resolve()
     out_mp4.parent.mkdir(parents=True, exist_ok=True)
 
-    if getattr(args, "portrait", False):
-        width, height = (540, 960) if args.draft else (1080, 1920)
-    else:
-        width, height = (960, 540) if args.draft else (1920, 1080)
     crf = 18 if args.draft else args.crf
     preset = "veryfast" if args.draft else args.preset
 
@@ -636,11 +639,23 @@ def cmd_render(args: argparse.Namespace) -> int:
         print("!" * 78 + "\n", file=sys.stderr)
 
     # Written after the voice check so the gate artifact records whether speech exists.
+    # KI-007: the declared aspect and the encoded pixels must agree, or the report lies. A 9:16
+    # profile with width >= height (or a 16:9 profile with height > width) is a hard failure,
+    # not a warning — it means some code path overwrote _render_dimensions again.
+    dimensions_match_aspect = (
+        (width < height) if aspect_ratio == "9:16" else (width > height)
+    )
+    aspect_warnings = list(warnings)
+    if not dimensions_match_aspect:
+        aspect_warnings.append(
+            f"encoded dimensions {width}x{height} contradict declared aspect {aspect_ratio}"
+        )
     val_path = out_mp4.with_name(f"{out_mp4.stem}_validation_report.json")
     val_path.write_text(
         json.dumps(
             {
-                "valid": len(compiled.get("errors", [])) == 0,
+                "valid": len(compiled.get("errors", [])) == 0 and dimensions_match_aspect,
+                "dimensions_match_aspect": dimensions_match_aspect,
                 "duration": compiled["totalDuration"],
                 "frames": compiled["totalFrames"],
                 "dimensions": [width, height],
@@ -651,7 +666,7 @@ def cmd_render(args: argparse.Namespace) -> int:
                 "film_grain": False,
                 "voiced": vo_backend != "text-led",
                 "voice_backend": vo_backend,
-                "warnings": list(compiled.get("warnings", [])) + warnings,
+                "warnings": list(compiled.get("warnings", [])) + aspect_warnings,
             },
             indent=2,
         ),
