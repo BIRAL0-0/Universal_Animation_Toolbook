@@ -57,6 +57,15 @@ THREE TIERS OF RULE — know which one you are touching
     - never report a number that did not come from a file the run produced
     - if a verbatim script is supplied, preserve 100% of its words: run
       validate work/episode.json --script <script.txt> and report the fidelity result
+    - Documentation maintenance: if this session's changes affect the documented pipeline
+      (new model/provider, changed prompt — including
+      docs/production-workflow/prompts/VOICEOVER_POLISH_PROMPT.md — new voice or animation
+      method, new output format or render flag, changed asset storage, new or changed
+      approval stage, removed feature, changed command), update the affected docs in the
+      SAME task/PR, following docs/production-workflow/WORKFLOW_CHANGELOG.md: fix the
+      instructions and paths, flip status labels, log a changelog entry, remove obsolete
+      instructions, and pass python3 tools/check_docs.py. Docs describe the current repo —
+      never a previous one
 
   DEFAULTS — correct for almost every request; change only with a stated reason:
     - 1920x1080 / 30 fps, 16:9 when the user has not specified another aspect; otherwise honor the request (9:16 = 1080x1920)
@@ -79,6 +88,8 @@ WORKFLOW
   check -> author work/episode.json -> validate -> stills -> inspect -> draft render ->
   inspect a frame at every board cue_on and every camera cut -> final render ->
   verify the master -> copy text artifacts to outputs/<film>/ -> report paths + measured numbers
+  -> if this session changed the pipeline itself: update the affected docs per the
+     Documentation maintenance invariant and run python3 tools/check_docs.py
 
 DELIVERY
   output/final_film_16x9.mp4 / output/final_film_9x16.mp4 and their matching chapters files
@@ -107,6 +118,7 @@ SCRIPT
 | The three tiers | A flat list of seven hard rules leaves no room for "make it a 30-second parchment fable with no narration", so the session either breaks a rule silently or refuses a normal request. Tiering says exactly what may flex. |
 | Draft pass before the master | Board and camera cues are only visible mid-scene; stills sample the scene opening and will not show them. |
 | "Report only measured numbers" | Renders fail and reviews still get written; every claimed number must trace to a report file. |
+| Documentation maintenance invariant | An engine change that lands silently leaves the next session following a doc that describes a previous repo — the exact failure `check_docs.py` exists to catch, except for *prose* that is false but points at nothing. Same-PR updates keep the docs executable. |
 
 ## §3 What this prompt deliberately does *not* do
 

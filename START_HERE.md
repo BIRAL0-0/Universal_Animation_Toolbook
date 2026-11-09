@@ -88,7 +88,8 @@ so you can catch it before rendering; `--voice none` is the only way to ask for 
 
 | # | File | Why |
 | --- | --- | --- |
-| 1 | [`universal_toolbook/process/README.md`](universal_toolbook/process/README.md) | the procedure index and the seven-line pipeline |
+| 0 | [`docs/production-workflow/INDEX.md`](docs/production-workflow/INDEX.md) | the WHOLE pipeline: idea → script → film → publishing, and where each stage is documented |
+| 1 | [`universal_toolbook/process/README.md`](universal_toolbook/process/README.md) | the procedure index and the seven-line pipeline (script → film) |
 | 2 | [`universal_toolbook/process/01_INTAKE.md`](universal_toolbook/process/01_INTAKE.md) | script → scenes, timing budget, cast, BGM |
 | 3 | [`universal_toolbook/process/02_AUTHORING_EPISODE_JSON.md`](universal_toolbook/process/02_AUTHORING_EPISODE_JSON.md) | how `work/episode.json` is written |
 | 4 | [`universal_toolbook/process/03_RENDER_PIPELINE.md`](universal_toolbook/process/03_RENDER_PIPELINE.md) | exact commands, flags, verification |
