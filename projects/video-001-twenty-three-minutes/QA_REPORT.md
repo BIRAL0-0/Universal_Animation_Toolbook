@@ -1,6 +1,6 @@
 # QA REPORT — video-001 "What If Every Notification Cost You 23 Minutes?"
 
-Date: 2026-11-09 · Branch `arena/0c65af06-universal-animation-toolbook`
+Date: 2026-11-09 · Branch arena/0c65af06-universal-animation-toolbook
 Verdict: **PASS — shippable.** Every number below was measured from the rendered artifacts in this
 folder; every frame claim was verified by opening the PNG. Nothing here is asserted from intent.
 
@@ -17,7 +17,7 @@ folder; every frame claim was verified by opening the PNG. Nothing here is asser
 
 ## 2. Container / completeness (STAGE I, automated + manual)
 
-- ffprobe: `Duration: 00:02:38.96`, video `1080x1920 yuv420p 30 fps`, audio `aac 44100 Hz stereo 195 kb/s`.
+- ffprobe: `Duration: 00:02:38.96`, video `1080x1920 yuv420p 30 fps`, audio: aac LC, 44100 Hz, stereo, 195 kb/s.
 - Full decode `-f null -`: **no errors** (`full_decode_ok: true`) — no corrupt/missing frames.
 - Start/end: first frame shows S01 bedroom + clock 7:14 AM; last frame shows S10 sunset card.
   No black screens at head or tail (checked frames at 0.5 s / 158.5 s during draft review; masters

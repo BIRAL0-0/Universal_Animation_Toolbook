@@ -163,7 +163,7 @@ master frames at `board_pop + ~1.6 s` (KI-003).
 `PROMPT.md` · `RESEARCH.md` · `TOPIC_SELECTION.md` · `SCRIPT_ORIGINAL.md` · `SCRIPT_POLISHED.md` ·
 `SCRIPT_CHANGELOG.md` · `STORYBOARD.md` · `CHARACTERS.md` · `SCENE_PLAN.json` · `VOICEOVER.md` ·
 `ASSET_MANIFEST.json` · `PRODUCTION_LOG.md` · `QA_REPORT.md` · `episode.json` · `final.mp4` ·
-`assets/` · `audio/` · `renders/`
+`projects/<slug>/assets/` · `projects/<slug>/audio/` · `projects/<slug>/renders/`
 
 ## 12. Self-healing obligation
 

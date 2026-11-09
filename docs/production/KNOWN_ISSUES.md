@@ -22,7 +22,7 @@ Every entry: **stage** · **symptom** · **root cause** · **status** · **regre
   the narration line was reworded to describe what the film shows
   (`projects/video-001-twenty-three-minutes/SCRIPT_CHANGELOG.md` change #1).
 - **Status:** OPEN — mitigation is adequate and honest; a real fix would add a `focus_counter`
-  prop to `engine/world_props_and_boards.js` and register it in `SUPPORTED_PROPS`, which should
+  prop to `universal_toolbook/engine/world_props_and_boards.js` and register it in `SUPPORTED_PROPS`, which should
   be done if a future video needs an attached HUD.
 - **Regression check:** n/a (feature request, not a bug). `validate` warns on unknown props, so a
   half-registered prop cannot ship silently.
@@ -97,14 +97,14 @@ Every entry: **stage** · **symptom** · **root cause** · **status** · **regre
 - **Root cause:** the author (me) pinned `portrait_focus: "board"` / `portrait_focus_x` and per-board
   `portrait_w`/`portrait_x` "to protect the boards". But the engine already solves both problems by
   default: auto-focus follows the active character, and `fitBoardToPortraitViewport`
-  (`engine/portrait_framing.js` L181) re-fits any board wider than the safe crop
+  (`universal_toolbook/engine/portrait_framing.js` L181) re-fits any board wider than the safe crop
   (`maxWidth = viewport.width − 48`, centred, clamped ±12 px). The overrides only *removed* the
   character framing the defaults provide. 38 overrides deleted across S01–S10.
 - **Rule going forward:** never author portrait overrides as a first instinct. Render a draft and
   measure a framing problem first; add an override only with a timestamped frame as evidence and a
   note in the project's PRODUCTION_LOG.
 - **Verification:** re-rendered draft + masters; QA frames at board_pop+1.6 s show character and
-  board together in every scene (`assets/qa_frames/`, `QA_REPORT.md` §4).
+  board together in every scene (`projects/video-001-twenty-three-minutes/assets/qa_frames/`, project `QA_REPORT.md` §4).
 
 ### KI-008 — Every mix rendered ~6 dB under the documented loudness band, and no report could see it
 - **Stage:** audio mix / QA gate
@@ -114,7 +114,7 @@ Every entry: **stage** · **symptom** · **root cause** · **status** · **regre
   window of −24.2 dBFS. So the deficit was not dead air — the entire mix was quiet. Secondary
   finding: the render report recorded `peak_dbfs` only (`rms_dbfs: null` in every previously
   shipped report), so the documented band had never been observable by any gate.
-- **Root cause:** `engine/audio_mixer.py` applied a peak *ceiling* (soft limiter) but no loudness
+- **Root cause:** `universal_toolbook/engine/audio_mixer.py` applied a peak *ceiling* (soft limiter) but no loudness
   *target*, and never reported RMS.
 - **Fix:** a bounded make-up stage after the limiter drives RMS toward the −17.5 dBFS midpoint,
   limited by the RMS target, the −1 dBFS peak ceiling and a hard +6 dB cap (so it can neither clip

@@ -68,7 +68,7 @@ The narration now describes what the film actually shows. **This is a factual-de
 a change to the story's meaning** — but it is the one edit a reviewer should confirm.
 
 No other change alters meaning. If the client wants the original HUD framing, the fix is to add a
-`focus_counter` prop to `engine/world_props_and_boards.js` and register it in `SUPPORTED_PROPS`;
+`focus_counter` prop to `universal_toolbook/engine/world_props_and_boards.js` and register it in `SUPPORTED_PROPS`;
 that is logged as a candidate improvement in `docs/production/LESSONS_LEARNED.md`, not silently
 worked around.
 

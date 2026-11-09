@@ -133,11 +133,11 @@ Appended run records, newest last.
 [2026-11-09 07:59:22]   !     compatible_brands: isomiso2avc1mp41
 [2026-11-09 07:59:22]   !     encoder         : Lavf63.1.102
 [2026-11-09 07:59:22]   !   Duration: 00:02:38.96, start: 0.000000, bitrate: 717 kb/s
-[2026-11-09 07:59:22]   !   Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1080x1920, 513 kb/s, 30 fps, 30 tbr, 15360 tbn (default)
+[2026-11-09 07:59:22]   !   Stream #0:0 (und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1080x1920, 513 kb/s, 30 fps, 30 tbr, 15360 tbn (default)
 [2026-11-09 07:59:22]   !     Metadata:
 [2026-11-09 07:59:22]   !       handler_name    : VideoHandler
 [2026-11-09 07:59:22]   !       encoder         : Lavc63.1.102 libx264
-[2026-11-09 07:59:22]   !   Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 44100 Hz, stereo, fltp, 195 kb/s (default)
+[2026-11-09 07:59:22]   !   Stream #0:1 (und): Audio: aac (LC) (mp4a / 0x6134706D), 44100 Hz, stereo, fltp, 195 kb/s (default)
 [2026-11-09 07:59:22]   !     Metadata:
 [2026-11-09 07:59:22]   !       handler_name    : SoundHandler
 [2026-11-09 07:59:22]   ! At least one output file must be specified
@@ -233,11 +233,11 @@ Appended run records, newest last.
 [2026-11-09 08:02:01]   !     compatible_brands: isomiso2avc1mp41
 [2026-11-09 08:02:01]   !     encoder         : Lavf63.1.102
 [2026-11-09 08:02:01]   !   Duration: 00:02:38.96, start: 0.000000, bitrate: 717 kb/s
-[2026-11-09 08:02:01]   !   Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1080x1920, 513 kb/s, 30 fps, 30 tbr, 15360 tbn (default)
+[2026-11-09 08:02:01]   !   Stream #0:0 (und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1080x1920, 513 kb/s, 30 fps, 30 tbr, 15360 tbn (default)
 [2026-11-09 08:02:01]   !     Metadata:
 [2026-11-09 08:02:01]   !       handler_name    : VideoHandler
 [2026-11-09 08:02:01]   !       encoder         : Lavc63.1.102 libx264
-[2026-11-09 08:02:01]   !   Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 44100 Hz, stereo, fltp, 195 kb/s (default)
+[2026-11-09 08:02:01]   !   Stream #0:1 (und): Audio: aac (LC) (mp4a / 0x6134706D), 44100 Hz, stereo, fltp, 195 kb/s (default)
 [2026-11-09 08:02:01]   !     Metadata:
 [2026-11-09 08:02:01]   !       handler_name    : SoundHandler
 [2026-11-09 08:02:01]   ! At least one output file must be specified
@@ -311,11 +311,11 @@ Appended run records, newest last.
 [2026-11-09 08:05:50]   !     compatible_brands: isomiso2avc1mp41
 [2026-11-09 08:05:50]   !     encoder         : Lavf63.1.102
 [2026-11-09 08:05:50]   !   Duration: 00:02:38.96, start: 0.000000, bitrate: 718 kb/s
-[2026-11-09 08:05:50]   !   Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1080x1920, 513 kb/s, 30 fps, 30 tbr, 15360 tbn (default)
+[2026-11-09 08:05:50]   !   Stream #0:0 (und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1080x1920, 513 kb/s, 30 fps, 30 tbr, 15360 tbn (default)
 [2026-11-09 08:05:50]   !     Metadata:
 [2026-11-09 08:05:50]   !       handler_name    : VideoHandler
 [2026-11-09 08:05:50]   !       encoder         : Lavc63.1.102 libx264
-[2026-11-09 08:05:50]   !   Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 44100 Hz, stereo, fltp, 196 kb/s (default)
+[2026-11-09 08:05:50]   !   Stream #0:1 (und): Audio: aac (LC) (mp4a / 0x6134706D), 44100 Hz, stereo, fltp, 196 kb/s (default)
 [2026-11-09 08:05:50]   !     Metadata:
 [2026-11-09 08:05:50]   !       handler_name    : SoundHandler
 [2026-11-09 08:05:50]   ! At least one output file must be specified
@@ -339,7 +339,7 @@ Freak CC0, credited in-video and in `final_report.json`.
 
 **Deviations from the project prompt (recorded per Part 8):**
 1. *Portrait overrides removed (KI-009).* The prompt/STORYBOARD originally prescribed
-   `portrait_focus*` + board `portrait_w/_x` overrides. Draft QA frames proved they clipped Kai
+   `portrait_focus*` + board `portrait_w` / `portrait_x` overrides. Draft QA frames proved they clipped Kai
    (S01) or removed him (S05); engine defaults (auto-focus + `fitBoardToPortraitViewport`) frame
    both characters and boards correctly. All 38 overrides deleted; STORYBOARD rows rewritten.
 2. *Loudness normalisation added mid-production (KI-008 / PC-010).* First master measured RMS

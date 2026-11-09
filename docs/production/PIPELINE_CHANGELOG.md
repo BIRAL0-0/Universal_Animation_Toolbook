@@ -11,7 +11,7 @@ Format: date · type · what changed · why · verification.
 
 ### PC-010 · ENGINE FIX — mixes now reach the documented loudness band (KI-008)
 - **Type:** engine bug fix + reporting + gate
-- **What:** `engine/audio_mixer.py` gained a loudness normalisation stage after the soft ceiling:
+- **What:** `universal_toolbook/engine/audio_mixer.py` gained a loudness normalisation stage after the soft ceiling:
   a 3 ms fast-attack peak limiter (thr −10 dBFS, 6:1, 120 ms release) tames transients, then make-up
   gain lifts the body to the −17.5 dBFS midpoint, bounded by the RMS target, the −1 dBFS peak
   ceiling and a hard +8 dB cap. The mixer now reports `rms_dbfs`, `rms_dbfs_before_makeup` and

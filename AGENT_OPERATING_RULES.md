@@ -76,7 +76,7 @@ Every new video gets its own folder under `projects/`, created **before** produc
 containing at minimum: `PROMPT.md`, `RESEARCH.md`, `TOPIC_SELECTION.md`, `SCRIPT_ORIGINAL.md`,
 `SCRIPT_POLISHED.md`, `SCRIPT_CHANGELOG.md`, `STORYBOARD.md`, `CHARACTERS.md`, `SCENE_PLAN.json`,
 `VOICEOVER.md`, `ASSET_MANIFEST.json`, `PRODUCTION_LOG.md`, `QA_REPORT.md`, `episode.json`,
-`final.mp4`, plus `assets/`, `audio/`, `renders/`.
+`final.mp4`, plus `projects/<slug>/assets/`, `projects/<slug>/audio/`, `projects/<slug>/renders/`.
 
 - Every project starts from [`templates/MASTER_VIDEO_PRODUCTION_PROMPT.md`](templates/MASTER_VIDEO_PRODUCTION_PROMPT.md),
   is customised with its own research, and the finalised prompt is saved **before** production.

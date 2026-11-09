@@ -144,16 +144,16 @@ point.
 
 ## 7. Sources
 
-1. `youtube.com/watch?v=DRdfSzODnlM` — reference 1 metadata + transcript.
-2. `youtube.com/watch?v=F-a7-UMsmKI` — reference 2 metadata, description, chapters.
-3. `youtube.com/watch?v=iOSajvozN78` — DOPAMINE metadata, description, chapters, transcript.
+1. `https://youtube.com/watch?v=DRdfSzODnlM` — reference 1 metadata + transcript.
+2. `https://youtube.com/watch?v=F-a7-UMsmKI` — reference 2 metadata, description, chapters.
+3. `https://youtube.com/watch?v=iOSajvozN78` — DOPAMINE metadata, description, chapters, transcript.
 4. `channelslike.com` — Day One Films subscriber count (21.6K, snapshot 2026-10-22).
 5. YouTube search results for `what happens if you stop using your phone for 30 days animation`
    and `dopamine detox stickman animation shorts` and `what if you never slept animated short
    film` — competitor set above.
-6. `pomogolo.com/blog/23-minute-refocus-cost`, `openpomodoro.com/blogs/why-you-cant-focus`,
-   `disconnectmadison.org/learn/attention`, `speakwiseapp.com/blog/attention-span-statistics`,
-   `pandev-metrics.com/docs/blog/focus-time-deep-work` — converging secondary reporting of
+6. `https://pomogolo.com/blog/23-minute-refocus-cost`, `https://openpomodoro.com/blogs/why-you-cant-focus`,
+   `https://disconnectmadison.org/learn/attention`, `https://speakwiseapp.com/blog/attention-span-statistics`,
+   `https://pandev-metrics.com/docs/blog/focus-time-deep-work` — converging secondary reporting of
    Mark et al. 2008 and *Attention Span* (2023).
 7. `blog.cliptude.com` — stickman-animation retention guidance ("start in the middle of
    something"; educational stickman content demands clearer visuals and tighter pacing).

@@ -17,7 +17,7 @@ v0.19 set (11 voices) merged with the v1.0 set (33 voices) = **44 selectable Kok
 
 | Speaker | Voice | Set | Rate | Pitch | Casting reason |
 |---|---|---|---|---|---|
-| `narrator` | **`am_michael`** | v0.19 | +1% | −1Hz | Repository PRIMARY default (`tts/config/voices.json` → `selection.default_voice`). Warm, authoritative, even pace — the right register for stating measured facts without preaching |
+| `narrator` | **`am_michael`** | v0.19 | +1% | −1Hz | Repository PRIMARY default (`universal_toolbook/tts/config/voices.json` → `selection.default_voice`). Warm, authoritative, even pace — the right register for stating measured facts without preaching |
 | `kai` | `am_liam` | v1.0 | +3% | +1Hz | Warm, friendly, natural; reads younger than Michael, so the protagonist and the narrator never blur. Used for only three lines, so distinctness matters more than range |
 | `sam` | **`af_bella`** | v0.19 | +2% | +0Hz | Repository preferred SECONDARY (`selection.secondary_voices[0]`). Warm, professional, clear — a colleague, not a co-narrator |
 
