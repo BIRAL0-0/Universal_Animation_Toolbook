@@ -1,8 +1,9 @@
 # Testing and validation
 
 The authoritative command list is [`tests/README.md`](../../tests/README.md); CI is
-[`.github/workflows/verify.yml`](../../.github/workflows/verify.yml). This page explains what
-each gate proves and what it deliberately does not prove.
+[`.github/workflows/verify.yml`](../../.github/workflows/verify.yml). The measured 2026-11-09
+results are in [`VALIDATION_REPORT.md`](VALIDATION_REPORT.md). This page explains what each gate
+proves and what it deliberately does not prove.
 
 | Gate | Proves | Does not prove |
 |---|---|---|

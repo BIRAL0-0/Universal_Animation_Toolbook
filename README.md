@@ -99,6 +99,8 @@ the English voiceover polish standard is immutable at
 | Verified problems and fixes | [`docs/troubleshooting/INDEX.md`](docs/troubleshooting/INDEX.md) |
 | Testing / contribution | [`docs/development/TESTING.md`](docs/development/TESTING.md), [`CONTRIBUTING.md`](CONTRIBUTING.md) |
 | Change history | [`CHANGELOG.md`](CHANGELOG.md) |
+| Reorganization evidence / final tree | [`docs/architecture/MIGRATION_REPORT.md`](docs/architecture/MIGRATION_REPORT.md), [`docs/architecture/FINAL_TREE.md`](docs/architecture/FINAL_TREE.md) |
+| Measured validation results | [`docs/development/VALIDATION_REPORT.md`](docs/development/VALIDATION_REPORT.md) |
 
 ## Tests
 

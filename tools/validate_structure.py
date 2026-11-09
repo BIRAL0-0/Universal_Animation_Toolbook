@@ -34,6 +34,8 @@ REQUIRED_FILES = (
     "docs/architecture/DEPENDENCY_MAP.md", "docs/architecture/RENDERING_PIPELINE.md",
     "docs/architecture/AUDIO_TTS_PIPELINE.md", "docs/architecture/DECISIONS.md",
     "docs/architecture/BASELINE_INVENTORY.md",
+    "docs/architecture/MIGRATION_REPORT.md", "docs/architecture/FINAL_TREE.md",
+    "docs/development/VALIDATION_REPORT.md",
     "docs/getting-started/INSTALL.md", "docs/getting-started/FIRST_VIDEO.md",
     "docs/development/CODE_ORGANIZATION.md", "docs/development/TESTING.md",
     "docs/development/ENVIRONMENT_REPORT.md", "docs/development/ROADMAP.md",
@@ -101,8 +103,9 @@ LEGACY_PATHS = (
     "tests/test_studio_pipeline.py",
 )
 HISTORICAL_DOC_PREFIXES = (
-    "docs/architecture/BASELINE_INVENTORY.md", "docs/production/WORKFLOW_CHANGELOG.md",
-    "projects/", "deliverables/", "CHANGELOG.md",
+    "docs/architecture/BASELINE_INVENTORY.md", "docs/architecture/MIGRATION_REPORT.md",
+    "docs/architecture/FINAL_TREE.md", "docs/development/VALIDATION_REPORT.md",
+    "docs/production/WORKFLOW_CHANGELOG.md", "projects/", "deliverables/", "CHANGELOG.md",
 )
 
 

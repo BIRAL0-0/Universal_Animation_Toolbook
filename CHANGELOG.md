@@ -6,6 +6,27 @@ All notable changes to this repository. Historical workflow and pipeline records
 authoritative repository-level change index. A change that affects the documented pipeline updates
 its documentation and its regression tests in the same task.
 
+## 2026-11-09 — post-reorganization validation and delivery evidence
+
+### Added
+- `docs/architecture/MIGRATION_REPORT.md`: complete architecture explanation, file-by-file
+  migration table, before/after counts, Remotion decision, skills explanation and future-agent map.
+- `docs/architecture/FINAL_TREE.md`: complete final tree of tracked, non-ignored files.
+- `docs/development/VALIDATION_REPORT.md`: measured local gates, production smoke, fresh-checkout
+  simulation, standalone-kit verification and explicit unverified items.
+
+### Verified
+- `tools/validate_structure.py`, `tools/check_docs.py`, `tools/check_workflows.py`,
+  `tools/validate_specs.py`, `run_studio.py check`, JS regression, Python integration and
+  `pytest tests/unit tests/production -q` all passed.
+- `scripts/new_project.py` and `tools/produce_video.py --stop-after stills` passed on a temporary
+  project; a silent 24-second draft rendered with a clean validation report.
+- Seven generated images were actually inspected. WAV peak/RMS/clipping were measured; no
+  subjective listening test was claimed.
+- `scripts/verify_fresh_checkout.py` passed all 16 steps on commit
+  `a2d311c79aaf359b265de56eb8a9e789011a6b07`, including a standalone kit validate and a silent
+  draft render in a fresh clone.
+
 ## 2026-11-09 — architecture reorganization, permanent skills, Remotion evaluation
 
 ### Added

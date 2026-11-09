@@ -85,6 +85,14 @@ LEGACY_ALIASES = (
     ("downloads/the_wall_you_agreed_with_1080x1920.zip",
      "deliverables/releases/the_wall_you_agreed_with_1080x1920.zip"),
     ("downloads/", "deliverables/the_wall_you_agreed_with/"),
+    ("docs/production-workflow/CONFIGURATION_AND_SETUP.md",
+     "docs/getting-started/INSTALL.md"),
+    ("docs/production-workflow/ENVIRONMENT_REPORT.md",
+     "docs/development/ENVIRONMENT_REPORT.md"),
+    ("docs/production-workflow/FUTURE_DEVELOPMENT.md",
+     "docs/development/ROADMAP.md"),
+    ("projects/video-001-twenty-three-minutes/video-001_RELEASE.zip",
+     "deliverables/releases/video-001_RELEASE.zip"),
     ("docs/production-workflow/", "docs/production/"),
     ("universal_toolbook/process/SESSION_PROMPT.md", "AGENTS.md"),
     ("universal_toolbook/process/REPO_MAP.md", "docs/architecture/SYSTEM_OVERVIEW.md"),
@@ -112,7 +120,7 @@ STRUCTURAL_SHORTHAND = {
     "integration/", "regression/", "production/", "fixtures/", "references/",
     # Hypothetical subdirectories rejected by ADR-0002 (quoted only to explain the decision):
     "rendering/", "animation/", "composition/", "voiceover/", "synchronization/",
-    "orchestration/",
+    "orchestration/", "__pycache__/", ".pytest_cache/",
 }
 
 IGNORE_EXACT = STRUCTURAL_SHORTHAND | {
