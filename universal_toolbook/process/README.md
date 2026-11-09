@@ -20,6 +20,15 @@ session that was handed a script and has never seen this repository, read these 
 | 08 | [`08_LIMITS.md`](08_LIMITS.md) | You are about to promise something the engine cannot do. |
 | — | [`REPO_MAP.md`](REPO_MAP.md) | You need to know which folder stores what, or what is not in git. |
 
+> **Where this sits in the whole pipeline.** These pages cover **script → film** (Stages 5–12
+> of the production workflow). The stages *around* that core — idea research and selection,
+> sample/polished scripts, the generation-order decision, and YouTube publishing
+> preparation — are documented in
+> [`docs/production-workflow/`](../../docs/production-workflow/INDEX.md), whose master
+> reference is `docs/production-workflow/COMPLETE_WORKFLOW.md`. Both document sets share the
+> maintenance rule in `docs/production-workflow/WORKFLOW_CHANGELOG.md`: a change that
+> affects the documented pipeline updates its docs in the same PR.
+
 > **Where things are.** The engine is one self-contained folder: `universal_toolbook/`.
 > Commands below are written for the **repository root**; `cd universal_toolbook` and drop the
 > prefix if you prefer, or copy the folder somewhere else entirely — it resolves its own

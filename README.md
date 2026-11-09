@@ -6,6 +6,7 @@ Give an AI agent the toolbook plus a script, and it can render zero-grain `1920�
 ```
 Universal_Animation_Toolbook/
 ├── universal_toolbook/   ★ the production kit — engine, assets, tools, process, template, schema
+├── docs/                   the full production-workflow docs (idea → script → film → publishing)
 ├── examples/               complete episode specs to copy structure and pacing from
 ├── tests/                  regression suite + its schema fixtures
 ├── outputs/                text results of finished films (chapters, reports, cue sheets)
@@ -24,6 +25,7 @@ reading order, and the five non-negotiable rules in one page.
 
 | If you want to… | Open |
 | --- | --- |
+| run the whole content operation — idea → script → film → YouTube prep | [`docs/production-workflow/INDEX.md`](docs/production-workflow/INDEX.md) |
 | know how a film gets made, step by step | [`universal_toolbook/process/README.md`](universal_toolbook/process/README.md) |
 | hand this to an agent that has a script | [`universal_toolbook/process/SESSION_PROMPT.md`](universal_toolbook/process/SESSION_PROMPT.md) |
 | the CLI surface and capabilities | [`universal_toolbook/00_START_HERE.md`](universal_toolbook/00_START_HERE.md) |

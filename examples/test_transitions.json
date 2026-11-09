@@ -9,7 +9,7 @@
     {
       "id": "test_stairs_transitions",
       "duration": 15,
-      "environment": "minimal",
+      "environment": "mind_space",
       "characters": [
         {
           "id": "tester",
