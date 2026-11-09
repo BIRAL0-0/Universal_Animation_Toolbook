@@ -49,7 +49,10 @@ copies `universal_toolbook/` to a temporary directory and runs `run_studio.py va
 
 [`.github/workflows/verify.yml`](../../.github/workflows/verify.yml) has five jobs: structure/docs,
 specs, engine/production tests, silent render smoke, and fresh checkout. YAML parsing is verified
-locally by `tools/check_workflows.py`. {{{{HOSTED_CI}}}}
+locally by `tools/check_workflows.py`. {{GitHub Actions PR run `42666120250` passed all five checks: structure/docs (38 s), specs
+(45 s), engine/production tests (43 s), render smoke (1 m 7 s) and fresh checkout (1 m 34 s).
+All five jobs were observed with `gh pr checks 18 --watch`. A documentation-only follow-up commit
+triggers the same workflow; its result is reported in the final delivery summary.}}
 
 ## What was NOT verified
 

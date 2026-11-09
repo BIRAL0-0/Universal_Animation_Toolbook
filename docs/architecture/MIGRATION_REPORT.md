@@ -1,10 +1,10 @@
 # Migration report — 2026-11-09 reorganization
 
-**Branch:** `arena/c7c9d20d-universal-animation-toolbook`  
-**Base:** `abedd59`  
-**Main reorganization commit:** `a2d311c`  
-**Final validation/report commits:** {{COMMIT_REFERENCES}}  
-**Pull request:** {{PR_REFERENCE}}
+**Branch:** `arena/c7c9d20d-universal-animation-toolbook`
+**Base:** `abedd59`
+**Main reorganization commit:** `a2d311c`
+**Final validation/report commits:** `a2d311c` (main reorganization), `cf649fa` (final tree/reports) and this evidence-update commit
+**Pull request:** [PR #18](https://github.com/BIRAL0-0/Universal_Animation_Toolbook/pull/18) (open, intentionally not merged)
 
 This report is generated from the actual repository. The complete file-by-file change table comes
 from `git diff --name-status -M abedd59 a2d311c`; the full final tree is
@@ -135,8 +135,8 @@ for exact outputs): structure/docs/workflow/spec checks, environment check, JS r
 integration, 31 unit/production tests, Python/JS/JSON syntax checks, `scripts/new_project.py`,
 `tools/produce_video.py --stop-after stills`, stills generation, a silent 24-second MP4 with a
 clean validation report, and `scripts/verify_fresh_checkout.py`. The fresh-checkout script passed
-all 16 steps on commit `a2d311c79aaf359b265de56eb8a9e789011a6b07`; the final commit was
-re-verified with the same script. CI YAML parses locally as 5 jobs / 36 steps.
+all 16 steps on commit `a2d311c79aaf359b265de56eb8a9e789011a6b07`; the same script is used to re-verify the final state before delivery. CI YAML parses locally as
+5 jobs / 36 steps.
 
 Complete measured outputs are in [`docs/development/VALIDATION_REPORT.md`](../development/VALIDATION_REPORT.md).
 Automated gates do **not** equal subjective visual/audio QA. Seven images were actually opened
@@ -151,8 +151,10 @@ human listening test was performed**; no voiced/Kokoro render was produced becau
 
 - Kokoro/Piper weights are absent here; `setup_tts.py` needs a network install before voiced
   rendering. No subjective audio review, full-film visual review or voiced render was performed.
-- GitHub-hosted Actions checks may still be pending when this report is read; this work does not
-  merge the PR and does not claim hosted checks passed before they are observed.
+- GitHub Actions PR run `42666120250` passed all five required checks: structure/docs (38 s),
+  specs (45 s), engine/production tests (43 s), render smoke (1 m 7 s) and fresh checkout
+  (1 m 34 s). The PR is intentionally **not merged**; the documentation-only follow-up commit
+  triggers the same workflow and its result is reported in the final delivery summary.
 - Remotion's public docs HTML was not fetched; the evaluation used the supplied framework
   concepts plus verified GitHub licence metadata. No MIT licence was assumed.
 - Historical project documents and delivery reports may quote pre-reorganization paths. They are
