@@ -3,7 +3,7 @@
 **Branch:** `arena/c7c9d20d-universal-animation-toolbook`
 **Base:** `abedd59`
 **Main reorganization commit:** `a2d311c`
-**Final validation/report commits:** `a2d311c` (main reorganization), `cf649fa` (final tree/reports) and this evidence-update commit
+**Final validation/report commits:** `a2d311c` (main reorganization), `cf649fa` (final tree/reports), `73cd477` (hosted CI evidence) and this final verification commit
 **Pull request:** [PR #18](https://github.com/BIRAL0-0/Universal_Animation_Toolbook/pull/18) (open, intentionally not merged)
 
 This report is generated from the actual repository. The complete file-by-file change table comes
@@ -116,8 +116,8 @@ the single master prompt, protected polish prompt, skill map and project structu
 | Markdown files | 75 | 110 | +35 |
 | Python files | 43 | 47 | +4 |
 | JavaScript files | 15 | 15 | +0 |
-| Python + JavaScript lines | 24,682 | 25,544 | +862 |
-| Markdown lines | 8,815 | 11,309 | +2,494 |
+| Python + JavaScript lines | 24,682 | ≈25.6k | +≈0.9k |
+| Markdown lines | 8,815 | ≈11.3k | +≈2.5k |
 
 The added Markdown is mostly new authoritative architecture/skills/decision documentation and
 the migration/validation reports, not duplicated procedures: five overlapping instruction files
@@ -125,18 +125,20 @@ and one old workflow-docs directory were removed, while 25 stage docs were reloc
 
 Baseline figures are from [`docs/architecture/BASELINE_INVENTORY.md`](BASELINE_INVENTORY.md); the
 "after" figures count all tracked, non-ignored files in the final tree, including the three
-report/tree documents. Source LOC means Python + JavaScript lines; Markdown lines are reported
-separately because documentation is not executable source.
+report/tree documents. Source LOC means Python + JavaScript lines and is approximate after the final verification
+commit; Markdown lines are reported separately because documentation is not executable source.
 
 ## 7. Validation, CI, fresh checkout and kit verification
 
 All local gates passed (see [`docs/development/VALIDATION_REPORT.md`](../development/VALIDATION_REPORT.md)
 for exact outputs): structure/docs/workflow/spec checks, environment check, JS regression, Python
-integration, 31 unit/production tests, Python/JS/JSON syntax checks, `scripts/new_project.py`,
+integration, 32 unit/production tests, Python/JS/JSON syntax checks, `scripts/new_project.py`,
 `tools/produce_video.py --stop-after stills`, stills generation, a silent 24-second MP4 with a
 clean validation report, and `scripts/verify_fresh_checkout.py`. The fresh-checkout script passed
-all 16 steps on commit `a2d311c79aaf359b265de56eb8a9e789011a6b07`; the same script is used to re-verify the final state before delivery. CI YAML parses locally as
-5 jobs / 36 steps.
+all 16 steps on `a2d311c79aaf359b265de56eb8a9e789011a6b07` and again on
+`73cd477452042e68d52f44baed88a4d6d9161506`; the same script is rerun on the last pushed
+commit before merge. CI YAML parses locally as 5 jobs / 36 steps;
+hosted runs `42666120250` and `42666566679` passed all five checks.
 
 Complete measured outputs are in [`docs/development/VALIDATION_REPORT.md`](../development/VALIDATION_REPORT.md).
 Automated gates do **not** equal subjective visual/audio QA. Seven images were actually opened
@@ -151,10 +153,9 @@ human listening test was performed**; no voiced/Kokoro render was produced becau
 
 - Kokoro/Piper weights are absent here; `setup_tts.py` needs a network install before voiced
   rendering. No subjective audio review, full-film visual review or voiced render was performed.
-- GitHub Actions PR run `42666120250` passed all five required checks: structure/docs (38 s),
-  specs (45 s), engine/production tests (43 s), render smoke (1 m 7 s) and fresh checkout
-  (1 m 34 s). The PR is intentionally **not merged**; the documentation-only follow-up commit
-  triggers the same workflow and its result is reported in the final delivery summary.
+- GitHub Actions PR runs `42666120250` and `42666566679` passed all five required checks:
+  structure/docs, specs, engine/production tests, render smoke and fresh checkout. The PR is
+  merged only after the checks for the final pushed commit are observed green.
 - Remotion's public docs HTML was not fetched; the evaluation used the supplied framework
   concepts plus verified GitHub licence metadata. No MIT licence was assumed.
 - Historical project documents and delivery reports may quote pre-reorganization paths. They are

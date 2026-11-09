@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -46,6 +47,14 @@ def test_structure_validator_and_docs_checker_pass():
         proc = subprocess.run([sys.executable, script], cwd=ROOT,
                               capture_output=True, text=True)
         assert proc.returncode == 0, f"{script} failed:\n{proc.stdout}\n{proc.stderr}"
+
+
+def test_final_reports_have_no_unresolved_placeholders():
+    """A shipping report may not contain a leftover double-brace token."""
+    for rel in ("docs/architecture/MIGRATION_REPORT.md", "docs/architecture/FINAL_TREE.md",
+                "docs/development/VALIDATION_REPORT.md", "CHANGELOG.md"):
+        body = (ROOT / rel).read_text(encoding="utf-8")
+        assert not re.search(r"\{\{[A-Z_]+\}\}", body), rel
 
 
 def test_skill_activation_map_is_operational():

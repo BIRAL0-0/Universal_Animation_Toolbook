@@ -107,6 +107,11 @@ HISTORICAL_DOC_PREFIXES = (
     "docs/architecture/FINAL_TREE.md", "docs/development/VALIDATION_REPORT.md",
     "docs/production/WORKFLOW_CHANGELOG.md", "projects/", "deliverables/", "CHANGELOG.md",
 )
+REPORT_DOCS = (
+    "docs/architecture/MIGRATION_REPORT.md", "docs/architecture/FINAL_TREE.md",
+    "docs/development/VALIDATION_REPORT.md", "CHANGELOG.md",
+)
+UNRESOLVED_PLACEHOLDER = re.compile(r"\{\{[A-Z_]+\}\}")
 
 
 def tracked_paths() -> list[str]:
@@ -130,6 +135,11 @@ def problems() -> list[str]:
     for rel in REQUIRED_DIRS:
         if not (ROOT / rel).is_dir():
             p.append(f"missing required directory: {rel}")
+
+    for rel in REPORT_DOCS:
+        f = ROOT / rel
+        if f.is_file() and UNRESOLVED_PLACEHOLDER.search(f.read_text(encoding="utf-8")):
+            p.append(f"unresolved report placeholder: {rel}")
 
     for rel in tracked:
         if rel.startswith("runtime/") and rel != "runtime/README.md":

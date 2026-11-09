@@ -27,7 +27,23 @@ its documentation and its regression tests in the same task.
   `a2d311c79aaf359b265de56eb8a9e789011a6b07`, including a standalone kit validate and a silent
   draft render in a fresh clone.
 - Opened [PR #18](https://github.com/BIRAL0-0/Universal_Animation_Toolbook/pull/18). GitHub
-  Actions run `42666120250` passed all five checks; the PR remains open and unmerged.
+  Actions runs `42666120250` and `42666566679` both passed all five checks; merge is performed
+  only after the final pushed commit's checks are green.
+
+## 2026-11-09 — final verification and merge readiness
+
+### Added
+- `tools/validate_structure.py` and `tests/unit/test_repository_structure.py`: reject unresolved
+  double-brace placeholders in the migration report, final tree, validation report and changelog.
+
+### Verified
+- Reconciled the local checkout with the pushed assigned branch after a snapshot restore; the
+  staged tree matched `73cd477` exactly and the working tree is clean.
+- A fresh-checkout simulation on `73cd477452042e68d52f44baed88a4d6d9161506` passed all 16
+  steps, including standalone kit validation and a clean silent draft render; the last pushed
+  commit is re-verified before merge.
+- Local structure/doc/workflow/spec/environment/JS/Python/pytest gates all passed with the new
+  placeholder guard. The final tree and migration counts were re-checked.
 
 ## 2026-11-09 — architecture reorganization, permanent skills, Remotion evaluation
 

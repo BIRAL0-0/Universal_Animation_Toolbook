@@ -8,14 +8,14 @@ No claim of subjective audio listening or Kokoro voice synthesis is made here.
 
 | Gate | Result |
 |---|---|
-| `tools/validate_structure.py` | `STRUCTURE CHECK OK: 55 required files, 23 required dirs, 6 skills` |
-| `tools/check_docs.py` | `DOCS CHECK OK: 1627 path references resolved across 107 markdown files` |
+| `tools/validate_structure.py` | `STRUCTURE CHECK OK: 58 required files, 23 required dirs, 6 skills` |
+| `tools/check_docs.py` | `DOCS CHECK OK` — all path claims across 110 markdown files resolved |
 | `tools/check_workflows.py` | `WORKFLOW CHECK OK: 1 file(s), 5 job(s), 36 step(s)` |
 | `tools/validate_specs.py` | `OK: all 11 spec(s) validated, warnings: []` |
 | `universal_toolbook/run_studio.py check` | `status: OK`, 7 BGM tracks, `kokoro_ready: false`, `offline_voiceover_ready: false` |
 | `node tests/regression/run_all_tests.js` | `js_tests: PASSED`, 60 actions, 7 builds, 12 hairstyles, 12 preset environments, zero bone stretch / foot slip |
 | `tests/integration/test_studio_pipeline.py` | `py_tests: PASSED`, voice-failure diagnosis, 7 BGM tracks, exact word match, speech-locked board/camera |
-| `pytest tests/unit tests/production -q` | `31 passed` |
+| `pytest tests/unit tests/production -q` | `32 passed` |
 | `python -m compileall` + `node --check` + JSON parse | all Python, JS and JSON files parsed |
 
 ## Production smoke
@@ -45,14 +45,19 @@ exit 0, `runtime/renders/fresh_checkout.mp4` was 1,793,346 bytes with 720 valida
 does not perform subjective visual review. `tests/unit/test_repository_structure.py` independently
 copies `universal_toolbook/` to a temporary directory and runs `run_studio.py validate` there.
 
+A pushed final-state candidate was re-verified at `73cd477452042e68d52f44baed88a4d6d9161506`:
+`PASSED`, 16/16 steps exit 0, a 1,793,303-byte MP4 with 720 validated frames and one extracted
+frame. Both fresh-checkout runs used `runtime/` only for generated files and left no tracked
+artifacts behind. The same script is rerun on the last pushed commit before merge.
+
 ## CI
 
 [`.github/workflows/verify.yml`](../../.github/workflows/verify.yml) has five jobs: structure/docs,
 specs, engine/production tests, silent render smoke, and fresh checkout. YAML parsing is verified
-locally by `tools/check_workflows.py`. {{GitHub Actions PR run `42666120250` passed all five checks: structure/docs (38 s), specs
-(45 s), engine/production tests (43 s), render smoke (1 m 7 s) and fresh checkout (1 m 34 s).
-All five jobs were observed with `gh pr checks 18 --watch`. A documentation-only follow-up commit
-triggers the same workflow; its result is reported in the final delivery summary.}}
+locally by `tools/check_workflows.py`. GitHub Actions PR runs `42666120250` and
+`42666566679` both passed all five checks: structure/docs, specs, engine/production tests,
+render smoke and fresh checkout. The final pushed commit also triggers the same workflow; the
+merge is performed only after those checks are observed green.
 
 ## What was NOT verified
 
