@@ -69,6 +69,7 @@ IGNORE_EXACT = {
     "focus_x/y", "y/n", "and/or", "24/7", "TCP/IP", "S01.wav", "S07.wav",
     # GitHub owner/repo identifiers (external mirrors, not repository paths):
     "007-Akira/Project-Rocky",  # Piper voice mirror used by fetch_piper_voices.py --github
+    "remsky/Kokoro-FastAPI",  # source of the pinned v1.0 voice .pt files (setup_tts.py step 4)
 }
 
 CMD_RE = re.compile(r"(?:python3|node)\s+([^\s`'\"|&;)]+)")

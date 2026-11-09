@@ -739,6 +739,9 @@ def _synthesize_kokoro_line(job: Dict[str, Any]) -> bool:
         job["dur"], job["words"] = _compact_piper_line(out_wav, job["text"], cached_dur)
         words_json.write_text(json.dumps(job["words"]), encoding="utf-8")
         job["ok"] = True
+        # keep the backend label accurate on cached re-runs (same voice
+        # resolution as the fresh-synthesis path below)
+        job["kokoro_voice"] = _kokoro_voice_id(job.get("kokoro_voice") or job.get("voice"))
         return True
 
     prov = _kokoro_get_provider()

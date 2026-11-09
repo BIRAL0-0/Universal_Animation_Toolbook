@@ -93,8 +93,14 @@ class PiperProvider(TTSProvider):
             self._current_id = model_id
             self._voice = pv = self._load_model(model_id)
 
-        length_scale = 1.0 / float(speed) if float(speed) > 0 else 1.0
-        chunks = list(pv.synthesize(text, include_alignments=True))
+        # Piper's native rate control: SynthesisConfig.length_scale
+        # (< 1 faster, > 1 slower). speed=1.0 (default) leaves the voice's
+        # natural pace untouched — no artificial slow-down.
+        from piper import SynthesisConfig
+
+        spd = float(speed)
+        syn_config = SynthesisConfig(length_scale=1.0 / spd) if spd > 0 and abs(spd - 1.0) > 1e-6 else None
+        chunks = list(pv.synthesize(text, syn_config=syn_config, include_alignments=True))
         arr = np.concatenate([c.audio_float_array for c in chunks]).astype(np.float32)
         sr = int(chunks[0].sample_rate) if chunks else int(pv.config.sample_rate)
 

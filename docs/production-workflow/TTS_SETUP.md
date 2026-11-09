@@ -6,7 +6,7 @@ it after any session reset and it skips what is already present and verified.
 > The Arena sandbox is temporary: Python packages, model weights, and generated
 > audio do **not** persist between sessions. This setup is the single command
 > that rebuilds a working environment. Budget ~3–5 min cold (one ~98 MB weight
-> download), seconds when warm.
+> download + 33 small voice files), seconds when warm.
 
 ## The one command
 
@@ -27,9 +27,10 @@ Readiness-only (no installs, no downloads):
 | --- | --- |
 | 1 Environment | warns if running under system Python (use the venv), checks free disk (≥ 2 GB) and RAM (≥ 2 GB) |
 | 2 Packages | installs `requirements.txt` if missing, then `kokoro-onnx` and `piper-tts[alignment]` if not importable |
-| 3 Kokoro weights | downloads `kokoro.onnx` (92.4 MB, int8) + `voices.npz` (5.8 MB) into `cache/tts/`, **SHA-256 verified** |
-| 4 Piper voices | installs `en_US-ryan-medium` + `en_GB-alan-medium` via `universal_toolbook/tools/fetch_piper_voices.py --github 007-Akira/Project-Rocky` |
-| 5 Verify | loads each engine and synthesizes a one-line test into `output/tts/_setup_check/`, reports what works |
+| 3 Kokoro weights | downloads `kokoro.onnx` (92.4 MB, int8) + `voices.npz` (5.8 MB, 11-voice v0.19 set) into `cache/tts/`, **SHA-256 verified** |
+| 4 Kokoro v1.0 voices | downloads 33 pinned v1.0 `.pt` voice files (one per voice, ~0.5 MB each, **SHA-256 verified**) from `remsky/Kokoro-FastAPI` and converts them torch-free into `cache/tts/voices-v1.0-en.npz` (17.2 MB). **Optional extra** — if it fails, the 11-voice v0.19 set still works |
+| 5 Piper voices | installs `en_US-ryan-medium` + `en_GB-alan-medium` via `universal_toolbook/tools/fetch_piper_voices.py --github 007-Akira/Project-Rocky` |
+| 6 Verify | loads each engine and synthesizes a one-line test into `output/tts/_setup_check/` (incl. one v1.0 voice when present), reports what works |
 
 Exit code 0 = Kokoro ready. The end-of-run report lists each engine READY /
 NOT READY.
@@ -48,7 +49,8 @@ python3 -m venv .venv
 | path | what | git |
 | --- | --- | --- |
 | `cache/tts/kokoro.onnx` | Kokoro-82M int8 model (92.4 MB) | ignored |
-| `cache/tts/voices.npz` | Kokoro voice set, 11 voices (5.8 MB) | ignored |
+| `cache/tts/voices.npz` | Kokoro v0.19 voice set, 11 voices (5.8 MB) | ignored |
+| `cache/tts/voices-v1.0-en.npz` | Kokoro v1.0 English voice set, 33 voices (17.2 MB), built from pinned `.pt` files | ignored |
 | `~/.cache/piper_voices/*.onnx` | Piper medium voices (~60 MB each) | n/a (home) |
 | `output/tts/_setup_check/` | setup verification audio | ignored (`output/`) |
 | `output/tts/<name>/` | generated voiceover jobs | ignored (`output/`) |

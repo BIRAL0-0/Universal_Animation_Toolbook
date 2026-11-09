@@ -204,6 +204,89 @@ def test_kokoro_synthesis_short() -> None:
            eng.resolve_voice("totally-unknown-voice") in eng.voices())
 
 
+def test_voice_selection_and_expansion() -> None:
+    """Voice selection policy + v1.0 voice expansion (2026-11 mission).
+
+    Covers: am_michael default, deterministic automatic selection, alias
+    targets, v0.19 names never shadowed, v1.0-only voices usable on the
+    v0.19 model, unavailable voice -> clear report + documented fallback,
+    and a real 2-scene run staying on ONE voice (no per-scene switching).
+    """
+    import contextlib
+    import io
+
+    from tts.config import kokoro_voices_paths, load_config
+    from tts.providers import get_engine
+
+    cfg = load_config()
+    sel = cfg.get("selection", {})
+    kcfg = cfg["engines"]["kokoro"]
+
+    # 1. am_michael is the primary default (new projects + auto selection)
+    report("sel: default voice is am_michael",
+           kcfg["defaults"]["voice"] == "am_michael" and sel.get("default_voice") == "am_michael")
+    # 2. automatic selection is deterministic; no per-scene switching
+    report("sel: automatic = default_voice (deterministic)", sel.get("automatic") == "default_voice")
+    report("sel: per_scene_switching disabled", sel.get("per_scene_switching") is False)
+    # 3. alias targets
+    al = kcfg["aliases"]
+    report("sel: narrator/host -> am_michael",
+           al.get("narrator") == "am_michael" and al.get("host") == "am_michael")
+    report("sel: Jenny alias still af_bella", al.get("en-US-JennyNeural") == "af_bella")
+
+    eng = get_engine("kokoro")
+    voices = set(eng.voices())
+    paths = kokoro_voices_paths()
+    v1_present = len(paths) > 1 and paths[1].exists()
+
+    # 4. v0.19 names are always present and never shadowed
+    v019 = ["af", "af_bella", "af_nicole", "af_sarah", "af_sky", "am_adam",
+            "am_michael", "bf_emma", "bf_isabella", "bm_george", "bm_lewis"]
+    report("sel: all 11 v0.19 voices present", all(n in voices for n in v019))
+    if v1_present:
+        v1_only = ["af_heart", "am_onyx", "af_aoede", "bf_alice", "bm_daniel", "am_fenrir"]
+        v1_variants = ["am_michael_v1", "af_bella_v1"]
+        report("sel: v1.0-only voices available", all(n in voices for n in v1_only))
+        report("sel: v1.0 re-recordings reachable as *_v1", all(n in voices for n in v1_variants))
+        report("sel: 44 voices total (11 + 23 v1.0-only + 10 *_v1)", len(voices) == 44, str(len(voices)))
+        res = eng.synthesize("Voice expansion check, v1 point 0.", voice="af_heart")
+        report("sel: v1.0 voice synthesizes on v0.19 model",
+               res.duration > 0.5 and res.voice == "af_heart", f"{res.duration:.2f}s")
+    else:
+        report("sel: v1.0 set absent -> 11-voice fallback state", len(voices) == 11, str(len(voices)))
+
+    # 5. unavailable voice -> clear report + documented fallback (no crash)
+    buf = io.StringIO()
+    with contextlib.redirect_stderr(buf):
+        res = eng.synthesize("Fallback check line.", voice="voice-that-does-not-exist")
+    out = buf.getvalue()
+    report("sel: unknown voice warns clearly",
+           "voice-that-does-not-exist" in out and "fallback" in out, out[:160])
+    report("sel: unknown voice falls back to default",
+           res.voice == "am_michael" and res.meta.get("voice_fallback") is True, str(res.meta))
+    report("sel: fallback synthesis succeeded", res.duration > 0.5)
+
+    # 6. no per-scene switching: 2-scene default run stays on one voice
+    d = fresh_dir()
+    scenes = d / "scenes.json"
+    scenes.write_text(json.dumps({"scenes": [
+        {"id": "S01", "text": "One scene line."},
+        {"id": "S02", "text": "Two scene line."},
+    ]}), encoding="utf-8")
+    out_dir = d / "job"
+    r = _run_cli(["universal_toolbook/generate_voiceover.py", "--input", str(scenes),
+                  "--out", str(out_dir)])
+    ok = r.returncode == 0 and (out_dir / "manifest.json").exists()
+    report("sel: default-voice 2-scene run ok", ok, (r.stdout + r.stderr)[-300:])
+    if ok:
+        man = json.loads((out_dir / "manifest.json").read_text())
+        report("sel: default run used am_michael", man.get("voice") == "am_michael", str(man.get("voice")))
+        per_seg = {s.get("voice") for s in man["segments"] if s.get("voice")}
+        report("sel: single voice across all scenes (no per-scene switching)",
+               len(per_seg) <= 1, str(per_seg))
+    shutil.rmtree(d, ignore_errors=True)
+
+
 def test_piper_synthesis_timings() -> None:
     from tts.providers import get_engine
 
@@ -457,6 +540,7 @@ def main() -> None:
     test_piper_synthesis_timings()
     if not FAST:
         test_speed_control()
+    test_voice_selection_and_expansion()
     test_process_and_validate_cli()
     if not FAST:
         test_generate_voiceover_e2e()

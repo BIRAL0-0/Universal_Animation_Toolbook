@@ -51,12 +51,33 @@ both missing — run `setup_tts.py`.
   ever. (On your own machine with HF access you can drop any Kokoro ONNX
   export into `cache/tts/` and point `TTS_MODEL_DIR` at it.)
 
+## 4a. v1.0 voices missing / `Voice af_heart not found` (or similar)
+
+**Cause:** `cache/tts/voices-v1.0-en.npz` was not built (setup step 4
+failed or was skipped), or you requested a v1.0-only voice while only the
+11-voice v0.19 set is present. The subsystem still works — 11 v0.19 voices
+stay available, and any missing name falls back to the default voice with a
+clear `WARNING [kokoro]: voice '…' is not available … Using documented
+fallback 'am_michael'` line on stderr (and `voice_fallback: true` in the
+result metadata).
+
+**Fix:**
+```bash
+.venv/bin/python universal_toolbook/setup_tts.py    # rebuilds step 4 (33 pinned .pt files, ~20 s)
+.venv/bin/python universal_toolbook/generate_voiceover.py --voices   # 44 voices expected
+```
+The converter needs no PyTorch (`universal_toolbook/tools/convert_kokoro_v1_voices.py` decodes
+the torch `.pt` single-tensor format with stdlib + numpy). If step 4 fails
+repeatedly (e.g. the upstream repo moved), the v0.19 set is unaffected —
+the failure is reported, never silent.
+
 ## 5. Generation is slower than expected
 
-* **RTF on this 2 vCPU / 3.8 GB box is ~0.6 when idle** (Kokoro int8,
-  ONNX Runtime) but degrades toward ~1.1+ when other CPU work runs in
-  parallel — measure generation alone, or expect a 60 s narration to take
-  ~35–70 s.
+* **RTF on a 2 vCPU / 3.8 GB box is ~0.6–0.85 when idle** (Kokoro int8,
+  ONNX Runtime; the original 4-voice benchmark measured 0.59–0.63, later
+  sandbox re-provisions measured ~0.82 for identical audio) and degrades
+  further when other CPU work runs in parallel — measure generation alone,
+  or expect a 60 s narration to take ~35–90 s.
 * `speed` does not change total work much; it changes output duration.
 * Long text is chunked internally by `kokoro-onnx`; no change needed.
 * Keep `cache/tts/` on the same disk (no network FS here anyway).
@@ -71,6 +92,7 @@ both missing — run `setup_tts.py`.
 | clipping reported by validate | raise `limit_dbfs` headroom (e.g. −1.0) or lower `normalize_rms_dbfs` (e.g. −18) in `voices.json` |
 | too much silence inside a segment | internal dead-air compaction happens in the pipeline path; for standalone jobs, `validate_audio.py --max-silence 1.0` locates it |
 | voice sounds wrong for a speaker alias | `generate_voiceover.py --voices` prints the alias map; aliases live in `voices.json → engines.<name>.aliases` |
+| fallback voice is faster/slower than the one requested | that is the voice's natural pace (Piper ryan is noticeably faster than the Kokoro defaults — see `TTS_VOICE_COMPARISON.md`). `speed` adjusts it (Kokoro 0.5–2.0; Piper via `length_scale = 1 ÷ speed`), but by policy we do not slow a fallback voice to imitate the primary — pick a voice that fits the genre instead |
 
 ## 7. Resume / manifest problems
 
