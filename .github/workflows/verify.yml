@@ -15,13 +15,17 @@ concurrency:
 
 jobs:
   docs:
-    name: docs paths resolve
+    name: structure, docs and workflow contracts
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
+      - name: Install checker dependencies
+        run: pip install --quiet pyyaml pytest
+      - name: Repository structure, skills and generated-file rules
+        run: python tools/validate_structure.py
       - name: Every path quoted in the markdown must exist
         run: |
           set +e
@@ -36,9 +40,9 @@ jobs:
           fi
           exit "$code"
       - name: Workflow files must parse as YAML
-        run: |
-          pip install --quiet pyyaml
-          python tools/check_workflows.py
+        run: python tools/check_workflows.py
+      - name: Structure unit tests
+        run: python -m pytest tests/unit -q
 
   specs:
     name: specs validate
@@ -57,12 +61,11 @@ jobs:
         run: npm install --prefix universal_toolbook --no-audit --no-fund
       - name: Environment check
         run: python universal_toolbook/run_studio.py check
-
       - name: Validate the template and every reference film
         run: python tools/validate_specs.py
 
   engine-tests:
-    name: engine tests
+    name: engine and production tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -73,15 +76,17 @@ jobs:
         with:
           node-version: "20"
       - name: Install python deps
-        run: pip install -r universal_toolbook/requirements.txt
+        run: pip install -r universal_toolbook/requirements.txt pytest pyyaml
       - name: Install canvas backend
         run: npm install --prefix universal_toolbook --no-audit --no-fund
       - name: JS regression suite
-        run: node tests/run_all_tests.js | tee /tmp/js.json
+        run: node tests/regression/run_all_tests.js | tee /tmp/js.json
       - name: Fail if the JS suite did not pass
         run: grep -q 'js_tests.*PASSED' /tmp/js.json
       - name: Python pipeline suite
-        run: python tests/test_studio_pipeline.py
+        run: python tests/integration/test_studio_pipeline.py
+      - name: Production contract tests
+        run: python -m pytest tests/production -q
 
   render-smoke:
     name: render smoke (silent draft)
@@ -100,11 +105,11 @@ jobs:
         run: npm install --prefix universal_toolbook --no-audit --no-fund
       - name: Stills render (proves the compositor draws)
         run: |
-          mkdir -p work
+          mkdir -p runtime/work runtime/renders runtime/previews runtime/cache runtime/logs
           python universal_toolbook/run_studio.py stills \
             universal_toolbook/templates/episode_minimal.json \
-            --out-dir work/stills --width 1920 --height 1080
-          test -f work/stills/S01_modern_office.png
+            --out-dir runtime/previews/minimal --width 1920 --height 1080
+          test -f runtime/previews/minimal/S01_modern_office.png
       - name: Silent draft encode (proves the ffmpeg path, no network needed)
         run: |
           python universal_toolbook/run_studio.py render \
@@ -158,3 +163,19 @@ jobs:
           print("silent render flagged:", rep["warnings"][0][:60], "...")
           print("the missing-voice path is loud")
           PY
+
+  fresh-checkout:
+    name: fresh checkout and standalone kit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+      - name: Clone only committed files, install, test and render a silent draft
+        run: python scripts/verify_fresh_checkout.py

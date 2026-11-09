@@ -6,8 +6,8 @@ originals: each input ``x.wav`` becomes ``x_processed.wav`` next to it (or in
 ``--out``). Prints a JSON analysis report for every processed file.
 
 Examples:
-    python3 universal_toolbook/process_audio.py output/tts/my_video/final/seg-000.wav
-    python3 universal_toolbook/process_audio.py output/tts/my_video/segments/ --out output/tts/my_video/final/
+    python3 universal_toolbook/process_audio.py runtime/renders/tts/my_video/final/seg-000.wav
+    python3 universal_toolbook/process_audio.py runtime/renders/tts/my_video/segments/ --out runtime/renders/tts/my_video/final/
     python3 universal_toolbook/process_audio.py foo.wav --resample-rate 48000 --no-rms
 """
 

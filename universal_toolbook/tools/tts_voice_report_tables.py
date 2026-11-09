@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render data tables into docs/production-workflow/TTS_VOICE_COMPARISON.md.
+"""Render data tables into docs/production/TTS_VOICE_COMPARISON.md.
 
 Fills three placeholders from real data (no hand-typed numbers):
   <!-- CATALOG_TABLE -->   the 44-voice catalog (from voices.json + installed voices)
@@ -8,7 +8,7 @@ Fills three placeholders from real data (no hand-typed numbers):
 
 Usage:
     .venv/bin/python universal_toolbook/tools/tts_voice_report_tables.py \
-        --results output/tts/benchmark2/results.json
+        --results runtime/renders/tts/benchmark2/results.json
 """
 
 from __future__ import annotations

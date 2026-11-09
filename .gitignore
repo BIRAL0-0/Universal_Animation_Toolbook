@@ -1,37 +1,35 @@
 # Byte-compiled / caches
 __pycache__/
 *.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 .venv/
 venv/
 
 # Node canvas backend (installed at run time)
 node_modules/
-
-*.partial
-
-# Offline neural voices (~60 MB each) are fetched, never committed
-assets/voices/
-*.onnx
-*.onnx.json
-
-# Self-hosted TTS model weights (cache/tts: kokoro.onnx 92 MB + voices.npz 6 MB).
-# Redownload: python3 universal_toolbook/setup_tts.py  (SHA-256 pinned, ~2 min)
-cache/
-*.npz
-
-
-
-# Toolbook install artifacts (npm/postinstall)
 universal_toolbook/node_modules/
 universal_toolbook/package-lock.json.partial
 
-# Renders, QA frames and delivery bundles are build artifacts, not source
+# Partial downloads
+*.partial
+
+# Offline neural voices and TTS weights (~60 MB each voice, ~100 MB model).
+# Fetched by: python3 universal_toolbook/setup_tts.py  (SHA-256 pinned)
+assets/voices/
+*.onnx
+*.onnx.json
+cache/
+*.npz
+
+# Unified temporary workspace. Only runtime/README.md is tracked; everything else a
+# render, install or QA run creates here is regenerable and stays out of git.
+runtime/*
+!runtime/README.md
+
+# Legacy scratch roots — still ignored so old commands and historical docs cannot
+# accidentally commit generated media. New code must use runtime/ instead.
 output/
 work/
-
-
-
-downloads/poster.jpg
-
-# resumable render chunk caches + intermediate mixes (regenerable, hundreds of MB)
 .work_*/

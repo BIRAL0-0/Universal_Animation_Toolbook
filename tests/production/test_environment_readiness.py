@@ -45,7 +45,7 @@ def _check(name, fn):
 
 
 def test_bootstrap_documented_in_start_here():
-    text = (REPO_ROOT / "START_HERE.md").read_text(encoding="utf-8")
+    text = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
     assert "npm install --prefix universal_toolbook" in text
     assert "setup_tts.py" in text
 
@@ -74,7 +74,7 @@ def run_checklist() -> bool:
         return ok, "@napi-rs/canvas" if ok else "node_modules missing — npm install --prefix universal_toolbook"
 
     def kokoro_weights():
-        d = REPO_ROOT / "cache" / "tts"
+        d = REPO_ROOT / "runtime" / "cache" / "tts"
         onnx = d / "kokoro.onnx"
         npz = d / "voices.npz"
         ok = onnx.exists() and npz.exists()
@@ -94,7 +94,7 @@ def run_checklist() -> bool:
     results.append(_check("numpy + imageio-ffmpeg", py_imports))
     results.append(_check("2D canvas backend", canvas_backend))
     results.append(_check("ffmpeg binary", ffmpeg_binary))
-    results.append(_check("Kokoro weights (cache/tts)", kokoro_weights))
+    results.append(_check("Kokoro weights (runtime/cache/tts)", kokoro_weights))
     return all(results)
 
 

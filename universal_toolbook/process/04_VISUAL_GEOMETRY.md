@@ -128,8 +128,8 @@ repositioned inside its safe area.
 
 ```bash
 # Review the intended vertical composition before the final render
-python3 universal_toolbook/run_studio.py stills work/episode.json \
-  --out-dir work/stills_9x16 --width 1080 --height 1920
+python3 universal_toolbook/run_studio.py stills runtime/work/episode.json \
+  --out-dir runtime/work/stills_9x16 --width 1080 --height 1920
 
 # Optional per-scene override: choose a cast id, "board", or a normalized x focus
 ```

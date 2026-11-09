@@ -20,7 +20,7 @@ Usage
     .venv/bin/python universal_toolbook/tools/tts_voice_benchmark.py
         [--voices am_michael af_bella ...]   # default: mission-2 shortlist
         [--include-piper]                    # add piper voices (pace check)
-        [--out output/tts/benchmark2]
+        [--out runtime/renders/tts/benchmark2]
         [--mp3-kbps 128]  [--no-mp3]  [--fast]
 
 Output layout (git-ignored):
@@ -44,7 +44,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))  # universal_toolbook/ on the path
 
 # --------------------------------------------------------------------------- scripts
-# Reproduced verbatim from docs/production-workflow/TTS_BENCHMARK.md §4 so the
+# Reproduced verbatim from docs/production/TTS_BENCHMARK.md §4 so the
 # numbers stay comparable with the original 4-voice benchmark.
 SCRIPTS: dict[str, str] = {
     "conversational": (
@@ -138,7 +138,7 @@ def main() -> None:
                     help="kokoro voice ids to benchmark (default: mission-2 shortlist)")
     ap.add_argument("--include-piper", action="store_true",
                     help="also run piper voices (fallback pace assessment)")
-    ap.add_argument("--out", default="output/tts/benchmark2")
+    ap.add_argument("--out", default="runtime/renders/tts/benchmark2")
     ap.add_argument("--mp3-kbps", type=int, default=128)
     ap.add_argument("--no-mp3", action="store_true")
     ap.add_argument("--fast", action="store_true",

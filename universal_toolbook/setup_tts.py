@@ -11,19 +11,19 @@ What it does (each step is skipped when already done and verified):
   2. Installs Python packages if missing: core requirements,
      kokoro-onnx, piper-tts[alignment].
   3. Downloads Kokoro-82M int8 ONNX weights (92.4 MB) + voice set (5.8 MB)
-     into cache/tts/ — from a pinned git blob on github.com, because
+     into runtime/cache/tts/ — from a pinned git blob on github.com, because
      huggingface.co and GitHub release assets are unreachable from the
      Arena sandbox. SHA-256 verified.
   4. Downloads the Kokoro v1.0 English voice set (33 single-tensor .pt
      files, pinned per-file SHA-256) and converts it to
-     cache/tts/voices-v1.0-en.npz with the torch-free decoder in
+     runtime/cache/tts/voices-v1.0-en.npz with the torch-free decoder in
      tools/convert_kokoro_v1_voices.py. OPTIONAL extra: if this step
      fails, the 11-voice v0.19 set in step 3 still works (voices from the
      v1.0 set then report as unavailable; see TTS_TROUBLESHOOTING.md).
   5. Installs Piper voices (en_US-ryan-medium, en_GB-alan-medium) from the
      repo's standard GitHub mirror via tools/fetch_piper_voices.py.
   6. Verifies: loads each engine and synthesizes a one-line test into
-     output/tts/_setup_check/, reports what works.
+     runtime/renders/tts/_setup_check/, reports what works.
 
 Safe to re-run after a session reset: existing valid files are kept, so a
 warm run finishes in seconds. No permanent servers are started.
@@ -42,7 +42,10 @@ import urllib.request
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-REPO_ROOT = HERE.parent
+# Inside the complete development repository, keep temporary TTS state in the repository's
+# runtime/ tree. When the kit is copied out on its own, keep it inside the kit instead of
+# writing into its parent directory. AGENTS.md is the repository marker.
+REPO_ROOT = HERE.parent if (HERE.parent / "AGENTS.md").is_file() else HERE
 sys.path.insert(0, str(HERE))
 
 MIN_FREE_GB = 2.0
@@ -233,7 +236,7 @@ def _download_git_blob(repo: str, blob_sha: str, dest: Path, size_mb: float) -> 
 
 def install_kokoro_weights(check_only: bool) -> None:
     step(3, "Kokoro-82M weights (int8 ONNX, GitHub git-blob source)")
-    d = REPO_ROOT / "cache" / "tts"
+    d = REPO_ROOT / "runtime" / "cache" / "tts"
     ok = True
     if check_only:
         for name, meta in KOKORO_GIT["files"].items():
@@ -287,7 +290,7 @@ def _validate_v1_voices_npz(p: Path) -> list[str] | None:
 
 def install_kokoro_v1_voices(check_only: bool) -> bool:
     step(4, "Kokoro v1.0 English voice set (33 voices, torch-free conversion)")
-    d = REPO_ROOT / "cache" / "tts"
+    d = REPO_ROOT / "runtime" / "cache" / "tts"
     p = d / "voices-v1.0-en.npz"
     if check_only:
         names = _validate_v1_voices_npz(p) if p.exists() else None
@@ -323,7 +326,7 @@ def install_kokoro_v1_voices(check_only: bool) -> bool:
         p.unlink(missing_ok=True)
         warn(f"v1.0 voice set download/conversion failed: {e}")
         warn("continuing with the 11-voice v0.19 set only — v1.0 voices will "
-             "report as unavailable (see docs/production-workflow/TTS_TROUBLESHOOTING.md)")
+             "report as unavailable (see docs/production/TTS_TROUBLESHOOTING.md)")
         return False
     names = _validate_v1_voices_npz(p)
     if not names:
@@ -380,7 +383,7 @@ def verify_engines(check_only: bool) -> dict:
     from tts import get_engine
     from tts import audio as A
 
-    out = REPO_ROOT / "output" / "tts" / "_setup_check"
+    out = REPO_ROOT / "runtime" / "renders" / "tts" / "_setup_check"
     for name in ("kokoro", "piper"):
         try:
             eng = get_engine(name)

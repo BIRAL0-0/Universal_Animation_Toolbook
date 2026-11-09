@@ -1,7 +1,7 @@
 """Kokoro-82M provider (int8 ONNX via the ``kokoro-onnx`` package).
 
 Model files (``kokoro.onnx`` 92.4 MB int8, Kokoro-82M v0.19 export) are
-downloaded by ``universal_toolbook/setup_tts.py`` into ``cache/tts/``.
+downloaded by ``universal_toolbook/setup_tts.py`` into ``runtime/cache/tts/``.
 Hugging Face is not reachable from the Arena sandbox, so the weights come
 from a public GitHub repository's git objects (see ``setup_tts.py`` for the
 exact source + SHA-256 pins).

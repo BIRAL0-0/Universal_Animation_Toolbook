@@ -5,8 +5,8 @@ is the exhaustive schema, and `universal_toolbook/templates/episode_minimal.json
 2-scene skeleton — copy it, don't start from a blank file.
 
 ```bash
-cp universal_toolbook/templates/episode_minimal.json work/episode.json
-python3 universal_toolbook/run_studio.py validate work/episode.json      # "warnings": []
+cp universal_toolbook/templates/episode_minimal.json runtime/work/episode.json
+python3 universal_toolbook/run_studio.py validate runtime/work/episode.json      # "warnings": []
 ```
 
 Delivery aspect is selected at render time; the same authored JSON can produce landscape and

@@ -60,16 +60,16 @@ Format: date · type · what changed · why · verification.
   customised prompt before production, follows it step by step and logs deviations.
 - **Verification:** `test_master_template_exists_with_required_sections`.
 
-### PC-003 · `AGENT_OPERATING_RULES.md` added and linked from `START_HERE.md`
+### PC-003 · `AGENTS.md` added and linked from `README.md`
 - **Type:** process (permanent behaviour)
 - **What:** codifies AUTOMATIC VIDEO CREATION MODE — a bare "Create a new video." activates the
   full workflow — plus the five input cases, the 20 ordered stages, decide-without-asking policy,
   house content rules, self-healing obligation, session safety and git discipline.
-  `START_HERE.md` now opens with a §0 pointer so every session loads it first.
+  `README.md` now opens with a §0 pointer so every session loads it first.
 - **Why:** Part 14 requires the behaviour to live in the repository's actual agent instructions,
   not only in a chat prompt.
 - **Verification:** `test_automatic_video_creation_rule_is_wired_into_agent_instructions` checks
-  both the file and the `START_HERE.md` link.
+  both the file and the `README.md` link.
 
 ### PC-004 · House rule: no channel name anywhere
 - **Type:** rule + enforcement
@@ -101,7 +101,7 @@ Format: date · type · what changed · why · verification.
 
 ### PC-007 · Voiceover polish standard re-affirmed as immutable
 - **Type:** rule
-- **What:** `docs/production-workflow/prompts/VOICEOVER_POLISH_PROMPT.md` is unchanged — sha256
+- **What:** `docs/production/prompts/VOICEOVER_POLISH_PROMPT.md` is unchanged — sha256
   `aeef0850347ae43535379981d2cd9f4a90e747b7de63b6bb5bd93c31518dc1ea`, 5256 bytes. A hash check now
   guards it.
 - **Why:** Part 5: preserve it byte-for-byte; never silently rewrite, replace, weaken or remove.

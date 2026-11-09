@@ -4,7 +4,7 @@
 Wraps `run_studio.py validate` so the check is one command locally and in CI:
 
     python3 tools/validate_specs.py                     # template + all of examples/
-    python3 tools/validate_specs.py --specs work/*.json  # specific files
+    python3 tools/validate_specs.py --specs runtime/work/*.json  # specific files
     python3 tools/validate_specs.py --allow-warnings     # report only, never fail
 
 Exit code 0 only when every spec parses, validates and reports `warnings: []`.

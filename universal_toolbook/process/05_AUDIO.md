@@ -127,7 +127,7 @@ from a separate audio file, so:
 
 ```python
 import wave, audioop, math
-w = wave.open("output/.work_final_film_16x9/master_audio.wav", "rb")
+w = wave.open("runtime/renders/.work_final_film_16x9/master_audio.wav", "rb")
 d = w.readframes(w.getnframes())
 print("dur", round(w.getnframes() / w.getframerate(), 2))
 print("peak dBFS", round(20*math.log10(audioop.max(d, w.getsampwidth()) / 32768.0), 2))

@@ -1,49 +1,48 @@
-# Deliverable — self-hosted TTS upgrade + voice expansion (2026-11-03 / 2026-11-09)
+# Deliverables
 
-This ZIP is the **source deliverable**: the repository with the TTS subsystem,
-pipeline integration, tests, and docs, minus heavy runtime artifacts.
+This is the **only** repository location for durable, distributable artifacts. Temporary renders,
+stills, caches and logs belong in the git-ignored [`runtime/`](../runtime/README.md); per-video
+source and QA evidence live in [`projects/`](../projects/).
 
-Mission 2 (2026-11-09) adds on top of mission 1:
-* **44 selectable Kokoro voices** — the 11-voice v0.19 set plus the 33-voice
-  English v1.0 set (23 new voices under plain names, 10 re-recordings as
-  `<name>_v1` for A/B), downloaded as pinned `.pt` files and converted
-  torch-free by `universal_toolbook/tools/convert_kokoro_v1_voices.py`.
-* **`am_michael` primary default**, explicit selection policy in
-  `universal_toolbook/tts/config/voices.json` (one run = one voice, deterministic, clear
-  fallback with manifest recording).
-* **Piper `speed` wired to the native `length_scale`** (default 1.0
-  unchanged), fallback-only by policy.
-* Voice comparison report + listening set: `docs/production-workflow/TTS_VOICE_COMPARISON.md`.
+| Path | What it is |
+|---|---|
+| [`RESULTS.md`](RESULTS.md) | the durable-results convention: one folder per finished film, text mirrors of chapters/reports/cues/validation, optional master MP4, `NOTES.md` with SHA-256 and exact rebuild command |
+| [`releases/`](releases/) | finished ZIP packages: `discipline_vs_obsession_release.zip`, `the_wall_you_agreed_with_1080x1920.zip`, `video-001_RELEASE.zip` |
+| [`universal_animation_toolbook_tts.zip`](universal_animation_toolbook_tts.zip) | the 2026-11-03/09 self-hosted TTS source deliverable (repository minus heavy runtime artifacts) |
+| [`tts_benchmark/`](tts_benchmark/README.md) | committed MP3 listening samples for 16 Kokoro/Piper voices, with attribution |
+| [`two_inch_bridge_cel/`](two_inch_bridge_cel/NOTES.md) | a complete shipped master MP4 plus chapters, report, validation, cues, SVG storyboard and measured notes |
+| [`the_wall_you_agreed_with/`](the_wall_you_agreed_with/index.html) | historical hand-off page plus real MP4, ZIP and poster files; the earlier broken symlinks were replaced with byte-identical release assets, and the package is also in `releases/` |
 
-## What's inside (highlights)
+## TTS source ZIP (historical)
 
-| Path | What |
-| --- | --- |
-| `universal_toolbook/tts/` | The TTS subsystem (Kokoro/Piper/Edge providers, audio processing, segmentation, manifests, configs, test suite) |
-| `universal_toolbook/setup_tts.py` | One-time setup (packages + SHA-256-pinned Kokoro weights + 33 pinned v1.0 voices + Piper voices + verification) |
-| `universal_toolbook/tools/convert_kokoro_v1_voices.py` | Torch-free decoder for the v1.0 `.pt` voice tensors |
-| `universal_toolbook/tools/tts_voice_benchmark.py` | Reproducible voice benchmark harness (same 4 genre scripts as mission 1) |
-| `universal_toolbook/generate_voiceover.py` | The single generation command (resumable jobs, WAV/MP3, manifest) |
-| `universal_toolbook/process_audio.py`, `validate_audio.py` | Reusable processing + validation |
-| `universal_toolbook/engine/voice_engine.py` | Pipeline integration (`--voice kokoro`, Kokoro-first `auto` chain) |
-| `docs/production-workflow/TTS_*.md` | Benchmark, setup, architecture, troubleshooting, **voice comparison**, measured environment |
-| `outputs/tts_benchmark/` | (in git, not in this ZIP) committed voice samples to listen to |
+Mission 1 added the Kokoro/Piper/Edge subsystem; mission 2 added 44 selectable Kokoro voices,
+`am_michael` as the primary default, Piper `length_scale` support and the voice comparison report.
+The ZIP intentionally excludes downloaded model weights (~242 MB), past films, generated renders,
+`.venv` and `node_modules`.
 
-## What's NOT in this ZIP (and how to get it back)
+Full details and the fresh-machine verification commands are in
+[`docs/production/TTS_BENCHMARK.md`](../docs/production/TTS_BENCHMARK.md),
+[`docs/production/TTS_VOICE_COMPARISON.md`](../docs/production/TTS_VOICE_COMPARISON.md) and
+[`docs/getting-started/INSTALL.md`](../docs/getting-started/INSTALL.md).
 
-| Artifact | How to restore |
-| --- | --- |
-| Kokoro weights + v0.19 voices + v1.0 voices + Piper voices (~242 MB) | `python3 universal_toolbook/setup_tts.py` — re-downloads everything pinned and SHA-256 verifies (~2–3 min from github.com). Deliberately **not** in the ZIP to keep it small. |
-| Past films in `outputs/` (git-tracked) | `git clone` the repo — all deliverable files are in git history. |
-| Render output (`output/`, `work/`) | Re-run the render; voice caches make re-voicing cheap. |
-| `.venv` / `node_modules` | `python3 -m venv .venv && .venv/bin/pip install -r universal_toolbook/requirements.txt pyyaml && .venv/bin/python universal_toolbook/setup_tts.py` and `npm install --prefix universal_toolbook` |
-
-## Verify it works (fresh machine, ~6 min)
+## Verify a fresh machine
 
 ```bash
 python3 -m venv .venv
 .venv/bin/pip install -r universal_toolbook/requirements.txt pyyaml
-.venv/bin/python universal_toolbook/setup_tts.py          # setup + self-verify (incl. one v1.0 voice)
-.venv/bin/python universal_toolbook/tts/test_tts.py       # full suite (91+ tests)
-.venv/bin/python universal_toolbook/generate_voiceover.py --voices   # expect 44 Kokoro voices
+.venv/bin/python universal_toolbook/setup_tts.py
+.venv/bin/python universal_toolbook/run_studio.py check
+python3 tools/validate_structure.py
 ```
+
+## Rules
+
+1. Do not commit generated QA frames, chunk caches, intermediate mixes or `.work_*` directories.
+2. Keep the master under ~50 MB; anything larger ships as text results plus the rebuild command.
+3. Never edit a report by hand; copy the renderer's output verbatim.
+4. Record licence and attribution for every audio asset (see
+   [`universal_toolbook/assets/bgm/CREATIVE_COMMONS_LICENSES.md`](../universal_toolbook/assets/bgm/CREATIVE_COMMONS_LICENSES.md)).
+5. Historical evidence is relocated, never deleted. `two_inch_bridge_cel/report.json`,
+   `chapters.txt`, `cues.json`, `validation.json`, the SVG storyboard and the master MP4 remain
+   byte-for-byte unchanged; historical path strings inside those records are documented in
+   `NOTES.md`. New delivery packages go here, not into source directories.

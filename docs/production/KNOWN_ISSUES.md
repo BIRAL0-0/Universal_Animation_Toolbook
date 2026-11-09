@@ -138,7 +138,7 @@ Every entry: **stage** · **symptom** · **root cause** · **status** · **regre
 - **Verification:** `run_studio.py check` printed `"status": "OK"`; `setup_tts.py` exit 0 with
   both engines READY; stills + draft renders succeeded afterwards.
 - **Regression check:** `tests/production/test_environment_readiness.py` (documented bootstrap
-  sequence) and the bootstrap block in `START_HERE.md` §2.
+  sequence) and the bootstrap block in `README.md` §2.
 
 ### KI-005 — A channel name was written into a project spec
 - **Stage:** delivery / house rules
@@ -149,7 +149,7 @@ Every entry: **stage** · **symptom** · **root cause** · **status** · **regre
   that read like a real brand.
 - **Fix:** the key was removed from the spec entirely; every other occurrence in the repo was
   already the empty default. The house rule ("no channel name anywhere") was codified in
-  `AGENT_OPERATING_RULES.md` §4 and enforced by a repo-wide scan.
+  `AGENTS.md` §4 and enforced by a repo-wide scan.
 - **Verification:** `tests/production/test_repo_hygiene.py::test_no_channel_name_anywhere` passes
   and scans every JSON file in the repository.
 - **Regression check:** same test, plus `test_project_specs_omit_channel_name_key`.

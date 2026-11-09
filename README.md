@@ -1,108 +1,123 @@
 # Universal Animation Toolbook
 
-AI-agnostic 16:9 landscape and 9:16 portrait animation, neural voiceover and Creative Commons music pipeline.
-Give an AI agent the toolbook plus a script, and it can render zero-grain `1920×1080` landscape or `1080×1920` portrait MP4s at 30fps. The renderer preserves geometry and reframes portrait shots instead of stretching them.
+**Version 3.0.0** — a self-contained, AI-agnostic production kit for complete stickman/cel
+animation videos: 16:9 (1920×1080) or 9:16 (1080×1920), 30 fps, zero film grain, Kokoro
+voiceover, Creative Commons music, synchronised foley and burned-in glowing captions. A single
+`episode.json` drives a deterministic frame renderer; Python handles speech, timing and audio,
+plain CommonJS JavaScript draws every frame. Portrait output reframes the composition — it never
+stretches it.
 
-```
-Universal_Animation_Toolbook/
-├── universal_toolbook/   ★ the production kit — engine, assets, tools, process, template, schema
-├── docs/                   the full production-workflow docs (idea → script → film → publishing)
-├── examples/               complete episode specs to copy structure and pacing from
-├── tests/                  regression suite + its schema fixtures
-├── outputs/                text results of finished films (chapters, reports, cue sheets)
-├── output/                 renders — git-ignored, regenerated on demand
-└── work/                   your working episode + QA stills — git-ignored
-```
+## What is in this repository
 
-`universal_toolbook/` is self-contained: `universal_toolbook/run_studio.py` resolves its own `universal_toolbook/engine/`, `universal_toolbook/assets/`
-and `universal_toolbook/config/` relative to itself, so it can be copied out and used on its own. Episodes and
-outputs always resolve from *your* current directory.
+| Location | Purpose |
+|---|---|
+| [`universal_toolbook/`](universal_toolbook/README.md) | **the reusable production kit** — CLI, renderer, audio/TTS, config, bundled assets, schema, template and kit procedure. Copy this folder alone to render films. |
+| [`AGENTS.md`](AGENTS.md) | mandatory rules for autonomous agents, architecture and skill activation |
+| [`skills/`](skills/README.md) | six permanent agent skills: animation production, scriptwriting, stickman animation, voiceover/audio, YouTube research, production quality |
+| [`templates/`](templates/README.md) | the one master video-production prompt and the project skeleton |
+| [`projects/`](projects/) | one independent, never-overwritten folder per finished video |
+| [`examples/`](examples/) | 11 validated reference episode specs |
+| [`docs/`](docs/architecture/SYSTEM_OVERVIEW.md) | architecture, setup, development, production detail, troubleshooting, decisions |
+| [`tests/`](tests/README.md) | unit, integration, regression, production and fixture tests |
+| [`tools/`](tools/README.md), [`scripts/`](scripts/README.md) | repository validation, QA and developer entry points |
+| [`deliverables/`](deliverables/README.md) | finished distributable packages, benchmark samples, durable text results |
+| [`runtime/`](runtime/README.md) | git-ignored temporary work, renders, previews, cache and logs |
 
-## Start here
+**Kit vs repository:** `universal_toolbook/` is the runtime and is copyable on its own. `skills/`,
+`AGENTS.md`, `projects/`, `docs/`, `tests/`, `tools/` and `scripts/` are the complete development
+repository around it; they are **not** required to render a film from the kit.
 
-**First stop for any session: [`START_HERE.md`](START_HERE.md)** — bootstrap commands, the
-reading order, and the five non-negotiable rules in one page.
+## Requirements
 
-| If you want to… | Open |
-| --- | --- |
-| run the whole content operation — idea → script → film → YouTube prep | [`docs/production-workflow/INDEX.md`](docs/production-workflow/INDEX.md) |
-| know how a film gets made, step by step | [`universal_toolbook/process/README.md`](universal_toolbook/process/README.md) |
-| hand this to an agent that has a script | [`universal_toolbook/process/SESSION_PROMPT.md`](universal_toolbook/process/SESSION_PROMPT.md) |
-| the CLI surface and capabilities | [`universal_toolbook/00_START_HERE.md`](universal_toolbook/00_START_HERE.md) |
-| the full JSON schema, all actions/environments | [`universal_toolbook/01_TOOLBOOK_REFERENCE.md`](universal_toolbook/01_TOOLBOOK_REFERENCE.md) |
-| the creative brief for an agent | [`universal_toolbook/MASTER_PROMPT.md`](universal_toolbook/MASTER_PROMPT.md) |
-| which folder stores what | [`universal_toolbook/process/REPO_MAP.md`](universal_toolbook/process/REPO_MAP.md) |
-| know what the engine cannot do | [`universal_toolbook/process/08_LIMITS.md`](universal_toolbook/process/08_LIMITS.md) |
-| a worked spec to copy | [`examples/`](examples) |
+- Python 3.11+ with `numpy`, `imageio-ffmpeg`, `edge-tts` (`universal_toolbook/requirements.txt`)
+- Node.js 20+ with `@napi-rs/canvas` or `canvas` (`npm install --prefix universal_toolbook`)
+- `ffmpeg` binary supplied by `imageio-ffmpeg`
+- Kokoro weights and voices downloaded by `universal_toolbook/setup_tts.py` into ignored `runtime/cache/tts/`
+- Optional: `piper-tts` as a last-resort offline fallback
 
-## Quick start (from the repository root)
-
-```bash
-python3 universal_toolbook/run_studio.py check                 # node, python, ffmpeg, fonts, BGM, voices
-npm install --prefix universal_toolbook                        # 2D canvas backend
-pip install -r universal_toolbook/requirements.txt             # edge-tts, numpy, imageio-ffmpeg
-
-cp universal_toolbook/templates/episode_minimal.json work/episode.json
-#   … author it (see universal_toolbook/process/02_AUTHORING_EPISODE_JSON.md) …
-python3 universal_toolbook/run_studio.py validate work/episode.json
-python3 universal_toolbook/run_studio.py stills work/episode.json \
-    --out-dir work/stills --width 1920 --height 1080          # look at these before rendering
-python3 universal_toolbook/run_studio.py render work/episode.json \
-    --out output/final_film_16x9.mp4 --full --preset veryfast \
-    --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
-```
-
-`--voice auto` is required where the Edge endpoint is unreachable: the engine falls back to
-local Piper voices (`universal_toolbook/tools/fetch_piper_voices.py`).
-
-## Choose the delivery format
-
-The same episode JSON can be rendered in either orientation. Select the aspect from the script and
-delivery requirement; short-form does not inherently mean portrait. Landscape remains the
-default; portrait uses a subject-aware crop, keeps subtitles/boards inside the safe area, and never
-scales X and Y independently. The example delivery pair here is a long 16:9 landscape film and a
-40–90 second 9:16 portrait cut. The generic `--short-form` gate remains aspect-independent.
+## Installation (fresh environment)
 
 ```bash
-# Long-form 16:9 landscape master (default); no short-form gate
-python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 \
-    --out output/film_landscape.mp4 --full --voice auto
-
-# Short 9:16 portrait cut (inclusive 40–90 second gate)
-python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 9:16 --short-form \
-    --out output/film_short_portrait.mp4 --full --voice auto
-
-# Vertical YouTube Shorts profile (any positive runtime through 180 seconds)
-python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts \
-    --out output/film_shorts.mp4 --full --voice auto
-
-# Inspect the portrait crop before encoding
-python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_portrait \
-    --width 1080 --height 1920
+python3 -m venv .venv
+.venv/bin/pip install -r universal_toolbook/requirements.txt pytest pyyaml
+npm install --prefix universal_toolbook --no-audit --no-fund
+.venv/bin/python universal_toolbook/setup_tts.py
+.venv/bin/python universal_toolbook/run_studio.py check
 ```
 
-`--short-form` checks the speech-locked final duration and exits with
-`INVALID_SHORT_FORM_DURATION` unless it is 40–90 seconds; it does not select an aspect ratio. The
-example pair above uses that gate for the short portrait, while the landscape master is long-form.
-Other aspect/runtime pairings remain available when the delivery calls for them. `--shorts` selects
-vertical 9:16 and accepts any positive duration up to 180 seconds (3 minutes), reporting
-`INVALID_SHORTS_DURATION` otherwise. For deliberate framing, a scene can set
-`"portrait_focus": "character_id"` (or `"board"`) / `"portrait_focus_x": 0.0..1.0`.
+`check` must print `"status": "OK"`. Full setup, environment variables and troubleshooting are in
+[`docs/getting-started/INSTALL.md`](docs/getting-started/INSTALL.md).
 
-## Reference films (episode specs, not renders)
-
-| Spec | Style | Shows |
-| --- | --- | --- |
-| [`examples/two_inch_bridge_episode.json`](examples/two_inch_bridge_episode.json) | parchment | 8 scenes, 2 ink-stick actors, 7 backdrops, 4 board types, two-actor `handoff`, dynamic CC BGM |
-| [`examples/cel_two_inch_bridge_episode.json`](examples/cel_two_inch_bridge_episode.json) | cel | 8 scenes, stat cards + notebook boards, rain setting, camera cuts cued on speech |
-| [`examples/red_umbrella_episode.json`](examples/red_umbrella_episode.json) | cel | night-city weather, umbrellas, multi-character cast |
-| [`examples/discipline_vs_obsession_episode.json`](examples/discipline_vs_obsession_episode.json) | cel | long-form essay pacing, phone cards, per-act BGM switching |
-
-Their text results live in [`outputs/`](outputs/README.md).
-
-## Tests (development only — not needed to render)
+## Quick start — render the smallest example
 
 ```bash
-node tests/run_all_tests.js            # 60 actions, 12 hairstyles, 12 presets, IK, 0 px drift
-python3 tests/test_studio_pipeline.py  # pipeline + speech-lock checks
+mkdir -p runtime/work runtime/renders runtime/previews
+.venv/bin/python universal_toolbook/run_studio.py validate universal_toolbook/templates/episode_minimal.json
+.venv/bin/python universal_toolbook/run_studio.py stills universal_toolbook/templates/episode_minimal.json \
+    --out-dir runtime/previews/minimal --width 1920 --height 1080
+.venv/bin/python universal_toolbook/run_studio.py render universal_toolbook/templates/episode_minimal.json \
+    --out runtime/renders/minimal.mp4 --draft --voice auto --workers 2 --chunk-sec 20
 ```
+
+`--voice none` produces a deliberately silent smoke render. `--short-form` gates a 40–90 s final
+runtime; `--shorts` selects 9:16 and allows up to 180 s. Read the `*_report.json` and
+`*_validation_report.json` written beside the MP4: `"voiced": true` and `"warnings": []` are
+required for a real delivery. Full command reference:
+[`universal_toolbook/README.md`](universal_toolbook/README.md) and
+[`universal_toolbook/process/03_RENDER_PIPELINE.md`](universal_toolbook/process/03_RENDER_PIPELINE.md).
+
+## How to create a video
+
+For an autonomous agent: read [`AGENTS.md`](AGENTS.md) and activate
+[`skills/animation-production/SKILL.md`](skills/animation-production/SKILL.md). A bare *"Create a
+new video."* already authorises the full research → prompt → script → animation → narration →
+render → QA workflow.
+
+For a human starting a new project:
+
+```bash
+python3 scripts/new_project.py video-003-topic --title "Your title"
+# customise projects/video-003-topic/PROMPT.md BEFORE production
+python3 tools/make_scene_plan.py projects/video-003-topic
+python3 tools/produce_video.py projects/video-003-topic
+```
+
+Each project keeps its own prompt, research, original/polished scripts, storyboard, characters,
+scene plan, asset manifest, production log, QA report, audio, renders and `final.mp4`. The
+master prompt is [`templates/MASTER_VIDEO_PRODUCTION_PROMPT.md`](templates/MASTER_VIDEO_PRODUCTION_PROMPT.md);
+the English voiceover polish standard is immutable at
+[`docs/production/prompts/VOICEOVER_POLISH_PROMPT.md`](docs/production/prompts/VOICEOVER_POLISH_PROMPT.md).
+
+## Documentation map
+
+| Need | Read |
+|---|---|
+| Agent rules and skill activation | [`AGENTS.md`](AGENTS.md) |
+| Architecture, module map, decisions | [`docs/architecture/SYSTEM_OVERVIEW.md`](docs/architecture/SYSTEM_OVERVIEW.md), [`docs/decisions/README.md`](docs/decisions/README.md) |
+| Fresh setup / first video | [`docs/getting-started/INSTALL.md`](docs/getting-started/INSTALL.md), [`docs/getting-started/FIRST_VIDEO.md`](docs/getting-started/FIRST_VIDEO.md) |
+| Full production stages | [`docs/production/INDEX.md`](docs/production/INDEX.md) |
+| Verified problems and fixes | [`docs/troubleshooting/INDEX.md`](docs/troubleshooting/INDEX.md) |
+| Testing / contribution | [`docs/development/TESTING.md`](docs/development/TESTING.md), [`CONTRIBUTING.md`](CONTRIBUTING.md) |
+| Change history | [`CHANGELOG.md`](CHANGELOG.md) |
+| Reorganization evidence / final tree | [`docs/architecture/MIGRATION_REPORT.md`](docs/architecture/MIGRATION_REPORT.md), [`docs/architecture/FINAL_TREE.md`](docs/architecture/FINAL_TREE.md) |
+| Measured validation results | [`docs/development/VALIDATION_REPORT.md`](docs/development/VALIDATION_REPORT.md) |
+
+## Tests
+
+```bash
+python3 tools/validate_structure.py
+python3 tools/check_docs.py
+python3 tools/validate_specs.py
+node tests/regression/run_all_tests.js
+python3 tests/integration/test_studio_pipeline.py
+python3 -m pytest tests/unit tests/production -q
+```
+
+CI (`.github/workflows/verify.yml`) runs these plus a silent draft-render smoke test.
+
+## Licence
+
+See [`LICENSE`](LICENSE). Bundled third-party audio and TTS components retain their own licences;
+attribution is recorded in
+[`universal_toolbook/assets/bgm/CREATIVE_COMMONS_LICENSES.md`](universal_toolbook/assets/bgm/CREATIVE_COMMONS_LICENSES.md)
+and [`docs/production/TTS_BENCHMARK.md`](docs/production/TTS_BENCHMARK.md).
