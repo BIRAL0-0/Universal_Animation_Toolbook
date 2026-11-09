@@ -19,7 +19,8 @@ Rules (deliberately narrow, to avoid flagging prose):
      not ignored: a doc pointing at a renamed test fails the check.
 
 Runtime artifacts (files a render produces) are listed in ALLOW_MISSING. Anything under a
-runtime directory -- `output/`, `work/`, `node_modules/`, `.venv/` -- is created by the pipeline
+runtime directory -- `output/`, `work/`, `node_modules/`, `.venv/`, or a per-film resumable
+chunk cache (`.work_*`) at any depth -- is created by the pipeline
 and is deliberately absent from a fresh clone, so a reference to it is not a broken path. That
 distinction is why this check passes in a checkout with a render in it and must also pass in a
 bare clone: `git clone <repo> /tmp/x && python3 tools/check_docs.py` is the real test.
@@ -55,6 +56,7 @@ ALLOW_MISSING = {
 RUNTIME_PREFIXES = (
     "output/",
     "work/",
+    ".work_",          # resumable chunk caches + intermediate mixes (git-ignored, per-film)
     "node_modules/",
     "universal_toolbook/node_modules/",
     ".venv/",
@@ -122,7 +124,10 @@ def is_runtime(token: str) -> bool:
     t = token.strip().rstrip(".,;:")
     if t.rstrip("/") in {"output", "work", "node_modules", ".venv", "assets/voices"}:
         return True
-    return t.startswith(RUNTIME_PREFIXES)
+    if t.startswith(RUNTIME_PREFIXES):
+        return True
+    # a resumable chunk cache at any depth (renders/.work_<stem>/, <project>/.work_<stem>/)
+    return any(part.startswith(".work_") for part in t.split("/"))
 
 
 def resolve(token: str, doc: Path) -> bool:

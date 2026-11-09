@@ -54,6 +54,14 @@ def test_claim_rules_unchanged_for_plain_paths():
         "kit-relative fallback must stay absent (rule 4)"
 
 
+def test_work_caches_are_runtime_not_broken_paths():
+    """A fresh CI clone has no .work_* caches; docs may cite measured WAVs inside them."""
+    mod = _load_checker()
+    assert mod.is_runtime(".work_final/master_audio.wav")
+    assert mod.is_runtime("renders/.work_draft_9x16/")
+    assert not mod.is_runtime("projects/video-001-twenty-three-minutes/final.mp4")
+
+
 if __name__ == "__main__":
     fns = [v for k, v in sorted(globals().items()) if k.startswith("test_")]
     bad = 0
