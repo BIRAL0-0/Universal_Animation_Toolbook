@@ -66,6 +66,8 @@ Supporting references:
 | Setup, environment variables, configuration reference | [`CONFIGURATION_AND_SETUP.md`](CONFIGURATION_AND_SETUP.md) |
 | Symptom → stage → fix triage (production-wide) | [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md) |
 | Roadmap of meaningful improvements, prioritized | [`FUTURE_DEVELOPMENT.md`](FUTURE_DEVELOPMENT.md) |
+| **Self-hosted TTS subsystem (Kokoro default)** | [`TTS_SETUP.md`](TTS_SETUP.md), [`TTS_ARCHITECTURE.md`](TTS_ARCHITECTURE.md), [`TTS_BENCHMARK.md`](TTS_BENCHMARK.md), [`TTS_TROUBLESHOOTING.md`](TTS_TROUBLESHOOTING.md) |
+| **Measured environment this pipeline was verified in** | [`ENVIRONMENT_REPORT.md`](ENVIRONMENT_REPORT.md) |
 | **Documentation maintenance policy + changelog** | [`WORKFLOW_CHANGELOG.md`](WORKFLOW_CHANGELOG.md) |
 
 ---

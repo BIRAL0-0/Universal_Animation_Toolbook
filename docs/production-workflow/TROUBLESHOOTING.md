@@ -37,6 +37,7 @@ Index of the entries there, for routing:
 
 | Area | Entries |
 | --- | --- |
+| **TTS subsystem (Kokoro/Piper/Edge)** | **See [`TTS_TROUBLESHOOTING.md`](TTS_TROUBLESHOOTING.md)** — missing weights, "package not installed", Edge-fails-per-line (expected in sandbox), slow generation, loudness/clip, resume/manifest, `COMPLETE_SILENT` diagnosis order |
 | Render/encode | Edge unreachable on line one; silent master (exit 3); re-render mixes old+new frames; render slower than estimated; chunk-log duration confusion |
 | Visual | flat-blue/no-face characters; floating squat; clipped subtitles; board never appears / appears too late / empty panel / collides; missing prop; dark empty stage; identical characters |
 | Audio | same voice twice; clipped words; BGM drowns narration; `volumedetect` prints nothing |
@@ -76,6 +77,7 @@ rebuild command). Record the change in `work/<slug>/decisions.md`.
 - Post-hoc audio edits (no post step — re-render).
 - A frame drawn with a broken engine state (re-render after fixing the engine; run the
   test suite first).
-- Voice identity across *different* backends (Edge voice ≠ its Piper alias — expect the
-  fallback voice to sound different from the cloud one; pick deliberately with
-  `--voice piper` when identity matters more than quality).
+- Voice identity across *different* backends (an Edge voice name ≠ its Kokoro voice ≠ its
+  Piper alias — expect the fallback to sound different from the cloud original). Within one
+  backend, identity is stable per voice id. Fix the mapping deliberately in
+  `universal_toolbook/tts/config/voices.json` (aliases) rather than accepting a fallback.

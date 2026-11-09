@@ -14,6 +14,11 @@ assets/voices/
 *.onnx
 *.onnx.json
 
+# Self-hosted TTS model weights (cache/tts: kokoro.onnx 92 MB + voices.npz 6 MB).
+# Redownload: python3 universal_toolbook/setup_tts.py  (SHA-256 pinned, ~2 min)
+cache/
+*.npz
+
 
 
 # Toolbook install artifacts (npm/postinstall)

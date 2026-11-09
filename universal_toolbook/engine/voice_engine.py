@@ -658,6 +658,129 @@ def _batch_synthesize_piper_lines(jobs: List[Dict[str, Any]]) -> int:
     return done
 
 
+# ---------------------------------------------------------------------------
+# Kokoro (self-hosted neural TTS via the tts/ subsystem) — default offline engine
+# ---------------------------------------------------------------------------
+
+_kokoro_provider_cache: Dict[str, Any] = {}
+
+
+def _kokoro_available() -> bool:
+    """Cheap check: tts subsystem importable + Kokoro weights present. No model load."""
+    try:
+        import sys as _sys
+        _pkg_dir = str(Path(__file__).resolve().parent.parent)
+        if _pkg_dir not in _sys.path:
+            _sys.path.insert(0, _pkg_dir)
+        from tts.providers import available_engines
+        return "kokoro" in available_engines()
+    except Exception:
+        return False
+
+
+def _kokoro_get_provider():
+    """Load (and memoize) the Kokoro provider. Returns None when unavailable."""
+    if "provider" in _kokoro_provider_cache:
+        return _kokoro_provider_cache["provider"]
+    try:
+        import sys as _sys
+        _pkg_dir = str(Path(__file__).resolve().parent.parent)
+        if _pkg_dir not in _sys.path:
+            _sys.path.insert(0, _pkg_dir)
+        from tts.providers import get_engine
+        prov = get_engine("kokoro")
+        _kokoro_provider_cache["provider"] = prov
+        return prov
+    except Exception:
+        _kokoro_provider_cache["provider"] = None
+        return None
+
+
+def _kokoro_voice_id(voice_name: str) -> str:
+    """Map any configured voice name to a Kokoro voice id via the tts alias table."""
+    try:
+        prov = _kokoro_get_provider()
+        if prov is not None:
+            return prov.resolve_voice(str(voice_name or ""))
+    except Exception:
+        pass
+    low = str(voice_name or "").lower()
+    if low.startswith(("af_", "am_", "bf_", "bm_")):
+        return voice_name
+    return "am_michael"
+
+
+def _kokoro_speed(rate: str) -> float:
+    """Edge-style rate (`+2%`) -> Kokoro speed multiplier (>1 = faster)."""
+    match = re.match(r"^([+-]?\d+(?:\.\d+)?)\s*%?$", str(rate or "").strip())
+    mult = 1.0 + (float(match.group(1)) / 100.0) if match else 1.0
+    return round(max(0.6, min(1.6, mult)), 4)
+
+
+def _synthesize_kokoro_line(job: Dict[str, Any]) -> bool:
+    """Synthesize one dialogue line with Kokoro into the job's WAV (+ cached word timings).
+
+    Mirrors the Piper line path: raw 24 kHz output is converted to 44.1 kHz mono,
+    internal dead air is compacted, and word timings use the syllable-proportional
+    + energy-refined fallback (this Kokoro export has no native word boundaries).
+    """
+    out_wav: Path = job["wav"]
+    meta_txt: Path = job["meta"]
+    words_json: Path = out_wav.with_suffix(".words.json")
+    sig: str = job["sig"]
+
+    if (
+        out_wav.exists()
+        and meta_txt.exists()
+        and words_json.exists()
+        and meta_txt.read_text(encoding="utf-8") == sig
+    ):
+        cached_dur = wav_duration_seconds(out_wav)
+        job["dur"], job["words"] = _compact_piper_line(out_wav, job["text"], cached_dur)
+        words_json.write_text(json.dumps(job["words"]), encoding="utf-8")
+        job["ok"] = True
+        return True
+
+    prov = _kokoro_get_provider()
+    if prov is None:
+        return False
+
+    voice_id = _kokoro_voice_id(job.get("kokoro_voice") or job.get("voice"))
+    raw_wav = out_wav.with_suffix(".raw.wav")
+    raw_wav.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        result = prov.synthesize(
+            job["text"], voice_id, speed=_kokoro_speed(job.get("rate", "+0%"))
+        )
+        from tts import audio as _tts_audio
+
+        _tts_audio.write_wav(raw_wav, result.audio, result.sample_rate)
+        dur, _lead = convert_to_mono_wav_ex(raw_wav, out_wav)
+        raw_wav.unlink(missing_ok=True)
+        if dur <= 0.04:
+            return False
+        dur, words = _compact_piper_line(out_wav, job["text"], dur)
+        meta_txt.write_text(sig, encoding="utf-8")
+        words_json.write_text(json.dumps(words), encoding="utf-8")
+        job["ok"] = True
+        job["dur"] = dur
+        job["words"] = words
+        job["kokoro_voice"] = voice_id
+        return True
+    except Exception:
+        raw_wav.unlink(missing_ok=True)
+        return False
+
+
+def _batch_synthesize_kokoro_lines(jobs: List[Dict[str, Any]]) -> int:
+    """Synthesize every pending line with Kokoro (sequential, one loaded model)."""
+    done = 0
+    for job in jobs:
+        if _synthesize_kokoro_line(job):
+            done += 1
+    return done
+
+
 def try_synthesize_os_tts(text: str, out_wav: Path) -> Optional[float]:
     espeak = shutil.which("espeak-ng") or shutil.which("espeak")
     if espeak:
@@ -1183,6 +1306,10 @@ def prepare_episode_voiceover(
     scene_plans: List[Dict[str, Any]] = []
     batch_jobs: List[Dict[str, Any]] = []
 
+    # Cache tag: give Kokoro-mode lines a distinct signature namespace so a
+    # run with a different engine never reuses another engine's cached WAVs.
+    sig_tag = "k1|" if mode == "kokoro" else ""
+
     for idx, sc in enumerate(retimed.get("scenes", [])):
         sid = sc.get("id") or f"S{idx + 1:02d}"
         dialogue = sc.get("dialogue")
@@ -1217,7 +1344,7 @@ def prepare_episode_voiceover(
                     "pause_after": eff_pa,
                     "wav": l_wav,
                     "meta": l_meta,
-                    "sig": f"wb3|{v_name}|{eff_rate}|{eff_pitch}|{txt}",
+                    "sig": f"{sig_tag}wb3|{v_name}|{eff_rate}|{eff_pitch}|{txt}",
                     "ok": False,
                     "dur": 0.0,
                     "words": [],
@@ -1253,21 +1380,50 @@ def prepare_episode_voiceover(
 
     backend_used = "text-led"
     has_external_audio = bool(voice_dir and voice_dir.exists())
-    if edge_available and batch_jobs and not has_external_audio and mode != "piper":
-        asyncio.run(_batch_synthesize_lines(batch_jobs, concurrency=5))
-        if any(j["ok"] for j in batch_jobs):
-            used_voices = sorted({j["voice"] for j in batch_jobs if j["ok"]})
-            backend_used = "edge-tts:" + ",".join(used_voices)
 
-    # Offline neural fallback: any line the cloud backend could not produce is voiced locally
-    # with Piper, so an air-gapped run still ends up with a fully narrated, lip-synced film.
-    if batch_jobs and not has_external_audio and mode in ("auto", "edge", "piper"):
+    # 1) Kokoro — the default self-hosted neural engine (setup: setup_tts.py).
+    #    Used when mode == "kokoro" (forced) or mode == "auto" and it is installed.
+    kokoro_done = 0
+    if batch_jobs and not has_external_audio and mode in ("auto", "kokoro"):
+        if mode == "kokoro" and not _kokoro_available():
+            raise RuntimeError(
+                "Kokoro TTS is not set up in this environment. Run: "
+                "python3 universal_toolbook/setup_tts.py  — or render with "
+                "--voice auto (Edge/Piper fallback) / --voice piper (offline) / --voice none."
+            )
+        if _kokoro_available():
+            kokoro_done = _batch_synthesize_kokoro_lines(batch_jobs)
+            if kokoro_done:
+                used = sorted({j.get("kokoro_voice") or "?" for j in batch_jobs if j["ok"]})
+                backend_used = "kokoro-offline:" + ",".join(used)
+
+    # 2) Edge (cloud) — only in auto/edge modes, only for lines Kokoro did not cover.
+    #    In the Arena sandbox speech.platform.bing.com is unreachable, so these
+    #    calls fail fast per line and the offline engines below pick them up.
+    if edge_available and batch_jobs and not has_external_audio and mode in ("auto", "edge"):
+        missing = [j for j in batch_jobs if not j["ok"]]
+        if missing:
+            asyncio.run(_batch_synthesize_lines(missing, concurrency=5))
+        edge_ok = [j for j in batch_jobs if j["ok"] and not j.get("kokoro_voice")]
+        if edge_ok and not kokoro_done:
+            used_voices = sorted({j["voice"] for j in edge_ok})
+            backend_used = "edge-tts:" + ",".join(used_voices)
+        elif edge_ok and kokoro_done:
+            backend_used += "+edge"
+
+    # 3) Piper — last-resort offline neural fallback so an air-gapped run still
+    #    ends up with a fully narrated, lip-synced film (rescues any line the
+    #    backends above could not produce, including in explicit kokoro mode).
+    if batch_jobs and not has_external_audio and mode in ("auto", "edge", "piper", "kokoro"):
         missing = [j for j in batch_jobs if not j["ok"]]
         if missing and _piper_available():
             done = _batch_synthesize_piper_lines(missing)
             if done:
-                used_models = sorted({j.get("piper_model") or _piper_model_id(j["voice"]) for j in batch_jobs if j["ok"]})
-                backend_used = "piper-offline:" + ",".join(used_models)
+                used_models = sorted({j.get("piper_model") or _piper_model_id(j["voice"]) for j in missing if j["ok"]})
+                if kokoro_done:
+                    backend_used += "+piper:" + ",".join(used_models)
+                else:
+                    backend_used = "piper-offline:" + ",".join(used_models)
 
     segments: List[Dict[str, Any]] = []
     for plan in scene_plans:

@@ -13,31 +13,57 @@ whole cost model, so it gets its own section below.
 
 | Backend | Selection | How it works | Notes |
 | --- | --- | --- | --- |
-| Edge/Azure neural | `--voice edge`, or `--voice auto` when a line succeeds there | `edge-tts` (Python library, no API key); word-boundary timestamps per line | Cloud; **unreachable in restricted sandboxes** (`speech.platform.bing.com:443`). `check` reports only whether the *library* is installed — reachability is per-line at render time. |
-| Piper offline | `--voice piper`, or `--voice auto` fallback, line by line | Local `.onnx` models via `piper-tts`; syllable-weighted word timings refined against real voiced onsets | The reliable default in this environment; 3 voices installed by default (see below). |
+| **Kokoro (self-hosted) — default** | `--voice kokoro`, or `--voice auto` when Kokoro is set up (it is, after `setup_tts.py`) | Kokoro-82M int8 ONNX via `kokoro-onnx` (CPU, ~0.7 GB RAM, faster than realtime on a 2-vCPU box); 11 voices; word timings via the syllable-proportional + energy-refined fallback (this export has no native boundaries) | **Completely free, local, no account.** Setup: `python3 universal_toolbook/setup_tts.py`. No word-boundary timestamps in the ONNX export — see `TTS_ARCHITECTURE.md` §2 for how timings are derived honestly. |
+| Edge/Azure neural | `--voice edge`, or `--voice auto` fallback for lines Kokoro missed | `edge-tts` (Python library, no API key); word-boundary timestamps per line | Cloud; **unreachable in restricted sandboxes** (`speech.platform.bing.com:443`). Not self-hosted, not guaranteed free — retained as a fallback only, and no longer the default. |
+| Piper offline | `--voice piper`, or last-resort fallback line by line | Local `.onnx` models via `piper-tts`; syllable-weighted word timings (native phoneme alignments) | The fast, small-footprint fallback; 2 voices installed by default (see below). |
 | OS TTS | `--voice offline` (with `espeak-ng` installed) | System espeak synthesis | Robotic; last resort, documented for completeness. |
 | External audio | `--voice-dir <dir>` with `<sceneId>.wav` files (`S01.wav`…) | Engine measures your files and retimes to them | The Stage 7 exception path (user-recorded narration). |
 | Text-led (silent) | `--voice none` | No speech; choreography and subtitles still render | Timing tests only. |
 
-`--voice auto` (the documented default here) tries Edge, and **any line the cloud cannot
-speak** falls back to a local Piper model through an alias map — so the episode JSON keeps
-the Edge names you designed and the report says what actually ran:
+`--voice auto` (the documented default here) tries **Kokoro first** (when
+`setup_tts.py` has been run), then Edge for any line it did not cover, then
+Piper — so the episode JSON keeps the Edge names you designed and the report
+says what actually ran:
 
 ```
-"voice_backend": "piper-offline:en_GB-alan-medium,en_US-amy-medium,en_US-ryan-medium"
+"voice_backend": "kokoro-offline:am_michael,af_bella"
 ```
 
-**Always read that field back.** One model in the list = two characters share a speaker.
+On machines without Kokoro set up, the legacy order (Edge → Piper) applies
+exactly as before. **Always read that field back.** One model in the list =
+two characters share a speaker.
 
-### The installed offline voices
+### The installed voices
 
-| Requested (Edge id in JSON) | Resolves to (Piper model) |
-| --- | --- |
-| `en-US-GuyNeural`, `en-US-AndrewNeural`, `en-US-EricNeural` | `en_US-ryan-medium` |
-| `en-US-ChristopherNeural` | `en_GB-alan-medium` |
-| `en-US-JennyNeural`, `en-US-AriaNeural`, `en-US-AnaNeural` | `en_US-amy-medium` |
+**Kokoro (default engine)** — 11 voices in the installed weight set:
+`af, af_bella, af_nicole, af_sarah, af_sky` (female), `am_adam, am_michael`
+(male), `bf_emma, bf_isabella` (British female), `bm_george, bm_lewis`
+(British male). Pipeline alias resolution (Edge-style name in the episode JSON
+→ Kokoro voice):
 
-That is **at most three distinguishable speakers** with the default install. More:
+| Requested (Edge id in JSON) | Kokoro | Piper fallback |
+| --- | --- | --- |
+| `en-US-AndrewNeural`, `en-US-EricNeural` | `am_michael` | `en_US-ryan-medium` |
+| `en-US-GuyNeural` | `am_adam` | `en_US-ryan-medium` |
+| `en-US-JennyNeural` | `af_bella` | `en_GB-alan-medium` |
+| `en-US-AriaNeural` | `af_sky` | — |
+| `en-US-AnaNeural`, `en-GB-LibbyNeural` | `af_nicole` | — |
+| `en-US-EmmaNeural` | `bf_emma` | — |
+| `en-GB-RyanNeural` | `am_michael` | — |
+| `narrator` / `host` | `af_bella` | `en_US-ryan-medium` |
+
+A Kokoro voice id (e.g. `"voice": "af_bella"`) works directly in the episode
+JSON. The alias tables live in `universal_toolbook/tts/config/voices.json`
+(`engines.kokoro.aliases` / `engines.piper.aliases`) — extend them there.
+List everything at runtime:
+
+```bash
+python3 universal_toolbook/generate_voiceover.py --voices --engine kokoro
+python3 universal_toolbook/generate_voiceover.py --voices --engine piper
+```
+
+That is **11 distinguishable Kokoro speakers** with the default install (Piper
+alone: 2). More:
 
 ```bash
 pip install piper-tts

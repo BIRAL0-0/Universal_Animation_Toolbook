@@ -78,6 +78,48 @@ to a "future cleanup" is a defect, not a task.
 
 ## Changelog
 
+## 2026-11-03 — Self-hosted TTS subsystem: Kokoro default (Edge → Kokoro → Piper chain)
+- **Trigger:** Voiceover quality on Microsoft Edge TTS was unsatisfactory and the service
+  is not self-hosted / not guaranteed free. The mission: a completely free, local,
+  on-demand TTS that is modular, resumable, tested, and integrated with the render
+  pipeline — with the script-polish step untouched.
+- **Code changed:**
+  - New `universal_toolbook/tts/` package — pluggable `TTSProvider` (Kokoro / Piper /
+    Edge), reusable `audio.py` (resample, peak pre-pass, RMS normalize, soft limit,
+    analysis), `segment.py` (natural segmentation + pronunciation dictionary),
+    `manifest.py` (job ids, per-segment status, resumability), `universal_toolbook/tts/config/voices.json` +
+    `universal_toolbook/tts/config/pronunciation_dictionary.json`.
+  - New CLIs: `setup_tts.py` (one-time idempotent setup + SHA-256-pinned Kokoro weights),
+    `generate_voiceover.py` (the single generation command), `process_audio.py`,
+    `validate_audio.py`, and `universal_toolbook/tts/test_tts.py` (the test suite).
+  - `universal_toolbook/engine/voice_engine.py`: Kokoro added as the first backend for `--voice auto`
+    (and new forced `--voice kokoro`), with Edge then Piper as fallbacks; Kokoro-mode
+    voice cache uses a distinct `k1|` signature namespace. Existing Edge/Piper/OS/text-led
+    paths are unchanged.
+  - `run_studio.py`: `--voice kokoro` choice, `kokoro_ready` in the `check` report,
+    updated `_voice_diagnosis` and setup notes.
+  - `.gitignore`: `cache/` + `*.npz` (model weights stay out of git).
+- **Docs changed:** new `TTS_SETUP.md`, `TTS_ARCHITECTURE.md`, `TTS_BENCHMARK.md`,
+  `TTS_TROUBLESHOOTING.md`, `ENVIRONMENT_REPORT.md`. Updated `VOICE_GENERATION.md`
+  (§8.1 backends + alias table), `TOOLS_AND_MODELS.md` (models, CLI, config),
+  `CONFIGURATION_AND_SETUP.md` (bootstrap, env vars, constraints), `TROUBLESHOOTING.md`
+  (TTS routing), `INDEX.md` (supporting references).
+- **What changed in the docs:** Edge TTS is now documented as a *fallback* (retained,
+  not the default); Kokoro-82M int8 (CPU, 11 voices, free, local) is the default
+  voiceover engine with a single setup command and a single generation command.
+  Voice-selection guidance, alias tables, configuration surface, and troubleshooting
+  routing all reflect the Kokoro → Edge → Piper order. The voiceover polish prompt
+  (`prompts/VOICEOVER_POLISH_PROMPT.md`) is **unchanged** — TTS is not a substitute for
+  script polishing.
+- **Status flips:** Voiceover generation (Stage 8) remains IMPLEMENTED; the standalone
+  TTS subsystem (setup/generate/process/validate + resumable manifests) is new and
+  IMPLEMENTED (test suite green). No PROCESS-STANDARD stage changed.
+- **Known limitations (documented, not hidden):** the installed Kokoro int8 export has
+  no native word-boundary output → word timings use the syllable-proportional +
+  energy-refined fallback (honest, same path Piper used); generation is CPU-only and
+  slower under parallel load; weights must be re-downloaded on a fresh sandbox
+  (`setup_tts.py`, ~2 min). See `TTS_BENCHMARK.md` + `TTS_TROUBLESHOOTING.md`.
+
 ## 2026-11-03 — Documentation system v1.0 (initial)
 
 - **Trigger:** establishment of the production-workflow documentation set covering the full

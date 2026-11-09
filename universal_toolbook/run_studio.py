@@ -161,6 +161,11 @@ def ensure_dependencies(auto_install: bool = True) -> Dict[str, Any]:
     except Exception:
         piper = False
     status["offline_voiceover_ready"] = piper
+    try:
+        from engine.voice_engine import _kokoro_available  # type: ignore
+        status["kokoro_ready"] = bool(_kokoro_available())
+    except Exception:
+        status["kokoro_ready"] = False
     return status
 
 
@@ -291,13 +296,18 @@ def cmd_check(_args: argparse.Namespace) -> int:
 
     # A green `check` still cannot narrate without a voice model. Say so once, here, instead
     # of letting the next render end in a silent master or an exit code 3.
-    if not deps.get("offline_voiceover_ready"):
+    if not deps.get("kokoro_ready"):
         print(
-            "\nNOTE: no offline voice models -- if the Edge endpoint is unreachable, renders will "
-            "have no narration.\n"
-            "  pip install piper-tts && python3 universal_toolbook/tools/fetch_piper_voices.py install\n"
-            "  (behind a blocked network: ... install --github <owner>/<repo> --github-path <dir>)\n"
+            "\nNOTE: Kokoro TTS is not set up -- `--voice auto/kokoro` will fall back to Piper "
+            "(or render silently if Piper is missing too).\n"
+            "  python3 universal_toolbook/setup_tts.py   # one command: packages + Kokoro weights + Piper voices\n"
             "  silent drafts on purpose: render ... --voice none",
+            file=sys.stderr,
+        )
+    elif not deps.get("offline_voiceover_ready"):
+        print(
+            "\nNOTE: no Piper fallback voices (Kokoro is ready and is the default engine).\n"
+            "  python3 universal_toolbook/setup_tts.py",
             file=sys.stderr,
         )
     return 0
@@ -356,6 +366,11 @@ def cmd_stills(args: argparse.Namespace) -> int:
 def _voice_diagnosis(deps: Dict[str, Any]) -> List[str]:
     """Explain *why* a voice mode produced no speech, in the order the engine tries backends."""
     out: List[str] = []
+    if not deps.get("kokoro_ready", False):
+        out.append(
+            "Kokoro TTS is not set up -> python3 universal_toolbook/setup_tts.py "
+            "(packages + Kokoro-82M int8 weights + Piper voices, one command)"
+        )
     if not deps.get("edge_tts"):
         out.append("edge-tts is not installed -> pip install -r universal_toolbook/requirements.txt")
     else:
@@ -813,7 +828,13 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="BGM mode/track: auto, dynamic, electronic_drive, upbeat_ncs_synth, chill_focus, retro_pulse, reflective_piano, suspense_tension, triumph_horizon, procedural, none, or /path/to/track.mp3",
     )
-    pr.add_argument("--voice", choices=["auto", "edge", "piper", "offline", "none"], default="auto")
+    pr.add_argument(
+        "--voice",
+        choices=["auto", "kokoro", "edge", "piper", "offline", "none"],
+        default="auto",
+        help="auto: Kokoro (if set up) -> Edge -> Piper; kokoro: Kokoro only (with Piper rescue); "
+        "edge/piper/offline/none as before",
+    )
     pr.add_argument("--voice-name", default="en-US-AndrewNeural")
     pr.add_argument("--voice-rate", default="+2%")
     pr.add_argument("--voice-dir", default=None)
