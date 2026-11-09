@@ -71,12 +71,27 @@ Design rules enforced by the package:
 ## 3. The three engines
 
 ### Kokoro (`kokoro_provider.py`) — default
-* Model: **Kokoro-82M v0.19, int8 ONNX** (`cache/tts/kokoro.onnx`, 92.4 MB) +
-  `voices.npz` (5.8 MB, 11 voices). Runs on CPU via the `kokoro-onnx`
-  (ONNX Runtime) package — no PyTorch, no GPU needed.
-* 24000 Hz output. `speed > 1.0` speaks faster.
+* Model: **Kokoro-82M v0.19, int8 ONNX** (`cache/tts/kokoro.onnx`, 92.4 MB).
+  Runs on CPU via the `kokoro-onnx` (ONNX Runtime) package — no PyTorch, no
+  GPU needed.
+* **Two voice sets, 44 selectable voices** (merged by the provider at load):
+  * `voices.npz` — 11-voice v0.19 set (5.8 MB), loaded first under plain
+    names (`am_michael`, `af_bella`, ...).
+  * `voices-v1.0-en.npz` — 33-voice English v1.0 set (17.2 MB), downloaded as
+    pinned `.pt` tensor files and converted torch-free by
+    `tools/convert_kokoro_v1_voices.py`. The 23 v1.0-only voices load under
+    their plain names (`af_heart`, `am_onyx`, `bf_alice`, ...); the 10
+    v1.0 re-recordings whose names collide with v0.19 voices load with a
+    `_v1` suffix (`am_michael_v1`, `af_bella_v1`, ...) so the plain names
+    always keep pointing at the v0.19 recordings the pipeline was
+    benchmarked on.
+  * All 44 are style vectors for the same 82M model
+    (`(510, 1, 256)` float32; v0.19 uses `(511, 1, 256)` — the one-row
+    difference is absorbed by kokoro-onnx's style clamping).
+* 24000 Hz output. `speed` in 0.5–2.0 scales phoneme durations (measured
+  non-linearly — see `TTS_BENCHMARK.md`); default 1.0, natural pace.
 * **No native word timings** on this export → `timings=None`.
-* Weights are downloaded from a pinned GitHub git-blob (Hugging Face and
+* Weights are downloaded from pinned GitHub git-blobs (Hugging Face and
   GitHub *release assets* are unreachable in this sandbox; see
   `TTS_SETUP.md`).
 
@@ -86,6 +101,13 @@ Design rules enforced by the package:
 * 22050 Hz output.
 * **Does** report per-phoneme alignments (with `piper-tts[alignment]`), so the
   provider derives real word timings from them.
+* **Rate control**: the `speed` parameter maps to Piper's native
+  `SynthesisConfig.length_scale` (`length_scale = 1 / speed`; <1 faster,
+  >1 slower). Default 1.0 keeps each voice's natural pace — by policy we do
+  **not** slow ryan down to imitate the Kokoro voices (that degrades the
+  voice); the pace difference is documented in `TTS_VOICE_COMPARISON.md`.
+* **Fallback only by policy**: while Kokoro is available, Piper never takes
+  over from it; its role is air-gapped/last-resort output.
 
 ### Edge (`edge_provider.py`) — retained, not the default
 * Wraps `edge-tts` (proprietary cloud). Kept so machines that *can* reach
@@ -94,6 +116,33 @@ Design rules enforced by the package:
   line and the chain falls through to the offline engines.
 * Not chosen as default: not self-hosted, not guaranteed free, and the
   motivation for this work was to move off it.
+
+## 3a. Voice selection policy (`tts/config/voices.json` → `selection`)
+
+The selection rules are data, not code — they live in `voices.json` and are
+enforced deterministically:
+
+* **Primary default: `am_michael`.** New projects and every automatic
+  selection resolve to `selection.default_voice` (=`am_michael`). `af_bella`
+  is the secondary default (readily selectable, still the `Jenny`/`Sofia`
+  alias target); `am_adam`/`af_sky` are the other quick picks.
+* **One run = one voice.** Automatic selection is a single deterministic
+  lookup, never random and never per-scene
+  (`selection.per_scene_switching: false`). A 2+ scene job keeps the same
+  resolved voice start to finish (covered by `test_voice_selection_and_expansion`).
+* **Explicit selection per project/channel.** `--voice` on
+  `generate_voiceover.py`, the `voice` field on scene jobs, or a per-project
+  config value. Changing the voice never touches the narration script —
+  the job signature (engine/voice/speed/language/text) just changes, so
+  switching voices re-synthesizes without any script edit.
+* **Aliases are stable shorthand.** The Edge-style names (`en-US-JennyNeural`,
+  ...) and `narrator`/`host` map to native ids in `engines.<engine>.aliases`;
+  `narrator`/`host` follow the default (`am_michael` on Kokoro).
+* **Unavailable voice = clear report + documented fallback.** If a requested
+  voice is not installed, the provider logs one warning naming the voice and
+  the fallback, synthesizes with the engine's default, and records
+  `meta.voice_fallback=true` + `meta.voice_requested` on every result (so
+  manifests show exactly what happened). It never fails the job silently.
 
 ## 4. Audio processing (`universal_toolbook/tts/audio.py`)
 

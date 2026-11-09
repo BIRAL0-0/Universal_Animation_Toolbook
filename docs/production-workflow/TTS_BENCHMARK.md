@@ -6,8 +6,15 @@ All 24 generated WAVs remain in `output/tts/benchmark/` (git-ignored) and six
 representative MP3s are committed in `outputs/tts_benchmark/` for human
 listening.
 
-Date: 2026-11-03 · Harness: `output/tts/benchmark/run_benchmark.py` ·
-Results: `output/tts/benchmark/results.json`
+Date: 2026-11-03 · Harness (now committed): `universal_toolbook/tools/tts_voice_benchmark.py`
+· Original results: `output/tts/benchmark/results.json`
+
+> **Mission 2 (2026-11-09) update:** the voice catalog expanded 11 → 44 and
+> the default became `am_michael`. The 4 benchmark scripts below are
+> unchanged and reused by the mission-2 run (16 voices × 4 scripts,
+> standalone); see `TTS_VOICE_COMPARISON.md` for the new measurements,
+> listening set, and the Piper ryan pace assessment. The mission-1 numbers
+> remain the reference standard for those 4 voices.
 
 ## 1. Why this benchmark exists
 
