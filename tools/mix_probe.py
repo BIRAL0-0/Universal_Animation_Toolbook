@@ -34,8 +34,8 @@ def db(x):
 
 
 def main() -> int:
-    spec_path = Path(sys.argv[1] if len(sys.argv) > 1 else ROOT / "work/the_beacon_that_kept_time_episode.json")
-    work_dir = Path(sys.argv[2] if len(sys.argv) > 2 else ROOT / "work/preview/.work_the_beacon_that_kept_time_draft").resolve()
+    spec_path = Path(sys.argv[1] if len(sys.argv) > 1 else ROOT / "runtime/work/the_beacon_that_kept_time_episode.json")
+    work_dir = Path(sys.argv[2] if len(sys.argv) > 2 else ROOT / "runtime/work/preview/.work_the_beacon_that_kept_time_draft").resolve()
     # node runs with cwd=universal_toolbook/, so every path handed to it must be absolute.
 
     retimed = (work_dir / "episode_retimed.json").resolve()

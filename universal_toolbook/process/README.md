@@ -1,78 +1,62 @@
-# process/ — the universal production procedure
+# process/ — the kit's technical production procedure
 
-> **First landing page for any session: [`START_HERE.md`](../../START_HERE.md)** at the
-> repository root — bootstrap commands and the reading order in one place.
-
-Everything here is **film-agnostic**. It does not describe any particular story; it describes
-how to turn *any* script into a finished 16:9 landscape or 9:16 portrait `.mp4` with this engine. If you are a fresh
-session that was handed a script and has never seen this repository, read these in order:
+These pages are **film-agnostic**: they describe how to turn any script into a finished 16:9 or
+9:16 MP4 with this engine. They are part of the copyable kit. The complete agent workflow
+(research, per-video prompt, script polishing, project archive, QA sign-off and self-healing) is
+repository-level knowledge: [`../../AGENTS.md`](../../AGENTS.md) and
+[`../../skills/animation-production/SKILL.md`](../../skills/animation-production/SKILL.md).
+Detailed 13-stage content-operation documentation lives at
+[`../../docs/production/INDEX.md`](../../docs/production/INDEX.md); architecture at
+[`../../docs/architecture/SYSTEM_OVERVIEW.md`](../../docs/architecture/SYSTEM_OVERVIEW.md).
 
 | # | File | Read it when |
-| --- | --- | --- |
-| — | [`SESSION_PROMPT.md`](SESSION_PROMPT.md) | You need a copy-paste prompt for a new session. |
+|---|---|---|
 | 01 | [`01_INTAKE.md`](01_INTAKE.md) | You have a script and must turn it into scenes, timing and a cast. |
-| 02 | [`02_AUTHORING_EPISODE_JSON.md`](02_AUTHORING_EPISODE_JSON.md) | You are writing `work/episode.json`. |
+| 02 | [`02_AUTHORING_EPISODE_JSON.md`](02_AUTHORING_EPISODE_JSON.md) | You are writing `episode.json`. |
 | 03 | [`03_RENDER_PIPELINE.md`](03_RENDER_PIPELINE.md) | You are ready to run commands. |
 | 04 | [`04_VISUAL_GEOMETRY.md`](04_VISUAL_GEOMETRY.md) | Something overlaps, clips, or sits in the wrong place. |
 | 05 | [`05_AUDIO.md`](05_AUDIO.md) | Voices, pacing, BGM, foley, or the audio sounds wrong. |
 | 06 | [`06_QA_GATE.md`](06_QA_GATE.md) | Before you call anything finished. |
 | 07 | [`07_TROUBLESHOOTING.md`](07_TROUBLESHOOTING.md) | A command failed or a render looks broken. |
 | 08 | [`08_LIMITS.md`](08_LIMITS.md) | You are about to promise something the engine cannot do. |
-| — | [`REPO_MAP.md`](REPO_MAP.md) | You need to know which folder stores what, or what is not in git. |
 
-> **Where this sits in the whole pipeline.** These pages cover **script → film** (Stages 5–12
-> of the production workflow). The stages *around* that core — idea research and selection,
-> sample/polished scripts, the generation-order decision, and YouTube publishing
-> preparation — are documented in
-> [`docs/production-workflow/`](../../docs/production-workflow/INDEX.md), whose master
-> reference is `docs/production-workflow/COMPLETE_WORKFLOW.md`. Both document sets share the
-> maintenance rule in `docs/production-workflow/WORKFLOW_CHANGELOG.md`: a change that
-> affects the documented pipeline updates its docs in the same PR.
+Reference material in the kit: [`../01_TOOLBOOK_REFERENCE.md`](../01_TOOLBOOK_REFERENCE.md) (full
+schema), [`../templates/episode_minimal.json`](../templates/episode_minimal.json) (runnable
+skeleton), [`../README.md`](../README.md) (CLI and capabilities). In the full repository,
+[`../../examples/`](../../examples/) holds complete reference specs and
+[`../../tests/README.md`](../../tests/README.md) explains the regression suites.
 
-> **Where things are.** The engine is one self-contained folder: `universal_toolbook/`.
-> Commands below are written for the **repository root**; `cd universal_toolbook` and drop the
-> prefix if you prefer, or copy the folder somewhere else entirely — it resolves its own
-> `universal_toolbook/engine/`, `universal_toolbook/assets/` and
-> `universal_toolbook/config/` relative to `run_studio.py`.
-
-Companion material already in the repo:
-
-- `MASTER_PROMPT.md` — the director's brief (creative intent, what to ask for).
-- `00_START_HERE.md` — CLI surface and capabilities.
-- `01_TOOLBOOK_REFERENCE.md` — the full JSON schema and every action/environment name.
-- `universal_toolbook/templates/episode_minimal.json` — a **runnable 2-scene episode**; start by copying it.
-- `examples/*.json` — complete reference films (cel and parchment) to copy structure and pacing from.
-- `tests/` — engine regression suite. **Development only**; you never need it to render a film.
-- `tools/check_docs.py` — verifies every path quoted in these docs actually exists.
-
----
+The engine resolves its own `engine/`, `assets/`, `config/`, `templates/` and `tools/` relative to
+`run_studio.py`. Commands below are written from the repository root; `cd universal_toolbook` and
+drop the prefix if you prefer, or copy the folder elsewhere entirely.
 
 ## The pipeline in seven lines
 
 ```bash
-python3 universal_toolbook/run_studio.py check                                     # env, fonts, ffmpeg, BGM, voices
-cp universal_toolbook/templates/episode_minimal.json work/episode.json             # then author it
-python3 universal_toolbook/run_studio.py validate work/episode.json                # must print warnings: []
-python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_16x9 --width 1920 --height 1080
-python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out /tmp/draft/film.mp4 --draft --voice auto
-# For portrait, also inspect a 1080x1920 still/draft; fix framing and repeat
-python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_9x16 --width 1080 --height 1920
-# inspect every still and every board cue, fix, repeat the target-aspect render
-python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out output/final_film_16x9.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
-# Example pairing: long 16:9 landscape + short 9:16 portrait; the gate itself is aspect-neutral.
-python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 9:16 --short-form --out output/short_portrait.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
-# --shorts selects 9:16 and accepts any positive runtime through 180s (3 minutes).
+python3 universal_toolbook/run_studio.py check
+cp universal_toolbook/templates/episode_minimal.json runtime/work/episode.json
+python3 universal_toolbook/run_studio.py validate runtime/work/episode.json
+python3 universal_toolbook/run_studio.py stills runtime/work/episode.json --out-dir runtime/previews/stills_16x9 --width 1920 --height 1080
+python3 universal_toolbook/run_studio.py render runtime/work/episode.json --aspect-ratio 16:9 --out runtime/renders/draft.mp4 --draft --voice auto
+python3 universal_toolbook/run_studio.py stills runtime/work/episode.json --out-dir runtime/previews/stills_9x16 --width 1080 --height 1920
+python3 universal_toolbook/run_studio.py render runtime/work/episode.json --aspect-ratio 16:9 --out runtime/renders/final_16x9.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 ```
 
-The loop that matters is **stills → look → fix → stills**, at the target aspect ratio. Rendering the
-master is the last 10 % of the work; catch framing and safe-area issues before paying for the encode.
+The loop that matters is **stills → look → fix → stills**, at the target aspect ratio. Rendering
+the master is the last 10 % of the work. `--short-form` gates 40–90 s independently of aspect;
+`--shorts` selects 9:16 and allows up to 180 s.
 
 ## Ground rules
 
 1. Never declare a render finished without opening frames from it.
 2. `validate` must show `warnings: []`.
-3. Grain stays off; the output is zero-grain.
-4. Never overwrite a previous master — new filename, and say so.
-5. Back up engine files before editing (`cp f /tmp/f.bak.$(date +%s)`).
-6. Scratch files live in `/tmp`; only deliverables, text artifacts and docs go in the repo.
-7. Nothing is reported that a file did not produce.
+3. Grain stays off; output is zero-grain.
+4. `voiced: true` is required; `COMPLETE_SILENT` / exit 3 is a failure.
+5. Never overwrite a previous master — new filename, and say so.
+6. Keep generated files in `runtime/`; only source and durable deliverables belong in git.
+7. Report only numbers that came out of a file the run produced.
+8. Shared defects are fixed in the engine with a regression test, never patched per video.
+
+When a change affects the documented pipeline, update the relevant skill, template, doc and
+[`../../CHANGELOG.md`](../../CHANGELOG.md) in the same task, then run
+`python3 tools/check_docs.py` from the repository root.

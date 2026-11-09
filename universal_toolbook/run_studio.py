@@ -816,14 +816,14 @@ def build_parser() -> argparse.ArgumentParser:
 
     ps = sub.add_parser("stills", help="Render landscape or portrait PNG scene stills for visual QA")
     ps.add_argument("episode")
-    ps.add_argument("--out-dir", default="output/stills")
+    ps.add_argument("--out-dir", default="runtime/renders/stills")
     ps.add_argument("--width", type=int, default=1920)
     ps.add_argument("--height", type=int, default=1080)
     ps.add_argument("--limit", type=int, default=12)
 
     pr = sub.add_parser("render", help="Render a voiced 16:9 landscape or 9:16 portrait MP4")
     pr.add_argument("episode")
-    pr.add_argument("--out", default="output/story_episode.mp4")
+    pr.add_argument("--out", default="runtime/renders/story_episode.mp4")
     pr.add_argument(
         "--aspect-ratio", "--aspect", dest="aspect_ratio", choices=["16:9", "9:16"], default=None,
         help="Output composition: 16:9 landscape (default) or 9:16 portrait. Geometry is preserved; frames are reframed, never stretched.",
@@ -870,7 +870,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     pa = sub.add_parser("player", help="Create self-contained HTML5 player + download wrapper")
     pa.add_argument("mp4")
-    pa.add_argument("--out", default="output/video_player_download.html")
+    pa.add_argument("--out", default="runtime/renders/video_player_download.html")
     pa.add_argument("--max-mb", type=float, default=14.5)
 
     return p

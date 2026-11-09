@@ -4,7 +4,7 @@ Single source of truth: ``universal_toolbook/tts/config/voices.json``.
 Environment overrides (kept minimal, for the temporary-session workflow):
 
 * ``TTS_CONFIG``   — path to an alternate voices.json
-* ``TTS_MODEL_DIR`` — directory containing Kokoro weights (default ``<repo>/cache/tts``)
+* ``TTS_MODEL_DIR`` — directory containing Kokoro weights (default ``<repo>/runtime/cache/tts``)
 * ``PIPER_VOICE_DIR`` — directory containing Piper voices (default ``~/.cache/piper_voices``)
 """
 
@@ -15,8 +15,11 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List
 
-#: repo root = two levels up from this file (universal_toolbook/tts/config.py)
-REPO_ROOT = Path(__file__).resolve().parents[2]
+#: The kit root is one level up from tts/. In the complete development repository the
+#: runtime/ tree lives one level above the kit; when the kit is copied out alone, keep the
+#: runtime/ tree inside the kit so a standalone copy remains self-contained.
+KIT_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = KIT_ROOT.parent if (KIT_ROOT.parent / "AGENTS.md").is_file() else KIT_ROOT
 TTS_ROOT = Path(__file__).resolve().parent
 DEFAULT_CONFIG_PATH = TTS_ROOT / "config" / "voices.json"
 

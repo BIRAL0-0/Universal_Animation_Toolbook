@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """One-command production orchestrator for the Universal Animation Toolbook.
 
-Implements the ordered stages of ``AGENT_OPERATING_RULES.md`` §1.2 for a project whose
+Implements the ordered stages of ``AGENTS.md`` §1.2 for a project whose
 ``episode.json`` already exists, and refuses to advance past a failed gate::
 
     Stage  A  validate          (gate: warnings must be [])
@@ -215,8 +215,8 @@ def main() -> int:
     # ---------------------------------------------------------- G measure
     if stage("measure"):
         log("STAGE G — measure mixed audio")
-        # The mix lives beside the master it belongs to: output/.work_<stem>/ for renders written
-        # into output/, or <project>/.work_<stem>/ for project-local masters (the normal case now).
+        # The mix lives beside the master it belongs to: runtime/renders/.work_<stem>/ for renders written
+        # into runtime/renders/, or <project>/.work_<stem>/ for project-local masters (the normal case now).
         wav_candidates = [final.parent / f".work_{final.stem}" / "master_audio.wav"]
         wav_candidates += sorted((REPO_ROOT / "output").glob(f".work_{final.stem}/master_audio.wav"))
         wav_candidates += sorted(final.parent.glob(".work_*/master_audio.wav"))

@@ -15,11 +15,11 @@ very short Shorts are valid.
 
 ```bash
 # Long-form landscape (no short-form duration gate)
-python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out output/long_16x9.mp4 --full
+python3 universal_toolbook/run_studio.py render runtime/work/episode.json --aspect-ratio 16:9 --out runtime/renders/long_16x9.mp4 --full
 # Short portrait (generic inclusive 40–90 second gate)
-python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 9:16 --short-form --out output/short_9x16.mp4 --full
+python3 universal_toolbook/run_studio.py render runtime/work/short_episode.json --aspect-ratio 9:16 --short-form --out runtime/renders/short_9x16.mp4 --full
 # Vertical YouTube Shorts profile
-python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts --out output/youtube_shorts.mp4 --full
+python3 universal_toolbook/run_studio.py render runtime/work/short_episode.json --shorts --out runtime/renders/youtube_shorts.mp4 --full
 ```
 
 ---
@@ -194,7 +194,7 @@ Write dialogue in short, one-breath sentences if you want broadcast-style single
 pip install piper-tts
 python3 universal_toolbook/tools/fetch_piper_voices.py check                       # is offline voiceover ready?
 python3 universal_toolbook/tools/fetch_piper_voices.py install --from-dir ~/voices # copies .onnx + .onnx.json
-python3 universal_toolbook/run_studio.py render work/episode.json --out out.mp4 --voice piper   # force offline
+python3 universal_toolbook/run_studio.py render runtime/work/episode.json --out out.mp4 --voice piper   # force offline
 ```
 
 Voice resolution: `PIPER_VOICE_DIR` → `~/.cache/piper_voices` → `assets/voices/`. Edge voice ids in

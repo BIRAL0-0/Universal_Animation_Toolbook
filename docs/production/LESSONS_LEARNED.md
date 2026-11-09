@@ -14,7 +14,7 @@ minutes of the session went to rebuilding it — before a single creative decisi
 
 **Lesson:** run the bootstrap and *prove* it (`check` → `status OK`, `setup_tts.py` → engines
 READY, one smoke render) before authoring anything. Record the exact commands.
-**Changed:** `KNOWN_ISSUES.md` KI-004; bootstrap block in `START_HERE.md` §2; the
+**Changed:** `KNOWN_ISSUES.md` KI-004; bootstrap block in `README.md` §2; the
 `tests/production/test_environment_readiness.py` checklist.
 
 ### L-02 · Kokoro weights ship over GitHub git-blobs, not Hugging Face
@@ -56,7 +56,7 @@ object.
 
 **Lesson:** never render on a spec with warnings. The warnings are cheap; a rendered surprise is
 not.
-**Changed:** master template §10 rule 1; `AGENT_OPERATING_RULES.md` §1.2 stage ordering.
+**Changed:** master template §10 rule 1; `AGENTS.md` §1.2 stage ordering.
 
 ### L-06 · Two characters is a hard ceiling — design the cast around it
 The engine collides three actors at 1920. The film was written for one protagonist plus one
@@ -85,7 +85,7 @@ guesses.
 **Changed:** master template §2 requires the taxonomy; `RESEARCH.md` structure enforces it.
 
 ### L-09 · The sandbox will vanish; the archive must not
-Renders and `work/` are git-ignored by design, so a finished MP4 living only in `output/` dies with
+Renders and `runtime/work/` are git-ignored by design, so a finished MP4 living only in `runtime/renders/` dies with
 the session.
 
 **Lesson:** the final MP4 belongs in `projects/<slug>/final.mp4` (not ignored), alongside its

@@ -8,9 +8,9 @@ manifest and segment ordering/coverage is verified).
 Exit codes: 0 all good, 1 problems found.
 
 Examples:
-    python3 universal_toolbook/validate_audio.py output/tts/my_video/
+    python3 universal_toolbook/validate_audio.py runtime/renders/tts/my_video/
     python3 universal_toolbook/validate_audio.py some.wav --max-silence 1.5
-    python3 universal_toolbook/validate_audio.py output/tts/my_video/final/full.wav
+    python3 universal_toolbook/validate_audio.py runtime/renders/tts/my_video/final/full.wav
 """
 
 from __future__ import annotations

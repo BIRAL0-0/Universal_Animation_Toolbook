@@ -20,7 +20,7 @@ the only ways a silent master reports `COMPLETE`.
 
 **A re-render mixes old and new frames**
 `--resume` is reusing chunks from a previous, different episode. Delete
-`output/.work_<name>/` and render again.
+`runtime/renders/.work_<name>/` and render again.
 
 **Render is far slower than the estimate**
 Wrong preset (anything not `veryfast`), `--workers` > 2 on a 2-vCPU box, or `--chunk-sec` too
@@ -113,11 +113,11 @@ Handing a binary to a human is the hard part, not the render. In order of reliab
 
 1. `python3 universal_toolbook/tools/serve_deliverables.py 8000 output` — Range-capable (`206`) static server;
    open the page from inside the app, not from a raw URL in another browser tab.
-2. `python3 universal_toolbook/run_studio.py player output/final_film_16x9.mp4 --out output/player.html` —
+2. `python3 universal_toolbook/run_studio.py player runtime/renders/final_film_16x9.mp4 --out runtime/renders/player.html` —
    self-contained HTML5 player with a download wrapper.
-3. `python3 universal_toolbook/tools/build_storyboard_svg.py <master> --out outputs/storyboard.svg` — the film as
+3. `python3 universal_toolbook/tools/build_storyboard_svg.py <master> --out deliverables/storyboard.svg` — the film as
    a **text** SVG (stills + captions + cross-fades); renders where video is refused.
-4. Write the text artifacts into `outputs/` so at minimum the chapters, report and cue sheet
+4. Write the text artifacts into `deliverables/` so at minimum the chapters, report and cue sheet
    reach the reader, and state the rebuild command for the video.
 
 Note: the Python stdlib `http.server` does **not** answer `Range` requests — video seeking and

@@ -5,7 +5,7 @@ One source of truth for the episode: scene timing, every beat, every prop window
 and every sound cue are derived from the constants at the top, so the cut can be re-timed by
 editing numbers instead of hunting through a 900-line JSON.
 
-    python3 work/build_wall_episode.py [out.json]
+    python3 runtime/work/build_wall_episode.py [out.json]
 """
 from __future__ import annotations
 
@@ -441,7 +441,7 @@ def main() -> int:
     argv = sys.argv[1:]
     portrait = "--portrait" in argv
     argv = [a for a in argv if a != "--portrait"]
-    out = Path(argv[0]) if argv else ROOT / "work/the_wall_you_agreed_with_episode.json"
+    out = Path(argv[0]) if argv else ROOT / "runtime/work/the_wall_you_agreed_with_episode.json"
     spec = build(portrait=portrait)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(spec, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

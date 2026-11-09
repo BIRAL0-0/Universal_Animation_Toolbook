@@ -3,10 +3,10 @@
 The definition of "finished". Every box is ticked **on a rendered frame**, never on the JSON.
 
 ## 0 — Pre-flight
-- [ ] `mkdir -p work` has been run (fresh clones have no `work/`)
+- [ ] `mkdir -p work` has been run (fresh clones have no `runtime/work/`)
 - [ ] `python3 tools/check_docs.py` → every documented path resolves
 - [ ] `python3 universal_toolbook/run_studio.py check` → `status: OK`
-- [ ] `validate work/episode.json` → `warnings: []`
+- [ ] `validate runtime/work/episode.json` → `warnings: []`
 - [ ] `duration_sec`, `scene_count`, `sound_events` match the plan
 - [ ] If a verbatim script was supplied: validated against it, 100 % preserved
 
@@ -30,10 +30,10 @@ For **each** still:
 
 ```bash
 # Long landscape draft (no short-form duration gate)
-python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out /tmp/draft/film_draft.mp4 \
+python3 universal_toolbook/run_studio.py render runtime/work/episode.json --aspect-ratio 16:9 --out /tmp/draft/film_draft.mp4 \
   --draft --voice auto --workers 2 --chunk-sec 20
 # Short portrait draft (generic inclusive 40–90 s gate)
-python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 9:16 --short-form \
+python3 universal_toolbook/run_studio.py render runtime/work/short_episode.json --aspect-ratio 9:16 --short-form \
   --out /tmp/draft/short_portrait.mp4 --draft --voice auto --workers 2 --chunk-sec 20
 # --short-form itself stays aspect-independent; --shorts selects 9:16 up to 180 s (3 minutes).
 ```
@@ -52,7 +52,7 @@ python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect
 ## 3 — Master
 
 ```bash
-python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out output/final_film_16x9.mp4 \
+python3 universal_toolbook/run_studio.py render runtime/work/episode.json --aspect-ratio 16:9 --out runtime/renders/final_film_16x9.mp4 \
   --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 ```
 
@@ -66,6 +66,6 @@ python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio
 
 ## 4 — Delivery
 - [ ] New filename; nothing overwritten
-- [ ] Text artifacts copied to `outputs/` (chapters, report, validation, cue sheet)
+- [ ] Text artifacts copied to `deliverables/` (chapters, report, validation, cue sheet)
 - [ ] No large media committed (`*.mp4`, `*.gif`, `*.webm` stay git-ignored)
 - [ ] Final message states the measured numbers and the exact paths — nothing invented

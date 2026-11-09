@@ -21,7 +21,7 @@ STUDIO = ROOT / "universal_toolbook"
 
 
 def main() -> int:
-    work_dir = Path(sys.argv[1] if len(sys.argv) > 1 else ROOT / "output/.work_final_film_1080p").resolve()
+    work_dir = Path(sys.argv[1] if len(sys.argv) > 1 else ROOT / "runtime/renders/.work_final_film_1080p").resolve()
     retimed = work_dir / "episode_retimed.json"
     manifest = json.loads((work_dir / "vo_manifest.json").read_text())
 

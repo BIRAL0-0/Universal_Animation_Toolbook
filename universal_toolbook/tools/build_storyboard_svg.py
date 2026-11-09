@@ -6,8 +6,8 @@ single .svg carrying base64 stills + SMIL cross-fades still shows the film — n
 transfer, no plugin, no player.
 
 Usage:
-    python3 tools/build_storyboard_svg.py output/final_film_1080p.mp4 \
-        --out work/deliverables/film_storyboard.svg
+    python3 tools/build_storyboard_svg.py runtime/renders/final_film_1080p.mp4 \
+        --out runtime/work/deliverables/film_storyboard.svg
 
 Options:
     --stills  comma separated timestamps (seconds) or a .json scene spec
@@ -72,7 +72,7 @@ def captions_from_spec(path: str):
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("master")
-    ap.add_argument("--out", default="work/deliverables/film_storyboard.svg")
+    ap.add_argument("--out", default="runtime/work/deliverables/film_storyboard.svg")
     ap.add_argument("--stills", default="", help="comma separated seconds")
     ap.add_argument("--spec", default="", help="episode json; timestamps from scene starts")
     ap.add_argument("--seconds", type=float, default=4.0)

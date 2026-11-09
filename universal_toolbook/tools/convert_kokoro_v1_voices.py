@@ -23,7 +23,7 @@ Usage (library, e.g. from setup_tts.py):
 Usage (CLI):
 
     python3 universal_toolbook/tools/convert_kokoro_v1_voices.py \\
-        --pt-dir /tmp/v1pts --out cache/tts/voices-v1.0-en.npz
+        --pt-dir /tmp/v1pts --out runtime/cache/tts/voices-v1.0-en.npz
 """
 
 from __future__ import annotations

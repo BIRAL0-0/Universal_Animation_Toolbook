@@ -7,7 +7,7 @@ Quick start
 -----------
     python3 universal_toolbook/setup_tts.py          # one-time setup
     python3 universal_toolbook/generate_voiceover.py \\
-        --input script.txt --voice af_bella --out output/tts/my_video
+        --input script.txt --voice af_bella --out runtime/renders/tts/my_video
 
 Importing this package never loads any model; heavy dependencies are imported
 lazily by the providers.

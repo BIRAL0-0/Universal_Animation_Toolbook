@@ -22,7 +22,7 @@ a non-`OK` status.
 ## Step 1 — validate the spec
 
 ```bash
-python3 universal_toolbook/run_studio.py validate work/episode.json
+python3 universal_toolbook/run_studio.py validate runtime/work/episode.json
 ```
 
 Read the JSON it prints: `duration_sec`, `scene_count`, `settings_used`, `sound_events`,
@@ -30,17 +30,17 @@ Read the JSON it prints: `duration_sec`, `scene_count`, `settings_used`, `sound_
 If a verbatim script was supplied, pass it too so word-for-word preservation is enforced:
 
 ```bash
-python3 universal_toolbook/run_studio.py validate work/episode.json --script path/to/script.txt
+python3 universal_toolbook/run_studio.py validate runtime/work/episode.json --script path/to/script.txt
 ```
 
 ## Step 2 — full-resolution stills in the delivery aspect ratio (the cheap QA loop)
 
 ```bash
 # Render landscape QA stills for a 16:9 delivery
-python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_16x9 --width 1920 --height 1080
+python3 universal_toolbook/run_studio.py stills runtime/work/episode.json --out-dir runtime/work/stills_16x9 --width 1920 --height 1080
 
 # Render portrait QA stills for a 9:16 delivery (same spec, no stretching)
-python3 universal_toolbook/run_studio.py stills work/episode.json --out-dir work/stills_9x16 --width 1080 --height 1920
+python3 universal_toolbook/run_studio.py stills runtime/work/episode.json --out-dir runtime/work/stills_9x16 --width 1080 --height 1920
 ```
 
 One PNG per scene, named `<sceneId>_<environment>.png`. `--limit N` renders only the first N
@@ -59,7 +59,7 @@ is normal and cheap; a full render with an overlap in it is neither.
 ## Step 3 — draft render (timing, boards, cuts, audio)
 
 ```bash
-python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 --out /tmp/draft/film_draft.mp4 \
+python3 universal_toolbook/run_studio.py render runtime/work/episode.json --aspect-ratio 16:9 --out /tmp/draft/film_draft.mp4 \
   --draft --voice auto --workers 2 --chunk-sec 20
 ```
 
@@ -85,16 +85,16 @@ FF=$(python3 -c "import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())")
 
 ```bash
 # Long-form 16:9 landscape master (no short-form duration gate)
-python3 universal_toolbook/run_studio.py render work/episode.json --aspect-ratio 16:9 \
-  --out output/long_landscape.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
+python3 universal_toolbook/run_studio.py render runtime/work/episode.json --aspect-ratio 16:9 \
+  --out runtime/renders/long_landscape.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 
 # Short 9:16 portrait cut (generic inclusive 40–90 second gate)
-python3 universal_toolbook/run_studio.py render work/short_episode.json --aspect-ratio 9:16 --short-form \
-  --out output/short_portrait.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
+python3 universal_toolbook/run_studio.py render runtime/work/short_episode.json --aspect-ratio 9:16 --short-form \
+  --out runtime/renders/short_portrait.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 
 # For YouTube Shorts, --shorts selects 9:16 and accepts any positive runtime through 180 seconds.
-python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts \
-  --out output/youtube_shorts.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
+python3 universal_toolbook/run_studio.py render runtime/work/short_episode.json --shorts \
+  --out runtime/renders/youtube_shorts.mp4 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto
 ```
 
 | Flag | Why this value |
@@ -107,7 +107,7 @@ python3 universal_toolbook/run_studio.py render work/short_episode.json --shorts
 | `--crf 24` | visually transparent on this art style, keeps files ~8 MB/min |
 | `--chunk-sec 45` | chunk length for parallel workers; shorter = more overhead, longer = worse resume granularity |
 | `--workers 2` | matches the CPU budget of the sandbox; more workers thrash |
-| `--resume` | re-uses finished chunks in `output/.work_<name>/` — always leave it on |
+| `--resume` | re-uses finished chunks in `runtime/renders/.work_<name>/` — always leave it on |
 | `--voice auto` | **required here**; Edge/Azure TTS is unreachable, so it falls back to local Piper |
 
 The example delivery pair is a **long 16:9 landscape** and a **short 9:16 portrait**. Generic
@@ -117,28 +117,28 @@ calls for it.
 ### What it writes
 
 ```
-output/final_film_16x9.mp4                     the master
-output/final_film_16x9_chapters.txt            chapters + auto-generated CC credits
-output/final_film_16x9_report.json             resolution, fps, duration, voice_backend, BGM, sfx, credits
-output/final_film_16x9_validation_report.json  {valid, frames, dimensions, fps, film_grain, warnings}
-output/final_film_16x9_visual_audio_cues.json  every foley/visual cue
-output/.work_final_film_16x9/master_audio.wav  the mixed audio (for measurement)
+runtime/renders/final_film_16x9.mp4                     the master
+runtime/renders/final_film_16x9_chapters.txt            chapters + auto-generated CC credits
+runtime/renders/final_film_16x9_report.json             resolution, fps, duration, voice_backend, BGM, sfx, credits
+runtime/renders/final_film_16x9_validation_report.json  {valid, frames, dimensions, fps, film_grain, warnings}
+runtime/renders/final_film_16x9_visual_audio_cues.json  every foley/visual cue
+runtime/renders/.work_final_film_16x9/master_audio.wav  the mixed audio (for measurement)
 ```
 
 If you kill a render, re-run the **same command**: `--resume` picks the finished chunks up.
-If you changed the episode, delete `output/.work_<name>/` first or you will mix old and new
+If you changed the episode, delete `runtime/renders/.work_<name>/` first or you will mix old and new
 frames.
 
 ## Step 5 — verify the master (not optional)
 
 ```bash
 FF=$(python3 -c "import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())")
-cat output/final_film_16x9_validation_report.json
-"$FF" -hide_banner -i output/final_film_16x9.mp4 2>&1 | grep -E "Duration|Stream"
-"$FF" -v error -i output/final_film_16x9.mp4 -f null - && echo FULL_DECODE_OK
+cat runtime/renders/final_film_16x9_validation_report.json
+"$FF" -hide_banner -i runtime/renders/final_film_16x9.mp4 2>&1 | grep -E "Duration|Stream"
+"$FF" -v error -i runtime/renders/final_film_16x9.mp4 -f null - && echo FULL_DECODE_OK
 python3 - <<'PY'
 import wave, audioop, math
-w = wave.open("output/.work_final_film_16x9/master_audio.wav", "rb")
+w = wave.open("runtime/renders/.work_final_film_16x9/master_audio.wav", "rb")
 d = w.readframes(w.getnframes())
 print("channels", w.getnchannels(), "rate", w.getframerate(), "dur", round(w.getnframes()/w.getframerate(), 2))
 print("peak dBFS", round(20*math.log10(audioop.max(d, w.getsampwidth())/32768.0), 2))
@@ -150,15 +150,15 @@ PY
 
 ## Step 6 — deliver
 
-- Master + chapters as agreed (default `output/final_film_16x9.mp4` and `…_chapters.txt`).
-- Copy the text artifacts into `outputs/` (see `outputs/README.md`) so results survive a
+- Master + chapters as agreed (default `runtime/renders/final_film_16x9.mp4` and `…_chapters.txt`).
+- Copy the text artifacts into `deliverables/` (see `deliverables/RESULTS.md`) so results survive a
   channel that can't carry video.
 - Handing the video to a human who can't download binaries:
 
 ```bash
 python3 universal_toolbook/tools/serve_deliverables.py 8000 output         # Range-capable static server
-python3 universal_toolbook/run_studio.py player output/final_film_16x9.mp4 --out output/player.html
-python3 universal_toolbook/tools/build_storyboard_svg.py output/final_film_16x9.mp4 --out outputs/storyboard.svg
+python3 universal_toolbook/run_studio.py player runtime/renders/final_film_16x9.mp4 --out runtime/renders/player.html
+python3 universal_toolbook/tools/build_storyboard_svg.py runtime/renders/final_film_16x9.mp4 --out deliverables/storyboard.svg
 ```
 
 The SVG storyboard is **text** — captions, cross-fades and stills inline — so it renders

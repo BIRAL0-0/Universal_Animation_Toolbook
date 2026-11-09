@@ -28,13 +28,13 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
-#: sha256 of docs/production-workflow/prompts/VOICEOVER_POLISH_PROMPT.md, recorded when the
+#: sha256 of docs/production/prompts/VOICEOVER_POLISH_PROMPT.md, recorded when the
 #: rule was codified. If the standard is ever *deliberately* revised, update this constant AND
-#: record the revision in docs/production-workflow/WORKFLOW_CHANGELOG.md — never silently.
+#: record the revision in CHANGELOG.md — never silently.
 POLISH_PROMPT_SHA256 = "aeef0850347ae43535379981d2cd9f4a90e747b7de63b6bb5bd93c31518dc1ea"
 POLISH_PROMPT_BYTES = 5256
 
-POLISH_PROMPT_PATH = REPO_ROOT / "docs" / "production-workflow" / "prompts" / "VOICEOVER_POLISH_PROMPT.md"
+POLISH_PROMPT_PATH = REPO_ROOT / "docs" / "production" / "prompts" / "VOICEOVER_POLISH_PROMPT.md"
 
 #: Files every project under projects/ must contain to be considered reproducible.
 REQUIRED_PROJECT_FILES = [
@@ -121,7 +121,7 @@ def test_voiceover_polish_prompt_is_byte_for_byte_intact():
     assert digest == POLISH_PROMPT_SHA256, (
         "The voiceover polishing prompt changed. It is a process standard and must be "
         "preserved byte-for-byte. If the revision is deliberate, record it in "
-        "docs/production-workflow/WORKFLOW_CHANGELOG.md and update POLISH_PROMPT_SHA256 "
+        "CHANGELOG.md and update POLISH_PROMPT_SHA256 "
         f"here. got={digest}"
     )
     assert len(raw) == POLISH_PROMPT_BYTES, "polish prompt byte length changed"
@@ -156,22 +156,33 @@ def test_master_template_exists_with_required_sections():
         "KNOWN_ISSUES.md",
         "LESSONS_LEARNED.md",
         "PIPELINE_CHANGELOG.md",
+        "AGENTS.md",
+        "skills/animation-production/SKILL.md",
     ):
         assert needle in text, f"master template no longer references {needle}"
 
 
 def test_automatic_video_creation_rule_is_wired_into_agent_instructions():
-    """Part 14: a bare 'create a video' request must auto-invoke the workflow."""
-    path = REPO_ROOT / "AGENT_OPERATING_RULES.md"
-    assert path.exists(), "AGENT_OPERATING_RULES.md is missing"
+    """A bare 'create a video' request must auto-invoke the workflow from the single rule file."""
+    path = REPO_ROOT / "AGENTS.md"
+    assert path.exists(), "AGENTS.md is missing"
     text = path.read_text(encoding="utf-8")
-    for needle in ("Create a new video", "AUTOMATIC VIDEO CREATION MODE", "projects/"):
-        assert needle in text, f"automatic-creation rule no longer mentions {needle}"
+    for needle in ("Create a new video", "Automatic video creation mode", "projects/",
+                   "skills/animation-production/SKILL.md", "am_michael"):
+        assert needle in text, f"AGENTS.md no longer mentions {needle}"
     start = REPO_ROOT / "START_HERE.md"
     assert start.exists()
-    assert "AGENT_OPERATING_RULES.md" in start.read_text(encoding="utf-8"), (
-        "START_HERE.md must point at AGENT_OPERATING_RULES.md so every session loads the rule"
+    assert "AGENTS.md" in start.read_text(encoding="utf-8"), (
+        "START_HERE.md redirect must point at AGENTS.md so every session loads the rule"
     )
+    legacy = REPO_ROOT / "AGENT_OPERATING_RULES.md"
+    if legacy.exists():
+        assert "AGENTS.md" in legacy.read_text(encoding="utf-8"), (
+            "the legacy rules redirect must point at AGENTS.md"
+        )
+        assert len(legacy.read_text(encoding="utf-8").splitlines()) < 20, (
+            "the legacy rules file must stay a short redirect, not a competing rule set"
+        )
 
 
 if __name__ == "__main__":

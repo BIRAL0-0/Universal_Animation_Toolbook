@@ -4,7 +4,7 @@
 THE single documented generation command for the TTS workflow:
 
     python3 universal_toolbook/generate_voiceover.py \
-        --input script.txt --voice af_bella --out output/tts/my_video
+        --input script.txt --voice af_bella --out runtime/renders/tts/my_video
 
 Inputs
   --input X.txt     plain approved script text (auto sentence/paragraph split)
@@ -17,7 +17,7 @@ Engines (pluggable)
   --speed 1.0                  1.0 = natural; >1.0 faster
   --language en-us
 
-Outputs (per job directory, default output/tts/<input-stem>)
+Outputs (per job directory, default runtime/renders/tts/<input-stem>)
   manifest.json                 job metadata + per-segment status (resumable)
   segments/seg-NNN.wav|.mp3     raw engine output (originals, never modified)
   final/seg-NNN.wav|.mp3        processed: resampled, normalized, peak-limited
@@ -122,7 +122,7 @@ def main() -> None:
     ap.add_argument("--voice", default=None, help="voice id or alias (default: engine config)")
     ap.add_argument("--speed", type=float, default=None)
     ap.add_argument("--language", default=None)
-    ap.add_argument("--out", default=None, help="job directory (default output/tts/<input-stem>)")
+    ap.add_argument("--out", default=None, help="job directory (default runtime/renders/tts/<input-stem>)")
     ap.add_argument("--dictionary", default=str(Path(__file__).resolve().parent / "tts/config/pronunciation_dictionary.json"))
     ap.add_argument("--formats", default="wav,mp3", help="comma list: wav,mp3 (mp3 needs ffmpeg)")
     ap.add_argument("--no-process", action="store_true", help="skip resample/normalize/limit")
@@ -158,7 +158,7 @@ def main() -> None:
     if not segs:
         die("no segments produced from input")
 
-    out_dir = Path(args.out).expanduser() if args.out else repo_root / "output/tts" / Path(args.input).stem
+    out_dir = Path(args.out).expanduser() if args.out else repo_root / "runtime/renders/tts" / Path(args.input).stem
     out_dir = out_dir if out_dir.is_absolute() else repo_root / out_dir
     (out_dir / "segments").mkdir(parents=True, exist_ok=True)
     (out_dir / "final").mkdir(parents=True, exist_ok=True)
@@ -203,7 +203,7 @@ def main() -> None:
             ) for g in segs],
             text_sha256=text_sha,
             engine_version=eng.engine_version(),
-            model=os.environ.get("TTS_MODEL_DIR", "cache/tts") if engine_name == "kokoro" else "",
+            model=os.environ.get("TTS_MODEL_DIR", "runtime/cache/tts") if engine_name == "kokoro" else "",
             processing={"enabled": not args.no_process,
                         **{k: v for k, v in proc_cfg.items() if not k.startswith("_")}},
         )
