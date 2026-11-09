@@ -169,3 +169,9 @@ Every entry: **stage** · **symptom** · **root cause** · **status** · **regre
   line; the access limitation is stated at the top of that file.
 - **Regression check:** `TOPIC_SELECTION.md` / `RESEARCH.md` templates require the [M]/[O]/[P] and
   [V]/[I]/[A] taxonomies.
+
+### KI-007 — documentation referenced removed production outputs (resolved)
+- **Stage:** repository verification. The docs checker found paths to removed beacon and staircase output directories.
+- **Cause:** examples in workflow documentation were not updated when old outputs were removed.
+- **Fix:** point guidance to existing tracked examples and avoid asserting missing artifacts exist.
+- **Regression check / verification:** `python3 tools/check_docs.py` passed after the edit; this checker also runs in CI.

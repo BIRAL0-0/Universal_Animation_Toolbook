@@ -117,3 +117,8 @@ Format: date · type · what changed · why · verification.
   follow the same steps without re-deriving them.
 - **Verification:** used end-to-end for video-001; its summary is archived in that project's
   `PRODUCTION_LOG.md`.
+
+### 2026-11-09 — repair stale production documentation examples
+- Documentation verification exposed references to removed output folders after repository cleanup.
+- Updated the workflow and orientation examples to use existing tracked outputs or specs; retained the path-checking gate rather than weakening it.
+- Verification: `python3 tools/check_docs.py` resolves the references.
