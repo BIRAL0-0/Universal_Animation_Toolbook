@@ -1,0 +1,75 @@
+{
+  "status": "COMPLETE_SILENT",
+  "title": "The Staircase \u2014 Short Form",
+  "output_mp4": "/home/user/Universal_Animation_Toolbook/outputs/the_staircase/the_staircase_9x16.mp4",
+  "size_mb": 8.573,
+  "resolution": "1080x1920",
+  "aspect_ratio": "9:16",
+  "output_profile": "portrait",
+  "short_form": false,
+  "fps": 30,
+  "film_grain": false,
+  "duration_sec": 48.169,
+  "duration_min": 0.8,
+  "scene_count": 4,
+  "voice_backend": "text-led",
+  "voiced": false,
+  "voice_mode": "auto",
+  "voice_diagnosis": [
+    "edge-tts is installed but every line failed (normally no internet access to the neural speech endpoint)",
+    "piper-tts and local voice models are both missing -> pip install piper-tts && python3 universal_toolbook/tools/fetch_piper_voices.py install"
+  ],
+  "warnings": [
+    "NO SPEECH WAS SYNTHESIZED: the backend is 'text-led', so this file has subtitles and music but no narration. Fix with `pip install piper-tts` + `python3 universal_toolbook/tools/fetch_piper_voices.py install` (or an internet-connected edge-tts run), then re-render. Pass --voice none for a deliberately silent draft, or --allow-silent to accept this one."
+  ],
+  "audio": {
+    "wav_path": "/home/user/Universal_Animation_Toolbook/outputs/the_staircase/.work_the_staircase_9x16/master_audio.wav",
+    "duration_sec": 48.17,
+    "voiced_scenes": 0,
+    "sfx_events": 29,
+    "peak_dbfs": -16.72,
+    "bgm": {
+      "mode": "dynamic_cc",
+      "tracks_used": [
+        {
+          "id": "electronic_drive",
+          "file": "electronic_drive.mp3",
+          "title": "Catalyst",
+          "artist": "Scott Buckley",
+          "license": "CC BY 4.0",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Catalyst.oga",
+          "moods": [
+            "focus",
+            "analytical",
+            "tech",
+            "science",
+            "business",
+            "systems"
+          ],
+          "keywords": [
+            "system",
+            "data",
+            "code",
+            "tech",
+            "algorithm",
+            "science",
+            "build",
+            "engineer",
+            "process",
+            "strategy",
+            "economy",
+            "market",
+            "future",
+            "ai"
+          ],
+          "description": "Crisp modern electronic pulse and cinematic synth drive for tech, science, business, and analytical storytelling.",
+          "duration_sec": 179.08,
+          "size_mb": 2.05
+        }
+      ],
+      "credits_text": "Music: \"Catalyst\" by Scott Buckley (CC BY 4.0) \u2014 https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Catalyst.oga"
+    }
+  },
+  "chapters_file": "/home/user/Universal_Animation_Toolbook/outputs/the_staircase/the_staircase_9x16_chapters.txt",
+  "elapsed_sec": 121.29
+}

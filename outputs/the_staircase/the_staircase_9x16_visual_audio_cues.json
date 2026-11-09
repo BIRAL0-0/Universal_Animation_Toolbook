@@ -1,0 +1,195 @@
+[
+  {
+    "t": 1.058,
+    "type": "board_pop",
+    "pan": 0
+  },
+  {
+    "t": 4.685,
+    "type": "board_pop",
+    "pan": -0.16500000000000004
+  },
+  {
+    "t": 6.302,
+    "type": "step",
+    "pan": -0.37449999999887046,
+    "actor": "waiter",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 6.491,
+    "type": "step",
+    "pan": -0.34300000000033176,
+    "actor": "waiter",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 6.653,
+    "type": "step",
+    "pan": -0.31150000000021133,
+    "actor": "waiter",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 6.804,
+    "type": "step",
+    "pan": -0.28000000000275027,
+    "actor": "waiter",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 6.955,
+    "type": "step",
+    "pan": -0.24849999999978867,
+    "actor": "waiter",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 7.117,
+    "type": "step",
+    "pan": -0.21699999999966826,
+    "actor": "waiter",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 7.306,
+    "type": "step",
+    "pan": -0.18550000000112943,
+    "actor": "waiter",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 7.704,
+    "type": "step",
+    "pan": -0.15400000000000005,
+    "actor": "waiter",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 8.028,
+    "type": "step",
+    "pan": -0.18550000000112943,
+    "actor": "waiter",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 8.182,
+    "type": "step",
+    "pan": -0.21699999999966826,
+    "actor": "waiter",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 8.313,
+    "type": "step",
+    "pan": -0.24849999999978867,
+    "actor": "waiter",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 8.436,
+    "type": "step",
+    "pan": -0.2799999999972496,
+    "actor": "waiter",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 8.56,
+    "type": "step",
+    "pan": -0.31150000000021133,
+    "actor": "waiter",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 8.691,
+    "type": "step",
+    "pan": -0.34300000000033176,
+    "actor": "waiter",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 8.845,
+    "type": "step",
+    "pan": -0.37449999999887057,
+    "actor": "waiter",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 9.169,
+    "type": "step",
+    "pan": -0.40599999999999986,
+    "actor": "waiter",
+    "source": "pace_think gait clock"
+  },
+  {
+    "t": 16.286,
+    "type": "board_pop",
+    "pan": 0.055000000000000056
+  },
+  {
+    "t": 19.658,
+    "type": "step",
+    "pan": 0,
+    "actor": "climber",
+    "source": "stair cadence clock"
+  },
+  {
+    "t": 21.048,
+    "type": "step",
+    "pan": 0,
+    "actor": "climber",
+    "source": "stair cadence clock"
+  },
+  {
+    "t": 22.438,
+    "type": "step",
+    "pan": 0,
+    "actor": "climber",
+    "source": "stair cadence clock"
+  },
+  {
+    "t": 23.829,
+    "type": "step",
+    "pan": 0,
+    "actor": "climber",
+    "source": "stair cadence clock"
+  },
+  {
+    "t": 25.219,
+    "type": "step",
+    "pan": 0,
+    "actor": "climber",
+    "source": "stair cadence clock"
+  },
+  {
+    "t": 26.61,
+    "type": "step",
+    "pan": 0,
+    "actor": "climber",
+    "source": "stair cadence clock"
+  },
+  {
+    "t": 28,
+    "type": "step",
+    "pan": 0,
+    "actor": "climber",
+    "source": "stair cadence clock"
+  },
+  {
+    "t": 29.39,
+    "type": "step",
+    "pan": 0,
+    "actor": "climber",
+    "source": "stair cadence clock"
+  },
+  {
+    "t": 30.113,
+    "type": "board_pop",
+    "pan": 0
+  },
+  {
+    "t": 41.285,
+    "type": "board_pop",
+    "pan": 0
+  }
+]
