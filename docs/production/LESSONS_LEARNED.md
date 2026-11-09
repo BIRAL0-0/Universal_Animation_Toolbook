@@ -92,3 +92,6 @@ the session.
 prompt, scripts, stills, audio and QA report. A project that cannot be re-rendered from its own
 folder is not finished.
 **Changed:** master template §11; `test_every_project_has_a_complete_archive`.
+
+### Removed example outputs leave stale documentation references
+When removing a production output, run `python3 tools/check_docs.py` and replace links with existing examples. Keep the documentation gate enabled; do not create empty placeholder directories to hide broken references.

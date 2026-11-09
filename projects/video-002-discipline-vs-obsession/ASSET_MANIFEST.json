@@ -1,0 +1,6 @@
+{
+  "animation": "episode.json and universal_toolbook engine",
+  "stills": "assets/stills/",
+  "music_licenses": "../../universal_toolbook/assets/bgm/CREATIVE_COMMONS_LICENSES.md",
+  "speech": "Kokoro local weights; generated per render"
+}

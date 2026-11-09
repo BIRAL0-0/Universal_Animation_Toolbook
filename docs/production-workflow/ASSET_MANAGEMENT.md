@@ -57,7 +57,7 @@ outputs/<film>/                (committed; the durable result)
   NOTES.md                     master path, bytes, sha256, exact rebuild command,
                                voice_backend actually used
   script.md                    per-scene text (the films in this repo do this — keep it)
-  stills/S01.jpg …             optional, as in outputs/the_beacon_that_kept_time/
+  stills/S01.jpg …             optional, for a project that retains stills
 ```
 
 **Slug rules.** Lowercase, underscores, stable for the life of the project
@@ -75,7 +75,7 @@ convention does).
 | Sample scripts | Stage 4 | `work/<slug>/samples/` | after direction chosen (kept — they're cheap and show the decision path) |
 | Complete script | Stage 5 | `work/<slug>/script_v1.md` | never for the life of the project (verbatim projects: this is the legal baseline) |
 | Polished script | Stage 6 | `work/<slug>/script_polished.md` | superseded only by a re-approved version (version it: `script_polished_v2.md`, note in `decisions.md`) |
-| Episode spec | Stage 9 | `work/<slug>/episode.json` | the render that ships is the truth; a shipping spec is copied into `outputs/<film>/episode.json` when the user wants reproducibility (done for `outputs/the_staircase/episode.json`) |
+| Episode spec | Stage 9 | `work/<slug>/episode.json` | the render that ships is the truth; a shipping spec is copied into `outputs/<film>/episode.json` when the user wants reproducibility (see `examples/the_staircase_episode.json` for an authored example) |
 | QA stills | Stage 9 | `work/<slug>/stills_*/` | any time after master passes QC |
 | Draft MP4s | Stage 9 | scratch in tmp (never committed) | session end |
 | Voice WAVs (per line) | Stage 8 | `output/.work_<stem>/vo_cache/` | with the work dir — but **reused across re-renders** (the cost-avoidance cache) |
