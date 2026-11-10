@@ -36,3 +36,14 @@ work/
 
 # Generated draft renders are QA-only; shipped masters are committed explicitly.
 projects/*/renders/draft_*.mp4
+runtime/
+runtime/*
+runtime/jobs/
+runtime/cache/
+runtime/temp/
+# Video archives are now in videos/ - old locations ignored
+projects/video-*
+deliverables/video-*
+deliverables/the_wall_you_agreed_with/
+deliverables/two_inch_bridge_cel/
+output/
