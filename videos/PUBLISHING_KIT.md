@@ -1,266 +1,339 @@
-# Publishing kit — all six completed videos
+# Publishing Kit — all videos
 
-Paste-ready. Everything here is also in `videos/<slug>/record.json`.
+Paste-ready copy for every completed film. Titles, descriptions, pinned comments and tags are generated from `videos/<slug>/record.json` — that file is the source of truth, so edit the record (and re-run this generator) rather than editing this page.
+
+| id | title | length | keyword |
+| --- | --- | --- | --- |
+| video-001 | [Notifications Cost You 23 Minutes (Every Single Time)](what-if-every-notification-cost-you-23-minutes/) | 159s | `notifications cost you 23 minutes` |
+| video-002 | [Discipline vs Obsession: The 9 PM vs 2 AM Problem](discipline-vs-obsession/) | 405s | `discipline vs obsession` |
+| video-003 | [Procrastination: Why 1 Plank Beats a Whole Bridge](the-first-plank/) | 126s | `procrastination` |
+| video-004 | [Cutting Corners: What a 2-Inch Shortcut Really Costs](the-two-inch-bridge/) | 103s | `cutting corners` |
+| video-005 | [Phone Distraction: The 2-Second Reach That Ends Focus](the-two-second-reach/) | 33s | `phone distraction` |
+| video-006 | [3 AM Anxiety: Why Checking the Clock Makes It Worse](never-check-the-time-at-3-am/) | 44s | `3 am anxiety` |
+| video-007 | [Limiting Beliefs: Did You Agree to That Wall?](the-wall-you-agreed-with/) | 46s | `limiting beliefs` |
 
 ---
 
-## video-002 — Discipline vs Obsession — The Man Who Sacrificed Everything
+## video-001 — Notifications Cost You 23 Minutes (Every Single Time)
 
-**File:** `videos/discipline-vs-obsession/discipline-vs-obsession.mp4` · **Thumbnail:** `videos/discipline-vs-obsession/thumbnail.jpg` (1280×720) · **16:9** 1920x1080 · **404.94s**
-
-**Slug:** `discipline-vs-obsession`  ·  **Tags:** discipline, obsession, burnout, ambition, stickman, psychology, work-life-balance
+- **file:** `videos/what-if-every-notification-cost-you-23-minutes/what-if-every-notification-cost-you-23-minutes.mp4`
+- **length:** 158.96s · 1080x1920 · 9:16
+- **primary keyword:** `notifications cost you 23 minutes`
 
 ### Title
 
-```
-Discipline vs Obsession — The Man Who Sacrificed Everything
-```
+Notifications Cost You 23 Minutes (Every Single Time)
 
 ### Description
 
-```
-Two men wanted exactly the same thing: to build a life that mattered.
+```text
+Notifications cost you 23 minutes. Not per day, per interruption. This short film follows Kai through one ordinary Tuesday to show what that arithmetic actually does to an eight-hour day.
 
-Both worked hard. Both gave up comfort for it. Ten years later, one of them could look back with pride — and the other looked around and realised he had sacrificed almost everything to get somewhere he could no longer enjoy.
+The figure comes from the switching-cost research, and it is why notifications cost you 23 minutes each rather than costing you an hour a day in some abstract sense: when you leave a task to look at a message and then come back, you do not resume at full speed. Part of your attention stays behind, parked on the thing you just checked, and the rebuild takes about twenty-three minutes. Four interruptions in a morning and the morning is structurally gone. Not because you were lazy, but because the shape of your day was made of interruptions and there was nothing left in between for work that needs unbroken thought.
 
-The difference was not talent, intelligence, or hours. It was something much harder to spot from the inside: one man had discipline, the other had obsession.
+What makes this film sting is how unremarkable every individual buzz is. Each one is small, reasonable, easy to answer in four seconds. The cost is invisible exactly because it is never paid by the notification — it is paid by the work you never got back to.
 
-This is a six-minute story about Daniel, who learns to take responsibility only for the minutes that matter, and Marcus, who turns every achievement into a new starting line and every hour of rest into proof that he is falling behind. They argue about it. Marcus loses the argument and keeps going anyway. Then one evening he calls his mother, and the conversation is not about work at all.
+The practical takeaway is not "check your phone less", which nobody manages, but "make one block that cannot be interrupted", which is a decision you make once rather than a discipline you renegotiate forty times a day.
 
-If you have ever finished a project and felt nothing, or felt guilty for closing the laptop on time, Marcus is going to be uncomfortably familiar.
+If this landed, subscribe — these are short films about the quiet mechanics of attention, drawn in ink.
 
-#discipline #obsession #burnout #ambition #worklifebalance #psychology #stickman
+Which interruption in your day is the one you would defend if someone asked you to? That is usually the real one.
 
-Subscribe if you want more stories that take an uncomfortable idea seriously instead of turning it into a quote.
+#productivity #deepwork #focus #attention
 
-Music: "Where Stars Fall" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Where_Stars_Fall.oga
-Music: "Softly" by Loyalty Freak Music (CC0 1.0 Public Domain) — https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_06_-_Softly.ogg
-Music: "The Distant Sun (Monomyth 1)" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Distant_Sun_(Monomyth_1).oga
-Music: "One Cool Minute" by Loyalty Freak Music (CC0 1.0 Public Domain) — https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_02_-_One_Cool_Minute.ogg
-Music: "The Restoration (Monomyth 12)" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Restoration_(Monomyth_12).oga
+Music: "Where Stars Fall" by Scott Buckley (CC BY 4.0), "Softly" by Loyalty Freak Music (CC0 1.0 Public Domain), "The Distant Sun (Monomyth 1)" by Scott Buckley (CC BY 4.0), "The Restoration (Monomyth 12)" by Scott Buckley (CC BY 4.0). Full links in the description notes of the source repository.
 ```
 
 ### Pinned comment
 
-```
-The line that does the most work in this story: "You don't know when your work is enough." Marcus never had a stopping rule — he only ever had a starting one.
+```text
+The detail I cannot get out of my head is that no single notification in this film is unreasonable. Not one of them is an emergency or an insult — every buzz is something you would probably want to know. That is the trap, isn't it? You cannot refuse any of them individually.
 
-What is your actual stopping rule? Not the aspirational one — the one you genuinely use on a normal weeknight. Do you have one written down anywhere?
-```
-
----
-
-## video-006 — Never Check the Time at 3 AM
-
-**File:** `videos/never-check-the-time-at-3-am/never-check-the-time-at-3-am.mp4` · **Thumbnail:** `videos/never-check-the-time-at-3-am/thumbnail.jpg` (1080×1920) · **9:16** 1080x1920 · **43.65s**
-
-**Slug:** `never-check-the-time-at-3-am`  ·  **Tags:** sleep, anxiety, 3am-thoughts, overthinking, stickman, night, mental-health
-
-### Title
-
-```
-Never Check the Time at 3 AM
+So here is my question: which interruption in your day would you actually defend if someone asked you to justify it out loud? That is usually the one costing the most.
 ```
 
-### Description
+### Tags
 
-```
-If you wake up at three in the morning, do not check the clock.
-
-The second your eyes read the hour, something in you starts doing arithmetic: how many hours are left, how bad tomorrow will be, how long this has been going on. In the dark your rational brain is still half asleep, and only your threat detector is fully awake, hunting for danger in the glow of a screen. A small tomorrow problem turns into a verdict on your entire life.
-
-Nothing real gets solved between three in the morning and sunrise. So this short offers the smallest possible intervention: stand up, step to a desk, and write the worry down in one plain sentence. Once it lives on paper, the guard dog finally stands down — and morning can carry the weight instead of you.
-
-Forty-four seconds. Watch it the next time you are awake at the wrong hour.
-
-#sleep #anxiety #overthinking #nightthoughts #stickman #mentalhealth
-
-A new short about the small mechanics of a calmer mind, most weeks. Subscribe if that sounds useful.
-
-Music: "The Distant Sun (Monomyth 1)" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Distant_Sun_(Monomyth_1).oga
-```
-
-### Pinned comment
-
-```
-The writing is the part that does the work, not the trying-to-relax part: one plain sentence on paper, and the thought stops needing to be held in your head all night.
-
-What is the 3 AM thought that keeps coming back for you — and when you write it down, does it actually shrink, or does it just move somewhere else?
+```text
+notifications cost you 23 minutes, notification distraction, context switching cost, deep work, attention span, productivity, focus, 23 minutes, how to stop checking your phone, open office distractions, knowledge worker productivity, stickman animation
 ```
 
 ---
 
-## video-003 — The First Plank
+## video-002 — Discipline vs Obsession: The 9 PM vs 2 AM Problem
 
-**File:** `videos/the-first-plank/the-first-plank.mp4` · **Thumbnail:** `videos/the-first-plank/thumbnail.jpg` (1080×1920) · **9:16** 1080x1920 · **126.04s**
-
-**Slug:** `the-first-plank`  ·  **Tags:** procrastination, first-step, focus, stickman, beginning, overthinking, motivation
+- **file:** `videos/discipline-vs-obsession/discipline-vs-obsession.mp4`
+- **length:** 404.94s · 1920x1080 · 16:9
+- **primary keyword:** `discipline vs obsession`
 
 ### Title
 
-```
-The First Plank
-```
+Discipline vs Obsession: The 9 PM vs 2 AM Problem
 
 ### Description
 
-```
-Mira stands at the near edge of a bridge where every plank is drawn except one — the first one.
+```text
+Discipline vs obsession is usually framed as intensity, and that framing is the reason people burn out while believing they are being disciplined. This short film puts the two side by side in the same room, one hour apart.
 
-The far side is perfect. Every distant beam inked in, every plank beyond the gap numbered and finished. She has spent the morning on it, and she calls that planning, because planning feels like movement. The first plank is still blank, and the page has not moved.
+Daniel and Marcus are the same person with different habits. At 9:00 PM Daniel is at the desk with the lamp on, upright, working a defined block, and then he stops — the room stays warm when the work does. At 2:00 AM Marcus is at the same desk in the same room, hunched over the same laptop, and the only light left is the red glow of a clock he keeps checking. The work is identical. What differs is who is allowed to end it.
 
-So she tries the louder answers first: jump harder, wait longer, draw more planks. None of them are a place to put your foot.
+The test the film leaves you with is not how hard the work is, but who decides when it stops. Discipline has an edge — you choose it, and you can put it down. Obsession has no edge; it has a debt. One is a practice you keep, the other is a thing that keeps you, and from the inside they feel almost exactly the same for the first year.
 
-This two-minute story is about the specific kind of stuck that looks like productivity — the version where the plan is beautiful and the first step is missing. It is not a speech about motivation. It is just what happens when someone finally writes one small, embarrassing, finishable line and stands on it.
+Watching a figure slowly lose his posture over the course of the film is the whole argument. Nobody decides to become Marcus. They just stop being allowed to go to bed.
 
-Watch to the end for the question she turns around and asks you.
+If this landed, subscribe — short films about the quiet mechanics of ambition, drawn in ink.
 
-#procrastination #firststep #overthinking #focus #motivation #stickman #discipline
+Where is your line between a hard week and a habit that has started running you? I would genuinely like to know how people draw it.
 
-If this one landed, subscribe — new short stories about the small mechanics of getting started.
+#discipline #burnout #ambition #worklifebalance
 
-Music: "Where Stars Fall" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Where_Stars_Fall.oga
-Music: "Softly" by Loyalty Freak Music (CC0 1.0 Public Domain) — https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_06_-_Softly.ogg
-Music: "The Distant Sun (Monomyth 1)" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Distant_Sun_(Monomyth_1).oga
-Music: "The Restoration (Monomyth 12)" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Restoration_(Monomyth_12).oga
+Music: "Where Stars Fall" by Scott Buckley (CC BY 4.0), "Softly" by Loyalty Freak Music (CC0 1.0 Public Domain), "The Distant Sun (Monomyth 1)" by Scott Buckley (CC BY 4.0), "One Cool Minute" by Loyalty Freak Music (CC0 1.0), "The Restoration (Monomyth 12)" by Scott Buckley (CC BY 4.0). Full attribution links in the source repository.
 ```
 
 ### Pinned comment
 
-```
-Mira can draw the entire far end of the bridge but not the first plank — and that is the most accurate description of procrastination in the story. The far end is never the hard part. The blank plank at her feet is.
+```text
+The frame that does the work here is the clock. At 9:00 PM it is a small teal display sitting quietly on the desk, and at 2:00 AM it is the loudest thing in the room, glowing red, with Marcus checking it like it owes him something.
 
-So: what is the nearest plank for you right now? Not the project, not the goal. The single smallest thing you could actually finish today.
+So: where is your own line between a hard week and a habit that has started running you instead of the other way around? Genuinely curious how other people draw it, because I do not think many of us decide in advance.
+```
+
+### Tags
+
+```text
+discipline vs obsession, burnout signs, ambition, work life balance, hustle culture, grind mindset, how to stay disciplined, signs you are burning out, psychology of obsession, stickman animation
 ```
 
 ---
 
-## video-004 — The Two-Inch Bridge
+## video-003 — Procrastination: Why 1 Plank Beats a Whole Bridge
 
-**File:** `videos/the-two-inch-bridge/the-two-inch-bridge.mp4` · **Thumbnail:** `videos/the-two-inch-bridge/thumbnail.jpg` (1280×720) · **16:9** 1920x1080 · **102.91s**
-
-**Slug:** `the-two-inch-bridge`  ·  **Tags:** engineering, safety-margin, shortcuts, craftsmanship, stickman, quality, bridge
+- **file:** `videos/the-first-plank/the-first-plank.mp4`
+- **length:** 126.04s · 1080x1920 · 9:16
+- **primary keyword:** `procrastination`
 
 ### Title
 
-```
-The Two-Inch Bridge
-```
+Procrastination: Why 1 Plank Beats a Whole Bridge
 
 ### Description
 
-```
-The chasm at Kessa is eight hundred metres of nothing. The city wants a bridge in twelve weeks. Nia writes the number down and quietly plans for nine.
+```text
+Procrastination rarely looks like laziness from the inside — it looks like preparation. Mira has drawn the far end of her bridge in perfect detail. The first plank is blank.
 
-Nine days in, she finds two inches. Two inches off every joint — ninety joints — and nobody would ever measure. The deck rises faster than any bridge at Kessa has ever risen and meets the far side five weeks early. Her senior engineer Okoro says nothing at all, which is somehow worse than praise.
+That is the whole film in one image. The distance she is avoiding is not the two hundred metres to the other side; it is the twelve inches directly in front of her feet. Planning feels like movement because it produces artefacts that look like progress: elevations, notes, a numbered plan with every future plank accounted for. The first plank stays blank because the first plank is the only part that cannot be done in your head.
 
-Then June arrives, the river comes up four metres, and the deck begins to sing a note it has never made before.
+The film follows her through the moment the plan becomes the obstacle, and then through the much smaller thing that actually works — naming the nearest edge out loud and standing on it. Nothing about the far end of the bridge changes. The destination is never the problem.
 
-This is a short cel-animated film about the difference between a structure that holds today and one that survives a bad day — and about how the part of the work nobody can see is usually the part holding everything up.
+If you have ever spent an evening organising a project instead of starting it, this one is uncomfortable in a useful way. It is two minutes, and it will probably name a plank you have been leaving blank.
 
-If you build anything, ship anything, or have ever shaved two inches off a job to hit a deadline, this one is going to feel personal.
+If this landed, subscribe — short films about the quiet mechanics of starting, drawn in ink.
 
-#engineering #safety #craftsmanship #quality #shortcuts #stickman #bridge
+What is the blank plank in your week right now? Name it in the comments and the rest of us will hold you to it.
 
-Subscribe for more short films about the invisible parts of good work.
+#procrastination #firststep #overthinking #perfectionism
 
-Music: "Where Stars Fall" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Where_Stars_Fall.oga
-Music: "Softly" by Loyalty Freak Music (CC0 1.0 Public Domain) — https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_06_-_Softly.ogg
-Music: "The Distant Sun (Monomyth 1)" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Distant_Sun_(Monomyth_1).oga
-Music: "The Restoration (Monomyth 12)" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Restoration_(Monomyth_12).oga
+Music: "Where Stars Fall" by Scott Buckley (CC BY 4.0), "Softly" by Loyalty Freak Music (CC0 1.0 Public Domain), "The Distant Sun (Monomyth 1)" by Scott Buckley (CC BY 4.0), "The Restoration (Monomyth 12)" by Scott Buckley (CC BY 4.0). Full attribution links in the source repository.
 ```
 
 ### Pinned comment
 
-```
-Okoro's rule is the whole film for me: a structure is not safe because it holds today, it is safe because it survives a bad day. Two inches off ninety joints is nothing until the river comes up four metres.
+```text
+Look at the upper background in the first shot: the far end of the bridge is already finished — towers, cables, decking, all of it drawn in fine detail. The near plank is the only blank thing on the page, and it stays blank for most of the film.
 
-Have you ever shipped the fast version and had it come back at you later? I would like to hear what the "June flood" was in your line of work — the thing that found the margin you did not leave.
+So what is your blank plank this week? Not the project — the single smallest physical next action you keep not taking. Say it out loud below and someone will hold you to it.
+```
+
+### Tags
+
+```text
+procrastination, overplanning, why we procrastinate, first step motivation, how to stop overthinking, getting started, productivity, perfectionism, planning vs doing, stickman animation
 ```
 
 ---
 
-## video-005 — The Two-Second Reach
+## video-004 — Cutting Corners: What a 2-Inch Shortcut Really Costs
 
-**File:** `videos/the-two-second-reach/the-two-second-reach.mp4` · **Thumbnail:** `videos/the-two-second-reach/thumbnail.jpg` (1080×1920) · **9:16** 1080x1920 · **32.66s**
-
-**Slug:** `the-two-second-reach`  ·  **Tags:** willpower, environment-design, focus, distraction, stickman, habits, deep-work
+- **file:** `videos/the-two-inch-bridge/the-two-inch-bridge.mp4`
+- **length:** 102.91s · 1920x1080 · 16:9
+- **primary keyword:** `cutting corners`
 
 ### Title
 
-```
-The Two-Second Reach
-```
+Cutting Corners: What a 2-Inch Shortcut Really Costs
 
 ### Description
 
-```
-You never lose an hour all at once. You lose it in a two-second reach.
+```text
+Cutting corners feels free because the bill arrives later, addressed to someone else. This short film is about two inches of steel and the forty years it takes to matter.
 
-One quick check becomes a scroll, the scroll becomes a reply, the reply becomes noise — and willpower loses every time the screen is already inside arm's reach. That is not a character flaw, it is just proximity.
+A margin is not padding — it is the part of the design that absorbs everything you did not predict: the heavier load, the colder winter, the inspector who is tired, the driver who is honest about the weight and the one who is not. Take two inches out and nothing happens today. Nothing happens next year either. The structure looks identical, the numbers still pass, and the money saved is real and immediate while the cost is theoretical and distant.
 
-The fix in this short is deliberately unheroic. No discipline, no blocking app, no 5 AM routine. Just put the phone down across the table before you sit, so the reach costs three more steps than the impulse is willing to spend.
+That asymmetry is the whole problem with shortcuts. The feedback loop is broken: the person who removes the margin is rewarded now, and the person who inherits the consequence is usually not in the room yet.
 
-Thirty seconds, one idea, and it will probably work better than the last productivity system you tried.
+The film is not an argument that margins are sacred. It is an argument that you should be able to say, out loud, what a margin is buying you before you spend it — because "it saves two inches" is a calculation, and "it has never failed before" is a memory of the times it did not.
 
-#focus #deepwork #habits #distraction #willpower #stickman #productivity
+If this landed, subscribe — short films about the quiet mechanics of doing things properly, drawn in ink.
 
-Subscribe for more short videos about attention — the mechanics, not the motivation.
+What margin have you seen quietly spent somewhere in your own work? Engineering, software, cookery — I would like to hear it.
 
-Music: "Softly" by Loyalty Freak Music (CC0 1.0 Public Domain) — https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_06_-_Softly.ogg
+#engineering #craftsmanship #quality #safety
+
+Music: "Where Stars Fall" by Scott Buckley (CC BY 4.0), "Softly" by Loyalty Freak Music (CC0 1.0 Public Domain), "The Distant Sun (Monomyth 1)" by Scott Buckley (CC BY 4.0), "The Restoration (Monomyth 12)" by Scott Buckley (CC BY 4.0). Full attribution links in the source repository.
 ```
 
 ### Pinned comment
 
-```
-The uncomfortable part is that willpower was never the problem — proximity was. The screen sitting within arm's reach loses the fight for you before you have even decided anything.
+```text
+The thing I find genuinely chilling here is that nothing goes wrong in the film. No crack, no collapse, no dramatic beat — just a span that is two inches shorter than it should be, still carrying traffic, still looking completely correct from the outside.
 
-Where does your phone live while you work? On the desk, in a pocket, in another room? I keep hearing that "another room" is the only version that actually sticks.
+So what margin have you watched get quietly spent in your own work? In software it is a timeout or a retry count, in cooking it is a rest time, in a building it is a beam. I want to know what yours looks like.
+```
+
+### Tags
+
+```text
+cutting corners, safety margin, engineering ethics, why short cuts fail, quality vs speed, craftsmanship, attention to detail, small errors compound, engineering mistakes, stickman animation
 ```
 
 ---
 
-## video-001 — What If Every Notification Cost You 23 Minutes?
+## video-005 — Phone Distraction: The 2-Second Reach That Ends Focus
 
-**File:** `videos/what-if-every-notification-cost-you-23-minutes/what-if-every-notification-cost-you-23-minutes.mp4` · **Thumbnail:** `videos/what-if-every-notification-cost-you-23-minutes/thumbnail.jpg` (1080×1920) · **9:16** 1080x1920 · **158.96s**
-
-**Slug:** `what-if-every-notification-cost-you-23-minutes`  ·  **Tags:** productivity, notifications, context-switching, attention, stickman, time-management, deep-work
+- **file:** `videos/the-two-second-reach/the-two-second-reach.mp4`
+- **length:** 32.66s · 1080x1920 · 9:16
+- **primary keyword:** `phone distraction`
 
 ### Title
 
-```
-What If Every Notification Cost You 23 Minutes?
-```
+Phone Distraction: The 2-Second Reach That Ends Focus
 
 ### Description
 
-```
-Two hundred and forty minutes. That is roughly how much real focus you get in a working day — and every single notification quietly takes a bite out of it.
+```text
+Phone distraction is usually treated as a willpower problem, which is why the advice almost never works. This short film makes the opposite case in thirty seconds: the fight is over before you sit down.
 
-In this short, a counter floats beside Kai and counts that focus down in real time. A buzz takes two seconds to read. Coming back from it takes much longer. Researchers at the University of California, Irvine measured the average resumption lag at twenty-three minutes and fifteen seconds, and the research team found that people rarely return to the same task first — two other things slip in ahead of it.
+Watch where the phone is. At the start it is in his hand, hanging at his side, a warm little cone of light washing up his sleeve. It takes two seconds to lift it and four to be gone. By the end the phone is face-down on a desk across the room, far enough that reaching it costs a decision instead of costing nothing.
 
-Which means the phone is not really stealing your minutes. The switching is.
+That difference is the entire argument. Willpower is a resource you spend, and every two-second reach spends it cheaply and often, so you lose the day in small denominations. Distance is structural — it does not care how tired you are at four in the afternoon.
 
-You will see what a normal Tuesday looks like when you price each interruption honestly, and the one unglamorous thing Kai does that gets an hour of his day back. No productivity system, no app, no heroic discipline — just a drawer.
+You are not lazy for getting distracted by a device designed by hundreds of the most capable engineers in the world to be reached for. You are just losing a fight that was never about you.
 
-If you have ever looked up at 3 PM and wondered where the day went, this one is for you.
+If this landed, subscribe — short films about the quiet mechanics of attention, drawn in ink.
 
-#productivity #attention #deepwork #notifications #focus #stickman
+How far away is your phone right now, while you are reading this? Be honest in the comments.
 
-If you found this useful, subscribe — one short, honest idea about attention every week.
+#focus #deepwork #habits #digitalminimalism
 
-Sources: Gloria Mark, Daniela Gudith and Ulrich Klocke, "The Cost of Interrupted Work: More Speed and Stress" (University of California, Irvine); Gloria Mark et al., "A Pace of Life in 24 Hours" — average sustained screen attention fell from 2.5 minutes to 47 seconds.
-
-Music: "Where Stars Fall" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Where_Stars_Fall.oga
-Music: "Softly" by Loyalty Freak Music (CC0 1.0 Public Domain) — https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_06_-_Softly.ogg
-Music: "The Distant Sun (Monomyth 1)" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Distant_Sun_(Monomyth_1).oga
-Music: "The Restoration (Monomyth 12)" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Restoration_(Monomyth_12).oga
+Music: "Softly" by Loyalty Freak Music (CC0 1.0 Public Domain). Full attribution link in the source repository.
 ```
 
 ### Pinned comment
 
-```
-The 23-minute number is the one that stops you: two seconds to read, twenty-three minutes to come back. And the researchers found the return trip is rarely direct — two other things slip in first.
+```text
+The whole film rests on one detail: watch the light. In the opening shot the phone is in his hand and it is casting a small pale glow up his forearm and across his cheek — the thing is literally lighting him up before he has decided to look at it.
 
-Have you ever counted how many times you check your phone during a single work session? Did the number surprise you, or was it about what you expected?
+How far away is your phone at this exact moment, while you are reading this? Not where you usually put it. Right now.
 ```
+
+### Tags
+
+```text
+phone distraction, environment design, attention span, how to focus, digital minimalism, doomscrolling, deep work habits, willpower is not enough, phone out of reach, stickman animation
+```
+
+---
+
+## video-006 — 3 AM Anxiety: Why Checking the Clock Makes It Worse
+
+- **file:** `videos/never-check-the-time-at-3-am/never-check-the-time-at-3-am.mp4`
+- **length:** 43.65s · 1080x1920 · 9:16
+- **primary keyword:** `3 am anxiety`
+
+### Title
+
+3 AM Anxiety: Why Checking the Clock Makes It Worse
+
+### Description
+
+```text
+3 AM anxiety has a specific shape, and checking the clock is what gives it that shape. This short film is about the arithmetic you do in the dark and why it always makes things worse.
+
+You wake for no reason. For the first few seconds you are fine — no numbers yet, just a dark room and the ceiling. Then you look. 3:14. And instantly the night stops being a night and becomes a budget: four hours and forty-six minutes until the alarm, minus however long it takes to fall back asleep, minus the time it always takes, which is now a number you have to beat.
+
+That is the trap. The clock turns a neutral wake-up into a performance with a scoreboard, and the part of your brain that does arithmetic is very good at arithmetic and terrible company at three in the morning. Every check makes the next one more likely, until the checking is the thing keeping you awake.
+
+The advice at the end is almost embarrassingly small: turn the clock around. Not because time stops mattering, but because you cannot lose to a scoreboard you cannot see.
+
+If this ever happens to you at 3 AM, you are not the only one awake, and it is not a personal failure — it is a very predictable behaviour that one small change can interrupt.
+
+If this landed, subscribe — short films about the quiet mechanics of the mind at night, drawn in ink.
+
+What is the latest you have ever let yourself check the time? I suspect a few records are about to fall in the comments.
+
+#sleep #anxiety #overthinking #mentalhealth
+
+Music: "The Distant Sun (Monomyth 1)" by Scott Buckley (CC BY 4.0). Full attribution link in the source repository.
+```
+
+### Pinned comment
+
+```text
+The moment this film is really about is the half-second *before* the check. You wake up, you are fine, there are no numbers anywhere — and then you reach for the clock and turn a night into a scoreboard you cannot win.
+
+What is the latest you have ever let yourself check the time? Mine is 4:52, and I still remember the number, which is the whole point.
+```
+
+### Tags
+
+```text
+3 am anxiety, why you wake up at 3am, night anxiety, overthinking at night, can't sleep anxiety, sleep hygiene, middle of the night thoughts, how to fall back asleep, mental health, stickman animation
+```
+
+---
+
+## video-007 — Limiting Beliefs: Did You Agree to That Wall?
+
+- **file:** `videos/the-wall-you-agreed-with/the-wall-you-agreed-with.mp4`
+- **length:** 46.00s · 1080x1920 · 9:16
+- **primary keyword:** `limiting beliefs`
+
+### Title
+
+Limiting Beliefs: Did You Agree to That Wall?
+
+### Description
+
+```text
+Limiting beliefs do not arrive as beliefs. They arrive as facts about the world, and by the time you notice, they are load-bearing. This short film draws one so you can finally see what it is made of.
+
+A small figure walks into a wall, and the wall is drawn in dashed lines. Not solid, not bricked, not built — dashed, like a plan somebody sketched and never finished. The landscape is visible straight through it. He stops anyway, because it is a wall and walls stop you, and that is the entire mechanism: a limit is real to you the moment you agree with it, regardless of what it is made of.
+
+The line that does the work is the one about the moment of agreement. Nobody signs anything. Nothing gets inspected. You simply say, at some ordinary hour, "I am not the kind of person who does that", and then live the next decade inside that sentence.
+
+The film does not claim every wall is imaginary — some are real and some cost too much to climb. It claims you should know which one you are standing in front of, and the dashed outline is how you check.
+
+If this landed, subscribe — short films about the quiet mechanics of believing something is impossible, drawn in ink.
+
+What wall are you still agreeing with? That is the whole question, and it is worth an answer in the comments.
+
+#mindset #limitingbeliefs #growth #psychology
+
+Music: "Catalyst" by Scott Buckley (CC BY 4.0), "Where Stars Fall" by Scott Buckley (CC BY 4.0), "Regeneration" by QuarksUnited (CC BY 3.0). Full attribution links in the source repository.
+```
+
+### Pinned comment
+
+```text
+The detail that does all the work here: the wall is drawn in dashed lines. It is a proposal, not a structure — and the landscape is still visible straight through it. He could have walked through at any point.
+
+So which wall in your life is actually built, and which one did you just agree to? I am curious how many of us can point at one and remember the exact ordinary moment we said yes to it.
+```
+
+### Tags
+
+```text
+limiting beliefs, self imposed limits, growth mindset, how to change your mindset, fear of failure, stuck in life, psychology, motivation, what holds you back, stickman animation
+```
+
+---

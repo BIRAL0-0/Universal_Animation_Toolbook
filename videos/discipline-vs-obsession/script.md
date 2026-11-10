@@ -1,4 +1,4 @@
-# Discipline vs Obsession — The Man Who Sacrificed Everything
+# Discipline vs Obsession: The 9 PM vs 2 AM Problem
 
 | Field | Value |
 |---|---|

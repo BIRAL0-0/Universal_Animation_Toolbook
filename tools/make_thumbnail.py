@@ -89,7 +89,8 @@ def parse_text(spec: str) -> tuple[str, str]:
 
 def render(base: Path, out: Path, size: tuple[int, int], texts, *, y_positions=None,
            size_fractions=None, stroke=7, font_path: Path = DEFAULT_FONT,
-           top_fade: bool = False, quality: int = 90) -> Path:
+           top_fade: bool = False, quality: int = 90,
+           plate: str | None = None, plate_ink: str | None = None) -> Path:
     from PIL import Image, ImageDraw, ImageFont
 
     width, height = size
@@ -100,6 +101,34 @@ def render(base: Path, out: Path, size: tuple[int, int], texts, *, y_positions=N
     draw = ImageDraw.Draw(image)
     default_y = (0.08, 0.20) if height > width else (0.09, 0.245)
     default_fraction = 0.078 if height > width else 0.115
+    plan = []
+    for index, spec in enumerate(texts):
+        colour, text = parse_text(spec)
+        y = (y_positions[index] if y_positions and index < len(y_positions)
+             else default_y[min(index, len(default_y) - 1)])
+        fraction = (size_fractions[index] if size_fractions and index < len(size_fractions)
+                    else default_fraction)
+        plan.append((colour, text, y, fraction))
+
+    if plate is not None:
+        # A rounded card behind the type, the way these films caption themselves:
+        # flat fill, soft corner, no shadow. Keeps dark ink readable over busy art.
+        boxes = []
+        for colour, text, y, fraction in plan:
+            font = ImageFont.truetype(str(font_path), int(width * fraction))
+            boxes.append(draw.textbbox((width // 2, int(height * y)), text, font=font, anchor="mm"))
+        pad_x = int(width * 0.045)
+        pad_y = int(width * 0.030)
+        left = max(0, min(box[0] for box in boxes) - pad_x)
+        right = min(width, max(box[2] for box in boxes) + pad_x)
+        top = max(0, min(box[1] for box in boxes) - pad_y)
+        bottom = min(height, max(box[3] for box in boxes) + pad_y)
+        draw.rounded_rectangle([left, top, right, bottom], radius=int(width * 0.022),
+                               fill=plate)
+        if plate_ink:
+            draw.rounded_rectangle([left, top, right, bottom], radius=int(width * 0.022),
+                                   outline=plate_ink, width=max(2, int(width * 0.004)))
+
     for index, spec in enumerate(texts):
         colour, text = parse_text(spec)
         y = (y_positions[index] if y_positions and index < len(y_positions) else default_y[
@@ -132,17 +161,26 @@ def main(argv: list[str] | None = None) -> int:
                         help="vertical centre of each text line as a fraction of height")
     parser.add_argument("--text-size", type=float, action="append", default=None,
                         help="each text line's font size as a fraction of width")
-    parser.add_argument("--stroke", type=int, default=7, help="outline width in pixels")
+    parser.add_argument("--stroke", type=int, default=7, help="outline width in pixels (0 = clean type)")
+    parser.add_argument("--no-stroke", action="store_true",
+                        help="set the outline to 0, matching films that use clean unoutlined type")
     parser.add_argument("--top-fade", action="store_true", help="darken the top band for legibility")
     parser.add_argument("--font", type=Path, default=DEFAULT_FONT)
+    parser.add_argument("--plate", metavar="#rrggbb",
+                        help="draw a rounded card in this colour behind all text lines")
+    parser.add_argument("--plate-ink", metavar="#rrggbb", help="outline colour for the card")
     args = parser.parse_args(argv)
+
+    if args.no_stroke:
+        args.stroke = 0
 
     if not args.base.exists():
         parser.error(f"base art not found: {args.base}")
 
     out = render(args.base, args.out, args.size, args.text, y_positions=args.y,
                  size_fractions=args.text_size, stroke=args.stroke,
-                 font_path=args.font, top_fade=args.top_fade)
+                 font_path=args.font, top_fade=args.top_fade,
+                 plate=args.plate, plate_ink=args.plate_ink)
     print(f"{out} — {out.stat().st_size/1024:.0f} KB, {args.size[0]}x{args.size[1]}")
     print("Now open it and inspect it (full size and at phone size) before publishing.")
     return 0

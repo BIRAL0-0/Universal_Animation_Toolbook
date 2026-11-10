@@ -1,4 +1,4 @@
-# What If Every Notification Cost You 23 Minutes?
+# Notifications Cost You 23 Minutes (Every Single Time)
 
 | Field | Value |
 |---|---|

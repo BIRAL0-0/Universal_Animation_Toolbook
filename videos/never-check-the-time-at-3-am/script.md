@@ -1,4 +1,4 @@
-# Never Check the Time at 3 AM
+# 3 AM Anxiety: Why Checking the Clock Makes It Worse
 
 | Field | Value |
 |---|---|

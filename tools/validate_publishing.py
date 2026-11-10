@@ -67,6 +67,8 @@ TEMP_RE = re.compile(
 ALLOWED_EXTRA_FILES = {"script.md", "thumbnail.jpg", "record.json"}
 
 MAX_THUMB_BYTES = 2 * 1024 * 1024
+MIN_SEO_SCORE = 78
+MIN_THUMB_STYLE = 0.62
 MIN_DESCRIPTION_CHARS = 200
 MIN_PINNED_CHARS = 40
 
@@ -145,19 +147,51 @@ def words(text: str) -> set[str]:
     return set(re.findall(r"[a-z']+", text.lower()))
 
 
+SPOKEN_LABELS = ("NARRATOR", "KAI", "SAM", "DANIEL", "MARCUS", "MOTHER", "NIA", "OKORO",
+                  "PANEL", "VOICE")
+NON_SPOKEN_LABELS = ("ON SCREEN", "VISUAL DIRECTION", "NOTE", "MUSIC")
+
+
 def narration_of(script: str) -> str:
-    """Strip markdown scaffolding, keeping spoken lines."""
-    lines = []
+    """Extract only spoken lines: drop headings, tables, direction, notes and credits.
+
+    A script legitimately carries on-screen text (which duplicates the narration), visual
+    direction and production notes. Counting those as speech would over-estimate runtime, so
+    the runtime check must see the narration alone.
+    """
+    lines: list[str] = []
+    in_notes = False
+    in_logline = False
+    seen: set[str] = set()
     for line in script.splitlines():
         stripped = line.strip()
-        if not stripped or stripped.startswith("#") or stripped.startswith("|") \
-                or stripped.startswith(">") or stripped.startswith("---"):
+        if stripped.startswith("#"):
+            heading = stripped.lstrip("# ").strip()
+            in_logline = bool(re.match(r"logline|summary|synopsis|premise", heading, re.I))
+            # everything from a production/credits section onwards is not narration
+            if re.search(r"production notes|credits|attribution", heading, re.IGNORECASE):
+                in_notes = True
             continue
-        stripped = re.sub(r"^\*\*[A-Z ]+:\*\*\s*", "", stripped)
-        stripped = re.sub(r"^\*\*[^*]+\*\*\s*", "", stripped)
-        stripped = re.sub(r"^_.*_$", "", stripped)
-        if stripped:
-            lines.append(stripped)
+        if in_notes or in_logline or not stripped:
+            continue
+        if stripped == "---":
+            in_logline = False
+            continue
+        if stripped.startswith(("|", ">", "_", "-")):
+            continue
+        label = re.match(r"^\*\*([A-Z][A-Z /]+):\*\*\s*(.*)$", stripped)
+        if label:
+            name, text = label.group(1).strip(), label.group(2).strip()
+            if name.startswith(NON_SPOKEN_LABELS):
+                continue
+            if name in SPOKEN_LABELS or text:
+                key = text.lower()
+                if key in seen:      # on-screen text often repeats a spoken line
+                    continue
+                seen.add(key)
+                lines.append(text)
+            continue
+        lines.append(stripped)
     return " ".join(lines)
 
 
@@ -284,8 +318,13 @@ def validate_package(directory: Path, index_entry: dict | None) -> tuple[list[st
             problems.append(f"[script] script.md suspiciously short ({len(script)} chars)")
         spoken = narration_of(script)
         spoken_words = words(spoken)
-        if len(spoken_words) < 40:
-            problems.append("[script] script.md carries fewer than 40 distinct spoken words")
+        # Duration-scaled floor: a tight 45s Short legitimately carries ~35 distinct words,
+        # while an empty or stub script still fails. ~0.4 distinct words per second of runtime.
+        min_words = max(20, int(float(record.get("duration_seconds", 0)) * 0.40))
+        if len(spoken_words) < min_words:
+            problems.append(
+                f"[script] script.md carries {len(spoken_words)} distinct spoken words, "
+                f"below the {min_words} expected for a {record.get('duration_seconds')}s master")
         # script must not contradict the record's own summary of the story
         summary_words = words(record.get("summary", "") + " " + record.get("topic", ""))
         if summary_words and len(summary_words & spoken_words) / len(summary_words) < 0.2:
@@ -315,6 +354,23 @@ def validate_package(directory: Path, index_entry: dict | None) -> tuple[list[st
                 problems.append(f"[thumbnail] {dims[0]}x{dims[1]} != required {want[0]}x{want[1]}")
             if min(dims) < 720:
                 problems.append("[thumbnail] short edge under 720px — unreadable on mobile")
+
+    # ---- SEO: the package must be findable, not just complete
+    try:
+        from seo_audit import audit as score_seo
+    except ImportError:  # pragma: no cover - run as a script path
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location(
+            "seo_audit", Path(__file__).resolve().parent / "seo_audit.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        score_seo = module.audit
+    seo = score_seo(record)
+    if seo["score"] < MIN_SEO_SCORE:
+        problems.append(
+            f"[seo] metadata scores {seo['score']}/100, below the {MIN_SEO_SCORE} floor — "
+            + "; ".join(seo["notes"][:3]))
 
     # ---- stray files
     present = {p.name for p in directory.iterdir() if p.is_file()}

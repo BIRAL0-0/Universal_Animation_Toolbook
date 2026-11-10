@@ -157,3 +157,33 @@ def test_publishing_validator_passes_on_this_repository():
     assert result.returncode == 0, report.get("problems")
     assert report.get("ok") is True
     assert report.get("packages")
+
+
+# --------------------------------------------------- narration extraction precision
+def _validator():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "validate_publishing", REPO_ROOT / "tools" / "validate_publishing.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_narration_ignores_logline_direction_and_notes():
+    """Runtime estimation must see speech only — not the logline, on-screen text or notes."""
+    mod = _validator()
+    script = (
+        "# A Title\n\n## Logline\n\nA long prose summary that is never spoken aloud.\n\n---\n\n"
+        "## S01 — One\n\n**ON SCREEN:** He hit a wall.\n\n**NARRATOR:** He hit a wall.\n\n"
+        "## Production notes\n\n- voices, music and other chatter that is never spoken.\n")
+    assert mod.narration_of(script).strip() == "He hit a wall."
+
+
+def test_word_floor_scales_with_duration():
+    """A tight 45s Short passes; the same script bolted to a 10-minute master would not."""
+    mod = _validator()
+    spoken = " ".join(f"word{i}" for i in range(30))
+    count = len(set(__import__("re").findall(r"[a-z0-9']+", spoken)))
+    assert count >= max(20, int(45 * 0.40))
+    assert count < max(20, int(600 * 0.40))

@@ -38,6 +38,52 @@ current, and that no temporary file is sitting in the package.
 **Format policy.** `<60.0s` → 9:16 `1080x1920` Shorts. `>=60.0s` → 16:9 `1920x1080` long-form.
 Approved exceptions are recorded in `record.json` and reported as `note` lines by the validator.
 
+**Thumbnail style rule (NORMATIVE).** A thumbnail must look like it was cut out of the film it
+advertises. Base art may be generated separately — that is usually better than a raw frame, which
+is often too empty to carry a cover — but it must be generated **against the film's own frames as
+style references**, and the result must be measured, not just felt:
+
+```bash
+python3 tools/thumbnail_style.py check videos/<slug>/<slug>.mp4 videos/<slug>/thumbnail.jpg
+```
+
+The checker samples eight stills spread through the master and scores the cover against them:
+hue signature weighted 0.55, saturation 0.20, brightness 0.25 (asymmetric — lifting exposure for
+contrast is craft, crushing it is a mismatch). Below `0.62` the cover does not share the film's
+visual world and must be regenerated. Matching a film is a *floor*, not a target: the designer
+still approves or rejects the result by eye.
+
+Three consequences worth stating plainly, because they were all learned the hard way:
+
+- **A generic illustration can never match.** A dark navy film with label pills and cyan accents
+  must not get an orange sunset poster, however good the poster is.
+- **Line quality is part of the style.** A flat ink-line film drawn with a uniform 4px pen looks
+  nothing like a hatched pencil illustration, even at the same cream background colour. Match the
+  drawing technique, not just the palette — the checker cannot see stroke weight, so this part is
+  still your eyes.
+- **Borrow the film's own type device.** If the film captions itself on a white rounded card, the
+  cover should use a card too (`make_thumbnail.py --plate`). If it uses clean unoutlined type,
+  pass `--no-stroke`. A thumbnail that invents a new typographic voice reads as a different channel.
+
+**Search rule (NORMATIVE).** Every `record.json` must declare `primary_keyword` — the one phrase a
+real viewer would type. Metadata is scored 0–100 and may not fall below the floor:
+
+```bash
+python3 tools/seo_audit.py            # scorecard for every package
+python3 tools/seo_audit.py --verbose  # with the specific points lost
+```
+
+| Block | Max | What it tests |
+| --- | --- | --- |
+| title | 30 | 40–70 chars, keyword in the first 40, a question or number, no all-caps shouting |
+| description | 30 | keyword inside the first 125 visible characters, 900–3200 chars, 2–4 natural mentions, 3–5 hashtags, an explicit call to action |
+| tags | 20 | 8–15 tags under 480 chars, at least 2 long-tail phrases, the keyword present |
+| pinned comment | 10 | ≥180 chars, asks a real question, points at a specific detail in the film |
+| slug | 10 | ≥3 hyphenated words carrying the keyword |
+
+`validate_publishing.py` fails a package below `78`, so SEO is a gate rather than an aspiration.
+The score is a floor too: `--min 85` is the target, and the current set averages 90.9.
+
 ---
 
 ## 13.1 What the pipeline already produces (IMPLEMENTED)

@@ -1,12 +1,12 @@
 {
   "id": "video-005",
   "slug": "the-two-second-reach",
-  "title": "The Two-Second Reach",
+  "title": "Phone Distraction: The 2-Second Reach That Ends Focus",
   "filename": "the-two-second-reach.mp4",
   "script": "script.md",
   "thumbnail": "thumbnail.jpg",
-  "youtube_description": "You never lose an hour all at once. You lose it in a two-second reach.\n\nOne quick check becomes a scroll, the scroll becomes a reply, the reply becomes noise — and willpower loses every time the screen is already inside arm's reach. That is not a character flaw, it is just proximity.\n\nThe fix in this short is deliberately unheroic. No discipline, no blocking app, no 5 AM routine. Just put the phone down across the table before you sit, so the reach costs three more steps than the impulse is willing to spend.\n\nThirty seconds, one idea, and it will probably work better than the last productivity system you tried.\n\n#focus #deepwork #habits #distraction #willpower #stickman #productivity\n\nSubscribe for more short videos about attention — the mechanics, not the motivation.\n\nMusic: \"Softly\" by Loyalty Freak Music (CC0 1.0 Public Domain) — https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_06_-_Softly.ogg",
-  "pinned_comment": "The uncomfortable part is that willpower was never the problem — proximity was. The screen sitting within arm's reach loses the fight for you before you have even decided anything.\n\nWhere does your phone live while you work? On the desk, in a pocket, in another room? I keep hearing that \"another room\" is the only version that actually sticks.",
+  "youtube_description": "Phone distraction is usually treated as a willpower problem, which is why the advice almost never works. This short film makes the opposite case in thirty seconds: the fight is over before you sit down.\n\nWatch where the phone is. At the start it is in his hand, hanging at his side, a warm little cone of light washing up his sleeve. It takes two seconds to lift it and four to be gone. By the end the phone is face-down on a desk across the room, far enough that reaching it costs a decision instead of costing nothing.\n\nThat difference is the entire argument. Willpower is a resource you spend, and every two-second reach spends it cheaply and often, so you lose the day in small denominations. Distance is structural — it does not care how tired you are at four in the afternoon.\n\nYou are not lazy for getting distracted by a device designed by hundreds of the most capable engineers in the world to be reached for. You are just losing a fight that was never about you.\n\nIf this landed, subscribe — short films about the quiet mechanics of attention, drawn in ink.\n\nHow far away is your phone right now, while you are reading this? Be honest in the comments.\n\n#focus #deepwork #habits #digitalminimalism\n\nMusic: \"Softly\" by Loyalty Freak Music (CC0 1.0 Public Domain). Full attribution link in the source repository.",
+  "pinned_comment": "The whole film rests on one detail: watch the light. In the opening shot the phone is in his hand and it is casting a small pale glow up his forearm and across his cheek — the thing is literally lighting him up before he has decided to look at it.\n\nHow far away is your phone at this exact moment, while you are reading this? Not where you usually put it. Right now.",
   "format": "portrait",
   "aspect_ratio": "9:16",
   "resolution": "1080x1920",
@@ -16,13 +16,16 @@
   "summary": "An hour is never lost at once — it goes in two-second reaches. Move the phone two steps further away than your impulse and the hour stays yours.",
   "key_angle": "The fix is architectural, not motivational: change the room, not your brain. The camera keeps the phone and the hand in the same frame the whole time.",
   "tags": [
-    "willpower",
-    "environment-design",
-    "focus",
-    "distraction",
-    "stickman",
-    "habits",
-    "deep-work"
+    "phone distraction",
+    "environment design",
+    "attention span",
+    "how to focus",
+    "digital minimalism",
+    "doomscrolling",
+    "deep work habits",
+    "willpower is not enough",
+    "phone out of reach",
+    "stickman animation"
   ],
   "production_version": "3.0.0",
   "status": "completed",
@@ -38,10 +41,12 @@
     ],
     "design": "AI-generated cel-stickman base art + Poppins-Bold text overlay, inspected at 1080x1920 / 1280x720 and at mobile preview size"
   },
-  "content_fingerprint": "sha256:07deaf6b387d30e35a1c4bf8db862bce",
+  "content_fingerprint": "sha256:69804296d7c6bde5ceb58405ae0438f7",
   "duration_sec": 32.66,
   "final_video": "the-two-second-reach.mp4",
   "script_summary": "An hour is never lost at once — it goes in two-second reaches. Move the phone two steps further away than your impulse and the hour stays yours.",
   "duration_label": "0:33",
-  "format_policy_exception": null
+  "format_policy_exception": null,
+  "previous_title": "The Two-Second Reach",
+  "primary_keyword": "phone distraction"
 }
