@@ -33,7 +33,7 @@ stale `.work_*` caches automatically when `episode.json` changes (PC-012).
 
 - **Episode spec:** `projects/video-003-first-plank/episode.json`
 - **Delivery branch:** `arena/d8a141d7-universal-animation-toolbook`
-- **Delivery commit:** PENDING_REPLACEMENT
+- **Delivery commit:** `219a98b788f6899e8baae27c2173c782d13c0d25`
 - **Voice backend actually used:** `kokoro-offline:am_michael`
 - **Measured runtime:** 126.038 s (retimed from real Kokoro speech; authored spec is 140 s)
 - **Chapters:** 7 lines + 4 CC music credits in `chapters.txt`
