@@ -166,3 +166,26 @@ def test_kit_is_copyable_and_validates_standalone(tmp_path):
     assert (kit_copy / "engine" / "video_renderer.js").is_file()
     assert (kit_copy / "assets" / "Poppins-Regular.ttf").is_file()
     assert (kit_copy / "config" / "studio_config.json").is_file()
+
+
+def test_master_prompt_documents_multiline_board_geometry():
+    """The reusable brief must carry every measured board-geometry value."""
+    text = (ROOT / "templates" / "MASTER_VIDEO_PRODUCTION_PROMPT.md").read_text(encoding="utf-8")
+    for value in ("h>=250", "y~74", "42-pixel", "portrait_w:460", "portrait_x:0.5",
+                  "final-master"):
+        assert value in text, value
+
+
+def test_docs_checker_ignores_evidence_taxonomy_and_ffprobe_language_tags():
+    """Copied production logs must not be read as broken links."""
+    text = (ROOT / "tools" / "check_docs.py").read_text(encoding="utf-8")
+    for token in ("[M]/[O]/[P]", "[V]/[I]/[A]", "und"):
+        assert token in text, token
+
+
+def test_produce_video_invalidates_stale_render_caches():
+    """A spec edit must not be silently ignored by --resume chunk/reuse state."""
+    text = (ROOT / "tools" / "produce_video.py").read_text(encoding="utf-8")
+    assert "def invalidate_stale_work_dirs" in text
+    assert ".work_cache_state" in text
+    assert "hashlib.sha256" in text

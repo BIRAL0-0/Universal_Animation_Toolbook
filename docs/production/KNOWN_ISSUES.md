@@ -175,3 +175,28 @@ Every entry: **stage** · **symptom** · **root cause** · **status** · **regre
 - **Cause:** examples in workflow documentation were not updated when old outputs were removed.
 - **Fix:** point guidance to existing tracked examples and avoid asserting missing artifacts exist.
 - **Regression check / verification:** `python3 tools/check_docs.py` passed after the edit; this checker also runs in CI.
+
+### KI-010 — Short board cards clip lines; wide portrait boards collide with name tags (resolved)
+- **Stage:** stills / draft / master visual QA
+- **First seen:** video-003, 2026-11-09/10
+- **Symptom:** multi-line boards clipped their lower lines; in 9:16 the S01 `MIRA` tag touched
+  the lower edge of "THE BRIDGE" card.
+- **Root cause:** project authoring geometry. `h:168` was too short, and the default portrait
+  board fit did not narrow/centre the 560-pixel card enough.
+- **Fix:** `h>=250`, `y~74`, 42-pixel line spacing, `portrait_w:460`, `portrait_x:0.5`; see
+  PC-009 / PC-010 and the master template. No shared-engine change was needed.
+- **Regression check / verification:** corrected final-master board frames inspected; unit test
+  guards the documented values.
+
+### KI-011 — Stale `--resume` cache can omit a spec correction from a master (resolved)
+- **Stage:** master re-render after an episode change
+- **First seen:** video-003, 2026-11-10
+- **Symptom:** a corrected voiced draft showed resized portrait boards, while the re-rendered
+  master still showed the old boards and the S01 name-tag collision.
+- **Root cause:** `produce_video.py` always passes `--resume`; an existing
+  `.work_final/episode_retimed.json` and its chunk MP4s were reused instead of regenerating from
+  the changed `episode.json`.
+- **Fix:** PC-012 hash guard clears stale `.work_*` render caches when the spec changes. The
+  delivered master was produced after that invalidation, and its board-cue frames were inspected.
+- **Regression check / verification:** `test_produce_video_invalidates_stale_render_caches`;
+  corrected final-master frames show the name tag below the board.

@@ -1,0 +1,63 @@
+{
+  "full_decode": {
+    "9x16": {
+      "ok": true,
+      "stderr": ""
+    },
+    "16x9": {
+      "ok": true,
+      "stderr": ""
+    }
+  },
+  "one_fps_frame_stats": {
+    "9x16": {
+      "frames_sampled": 126,
+      "min_mean": 23.34,
+      "max_mean": 86.78,
+      "min_std": 20.3,
+      "black_or_flat_frames": 0,
+      "black_or_flat_times": []
+    },
+    "16x9": {
+      "frames_sampled": 126,
+      "min_mean": 20.97,
+      "max_mean": 75.46,
+      "min_std": 13.91,
+      "black_or_flat_frames": 0,
+      "black_or_flat_times": []
+    }
+  },
+  "muxed_aac": {
+    "peak_dbfs": -1.27,
+    "rms_dbfs": -17.51,
+    "samples": 11114496
+  },
+  "storyboard_times": [
+    3.0,
+    22.556,
+    40.556,
+    56.556,
+    74.556,
+    93.038,
+    111.038
+  ],
+  "chapters": {
+    "lines": 7,
+    "timestamps_sec": [
+      0,
+      19,
+      37,
+      53,
+      71,
+      90,
+      108
+    ],
+    "all_within_duration": true,
+    "credits_present": true,
+    "last_line": "01:48 Chapter Seven | The Other Side"
+  },
+  "sha256": {
+    "final.mp4": "7a21ad65b6185f814e1e55cf4e8fb87512611a0daf65ed4d58a9f3b840424ba4",
+    "final_16x9.mp4": "67c2512daf0795aa1d8f6f9744dd0253903d5f324697fa9493eeea081ccfb8ed"
+  }
+}

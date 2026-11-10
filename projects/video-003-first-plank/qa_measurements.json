@@ -1,0 +1,73 @@
+{
+  "project": "video-003-first-plank",
+  "stages": {
+    "validate": {
+      "duration_sec": 140,
+      "scene_count": 7,
+      "sound_events": 49,
+      "warnings": []
+    },
+    "stills": {
+      "9x16": 7,
+      "16x9": 7
+    },
+    "draft": {
+      "path": "renders/draft_9x16.mp4",
+      "bytes": 13428469
+    },
+    "master": {
+      "9x16": {
+        "path": "final.mp4",
+        "bytes": 12911980
+      },
+      "16x9": {
+        "path": "renders/final_16x9.mp4",
+        "bytes": 9446336
+      },
+      "wide_ok": true
+    },
+    "measure": {
+      "wav": "/home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/.work_final/master_audio.wav",
+      "channels": 2,
+      "rate": 44100,
+      "duration_sec": 126.04,
+      "peak_dbfs": -1.22,
+      "rms_dbfs": -17.5,
+      "peak_in_target": true,
+      "rms_in_target": true
+    },
+    "frames": {
+      "times": [
+        5.04,
+        20.16,
+        37.81,
+        56.71,
+        75.62,
+        94.52,
+        110.91,
+        122.25
+      ],
+      "paths": [
+        "assets/qa_frames/t005.04.png",
+        "assets/qa_frames/t020.16.png",
+        "assets/qa_frames/t037.81.png",
+        "assets/qa_frames/t056.71.png",
+        "assets/qa_frames/t075.62.png",
+        "assets/qa_frames/t094.52.png",
+        "assets/qa_frames/t110.91.png",
+        "assets/qa_frames/t122.25.png"
+      ],
+      "duration_sec": 126.03
+    },
+    "verify": {
+      "probe_lines": [
+        "Duration: 00:02:06.03, start: 0.000000, bitrate: 819 kb/s",
+        "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1080x1920, 615 kb/s, 30 fps, 30 tbr, 15360 tbn (default)",
+        "Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 44100 Hz, stereo, fltp, 196 kb/s (default)"
+      ],
+      "full_decode_ok": true,
+      "dimensions": "1080x1920",
+      "fps": "30"
+    }
+  }
+}

@@ -30,6 +30,7 @@ Exit codes: 0 all requested stages passed · 2 a gate failed · 3 render produce
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import shutil
@@ -62,6 +63,29 @@ def ffmpeg_exe() -> str:
     return imageio_ffmpeg.get_ffmpeg_exe()
 
 
+def invalidate_stale_work_dirs(proj: Path, spec: Path) -> tuple[str, bool]:
+    """Clear resumed render caches whenever the authoritative episode spec changes.
+
+    ``run_studio.py --resume`` reuses ``.work_*/episode_retimed.json``, chunk MP4s and the mixed
+    WAV. Those artifacts encode the *old* spec, so a board/geometry edit can otherwise be
+    silently omitted from a supposedly fresh master. A SHA-256 marker lives in an ignored
+    ``.work_cache_state/`` directory and is compared at the start of every orchestrator run.
+    """
+    digest = hashlib.sha256(spec.read_bytes()).hexdigest()
+    state_dir = proj / ".work_cache_state"
+    marker = state_dir / "spec_sha256"
+    previous = marker.read_text(encoding="utf-8").strip() if marker.exists() else None
+    changed = previous != digest
+    if changed:
+        for root in (proj, proj / "renders"):
+            for work in sorted(root.glob(".work_*")):
+                if work.is_dir() and work != state_dir:
+                    shutil.rmtree(work)
+        state_dir.mkdir(parents=True, exist_ok=True)
+        marker.write_text(digest + "\n", encoding="utf-8")
+    return digest, changed
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("project", help="path to projects/<slug>")
@@ -82,6 +106,7 @@ def main() -> int:
     (proj / "renders").mkdir(parents=True, exist_ok=True)
     (proj / "audio").mkdir(parents=True, exist_ok=True)
     (proj / "assets" / "qa_frames").mkdir(parents=True, exist_ok=True)
+    spec_sha, caches_cleared = invalidate_stale_work_dirs(proj, spec)
 
     log_lines: list[str] = []
 
@@ -90,6 +115,9 @@ def main() -> int:
         line = f"[{stamp}] {msg}"
         print(line)
         log_lines.append(line)
+
+    if caches_cleared:
+        log(f"episode spec changed -> cleared stale .work_* render caches ({spec_sha[:12]})")
 
     py = sys.executable
     ff = ffmpeg_exe()

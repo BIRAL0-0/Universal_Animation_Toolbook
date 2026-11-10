@@ -52,6 +52,7 @@ ALLOW_MISSING = {
     "downloads/the_wall_you_agreed_with_1080x1920.mp4",
     "downloads/the_wall_you_agreed_with_1080x1920.zip",
     "projects/video-003-topic/PROMPT.md",  # worked example in the first-video guide
+    "und",  # ffprobe prints Stream #0:1[0x2](und) in copied production logs
 }
 
 # Directories a render or an install creates. A path inside them cannot exist in a fresh clone.
@@ -127,10 +128,16 @@ IGNORE_EXACT = STRUCTURAL_SHORTHAND | {
     "focus_x/y", "y/n", "and/or", "24/7", "TCP/IP", "S01.wav", "S07.wav",
     # Branch names, API endpoints and GitHub owner/repo identifiers are external, not paths:
     "arena/c7c9d20d-universal-animation-toolbook",
+    "arena/d8a141d7-universal-animation-toolbook",
     "api.github.com/repos/remotion-dev/skills",
     "remotion-dev/remotion", "remotion-dev/skills",
     "007-Akira/Project-Rocky",  # Piper voice mirror used by fetch_piper_voices.py --github
     "remsky/Kokoro-FastAPI",  # source of the pinned v1.0 voice .pt files (setup_tts.py step 4)
+}
+
+# Evidence-taxonomy labels and ffprobe's undefined-language tag are prose/tool output, not paths.
+IGNORE_EXACT |= {
+    "[M]/[O]/[P]", "[V]/[I]/[A]", "[M]", "[O]", "[P]", "[V]", "[I]", "[A]", "und",
 }
 
 # Documents that describe the kit from the outside may quote kit-relative paths such as
@@ -333,6 +340,8 @@ def main() -> int:
                 continue
             target_path = target.split("#")[0]
             if not target_path:
+                continue
+            if target_path in ALLOW_MISSING or target_path in IGNORE_EXACT:
                 continue
             claims += 1
             if not link_resolves(target_path, doc):

@@ -1,0 +1,245 @@
+[
+  {
+    "t": 1.956,
+    "type": "page_turn",
+    "pan": -0.2
+  },
+  {
+    "t": 2.78,
+    "type": "board_pop",
+    "pan": 0.132
+  },
+  {
+    "t": 5.867,
+    "type": "step",
+    "pan": 0.1
+  },
+  {
+    "t": 11.734,
+    "type": "wind_gust",
+    "pan": 0
+  },
+  {
+    "t": 13.689,
+    "type": "step",
+    "pan": -0.11200000000122233,
+    "actor": "mira",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 19.556,
+    "type": "step",
+    "pan": -0.055999999999999966,
+    "actor": "mira",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 19.636,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 22.256,
+    "type": "page_turn",
+    "pan": -0.2
+  },
+  {
+    "t": 26.756,
+    "type": "paper_slide",
+    "pan": 0.1
+  },
+  {
+    "t": 30.594,
+    "type": "board_pop",
+    "pan": 0.132
+  },
+  {
+    "t": 32.156,
+    "type": "step",
+    "pan": 0
+  },
+  {
+    "t": 37.636,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 39.334,
+    "type": "wind_gust",
+    "pan": 0
+  },
+  {
+    "t": 41.556,
+    "type": "step",
+    "pan": -0.14000000000152793,
+    "actor": "mira",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 43.661,
+    "type": "board_pop",
+    "pan": 0.132
+  },
+  {
+    "t": 43.778,
+    "type": "body_thud",
+    "pan": 0.2
+  },
+  {
+    "t": 45.556,
+    "type": "step",
+    "pan": -0.06999999999999998,
+    "actor": "mira",
+    "source": "actual gait touchdown clock"
+  },
+  {
+    "t": 48.223,
+    "type": "paper_rustle",
+    "pan": -0.2
+  },
+  {
+    "t": 51.778,
+    "type": "step",
+    "pan": 0.1
+  },
+  {
+    "t": 53.636,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 57.156,
+    "type": "page_turn",
+    "pan": -0.2
+  },
+  {
+    "t": 59.487,
+    "type": "board_pop",
+    "pan": 0.132
+  },
+  {
+    "t": 61.656,
+    "type": "paper_slide",
+    "pan": 0.1
+  },
+  {
+    "t": 67.056,
+    "type": "step",
+    "pan": 0
+  },
+  {
+    "t": 71.636,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 73.266,
+    "type": "board_pop",
+    "pan": 0.132
+  },
+  {
+    "t": 74.076,
+    "type": "page_turn",
+    "pan": -0.2
+  },
+  {
+    "t": 79.117,
+    "type": "step",
+    "pan": 0.1
+  },
+  {
+    "t": 86.677,
+    "type": "final_piano_note",
+    "pan": 0
+  },
+  {
+    "t": 90.118,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 91.208,
+    "type": "step",
+    "pan": 0,
+    "actor": "mira",
+    "source": "stair cadence clock"
+  },
+  {
+    "t": 91.838,
+    "type": "step",
+    "pan": 0.1
+  },
+  {
+    "t": 93.008,
+    "type": "step",
+    "pan": 0,
+    "actor": "mira",
+    "source": "stair cadence clock"
+  },
+  {
+    "t": 94.538,
+    "type": "step",
+    "pan": 0.1
+  },
+  {
+    "t": 94.808,
+    "type": "step",
+    "pan": 0,
+    "actor": "mira",
+    "source": "stair cadence clock"
+  },
+  {
+    "t": 96.608,
+    "type": "step",
+    "pan": 0,
+    "actor": "mira",
+    "source": "stair cadence clock"
+  },
+  {
+    "t": 97.903,
+    "type": "board_pop",
+    "pan": 0.132
+  },
+  {
+    "t": 98.408,
+    "type": "step",
+    "pan": 0,
+    "actor": "mira",
+    "source": "stair cadence clock"
+  },
+  {
+    "t": 99.038,
+    "type": "door_bell",
+    "pan": 0.2
+  },
+  {
+    "t": 105.338,
+    "type": "final_piano_note",
+    "pan": 0
+  },
+  {
+    "t": 108.118,
+    "type": "chapter_chime",
+    "pan": 0
+  },
+  {
+    "t": 109.838,
+    "type": "wind_gust",
+    "pan": 0
+  },
+  {
+    "t": 111.805,
+    "type": "board_pop",
+    "pan": 0.132
+  },
+  {
+    "t": 115.238,
+    "type": "step",
+    "pan": 0.1
+  },
+  {
+    "t": 119.738,
+    "type": "final_piano_note",
+    "pan": 0
+  }
+]
