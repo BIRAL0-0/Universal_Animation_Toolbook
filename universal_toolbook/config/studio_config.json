@@ -6,5 +6,33 @@
   "film_grain": false,
   "subtitles_default": "cinema",
   "bgm_default": "auto",
-  "voice_default": "am_michael"
+  "voice_default": "am_michael",
+  "format_policy": {
+    "auto_by_duration": true,
+    "short_max_Exclusive_sec": 60.0,
+    "under_60s": {
+      "aspect_ratio": "9:16",
+      "width": 1080,
+      "height": 1920
+    },
+    "60s_or_longer": {
+      "aspect_ratio": "16:9",
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  "visual_identity": {
+    "mode": "near_black_minimal",
+    "lock_identity": true,
+    "sky_top": "#070a10",
+    "sky_mid": "#0d1624",
+    "sky_bottom": "#111c2d",
+    "ambient_glow": "#223f5e",
+    "ambient_glow_alpha": 0.46,
+    "floor_top": "#090c12",
+    "floor_bottom": "#04060a",
+    "horizon_line": "#64748b",
+    "horizon_alpha": 0.22,
+    "center_lift_alpha": 0.045
+  }
 }

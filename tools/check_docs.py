@@ -54,6 +54,8 @@ ALLOW_MISSING = {
     "downloads/the_wall_you_agreed_with_1080x1920.mp4",
     "downloads/the_wall_you_agreed_with_1080x1920.zip",
     "projects/video-003-topic/PROMPT.md",  # worked example in the first-video guide
+    "videos/video-XXX/", "videos/video-XXX/final.mp4", "videos/video-XXX/record.json",
+    "videos/video-005/final.mp4", "jobs/current-job/", "temp/",
     "und",  # ffprobe prints Stream #0:1[0x2](und) in copied production logs
 }
 
@@ -73,29 +75,42 @@ RUNTIME_PREFIXES = (
     "renders/", "previews/", "logs/",  # shorthands for runtime/ subdirectories
     "outputs/storyboard",
     "deliverables/storyboard",
+    "jobs/", "temp/",
 )
 
 # Old path -> canonical path. Ordered: specific paths before directory prefixes.
 # This is a compatibility map for *historical* docs, not permission to write new stale links.
 LEGACY_ALIASES = (
-    ("outputs/README.md", "deliverables/RESULTS.md"),
-    ("outputs/the_wall_you_agreed_with_1080x1920.zip",
-     "deliverables/releases/the_wall_you_agreed_with_1080x1920.zip"),
-    ("outputs/discipline_vs_obsession_release.zip",
-     "deliverables/releases/discipline_vs_obsession_release.zip"),
-    ("outputs/", "deliverables/"),
-    ("downloads/index.html", "deliverables/the_wall_you_agreed_with/index.html"),
-    ("downloads/the_wall_you_agreed_with_1080x1920.zip",
-     "deliverables/releases/the_wall_you_agreed_with_1080x1920.zip"),
-    ("downloads/", "deliverables/the_wall_you_agreed_with/"),
+    ("outputs/README.md", "videos/index.json"),
+    ("outputs/the_wall_you_agreed_with_1080x1920.zip", "videos/video-004/record.json"),
+    ("outputs/discipline_vs_obsession_release.zip", "videos/video-002/record.json"),
+    ("outputs/", "videos/"),
+    ("downloads/index.html", "videos/video-004/record.json"),
+    ("downloads/the_wall_you_agreed_with_1080x1920.zip", "videos/video-004/record.json"),
+    ("downloads/", "videos/video-004/"),
     ("docs/production-workflow/CONFIGURATION_AND_SETUP.md",
      "docs/getting-started/INSTALL.md"),
     ("docs/production-workflow/ENVIRONMENT_REPORT.md",
      "docs/development/ENVIRONMENT_REPORT.md"),
     ("docs/production-workflow/FUTURE_DEVELOPMENT.md",
      "docs/development/ROADMAP.md"),
-    ("projects/video-001-twenty-three-minutes/video-001_RELEASE.zip",
-     "deliverables/releases/video-001_RELEASE.zip"),
+    ("projects/video-001-twenty-three-minutes/", "videos/video-001/"),
+    ("projects/video-002-discipline-vs-obsession/", "videos/video-002/"),
+    ("projects/video-003-first-plank/", "videos/video-003/"),
+    ("projects/README.md", "videos/index.json"),
+    ("projects/", "videos/"),
+    ("deliverables/README.md", "videos/index.json"),
+    ("deliverables/RESULTS.md", "videos/index.json"),
+    ("deliverables/releases/", "videos/"),
+    ("deliverables/video-003-first-plank/", "videos/video-003/"),
+    ("deliverables/the_wall_you_agreed_with/", "videos/video-004/"),
+    ("deliverables/two_inch_bridge_cel/", "videos/"),
+    ("deliverables/", "videos/"),
+    ("video-001-twenty-three-minutes/", "videos/video-001/"),
+    ("video-002-discipline-vs-obsession/", "videos/video-002/"),
+    ("video-003-first-plank/", "videos/video-003/"),
+    ("the_wall_you_agreed_with/", "videos/video-004/"),
+    ("two_inch_bridge_cel/", "videos/"),
     ("docs/production-workflow/", "docs/production/"),
     ("universal_toolbook/process/SESSION_PROMPT.md", "AGENTS.md"),
     ("universal_toolbook/process/REPO_MAP.md", "docs/architecture/SYSTEM_OVERVIEW.md"),
@@ -216,8 +231,30 @@ def is_runtime(token: str) -> bool:
     return any(part.startswith(".work_") for part in t.split("/"))
 
 
+CONSOLIDATED_ARCHIVE_PREFIXES = (
+    ("projects/video-001-twenty-three-minutes/", "videos/video-001/record.json"),
+    ("projects/video-002-discipline-vs-obsession/", "videos/video-002/record.json"),
+    ("projects/video-003-first-plank/", "videos/video-003/record.json"),
+    ("deliverables/video-003-first-plank/", "videos/video-003/record.json"),
+    ("deliverables/the_wall_you_agreed_with/", "videos/video-004/record.json"),
+    ("deliverables/two_inch_bridge_cel/", "videos/index.json"),
+    ("outputs/two_inch_bridge_cel/", "videos/index.json"),
+    ("outputs/tts_benchmark/", "docs/production/TTS_BENCHMARK.md"),
+    ("video-001-twenty-three-minutes/", "videos/video-001/record.json"),
+    ("video-002-discipline-vs-obsession/", "videos/video-002/record.json"),
+    ("video-003-first-plank/", "videos/video-003/record.json"),
+    ("the_wall_you_agreed_with/", "videos/video-004/record.json"),
+    ("two_inch_bridge_cel/", "videos/index.json"),
+    ("deliverables/README.md", "videos/index.json"),
+    ("deliverables/RESULTS.md", "videos/index.json"),
+)
+
+
 def _canonical(rel: str) -> str:
     """Map a repo-root-relative historical path to its current canonical path."""
+    for prefix, target in CONSOLIDATED_ARCHIVE_PREFIXES:
+        if rel == prefix.rstrip("/") or rel.startswith(prefix):
+            return target
     for old, new in LEGACY_ALIASES:
         if rel == old.rstrip("/"):
             return new.rstrip("/")

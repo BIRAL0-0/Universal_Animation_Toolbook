@@ -1,6 +1,6 @@
 'use strict';
 
-const { clamp, lerp, ease, eo, ca, hexToRgb } = require('./character_rig');
+const { clamp, lerp, ease, eo, ca, hexToRgb, traceTangentCapsule } = require('./character_rig');
 const { drawSoftGlow } = require('./environments');
 // Harbor-beacon prop extension (lighthouse, lamp mechanism, boats, fog, oil flask, workbench).
 // Drawn in its own module so this file keeps one dispatch line; see engine/beacon_harbor.js.
@@ -14,6 +14,14 @@ const K = (t, a, b) => (b <= a ? 1 : clamp((t - a) / (b - a)));
 
 const SUPPORTED_PROPS = Object.freeze([
   'desk',
+  'chair',
+  'table',
+  'phone',
+  'laptop',
+  'computer',
+  'sofa',
+  'window',
+  'cup',
   'podium',
   'bench',
   'door',
@@ -30,6 +38,7 @@ const SUPPORTED_PROPS = Object.freeze([
   'goal_silhouette',
   'goal_orb',
   'pedestal',
+  'book',
   'books',
   'umbrella_stand',
   'water_trail',
@@ -49,6 +58,448 @@ const SUPPORTED_PROPS = Object.freeze([
   ...WALL_PROPS,
 ]);
 
+/**
+ * Canonical Asset Library — authoritative dimensions, restrained dark-studio palette,
+ * pivots, layering rules, and interaction anchor definitions for reusable world props & furniture.
+ */
+const CANONICAL_ASSET_LIBRARY = Object.freeze({
+  phone: Object.freeze({
+    width: 15,
+    height: 30,
+    flatWidth: 28,
+    flatHeight: 6.5,
+    pivot: 'grip_center',
+    layering: 'attachable_hand_or_surface',
+    palette: { chassis: '#0f172a', bezel: '#94a3b8', screenOff: '#1e293b', screenOn: '#38bdf8', outline: '#05070c' },
+  }),
+  laptop: Object.freeze({
+    width: 62,
+    height: 44,
+    pivot: 'surface_bottom',
+    layering: 'surface_prop',
+    palette: { body: '#334155', bezel: '#cbd5e1', screen: '#38bdf8', outline: '#05070c' },
+  }),
+  computer: Object.freeze({
+    width: 78,
+    height: 68,
+    pivot: 'surface_bottom',
+    layering: 'surface_prop',
+    palette: { stand: '#334155', bezel: '#cbd5e1', screen: '#38bdf8', outline: '#05070c' },
+  }),
+  desk: Object.freeze({
+    width: 276,
+    height: 142,
+    chairSeatHeight: 92,
+    pivot: 'floor_center',
+    layering: 'split_chair_back_apron_front',
+    palette: { frame: '#1e293b', top: '#475569', chair: '#1e293b', outline: '#05070c' },
+  }),
+  chair: Object.freeze({
+    width: 82,
+    height: 196,
+    seatHeight: 92,
+    pivot: 'floor_center',
+    layering: 'split_back_and_seat',
+    palette: { frame: '#1e293b', cushion: '#334155', outline: '#05070c' },
+  }),
+  table: Object.freeze({
+    width: 260,
+    height: 148,
+    pivot: 'floor_center',
+    layering: 'surface_furniture',
+    palette: { legs: '#1e293b', top: '#475569', trim: '#64748b', outline: '#05070c' },
+  }),
+  sofa: Object.freeze({
+    width: 264,
+    height: 148,
+    seatHeight: 82,
+    pivot: 'floor_center',
+    layering: 'split_back_and_seat',
+    palette: { base: '#1e293b', cushion: '#334155', arm: '#263449', outline: '#05070c' },
+  }),
+  bed: Object.freeze({
+    width: 310,
+    height: 92,
+    pivot: 'floor_center',
+    layering: 'background_furniture',
+    palette: { frame: '#1e293b', mattress: '#334155', blanket: '#475569', outline: '#05070c' },
+  }),
+  door: Object.freeze({
+    width: 184,
+    height: 468,
+    handleHeight: 214,
+    pivot: 'hinge_edge',
+    layering: 'architectural',
+    palette: { frame: '#475569', leaf: '#1e293b', panel: '#263449', handle: '#cbd5e1', outline: '#05070c' },
+  }),
+  window: Object.freeze({
+    width: 160,
+    height: 190,
+    elevation: 165,
+    pivot: 'wall_center',
+    layering: 'architectural_back',
+    palette: { frame: '#334155', glass: '#0c121d', mullion: '#475569', outline: '#05070c' },
+  }),
+  book: Object.freeze({
+    width: 84,
+    height: 72,
+    pivot: 'surface_or_floor',
+    layering: 'surface_prop',
+    palette: { spines: ['#334155', '#475569', '#64748b', '#1e293b', '#94a3b8'], outline: '#05070c' },
+  }),
+  books: Object.freeze({
+    width: 84,
+    height: 72,
+    pivot: 'surface_or_floor',
+    layering: 'surface_prop',
+    palette: { spines: ['#334155', '#475569', '#64748b', '#1e293b', '#94a3b8'], outline: '#05070c' },
+  }),
+  cup: Object.freeze({
+    width: 18,
+    height: 20,
+    pivot: 'surface_bottom',
+    layering: 'attachable_hand_or_surface',
+    palette: { body: '#cbd5e1', rim: '#f1f5f9', outline: '#05070c' },
+  }),
+});
+
+/**
+ * Computes exact world-space coordinates, bounding box, surface planes, seat heights,
+ * and grip/contact anchors for any scene prop so character IK/FK interactions always target
+ * the real prop coordinates rather than hardcoded guesses.
+ */
+function computePropAnchors(prop, W = 1920, floorY = 855) {
+  if (!prop || !prop.type) return null;
+  const px = (prop.x ?? 0.5) * W;
+  const s = prop.scale ?? 1.0;
+  const faceLeft = prop.facing === 'left';
+  const baseY = floorY - Number(prop.elevation || 0);
+
+  if (prop.type === 'desk' || prop.type === 'clean_desk' || prop.type === 'messy_desk') {
+    const dw = 276 * s;
+    const dh = 142 * s;
+    const surfaceTopY = floorY - dh - 14 * s;
+    const chOff = (prop.chair_offset ?? 102) * s;
+    const seatX = px + (faceLeft ? chOff : -chOff);
+    const seatTopY = floorY - 92 * s;
+    const laptopX = px + (faceLeft ? -34 * s : 34 * s);
+    const kbHomeX = laptopX + (faceLeft ? 16 * s : -16 * s);
+    return {
+      type: prop.type,
+      id: prop.id || null,
+      centerX: px,
+      scale: s,
+      surfaceTopY,
+      tabletopLeft: px - dw * 0.5,
+      tabletopRight: px + dw * 0.5,
+      seatX,
+      seatTopY,
+      keyboardContact: [kbHomeX, surfaceTopY - 3 * s],
+      propSlotNear: [px + (faceLeft ? 42 * s : -42 * s), surfaceTopY],
+      propSlotFar: [px + (faceLeft ? -78 * s : 78 * s), surfaceTopY],
+      bounds: { left: Math.min(px - dw * 0.5, seatX - 42 * s), top: surfaceTopY - 68 * s, right: Math.max(px + dw * 0.5, seatX + 42 * s), bottom: floorY },
+    };
+  }
+  if (prop.type === 'chair') {
+    const cw = 82 * s;
+    const seatTopY = floorY - 92 * s;
+    return {
+      type: 'chair',
+      id: prop.id || null,
+      centerX: px,
+      scale: s,
+      seatX: px,
+      seatTopY,
+      backrestX: px + (faceLeft ? 34 * s : -34 * s),
+      bounds: { left: px - cw * 0.56, top: floorY - 196 * s, right: px + cw * 0.56, bottom: floorY },
+    };
+  }
+  if (prop.type === 'sofa' || prop.type === 'bench') {
+    const sw = (prop.type === 'sofa' ? 264 : 240) * s;
+    const seatTopY = floorY - (prop.type === 'sofa' ? 82 : 84) * s;
+    return {
+      type: prop.type,
+      id: prop.id || null,
+      centerX: px,
+      scale: s,
+      seatX: px,
+      seatTopY,
+      bounds: { left: px - sw * 0.5, top: floorY - 148 * s, right: px + sw * 0.5, bottom: floorY },
+    };
+  }
+  if (prop.type === 'table' || prop.type === 'cafe_table' || prop.type === 'photo_table' || prop.type === 'judge_table') {
+    const tw = (prop.type === 'table' ? 260 : 250) * s;
+    const th = (prop.type === 'table' ? 148 : 146) * s;
+    const surfaceTopY = floorY - th;
+    return {
+      type: prop.type,
+      id: prop.id || null,
+      centerX: px,
+      scale: s,
+      surfaceTopY,
+      tabletopLeft: px - tw * 0.5,
+      tabletopRight: px + tw * 0.5,
+      propSlotLeft: [px - tw * 0.28, surfaceTopY],
+      propSlotCenter: [px, surfaceTopY],
+      propSlotRight: [px + tw * 0.28, surfaceTopY],
+      gripAnchor: [px, surfaceTopY - 4 * s],
+      bounds: { left: px - tw * 0.5, top: surfaceTopY - 20 * s, right: px + tw * 0.5, bottom: floorY },
+    };
+  }
+  if (prop.type === 'phone') {
+    const flat = prop.orientation !== 'upright';
+    const pw = (flat ? 28 : 15) * s;
+    const ph = (flat ? 7 : 30) * s;
+    return {
+      type: 'phone',
+      id: prop.id || null,
+      centerX: px,
+      scale: s,
+      surfaceY: baseY,
+      gripAnchor: [px, baseY - ph * 0.55],
+      screenCenter: [px, baseY - ph * 0.5],
+      bounds: { left: px - pw * 0.6, top: baseY - ph - 4 * s, right: px + pw * 0.6, bottom: baseY + 2 * s },
+    };
+  }
+  if (prop.type === 'laptop' || prop.type === 'computer') {
+    const lw = (prop.type === 'computer' ? 78 : 62) * s;
+    const lh = (prop.type === 'computer' ? 68 : 44) * s;
+    const kbX = px + (faceLeft ? 12 * s : -12 * s);
+    return {
+      type: prop.type,
+      id: prop.id || null,
+      centerX: px,
+      scale: s,
+      surfaceTopY: baseY,
+      keyboardContact: [kbX, baseY - 5 * s],
+      screenCenter: [px + (faceLeft ? -14 * s : 14 * s), baseY - lh * 0.6],
+      bounds: { left: px - lw * 0.55, top: baseY - lh, right: px + lw * 0.55, bottom: baseY },
+    };
+  }
+  if (prop.type === 'cup') {
+    const cw = 18 * s;
+    const ch = 20 * s;
+    return {
+      type: 'cup',
+      id: prop.id || null,
+      centerX: px,
+      scale: s,
+      surfaceY: baseY,
+      gripAnchor: [px, baseY - ch * 0.55],
+      bounds: { left: px - cw * 0.65, top: baseY - ch, right: px + cw * 0.65, bottom: baseY },
+    };
+  }
+  if (prop.type === 'door') {
+    const dw = 184 * s;
+    const dh = 468 * s;
+    const open = clamp(prop.open ?? 0.0);
+    const hingeLeft = prop.hinge !== 'right';
+    const hingeX = hingeLeft ? px - dw * 0.5 + 6 * s : px + dw * 0.5 - 6 * s;
+    const leafSpan = (dw - 12 * s) * clamp(1 - open * 0.72, 0.20, 1.0);
+    const handleX = hingeLeft ? hingeX + leafSpan * 0.82 : hingeX - leafSpan * 0.82;
+    const handleY = floorY - 214 * s;
+    return {
+      type: 'door',
+      id: prop.id || null,
+      centerX: px,
+      scale: s,
+      open,
+      hingeX,
+      handleGrip: [handleX, handleY],
+      gripAnchor: [handleX, handleY],
+      bounds: { left: px - dw * 0.52, top: floorY - dh, right: px + dw * 0.52, bottom: floorY },
+    };
+  }
+  if (prop.type === 'bed') {
+    const bw = 280 * s;
+    const bh = 66 * s;
+    return {
+      type: 'bed',
+      id: prop.id || null,
+      centerX: px,
+      scale: s,
+      seatX: px,
+      seatTopY: floorY - bh,
+      bounds: { left: px - bw * 0.5, top: floorY - bh - 48 * s, right: px + bw * 0.5, bottom: floorY },
+    };
+  }
+  return {
+    type: prop.type,
+    id: prop.id || null,
+    centerX: px,
+    scale: s,
+    gripAnchor: [px, baseY - 36 * s],
+    bounds: { left: px - 60 * s, top: baseY - 120 * s, right: px + 60 * s, bottom: baseY },
+  };
+}
+
+/**
+ * Split-layer canonical phone renderer inside the gripping hand:
+ *  1. Drawn AFTER the front arm + back palm,
+ *  2. Draws canonical phone body + live scrolling/typing UI screen,
+ *  3. Draws wrapping single-colour fingertips on far bezel + articulated swiping/tapping thumb on top!
+ */
+function drawHeldPhoneInHand(g, handInfo, phoneOpts = {}) {
+  const { wrist, forearmAngle, scale: s, bodyFill, outlineCol, sw, thumbScroll = 0, thumbTap = 0 } = handInfo;
+  const pw = 13.5 * s;
+  const ph = 33.5 * s;
+  const palmX = wrist[0] + Math.cos(forearmAngle) * 7.8 * s;
+  const palmY = wrist[1] + Math.sin(forearmAngle) * 7.8 * s;
+  const phoneTilt = phoneOpts.tilt ?? -0.58; // Sleek ~33° 3/4 tilt angled back toward the character's eyes
+  const isLit = phoneOpts.lit !== false;
+  const scrollPhase = Number(phoneOpts.scrollPhase || 0);
+
+  g.save();
+  g.translate(palmX, palmY);
+  g.rotate(phoneTilt);
+
+  const px0 = -pw * 0.42;
+  const py0 = -ph * 0.78;
+
+  // 1. Volumetric upward cyan-blue screen light cone radiating toward face & upper chest
+  if (isLit) {
+    g.save();
+    // Soft atmospheric screen bloom in the air between phone & face
+    const bloom = g.createRadialGradient(px0 - 10 * s, py0 - 12 * s, 2 * s, px0 - 26 * s, py0 - 36 * s, 68 * s);
+    bloom.addColorStop(0, 'rgba(125, 211, 252, 0.36)');
+    bloom.addColorStop(0.45, 'rgba(56, 189, 248, 0.15)');
+    bloom.addColorStop(1, 'rgba(56, 189, 248, 0.00)');
+    g.fillStyle = bloom;
+    g.beginPath();
+    g.arc(px0 - 24 * s, py0 - 32 * s, 68 * s, 0, Math.PI * 2);
+    g.fill();
+
+    // Upward-angled volumetric light cone from lit glass toward face (contained in front of torso, never leaking behind spine!)
+    const beamGrad = g.createLinearGradient(px0 + 1 * s, py0 + ph * 0.45, px0 - 54 * s, py0 - 78 * s);
+    beamGrad.addColorStop(0, 'rgba(186, 230, 253, 0.44)');
+    beamGrad.addColorStop(0.32, 'rgba(56, 189, 248, 0.22)');
+    beamGrad.addColorStop(0.72, 'rgba(56, 189, 248, 0.06)');
+    beamGrad.addColorStop(1, 'rgba(56, 189, 248, 0.00)');
+    g.fillStyle = beamGrad;
+    g.beginPath();
+    g.moveTo(px0 + 1.5 * s, py0 + 2.5 * s);
+    g.lineTo(px0 - 34 * s, py0 - 86 * s);
+    g.lineTo(px0 - 68 * s, py0 - 18 * s);
+    g.lineTo(px0 + 1.5 * s, py0 + ph - 2.5 * s);
+    g.closePath();
+    g.fill();
+    g.restore();
+  }
+
+  // 2. 3/4 Smartphone metallic side rail + dark glass chassis
+  g.fillStyle = '#0d1422';
+  g.strokeStyle = outlineCol;
+  g.lineWidth = Math.max(1.7 * s, sw * 0.80);
+  g.beginPath();
+  g.roundRect(px0, py0, pw, ph, 3.4 * s);
+  g.fill();
+  g.stroke();
+
+  // Brushed slate-blue metallic side edge + subtle rear camera module pill
+  g.fillStyle = '#334155';
+  g.beginPath();
+  g.roundRect(px0 + pw - 3.6 * s, py0 + 1.2 * s, 2.8 * s, ph - 2.4 * s, 1.4 * s);
+  g.fill();
+  g.fillStyle = '#1e293b';
+  g.strokeStyle = '#64748b';
+  g.lineWidth = 0.9 * s;
+  g.beginPath();
+  g.roundRect(px0 + pw * 0.36, py0 + 3.0 * s, 3.6 * s, 7.2 * s, 1.4 * s);
+  g.fill();
+  g.stroke();
+
+  // Glowing cyan screen face visible along the angled front (-X) edge
+  const sx0 = px0 + 1.1 * s;
+  const sy0 = py0 + 2.2 * s;
+  const sw2 = pw * 0.42;
+  const sh2 = ph - 4.4 * s;
+  g.save();
+  g.beginPath();
+  g.roundRect(sx0, sy0, sw2, sh2, 1.5 * s);
+  g.fillStyle = isLit ? '#38bdf8' : '#1e293b';
+  g.fill();
+  g.clip();
+  if (isLit) {
+    const feedShift = ((scrollPhase * 9.0 * s) % (7.8 * s) + 7.8 * s) % (7.8 * s);
+    for (let row = -1; row < 5; row++) {
+      const cy = sy0 + 2.0 * s + row * 7.8 * s - feedShift;
+      g.fillStyle = row % 2 === 0 ? 'rgba(240, 249, 255, 0.92)' : 'rgba(125, 211, 252, 0.78)';
+      g.fillRect(sx0 + 0.6 * s, cy, sw2 - 1.2 * s, 4.4 * s);
+    }
+  }
+  g.restore();
+
+  // Bright specular cyan edge line right along the lit glass border
+  if (isLit) {
+    g.strokeStyle = '#e0f2fe';
+    g.lineWidth = 1.35 * s;
+    g.beginPath();
+    g.moveTo(px0 + 1.2 * s, py0 + 3.2 * s);
+    g.lineTo(px0 + 1.2 * s, py0 + ph - 3.2 * s);
+    g.stroke();
+  }
+
+  // 3. Four sculpted wrapping fingers curling cleanly around the far (+X) edge of the phone
+  const fingerR = 2.05 * s;
+  const fingerSw = sw * 0.74;
+  for (const fyFrac of [0.30, 0.44, 0.58, 0.72]) {
+    const fyPos = py0 + ph * fyFrac;
+    const fxA = [px0 + pw - 2.2 * s, fyPos + 0.6 * s];
+    const fxB = [px0 + pw + 1.9 * s, fyPos - 0.5 * s];
+    g.fillStyle = outlineCol;
+    traceTangentCapsule(g, fxA, fingerR + fingerSw, fxB, fingerR * 0.92 + fingerSw);
+    g.fill();
+    g.fillStyle = bodyFill;
+    traceTangentCapsule(g, fxA, fingerR, fxB, fingerR * 0.92);
+    g.fill();
+  }
+
+  // 4. Articulated thumb cradling & swiping the near bezel
+  const thumbBase = [px0 - 1.6 * s, py0 + ph * 0.80];
+  const scrollDy = -clamp(thumbScroll, -1, 1) * 5.8 * s;
+  const tapDx = clamp(thumbTap, -1, 1) * 2.0 * s;
+  const thumbTip = [px0 + pw * 0.36 + tapDx, py0 + ph * 0.54 + scrollDy];
+  const thR0 = 2.9 * s;
+  const thR1 = 2.2 * s;
+  const thSw = sw * 0.78;
+
+  g.fillStyle = outlineCol;
+  traceTangentCapsule(g, thumbBase, thR0 + thSw, thumbTip, thR1 + thSw);
+  g.fill();
+  g.fillStyle = bodyFill;
+  traceTangentCapsule(g, thumbBase, thR0, thumbTip, thR1);
+  g.fill();
+
+  g.restore();
+}
+
+function drawHeldCupInHand(g, handInfo) {
+  const { wrist, forearmAngle, scale: s, bodyFill, outlineCol, sw } = handInfo;
+  const cx = wrist[0] + Math.cos(forearmAngle) * 7.5 * s;
+  const cy = wrist[1] + Math.sin(forearmAngle) * 7.5 * s;
+  const cw = 17 * s;
+  const ch = 19 * s;
+  g.save();
+  g.translate(cx, cy);
+  g.fillStyle = '#cbd5e1';
+  g.strokeStyle = outlineCol;
+  g.lineWidth = Math.max(1.8 * s, sw * 0.82);
+  g.beginPath();
+  g.roundRect(-cw * 0.45, -ch * 0.72, cw, ch, [2 * s, 2 * s, 4 * s, 4 * s]);
+  g.fill();
+  g.stroke();
+  // Thumb/finger grip wrap in front
+  const thA = [-cw * 0.35, -ch * 0.25];
+  const thB = [cw * 0.22, -ch * 0.25];
+  g.fillStyle = outlineCol;
+  traceTangentCapsule(g, thA, 2.8 * s + sw * 0.78, thB, 2.4 * s + sw * 0.78);
+  g.fill();
+  g.fillStyle = bodyFill;
+  traceTangentCapsule(g, thA, 2.8 * s, thB, 2.4 * s);
+  g.fill();
+  g.restore();
+}
+
 const SUPPORTED_BOARDS = Object.freeze([
   'line_graph',
   'flow_chain',
@@ -66,9 +517,11 @@ const SUPPORTED_BOARDS = Object.freeze([
 ]);
 
 function drawWorldProp(g, prop, W, floorY, t, sceneAccent = '#38bdf8', sceneT = null, propPass = 'full') {
+  if (!prop || !prop.type || prop._attachedToActor) return;
   const ts = sceneT !== null ? sceneT : t;
   const px = (prop.x ?? 0.5) * W;
   const s = prop.scale ?? 1.0;
+  const baseY = floorY - Number(prop.elevation || 0);
   const accent = prop.color || sceneAccent;
 
   // Harbor-beacon set: single-pass ink props, dispatched to engine/beacon_harbor.js
@@ -88,27 +541,324 @@ function drawWorldProp(g, prop, W, floorY, t, sceneAccent = '#38bdf8', sceneT = 
   }
 
   g.save();
-  if (prop.type === 'desk') {
-    const dw = 210 * s;
-    const dh = 108 * s;
+  if (prop.type === 'chair') {
+    const faceLeft = prop.facing === 'left';
+    const cw = 82 * s;
+    const seatTopY = floorY - 92 * s;
+    if (propPass === 'full' || propPass === 'back_only') {
+      // Backrest & rear support behind seated character
+      const backX = px + (faceLeft ? 30 * s : -42 * s);
+      g.fillStyle = '#1e293b';
+      g.strokeStyle = '#05070c';
+      g.lineWidth = 3 * s;
+      g.beginPath();
+      g.roundRect(backX, floorY - 196 * s, 12 * s, 108 * s, 5 * s);
+      g.fill();
+      g.stroke();
+      // Legs & seat cushion
+      g.fillStyle = '#1e293b';
+      g.fillRect(px - cw * 0.38, seatTopY + 12 * s, 8.5 * s, 80 * s);
+      g.fillRect(px + cw * 0.38 - 8.5 * s, seatTopY + 12 * s, 8.5 * s, 80 * s);
+      g.fillStyle = '#334155';
+      g.beginPath();
+      g.roundRect(px - cw * 0.5, seatTopY, cw, 14 * s, 5 * s);
+      g.fill();
+      g.stroke();
+    }
+  } else if (prop.type === 'table') {
+    if (propPass === 'back_only') {
+      g.restore();
+      return;
+    }
+    const tw = 260 * s;
+    const th = 148 * s;
+    const topY = floorY - th;
+    const bodyW = tw * 0.88;
+    const bodyX = px - bodyW * 0.5;
+    const legW = 12 * s;
+
+    // Grounded soft floor shadow under the nightstand/side-table
+    g.save();
+    const tSh = g.createRadialGradient(px, floorY + 2 * s, 8 * s, px, floorY + 2 * s, tw * 0.56);
+    tSh.addColorStop(0, 'rgba(0, 0, 0, 0.52)');
+    tSh.addColorStop(0.7, 'rgba(0, 0, 0, 0.22)');
+    tSh.addColorStop(1, 'rgba(0, 0, 0, 0.00)');
+    g.fillStyle = tSh;
+    g.beginPath();
+    g.ellipse(px, floorY + 2 * s, tw * 0.54, 8 * s, 0, 0, Math.PI * 2);
+    g.fill();
+    g.restore();
+
+    g.lineJoin = 'round';
+    g.lineCap = 'round';
+    g.strokeStyle = '#070a10';
+    g.lineWidth = 2.3 * s;
+
+    // Recessed dark lower shelf cubby interior
+    const shelfTopY = topY + 52 * s;
+    const shelfBotY = floorY - 22 * s;
+    g.fillStyle = '#0e141e';
+    g.beginPath();
+    g.rect(bodyX + legW * 0.6, shelfTopY, bodyW - legW * 1.2, shelfBotY - shelfTopY);
+    g.fill();
+    g.stroke();
+
+    // Lower-shelf illustrated book silhouettes (3 leaning/upright books on left + 2 flat stacked books on right)
+    const bLeft = bodyX + legW + 8 * s;
+    g.fillStyle = '#182232';
+    g.fillRect(bLeft, shelfBotY - 46 * s, 11 * s, 46 * s);
+    g.strokeRect(bLeft, shelfBotY - 46 * s, 11 * s, 46 * s);
+    g.fillStyle = '#1e2b3e';
+    g.fillRect(bLeft + 12 * s, shelfBotY - 50 * s, 12 * s, 50 * s);
+    g.strokeRect(bLeft + 12 * s, shelfBotY - 50 * s, 12 * s, 50 * s);
+    g.save();
+    g.translate(bLeft + 27 * s, shelfBotY);
+    g.rotate(-0.18);
+    g.fillStyle = '#162030';
+    g.fillRect(0, -45 * s, 11 * s, 45 * s);
+    g.strokeRect(0, -45 * s, 11 * s, 45 * s);
+    g.restore();
+
+    const sRight = bodyX + bodyW - legW - 62 * s;
+    g.fillStyle = '#1a2536';
+    g.beginPath();
+    g.roundRect(sRight, shelfBotY - 11 * s, 54 * s, 11 * s, 2 * s);
+    g.fill();
+    g.stroke();
+    g.fillStyle = '#223046';
+    g.beginPath();
+    g.roundRect(sRight + 4 * s, shelfBotY - 21 * s, 46 * s, 10 * s, 2 * s);
+    g.fill();
+    g.stroke();
+
+    // Left & right side legs + bottom shelf rail
+    g.fillStyle = '#182230';
+    g.fillRect(bodyX, topY + 12 * s, legW, th - 12 * s);
+    g.strokeRect(bodyX, topY + 12 * s, legW, th - 12 * s);
+    g.fillRect(bodyX + bodyW - legW, topY + 12 * s, legW, th - 12 * s);
+    g.strokeRect(bodyX + bodyW - legW, topY + 12 * s, legW, th - 12 * s);
+    g.fillStyle = '#1c2838';
+    g.fillRect(bodyX + legW, shelfBotY, bodyW - legW * 2, 10 * s);
+    g.strokeRect(bodyX + legW, shelfBotY, bodyW - legW * 2, 10 * s);
+
+    // Upper drawer casing + inset drawer face + round center knob
+    g.fillStyle = '#1b2636';
+    g.fillRect(bodyX + legW, topY + 13 * s, bodyW - legW * 2, 39 * s);
+    g.strokeRect(bodyX + legW, topY + 13 * s, bodyW - legW * 2, 39 * s);
+    g.fillStyle = '#1f2c3f';
+    g.beginPath();
+    g.roundRect(bodyX + legW + 6 * s, topY + 18 * s, bodyW - legW * 2 - 12 * s, 29 * s, 2.5 * s);
+    g.fill();
+    g.stroke();
+    g.fillStyle = '#33445c';
+    g.beginPath();
+    g.arc(px, topY + 32.5 * s, 4.2 * s, 0, Math.PI * 2);
+    g.fill();
+    g.stroke();
+
+    // Beveled overhanging tabletop with subtle cool-slate top rim sheen
+    g.fillStyle = '#253347';
+    g.beginPath();
+    g.roundRect(px - tw * 0.5, topY, tw, 13.5 * s, 3.5 * s);
+    g.fill();
+    g.stroke();
+    g.strokeStyle = 'rgba(148, 163, 184, 0.28)';
+    g.lineWidth = 1.3 * s;
+    g.beginPath();
+    g.moveTo(px - tw * 0.48, topY + 2.2 * s);
+    g.lineTo(px + tw * 0.48, topY + 2.2 * s);
+    g.stroke();
+
+    // Subtle everyday bedside/study details (resting folded eyeglasses + draped charging cable)
+    if (prop.minimal !== true) {
+      // Folded eyeglasses resting on left side of tabletop
+      const gx = px - tw * 0.28;
+      const gy = topY - 1.5 * s;
+      g.strokeStyle = '#64748b';
+      g.lineWidth = 1.6 * s;
+      g.beginPath();
+      g.ellipse(gx - 7 * s, gy - 2 * s, 6.5 * s, 3.2 * s, -0.08, 0, Math.PI * 2);
+      g.ellipse(gx + 7 * s, gy - 2 * s, 6.5 * s, 3.2 * s, 0.08, 0, Math.PI * 2);
+      g.moveTo(gx - 0.8 * s, gy - 2.6 * s);
+      g.lineTo(gx + 0.8 * s, gy - 2.6 * s);
+      g.moveTo(gx - 13 * s, gy - 3 * s);
+      g.lineTo(gx - 3 * s, gy - 6.5 * s);
+      g.stroke();
+
+      // Thin dark charging cord curving gracefully from right tabletop down past the drawer
+      const cx0 = px + tw * 0.12;
+      g.strokeStyle = '#090d14';
+      g.lineWidth = 2.0 * s;
+      g.beginPath();
+      g.moveTo(cx0 - 6 * s, topY + 0.5 * s);
+      g.bezierCurveTo(cx0 + 4 * s, topY + 18 * s, cx0 - 8 * s, topY + 46 * s, cx0 + 18 * s, topY + 64 * s);
+      g.stroke();
+    }
+  } else if (prop.type === 'phone') {
+    if (propPass === 'back_only') {
+      g.restore();
+      return;
+    }
+    const isUpright = prop.orientation === 'upright';
+    const isNotifying = Boolean(prop.notifying) || (prop.notify_at !== undefined && ts >= Number(prop.notify_at));
+    if (isNotifying) {
+      const pulse = 0.14 + 0.08 * Math.sin(t * 7.5);
+      drawSoftGlow(g, px, baseY - 8 * s, 42 * s, '#38bdf8', pulse);
+    }
+    if (isUpright) {
+      const pw = 15 * s, ph = 30 * s;
+      g.fillStyle = '#0f172a';
+      g.strokeStyle = '#94a3b8';
+      g.lineWidth = 1.8 * s;
+      g.beginPath();
+      g.roundRect(px - pw * 0.5, baseY - ph, pw, ph, 3.2 * s);
+      g.fill();
+      g.stroke();
+      g.fillStyle = isNotifying ? '#38bdf8' : '#1e293b';
+      g.fillRect(px - pw * 0.34, baseY - ph + 3 * s, pw * 0.68, ph - 6 * s);
+    } else {
+      // Sleek side-3/4 smartphone resting flat on tabletop/surface
+      const pw = 28 * s, ph = 6.5 * s;
+      g.fillStyle = '#0f172a';
+      g.strokeStyle = '#94a3b8';
+      g.lineWidth = 1.8 * s;
+      g.beginPath();
+      g.roundRect(px - pw * 0.5, baseY - ph, pw, ph, 2.5 * s);
+      g.fill();
+      g.stroke();
+      // Subtle top screen strip (lights softly when notifying)
+      g.fillStyle = isNotifying ? '#7dd3fc' : '#334155';
+      g.fillRect(px - pw * 0.38, baseY - ph + 0.8 * s, pw * 0.76, 2.0 * s);
+    }
+  } else if (prop.type === 'laptop' || prop.type === 'computer') {
+    if (propPass === 'back_only') {
+      g.restore();
+      return;
+    }
+    const faceLeft = prop.facing === 'left';
+    const dir = faceLeft ? -1 : 1;
+    const screenLit = prop.lit !== false;
+    if (screenLit) {
+      drawSoftGlow(g, px, baseY - 32 * s, 72 * s, '#cbd5e1', 0.12);
+    }
+    if (prop.type === 'computer') {
+      // Minimalist desktop monitor + keyboard deck
+      const mw = 58 * s, mh = 42 * s;
+      const monX = px + dir * 12 * s;
+      g.fillStyle = '#334155';
+      g.fillRect(monX - 4 * s, baseY - 16 * s, 8 * s, 16 * s);
+      g.fillRect(monX - 16 * s, baseY - 4 * s, 32 * s, 4 * s);
+      g.fillStyle = '#0f172a';
+      g.strokeStyle = '#94a3b8';
+      g.lineWidth = 2.4 * s;
+      g.beginPath();
+      g.roundRect(monX - mw * 0.5, baseY - 16 * s - mh, mw, mh, 4 * s);
+      g.fill();
+      g.stroke();
+      // Keyboard deck in front
+      const kbX = px - dir * 18 * s;
+      g.fillStyle = '#475569';
+      g.fillRect(kbX - 18 * s, baseY - 4.5 * s, 36 * s, 4.5 * s);
+    } else {
+      // Sleek open laptop in side-3/4 view
+      g.strokeStyle = '#cbd5e1';
+      g.lineWidth = 5.2 * s;
+      g.lineCap = 'round';
+      g.lineJoin = 'round';
+      g.beginPath();
+      g.moveTo(px - dir * 26 * s, baseY - 3 * s);
+      g.lineTo(px + dir * 4 * s, baseY - 3 * s);
+      g.lineTo(px + dir * 18 * s, baseY - 44 * s);
+      g.stroke();
+    }
+  } else if (prop.type === 'sofa') {
+    const sw2 = 228 * s;
+    const seatTopY = floorY - 56 * s;
+    if (propPass === 'full' || propPass === 'back_only') {
+      g.fillStyle = '#1e293b';
+      g.strokeStyle = '#05070c';
+      g.lineWidth = 3 * s;
+      g.beginPath();
+      g.roundRect(px - sw2 * 0.48, floorY - 110 * s, sw2 * 0.96, 60 * s, 8 * s);
+      g.fill();
+      g.stroke();
+      g.fillStyle = '#334155';
+      g.beginPath();
+      g.roundRect(px - sw2 * 0.46, seatTopY, sw2 * 0.92, 24 * s, 6 * s);
+      g.fill();
+      g.stroke();
+      // Low armrests
+      g.fillStyle = '#263449';
+      g.beginPath();
+      g.roundRect(px - sw2 * 0.5, floorY - 78 * s, 22 * s, 56 * s, 6 * s);
+      g.roundRect(px + sw2 * 0.5 - 22 * s, floorY - 78 * s, 22 * s, 56 * s, 6 * s);
+      g.fill();
+      g.stroke();
+      // Stubby legs
+      g.fillStyle = '#0f172a';
+      g.fillRect(px - sw2 * 0.42, floorY - 22 * s, 10 * s, 22 * s);
+      g.fillRect(px + sw2 * 0.42 - 10 * s, floorY - 22 * s, 10 * s, 22 * s);
+    }
+  } else if (prop.type === 'window') {
+    if (propPass === 'front_only') {
+      g.restore();
+      return;
+    }
+    const ww = 160 * s, wh = 190 * s;
+    const wy = floorY - (prop.elevation ?? 355 * s);
+    g.fillStyle = '#0a0e17';
+    g.strokeStyle = '#334155';
+    g.lineWidth = 4 * s;
+    g.beginPath();
+    g.roundRect(px - ww * 0.5, wy, ww, wh, 4 * s);
+    g.fill();
+    g.stroke();
+    g.strokeStyle = '#1e293b';
+    g.lineWidth = 2.5 * s;
+    g.beginPath();
+    g.moveTo(px, wy); g.lineTo(px, wy + wh);
+    g.moveTo(px - ww * 0.5, wy + wh * 0.5); g.lineTo(px + ww * 0.5, wy + wh * 0.5);
+    g.stroke();
+  } else if (prop.type === 'cup') {
+    if (propPass === 'back_only') {
+      g.restore();
+      return;
+    }
+    const cw = 17 * s, ch = 19 * s;
+    g.fillStyle = '#cbd5e1';
+    g.strokeStyle = '#05070c';
+    g.lineWidth = 2.2 * s;
+    g.beginPath();
+    g.roundRect(px - cw * 0.5, baseY - ch, cw, ch, [2 * s, 2 * s, 4 * s, 4 * s]);
+    g.fill();
+    g.stroke();
+    // Handle loop
+    g.strokeStyle = '#cbd5e1';
+    g.lineWidth = 2.4 * s;
+    g.beginPath();
+    g.arc(px + cw * 0.5, baseY - ch * 0.52, 4.2 * s, -Math.PI * 0.5, Math.PI * 0.5, false);
+    g.stroke();
+  } else if (prop.type === 'desk') {
+    const dw = 276 * s;
+    const dh = 142 * s;
     const topY = floorY - dh;
     const faceLeft = prop.facing === 'left';
 
     // Chair (back_only or full)
     if (propPass === 'full' || propPass === 'back_only') {
-      const chOff = (prop.chair_offset ?? 82) * s;
+      const chOff = (prop.chair_offset ?? 102) * s;
       const chairX = px + (faceLeft ? chOff : -chOff);
       g.fillStyle = '#1e293b';
       g.strokeStyle = '#090d16';
       g.lineWidth = 3;
       g.beginPath();
-      g.roundRect(chairX - 28 * s, floorY - 66 * s, 56 * s, 12 * s, 4);
+      g.roundRect(chairX - 40 * s, floorY - 92 * s, 80 * s, 14 * s, 5);
       g.fill();
       g.stroke();
-      g.fillRect(chairX - 5 * s, floorY - 54 * s, 10 * s, 54 * s);
-      const backX = chairX + (faceLeft ? 22 * s : -32 * s);
+      g.fillRect(chairX - 6 * s, floorY - 78 * s, 12 * s, 78 * s);
+      const backX = chairX + (faceLeft ? 30 * s : -42 * s);
       g.beginPath();
-      g.roundRect(backX, floorY - 136 * s, 11 * s, 74 * s, 5);
+      g.roundRect(backX, floorY - 196 * s, 12 * s, 108 * s, 5);
       g.fill();
       g.stroke();
     }
@@ -118,28 +868,54 @@ function drawWorldProp(g, prop, W, floorY, t, sceneAccent = '#38bdf8', sceneT = 
       g.fillStyle = '#263449';
       g.fillRect(px - dw * 0.42, topY, dw * 0.84, dh * 0.42);
       g.fillStyle = '#334155';
-      g.fillRect(px - dw * 0.44, topY, 12 * s, dh);
-      g.fillRect(px + dw * 0.44 - 12 * s, topY, 12 * s, dh);
+      g.fillRect(px - dw * 0.44, topY, 14 * s, dh);
+      g.fillRect(px + dw * 0.44 - 14 * s, topY, 14 * s, dh);
       g.fillStyle = '#475569';
       g.strokeStyle = '#090d16';
       g.lineWidth = 3;
       g.beginPath();
-      g.roundRect(px - dw * 0.5, topY - 12 * s, dw, 14 * s, 5);
+      g.roundRect(px - dw * 0.5, topY - 14 * s, dw, 16 * s, 5);
       g.fill();
       g.stroke();
 
-      // Monitor / Laptop on desk
-      const mx = px + (faceLeft ? -28 * s : 28 * s);
-      const screenCol = prop.screen_color || accent;
-      drawSoftGlow(g, mx, topY - 46 * s, 115 * s, screenCol, 0.26);
-      g.strokeStyle = '#cbd5e1';
-      g.lineWidth = 6 * s;
-      g.lineCap = 'round';
-      g.beginPath();
-      g.moveTo(mx - (faceLeft ? -26 * s : 26 * s), topY - 14 * s);
-      g.lineTo(mx, topY - 14 * s);
-      g.lineTo(mx + (faceLeft ? -16 * s : 16 * s), topY - 68 * s);
-      g.stroke();
+      // Monitor / Laptop on desk (or warm midnight notebook & lamp when `hide_laptop` / `notebook` is set)
+      const mx = px + (faceLeft ? -34 * s : 34 * s);
+      if (!prop.hide_laptop) {
+        const screenCol = prop.screen_color || accent;
+        drawSoftGlow(g, mx, topY - 52 * s, 125 * s, screenCol, 0.24);
+        g.strokeStyle = '#cbd5e1';
+        g.lineWidth = 6 * s;
+        g.lineCap = 'round';
+        g.beginPath();
+        g.moveTo(mx - (faceLeft ? -30 * s : 30 * s), topY - 16 * s);
+        g.lineTo(mx, topY - 16 * s);
+        g.lineTo(mx + (faceLeft ? -18 * s : 18 * s), topY - 76 * s);
+        g.stroke();
+      } else if (prop.notebook) {
+        // Warm low-glare study lamp + open notebook sheet on tabletop
+        const lampX = px + (faceLeft ? -78 * s : 78 * s);
+        drawSoftGlow(g, lampX - (faceLeft ? -18 * s : 18 * s), topY - 46 * s, 118 * s, '#f6c87a', 0.22);
+        g.strokeStyle = '#1e293b';
+        g.lineWidth = 3.2 * s;
+        g.lineCap = 'round';
+        g.beginPath();
+        g.moveTo(lampX, topY - 15 * s);
+        g.quadraticCurveTo(lampX + (faceLeft ? -8 * s : 8 * s), topY - 56 * s, lampX - (faceLeft ? -18 * s : 18 * s), topY - 62 * s);
+        g.stroke();
+        g.fillStyle = '#334155';
+        g.beginPath();
+        g.ellipse(lampX - (faceLeft ? -20 * s : 20 * s), topY - 60 * s, 12 * s, 5.5 * s, faceLeft ? 0.35 : -0.35, 0, Math.PI * 2);
+        g.fill();
+        // Crisp notebook sheet resting flat on tabletop
+        const sheetX = px + (faceLeft ? 8 * s : -28 * s);
+        g.fillStyle = '#e2e8f0';
+        g.strokeStyle = '#090d16';
+        g.lineWidth = 1.8 * s;
+        g.beginPath();
+        g.roundRect(sheetX, topY - 18.5 * s, 44 * s, 4.5 * s, 1.5 * s);
+        g.fill();
+        g.stroke();
+      }
     }
   } else if (prop.type === 'podium') {
     if (propPass === 'back_only') {
@@ -170,25 +946,73 @@ function drawWorldProp(g, prop, W, floorY, t, sceneAccent = '#38bdf8', sceneT = 
     g.fill();
     g.stroke();
   } else if (prop.type === 'door') {
-    const dw = 136 * s, dh = 278 * s;
-    const open = clamp(prop.open ?? 0.85);
-    if (open > 0.05) {
-      drawSoftGlow(g, px, floorY - dh * 0.5, 220 * open, accent, 0.32 * open);
-      const [r, gr, b] = hexToRgb(accent);
-      const ig = g.createLinearGradient(0, floorY - dh, 0, floorY);
-      ig.addColorStop(0, `rgba(${r},${gr},${b},${ca(0.65 * open)})`);
-      ig.addColorStop(1, `rgba(${r},${gr},${b},${ca(0.22 * open)})`);
-      g.fillStyle = ig;
-      g.fillRect(px - dw * 0.5 + 8, floorY - dh + 8, (dw - 16) * open, dh - 8);
+    if (propPass === 'front_only') {
+      g.restore();
+      return;
     }
-    g.strokeStyle = '#cbd5e1';
-    g.lineWidth = 7 * s;
-    g.strokeRect(px - dw * 0.5, floorY - dh, dw, dh);
+    const dw = 184 * s, dh = 468 * s;
+    const open = clamp(prop.open ?? 0.0);
+    const hingeLeft = prop.hinge !== 'right';
+    const frameLeft = px - dw * 0.5;
+    const frameTop = floorY - dh;
+
+    // Dark recessed doorway opening with subtle restrained architectural light when open
+    g.fillStyle = '#05070c';
+    g.fillRect(frameLeft, frameTop, dw, dh);
+    if (open > 0.03) {
+      const openLight = g.createLinearGradient(0, frameTop, 0, floorY);
+      openLight.addColorStop(0, `rgba(226, 232, 240, ${ca(0.11 * open)})`);
+      openLight.addColorStop(1, `rgba(148, 163, 184, ${ca(0.05 * open)})`);
+      g.fillStyle = openLight;
+      g.fillRect(frameLeft + 6 * s, frameTop + 6 * s, dw - 12 * s, dh - 6 * s);
+    }
+
+    // Hinged door leaf foreshortens smoothly as `open` goes 0 -> 1
+    const hingeX = hingeLeft ? frameLeft + 6 * s : frameLeft + dw - 6 * s;
+    const leafSpan = (dw - 12 * s) * clamp(1 - open * 0.72, 0.20, 1.0);
+    const leafX = hingeLeft ? hingeX : hingeX - leafSpan;
+    g.fillStyle = '#1e293b';
+    g.strokeStyle = '#05070c';
+    g.lineWidth = 2.8 * s;
+    g.fillRect(leafX, frameTop + 6 * s, leafSpan, dh - 7 * s);
+    g.strokeRect(leafX, frameTop + 6 * s, leafSpan, dh - 7 * s);
+
+    // Subtle recessed architectural panels on door leaf
+    if (leafSpan > 34 * s) {
+      g.strokeStyle = 'rgba(148, 163, 184, 0.22)';
+      g.lineWidth = 1.6 * s;
+      g.strokeRect(leafX + leafSpan * 0.18, frameTop + 34 * s, leafSpan * 0.64, dh * 0.34);
+      g.strokeRect(leafX + leafSpan * 0.18, frameTop + dh * 0.50, leafSpan * 0.64, dh * 0.34);
+    }
+
+    // Door lever handle at exact `computePropAnchors` `handleGrip` coordinate
+    const handleX = hingeLeft ? hingeX + leafSpan * 0.82 : hingeX - leafSpan * 0.82;
+    const handleY = floorY - 214 * s;
+    const leverLen = Math.max(6 * s, 16 * s * clamp(1 - open * 0.55, 0.4, 1.0));
+    g.fillStyle = '#cbd5e1';
+    g.strokeStyle = '#05070c';
+    g.lineWidth = 2.0 * s;
+    g.beginPath();
+    g.arc(handleX, handleY, 4.2 * s, 0, Math.PI * 2);
+    g.fill();
+    g.stroke();
+    g.strokeStyle = '#e2e8f0';
+    g.lineWidth = 3.2 * s;
+    g.lineCap = 'round';
+    g.beginPath();
+    g.moveTo(handleX, handleY);
+    g.lineTo(handleX + (hingeLeft ? -leverLen : leverLen), handleY + (open > 0.08 && open < 0.55 ? 2.5 * s : 0));
+    g.stroke();
+
+    // Outer architectural door casing
+    g.strokeStyle = '#475569';
+    g.lineWidth = 5.5 * s;
+    g.strokeRect(frameLeft, frameTop, dw, dh);
     if (prop.label) {
-      g.font = `bold ${Math.round(20 * s)}px PopB`;
-      g.fillStyle = accent;
+      g.font = `bold ${Math.round(18 * s)}px PopB`;
+      g.fillStyle = '#cbd5e1';
       g.textAlign = 'center';
-      g.fillText(prop.label.toUpperCase(), px, floorY - dh - 16 * s);
+      g.fillText(prop.label.toUpperCase(), px, frameTop - 16 * s);
     }
   } else if (prop.type === 'boulder') {
     const bw = 136 * s, bh = 98 * s;
@@ -634,15 +1458,21 @@ function drawWorldProp(g, prop, W, floorY, t, sceneAccent = '#38bdf8', sceneT = 
     g.beginPath();
     g.arc(px, floorY - 152 * s, 20 * s, 0, Math.PI * 2);
     g.fill();
-  } else if (prop.type === 'books') {
-    const cols = ['#38bdf8', '#a78bfa', '#34d399', '#fb7185', '#fbbf24'];
-    for (let i = 0; i < (prop.count || 5); i++) {
-      const by = floorY - (i + 1) * 18 * s;
+  } else if (prop.type === 'books' || prop.type === 'book') {
+    if (propPass === 'back_only') {
+      g.restore();
+      return;
+    }
+    const cols = Array.isArray(prop.colors) && prop.colors.length > 0
+      ? prop.colors
+      : CANONICAL_ASSET_LIBRARY.books.palette.spines;
+    for (let i = 0; i < (prop.count || 4); i++) {
+      const by = baseY - (i + 1) * 16 * s;
       g.fillStyle = cols[i % cols.length];
-      g.strokeStyle = '#090d16';
-      g.lineWidth = 2;
+      g.strokeStyle = '#05070c';
+      g.lineWidth = 2 * s;
       g.beginPath();
-      g.roundRect(px - 44 * s + (i % 2) * 5, by, 88 * s, 17 * s, 3);
+      g.roundRect(px - 38 * s + (i % 2) * 4 * s, by, 76 * s, 15 * s, 3 * s);
       g.fill();
       g.stroke();
     }
@@ -2366,6 +3196,10 @@ function drawForegroundLayer(g, fgType, W, H, floorY, t, panX = 0) {
 module.exports = {
   SUPPORTED_PROPS,
   SUPPORTED_BOARDS,
+  CANONICAL_ASSET_LIBRARY,
+  computePropAnchors,
+  drawHeldPhoneInHand,
+  drawHeldCupInHand,
   drawWorldProp,
   drawWorldBoard,
   drawForegroundLayer,

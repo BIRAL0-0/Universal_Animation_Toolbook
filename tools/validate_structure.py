@@ -46,7 +46,18 @@ REQUIRED_FILES = (
     "docs/decisions/ADR-0002-engine-layout.md",
     "docs/decisions/ADR-0003-repository-layout.md",
     "skills/README.md", "skills/animation-production/SKILL.md",
-    "skills/scriptwriting/SKILL.md", "skills/stickman-animation/SKILL.md",
+    "skills/character-design-and-rigging/SKILL.md",
+    "skills/stickman-animation/SKILL.md",
+    "skills/physical-interactions-and-props/SKILL.md",
+    "skills/animation-principles/SKILL.md",
+    "skills/cinematic-composition/SKILL.md",
+    "skills/environment-and-asset-continuity/SKILL.md",
+    "skills/subtitles-and-typography/SKILL.md",
+    "skills/animation-scriptwriting/SKILL.md",
+    "skills/youtube-storytelling-and-hooks/SKILL.md",
+    "skills/sound-design/SKILL.md",
+    "skills/animation-quality-assurance/SKILL.md",
+    "skills/scriptwriting/SKILL.md",
     "skills/voiceover-audio/SKILL.md", "skills/youtube-research/SKILL.md",
     "skills/production-quality/SKILL.md",
     "templates/MASTER_VIDEO_PRODUCTION_PROMPT.md",
@@ -59,20 +70,24 @@ REQUIRED_FILES = (
     "tools/validate_structure.py", "tools/check_docs.py", "tools/check_workflows.py",
     "tools/validate_specs.py", "scripts/new_project.py",
     "scripts/verify_fresh_checkout.py", "scripts/README.md",
-    ".github/workflows/verify.yml", "deliverables/README.md", "deliverables/RESULTS.md",
+    ".github/workflows/verify.yml", "videos/index.json",
     "runtime/README.md",
 )
 REQUIRED_DIRS = (
     "universal_toolbook/engine", "universal_toolbook/tts", "universal_toolbook/assets",
     "universal_toolbook/process", "skills", "docs/architecture", "docs/getting-started",
     "docs/development", "docs/production", "docs/troubleshooting", "docs/decisions",
-    "projects", "examples", "templates", "tests/unit", "tests/integration",
+    "videos", "examples", "templates", "tests/unit", "tests/integration",
     "tests/regression", "tests/production", "tests/fixtures", "tools", "scripts",
-    "deliverables", "runtime",
+    "runtime",
 )
 SKILLS = (
-    "youtube-research", "scriptwriting", "stickman-animation", "animation-production",
-    "voiceover-audio", "production-quality",
+    "youtube-research", "youtube-storytelling-and-hooks", "scriptwriting",
+    "animation-scriptwriting", "character-design-and-rigging", "stickman-animation",
+    "physical-interactions-and-props", "animation-principles", "cinematic-composition",
+    "environment-and-asset-continuity", "subtitles-and-typography", "sound-design",
+    "animation-quality-assurance", "animation-production", "voiceover-audio",
+    "production-quality",
 )
 # Historical projects predate the template's directory names; accept equivalent evidence.
 PROJECT_REQUIRED_GROUPS = (
@@ -86,7 +101,8 @@ MEDIA_EXT = {".mp4", ".mov", ".mkv", ".wav", ".mp3", ".ogg", ".flac", ".webm", "
              ".jpg", ".jpeg", ".gif", ".webp", ".npz", ".onnx"}
 SOURCE_MEDIA_ALLOW = (
     "universal_toolbook/assets/",             # bundled fonts/BGM/licences are kit assets
-    "deliverables/",                          # durable benchmark/release evidence
+    "videos/",                                # lean durable completed video outputs
+    "deliverables/",                          # legacy durable benchmark/release evidence
     "projects/",                              # independent per-video source/evidence
 )
 TRACKED_BAD = (
@@ -186,6 +202,16 @@ def problems() -> list[str]:
             p.append(f"decorative/empty skill: skills/{name}/SKILL.md")
         if f"skills/{name}/SKILL.md" not in agents:
             p.append(f"AGENTS.md activation map does not reference skills/{name}/SKILL.md")
+
+    # Durable completed video folders must each ship final.mp4 + record.json.
+    video_dirs = sorted({rel.split("/")[1] for rel in tracked
+                         if rel.startswith("videos/") and rel.count("/") >= 2})
+    if not video_dirs:
+        p.append("videos/ contains no completed video archives")
+    for vslug in video_dirs:
+        for req in ("final.mp4", "record.json"):
+            if f"videos/{vslug}/{req}" not in tracked_set:
+                p.append(f"video archive {vslug} missing required file: {req}")
 
     # Project structure: source/QA files, not just a media dump.
     project_dirs = sorted({rel.split("/")[1] for rel in tracked

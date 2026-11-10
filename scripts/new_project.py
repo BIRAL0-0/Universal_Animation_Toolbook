@@ -57,6 +57,22 @@ def _scene_plan(spec: dict) -> dict:
     return module.plan_from_spec(spec)
 
 
+def _parse_runtime_seconds(runtime: str) -> float | None:
+    s = str(runtime or "").strip().lower()
+    if not s or s == "to be decided":
+        return None
+    colon = re.search(r"(\d+):(\d+(?:\.\d+)?)", s)
+    if colon:
+        return int(colon.group(1)) * 60.0 + float(colon.group(2))
+    m_min = re.search(r"(\d+(?:\.\d+)?)\s*(?:min|minute|minutes|m)\b", s)
+    if m_min:
+        return float(m_min.group(1)) * 60.0
+    m_sec = re.search(r"(\d+(?:\.\d+)?)\s*(?:s|sec|secs|second|seconds)?\b", s)
+    if m_sec:
+        return float(m_sec.group(1))
+    return None
+
+
 def create(slug: str, title: str, fmt: str, runtime: str, projects_dir: Path) -> dict:
     global _PROJECT_TITLE
     _PROJECT_TITLE = title
@@ -65,6 +81,12 @@ def create(slug: str, title: str, fmt: str, runtime: str, projects_dir: Path) ->
     for required in (MASTER, MINIMAL_SPEC, SCENE_PLAN_TOOL):
         if not required.is_file():
             raise FileNotFoundError(f"missing template/tool: {required}")
+
+    parsed_sec = _parse_runtime_seconds(runtime)
+    if fmt == "auto" and parsed_sec is not None:
+        fmt = "9:16 1080x1920" if parsed_sec < 60.0 else "16:9 1920x1080"
+    elif fmt == "auto":
+        fmt = "16:9 1920x1080"
 
     dest = projects_dir / slug
     if dest.exists():

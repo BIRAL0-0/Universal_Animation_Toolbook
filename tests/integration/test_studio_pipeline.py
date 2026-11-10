@@ -212,6 +212,37 @@ def main() -> int:
     assert any("no internet" in line for line in with_edge), with_edge
     assert any("piper-tts" in line for line in with_edge), with_edge
 
+    # 7. Automatic Video Format & Duration Policy (< 60.0s -> 9:16, >= 60.0s -> 16:9, explicit override)
+    from run_studio import (
+        FORMAT_DURATION_BOUNDARY_SEC,
+        estimate_planned_duration_sec,
+        select_video_format_for_duration,
+    )
+
+    assert FORMAT_DURATION_BOUNDARY_SEC == 60.0
+    short_pol = select_video_format_for_duration(59.9, explicit_format=None, draft=False)
+    assert short_pol["format"] == "9:16" and [short_pol["width"], short_pol["height"]] == [1080, 1920]
+    assert short_pol["overridden"] is False
+
+    short_draft_pol = select_video_format_for_duration(24.0, explicit_format=None, draft=True)
+    assert short_draft_pol["format"] == "9:16" and [short_draft_pol["width"], short_draft_pol["height"]] == [540, 960]
+
+    exact_60_pol = select_video_format_for_duration(60.0, explicit_format=None, draft=False)
+    assert exact_60_pol["format"] == "16:9" and [exact_60_pol["width"], exact_60_pol["height"]] == [1920, 1080]
+    assert exact_60_pol["overridden"] is False
+
+    long_pol = select_video_format_for_duration(95.0, explicit_format=None, draft=False)
+    assert long_pol["format"] == "16:9" and [long_pol["width"], long_pol["height"]] == [1920, 1080]
+
+    override_pol = select_video_format_for_duration(32.0, explicit_format="16:9", draft=False)
+    assert override_pol["format"] == "16:9" and [override_pol["width"], override_pol["height"]] == [1920, 1080]
+    assert override_pol["overridden"] is True
+    assert override_pol["auto_recommended_format"] == "9:16"
+    assert "overrides automatic duration policy" in (override_pol["override_notice"] or "")
+
+    est = estimate_planned_duration_sec({"scenes": [{"duration": 12.5}, {"duration": 18.5}]})
+    assert abs(est - 31.0) < 1e-6
+
     print(
         json.dumps(
             {
@@ -222,6 +253,7 @@ def main() -> int:
                 "script_mood_matching": "PASSED",
                 "silence_compactor_verified": True,
                 "speech_locked_board_and_camera_verified": True,
+                "format_duration_policy_verified": True,
                 "exact_word_match": True,
             },
             indent=2,

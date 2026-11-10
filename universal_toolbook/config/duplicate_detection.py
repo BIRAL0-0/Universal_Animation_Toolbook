@@ -1,8 +1,12 @@
 import json
 import os
 from difflib import SequenceMatcher
+from pathlib import Path
 
-def load_index(repo_root="/home/user/Universal_Animation_Toolbook"):
+DEFAULT_REPO_ROOT = str(Path(__file__).resolve().parents[2])
+
+def load_index(repo_root=None):
+    repo_root = repo_root or DEFAULT_REPO_ROOT
     index_path = os.path.join(repo_root, "videos", "index.json")
     if not os.path.exists(index_path):
         return {"videos": []}
@@ -12,7 +16,8 @@ def load_index(repo_root="/home/user/Universal_Animation_Toolbook"):
 def similarity(a, b):
     return SequenceMatcher(None, a.lower(), b.lower()).ratio()
 
-def check_duplicate(new_concept, repo_root="/home/user/Universal_Animation_Toolbook"):
+def check_duplicate(new_concept, repo_root=None):
+    repo_root = repo_root or DEFAULT_REPO_ROOT
     """
     new_concept: dict with keys: title, topic, script_summary, content_fingerprint
     Returns: (is_duplicate, overlap_video, reason)
@@ -47,7 +52,8 @@ def check_duplicate(new_concept, repo_root="/home/user/Universal_Animation_Toolb
             
     return False, None, "No substantial overlap"
 
-def add_video(record, repo_root="/home/user/Universal_Animation_Toolbook"):
+def add_video(record, repo_root=None):
+    repo_root = repo_root or DEFAULT_REPO_ROOT
     index = load_index(repo_root)
     index["videos"].append(record)
     index["total_videos"] = len(index["videos"])

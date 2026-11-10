@@ -7,11 +7,25 @@ const {
   lerp,
   ease,
   eo,
+  springEase,
+  anticipationEase,
+  arcPoint,
   lerpPose,
   skeleton,
   walkMotion,
   runMotion,
 } = require('./character_rig');
+const { computePropAnchors } = require('./world_props_and_boards');
+
+const INTERACTION_PHASES = Object.freeze([
+  'approach',
+  'anticipation',
+  'contact',
+  'grip',
+  'manipulation',
+  'release',
+  'recovery',
+]);
 
 const SUPPORTED_ACTIONS = Object.freeze([
   'idle_stand',
@@ -24,6 +38,8 @@ const SUPPORTED_ACTIONS = Object.freeze([
   'debate_gesture',
   'point_board',
   'write_board',
+  'sit_down',
+  'sit_chair',
   'sit_desk_type',
   'sit_desk_slump',
   'sit_bench',
@@ -31,8 +47,16 @@ const SUPPORTED_ACTIONS = Object.freeze([
   'sit_cafe_listen',
   'sit_cafe_talk',
   'sit_cafe_write',
+  'reach_phone',
+  'pick_up_phone',
+  'hold_phone',
   'phone_scroll',
+  'phone_type',
+  'put_down_phone',
   'phone_call',
+  'interact_table',
+  'open_door',
+  'react_surprise',
   'kneel_exhausted',
   'kneel_lookup',
   'stand_up_resolve',
@@ -191,26 +215,40 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
 
   if (action === 'pace_think') {
     const rawSpan = (beat.span ?? 0.065) * W;
-    const edgeTaper = clamp(bt / 0.85) * clamp((bDur - bt) / 0.85);
+    const edgeTaper = ease(clamp(bt / 0.85)) * ease(clamp((bDur - bt) / 0.85));
     const span = rawSpan * edgeTaper;
-    const phase = (bt / 3.6) % 2.0;
+    const phase = (bt / 3.8) % 2.0;
     const leg = phase < 1.0 ? phase : 2.0 - phase;
     const segStart = fromX - span;
     const segEnd = fromX + span;
     const goingRight = phase < 1.0;
+    // Smooth 3D turnaround pivot near phase 0.0 / 1.0 so pacing never mirror-snaps in 1 frame!
+    const distToTurn = Math.min(phase, Math.abs(phase - 1.0), 2.0 - phase);
+    const turnPivot = distToTurn < 0.11 ? lerp(0.26, 1.0, ease(distToTurn / 0.11)) : 1.0;
     const wm = walkMotion({
-      t: goingRight ? leg * 1.8 : (1.0 - leg) * 1.8,
-      duration: 1.8,
+      t: goingRight ? leg * 1.9 : (1.0 - leg) * 1.9,
+      duration: 1.9,
       x0: goingRight ? segStart : segEnd,
       x1: goingRight ? segEnd : segStart,
       floor: gY,
       scale: s,
       style: 'normal',
     });
-    wm.pose.head = 0.16;
-    wm.pose.al = [0.55, 2.32];
+    const chinWave = Math.sin(globalT * 2.1 + (beat._actorSeed || 0)) * 0.035;
+    wm.pose.lean = 0.055 + 0.012 * Math.sin(globalT * 1.5);
+    wm.pose.head = 0.16 + chinWave * 0.6;
+    wm.pose.al = [0.55 + chinWave, 2.30 + chinWave * 1.2];
     wm.pose.handL = 'open';
-    return { x: wm.x, fy: gY, s, flip: wm.flip, pose: wm.pose };
+    return {
+      x: wm.x,
+      fy: gY,
+      s,
+      flip: wm.flip,
+      turnScaleX: turnPivot,
+      lookX: 0.28,
+      lookY: 0.22 + chinWave * 1.5,
+      pose: wm.pose,
+    };
   }
 
   if (action === 'climb_stairs' || action === 'descend_stairs') {
@@ -519,18 +557,21 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
   // --- 2. STATIONARY, CONVERSATIONAL, INTERACTION & EVERYDAY ACTIONS ---
   const x = lerp(fromX, toX, ease(u));
   const phaseSeed = (fromX * 0.017) + (beat._actorSeed || 0);
-  const breath = Math.sin(globalT * 2.05 + phaseSeed);
-  const slowShift = Math.sin(globalT * 0.78 + phaseSeed * 1.7);
+  const breath = Math.sin(globalT * 1.65 + phaseSeed);
+  const breathLag = Math.sin(globalT * 1.65 + phaseSeed - 0.55); // Overlapping forearm/hand lag!
+  const slowShift = Math.sin(globalT * 0.82 + phaseSeed * 1.7);
+  const microGaze = Math.sin(globalT * 0.62 + phaseSeed * 2.3);
   // Strict speech-gating: characters only animate talking gestures when actively speaking (never during narrator lines!)
   const speakBoost = beat._isSpeaking ? 1.0 : (beat.force_gesture ? 0.65 : 0.0);
 
   // World-locked stance feet helper: tall, natural human leg extension (~3° soft knee) with zero foot drift
+  // and living ribcage/pelvis breathing (`hipY` + subtle weight balance)
   const plantedStandingLegs = (spreadL = 8.5, spreadR = 10.5) => {
     const maxReach = 118.85;
     const maxSpread = Math.max(Math.abs(spreadL), Math.abs(spreadR));
     const safeHeight = Math.min(118.4, Math.sqrt(Math.max(96 * 96, maxReach * maxReach - maxSpread * maxSpread)) - 0.35);
     return {
-      hipY: gY - safeHeight * s + breath * 0.28 * s,
+      hipY: gY - safeHeight * s + breath * 0.85 * s,
       fl: [x + facing * spreadL * s, gY],
       fr: [x - facing * spreadR * s, gY],
       bendL: 1,
@@ -719,20 +760,23 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
   }
 
   if (action === 'chest_hand_sincere') {
-    const pulse = Math.sin(globalT * 2.3 + phaseSeed) * 0.07 * speakBoost;
+    const liftIn = ease(clamp(u * 2.8));
+    const pulse = Math.sin(globalT * 2.1 + phaseSeed) * 0.045 * (0.45 + 0.55 * speakBoost);
     return {
       x,
       fy: gY,
       s,
       flip,
+      lookX: 0.18 + 0.08 * microGaze,
+      lookY: 0.06 + 0.04 * breath,
       pose: P({
-        ...plantedStandingLegs(),
-        lean: 0.05 + 0.015 * slowShift,
-        head: 0.05 + pulse * 0.5,
-        spineCurve: 2.5 * s,
-        al: [0.34 + pulse, 2.22 + pulse],
-        ar: [0.20 - pulse * 0.5, 0.98 + pulse],
-        handL: 'open',
+        ...plantedStandingLegs(10, 12),
+        lean: 0.035 + 0.014 * breath + 0.012 * slowShift,
+        head: 0.04 + 0.025 * breath + pulse * 0.4,
+        spineCurve: (2.8 + 0.8 * breath) * s,
+        al: [lerp(0.10, 0.34 + pulse, liftIn), lerp(0.26, 2.22 + pulse, liftIn)],
+        ar: [-0.06 + 0.02 * breathLag, 0.22 + 0.04 * breathLag],
+        handL: liftIn > 0.35 ? 'open' : 'relaxed',
         handR: 'relaxed',
       }),
     };
@@ -825,40 +869,49 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
   }
 
   if (action === 'wipe_eyes') {
-    const wipe = 0.5 + 0.5 * Math.sin(bt * 4.2);
+    const raise = ease(clamp(u / 0.24)) * ease(clamp((1.04 - u) / 0.22));
+    const wipe = Math.sin(bt * 3.8);
     return {
       x,
       fy: gY,
       s,
       flip,
+      expression: 'sad',
+      lookY: 0.32 * raise,
       pose: P({
-        ...plantedStandingLegs(),
-        lean: 0.10,
-        head: 0.24,
-        spineCurve: -4.0 * s,
-        al: [1.18 + 0.06 * wipe, 2.58 + 0.08 * wipe],
-        ar: [-0.06, 0.24],
-        handL: 'open',
+        ...plantedStandingLegs(10, 12),
+        lean: lerp(0.03, 0.08, raise) + 0.012 * breath,
+        head: lerp(0.04, 0.22, raise) + 0.02 * wipe * raise,
+        spineCurve: lerp(2.0, -3.2, raise) * s,
+        al: [lerp(0.09, 1.14 + 0.05 * wipe, raise), lerp(0.24, 2.54 + 0.07 * wipe, raise)],
+        ar: [-0.06 + 0.02 * breathLag, 0.22 + 0.03 * breathLag],
+        handL: raise > 0.35 ? 'open' : 'relaxed',
         handR: 'relaxed',
       }),
     };
   }
 
   if (action === 'check_watch') {
-    const lift = ease(clamp(u * 2.4));
+    // 3-phase watch glance: [0..0.28] Crisp raise -> [0.28..0.82] Reading wrist with subtle tilt & breath -> [0.82..1.0] Gentle lower
+    const liftIn = springEase(clamp(u / 0.28), { bounce: 0.06 });
+    const releaseOut = u > 0.84 ? 1 - ease((u - 0.84) / 0.16) : 1.0;
+    const lift = liftIn * releaseOut;
+    const wristScan = Math.sin(bt * 2.8 + phaseSeed) * 0.035 * lift;
     return {
       x,
       fy: gY,
       s,
       flip,
-      lookY: 0.45 * lift,
+      lookX: 0.32 * lift,
+      lookY: (0.42 + 0.04 * Math.sin(bt * 2.2)) * lift,
       pose: P({
-        ...plantedStandingLegs(),
-        lean: 0.06 * lift,
-        head: 0.28 * lift,
-        al: [lerp(0.14, 0.62, lift), lerp(0.35, 1.98, lift)],
-        ar: [-0.08, 0.16],
-        handL: 'relaxed',
+        ...plantedStandingLegs(10, 12),
+        lean: 0.045 * lift + 0.01 * breath,
+        head: (0.24 + wristScan * 0.5) * lift + 0.015 * breath,
+        spineCurve: (2.4 - 1.2 * lift) * s,
+        al: [lerp(0.10, 0.64 + wristScan, lift), lerp(0.26, 2.02 + wristScan * 1.4, lift)],
+        ar: [-0.07 + 0.02 * breathLag, 0.16 + 0.03 * breathLag],
+        handL: lift > 0.4 ? 'open' : 'relaxed',
         handR: 'relaxed',
       }),
     };
@@ -1009,26 +1062,32 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
   }
 
   if (action === 'stand_from_desk') {
-    const eu = ease(u);
+    // 3-phase counterbalanced stand: [0..0.28] Nose-over-toes lean forward -> [0.28..0.76] Smooth leg extension -> [0.76..1.0] Balanced upright settle
+    const leanIn = u < 0.30 ? ease(u / 0.30) : (1 - ease(clamp((u - 0.30) / 0.58)));
+    const riseU = u < 0.14 ? 0 : ease(clamp((u - 0.14) / 0.72));
     return {
       x,
       fy: gY,
       s,
       flip,
+      seatedAtDesk: u < 0.78,
+      seatedOnChair: true,
+      seatDescentProgress: 1 - riseU,
+      targetPropId: beat.target_prop || null,
       pose: P({
-        hipY: lerp(gY - 65 * s, gY - 115.5 * s, eu),
-        lean: lerp(0.26, 0.03, eu),
-        head: lerp(0.14, -0.02, eu),
-        spineCurve: lerp(-2.0 * s, 3.0 * s, eu),
-        fl: [x + facing * lerp(26, 8.5, eu) * s, gY],
-        fr: [x + facing * lerp(18, -10.5, eu) * s, gY],
+        hipY: lerp(gY - 75.5 * s, gY - 115.5 * s, riseU),
+        lean: lerp(0.08, 0.025, riseU) + 0.16 * leanIn,
+        head: lerp(0.08, -0.01, riseU) + 0.08 * leanIn,
+        spineCurve: lerp(1.2, 2.8, riseU) * s - 2.2 * s * leanIn,
+        fl: [x + facing * lerp(34, 9.5, riseU) * s, gY],
+        fr: [x + facing * lerp(24, -10.5, riseU) * s, gY],
         bendL: 1,
         bendR: 1,
         legIkw: 1,
         footAngleL: 0,
         footAngleR: 0,
-        al: [lerp(0.52, 0.14, eu), lerp(1.52, 0.38, eu)],
-        ar: [lerp(0.44, -0.08, eu), lerp(1.44, 0.14, eu)],
+        al: [lerp(0.46, 0.09, riseU), lerp(1.36, 0.22, riseU)],
+        ar: [lerp(0.38, -0.07, riseU), lerp(1.28, 0.15, riseU)],
         handL: 'relaxed',
         handR: 'relaxed',
       }),
@@ -1195,18 +1254,20 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
   }
 
   if (action === 'sketch_desk') {
-    const stroke = Math.sin(globalT * 4.8 + phaseSeed);
-    const sweep = Math.cos(globalT * 1.9 + phaseSeed);
+    const stroke = Math.sin(globalT * 4.4 + phaseSeed);
+    const sweep = Math.cos(globalT * 1.7 + phaseSeed);
     const pose = P({
-      hipY: gY - 65 * s,
-      lean: 0.20 + 0.03 * sweep,
-      head: 0.24 + 0.04 * sweep,
-      spineCurve: -2.5 * s,
-      al: [0.64 + 0.13 * stroke, 1.54 - 0.11 * stroke],
-      ar: [0.46, 1.44],
-      ll: [1.46, 0.04],
-      lr: [1.34, 0.14],
-      legIkw: 0,
+      hipY: gY - 75.5 * s + breath * 0.35 * s,
+      lean: 0.16 + 0.022 * sweep,
+      head: 0.20 + 0.03 * sweep,
+      spineCurve: -1.8 * s,
+      al: [0.60 + 0.11 * stroke, 1.54 - 0.09 * stroke],
+      ar: [0.46, 1.42],
+      fl: [x + facing * 34 * s, gY],
+      fr: [x + facing * 24 * s, gY],
+      bendL: 1,
+      bendR: 1,
+      legIkw: 1,
       handL: 'write',
       handR: 'relaxed',
     });
@@ -1218,6 +1279,14 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
       flip,
       pose,
       seatedAtDesk: true,
+      seatedOnChair: true,
+      seatDescentProgress: 1.0,
+      sketchingAtDesk: true,
+      sketchStroke: stroke,
+      sketchSweep: sweep,
+      targetPropId: beat.target_prop || null,
+      lookX: 0.38 + 0.06 * stroke,
+      lookY: 0.30,
       heldPen: { x: sk.world.al[2][0], y: sk.world.al[2][1], dir: facing },
     };
   }
@@ -1252,30 +1321,168 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
     };
   }
 
+  if (action === 'sit_down') {
+    // 4-phase classical seating biomechanics:
+    // [0..0.18] Preparation & glance -> [0.18..0.64] Counterbalanced hip descent -> [0.64..0.78] Seat contact -> [0.78..1.0] Cushioned settle
+    const standHipY = gY - 115.5 * s;
+    const seatHipY = gY - 75.5 * s;
+    let hipY = standHipY;
+    let lean = 0.03;
+    let head = 0.02;
+    let spineCurve = 2.5 * s;
+    let al = [0.10, 0.24];
+    let ar = [-0.08, 0.16];
+    let handMode = 'relaxed';
+    let footSpan = 10;
+    let phase = 'approach';
+
+    if (u < 0.18) {
+      phase = 'anticipation';
+      const pu = ease(u / 0.18);
+      hipY = lerp(standHipY, standHipY + 5 * s, pu);
+      lean = lerp(0.03, 0.16, pu);
+      head = lerp(0.0, 0.14, pu);
+      al = [lerp(0.10, 0.34, pu), lerp(0.24, 0.78, pu)];
+      ar = [lerp(-0.08, 0.22, pu), lerp(0.16, 0.68, pu)];
+      footSpan = lerp(10, 18, pu);
+    } else if (u < 0.68) {
+      phase = u < 0.58 ? 'manipulation' : 'contact';
+      const du = ease((u - 0.18) / 0.50);
+      const balanceArc = Math.sin(du * Math.PI);
+      hipY = lerp(standHipY + 5 * s, seatHipY, du);
+      // Forward torso counterbalance over knees during hip drop
+      lean = lerp(0.16, 0.08, du) + 0.18 * balanceArc;
+      head = lerp(0.14, 0.05, du) + 0.08 * balanceArc;
+      spineCurve = (2.5 - 3.5 * balanceArc) * s;
+      al = [lerp(0.34, 0.36, du) + 0.26 * balanceArc, lerp(0.78, 1.36, du) + 0.22 * balanceArc];
+      ar = [lerp(0.22, 0.28, du) + 0.22 * balanceArc, lerp(0.68, 1.26, du) + 0.18 * balanceArc];
+      handMode = balanceArc > 0.35 ? 'open' : 'relaxed';
+      footSpan = lerp(18, 34, du);
+    } else {
+      phase = 'recovery';
+      const su = (u - 0.68) / 0.32;
+      const cushionDip = Math.sin(clamp(su * 2.2) * Math.PI) * (1 - clamp(su)) * 2.4 * s;
+      const settle = ease(su);
+      hipY = seatHipY + cushionDip;
+      lean = lerp(0.08, 0.04, settle);
+      head = lerp(0.05, 0.02, settle);
+      spineCurve = lerp(1.0, 2.2, settle) * s;
+      al = [lerp(0.36, 0.32, settle), lerp(1.36, 1.28, settle)];
+      ar = [lerp(0.28, 0.24, settle), lerp(1.26, 1.18, settle)];
+      footSpan = 34;
+    }
+
+    return {
+      x,
+      fy: gY,
+      s,
+      flip,
+      seatedOnChair: true,
+      seatDescentProgress: ease(clamp((u - 0.12) / 0.56)),
+      targetPropId: beat.target_prop || null,
+      interactionState: {
+        phase,
+        targetPropType: 'chair',
+        targetPropId: beat.target_prop || null,
+        attached: u >= 0.64,
+        contactProgress: clamp((u - 0.18) / 0.50),
+      },
+      pose: P({
+        hipY,
+        lean,
+        head,
+        spineCurve,
+        fl: [x + facing * footSpan * s, gY],
+        fr: [x + facing * (footSpan - 9) * s, gY],
+        bendL: 1,
+        bendR: 1,
+        legIkw: 1,
+        footAngleL: 0,
+        footAngleR: 0,
+        al,
+        ar,
+        handL: handMode,
+        handR: handMode,
+      }),
+    };
+  }
+
+  if (action === 'sit_chair') {
+    const talkWave = speakBoost > 0.05 ? Math.sin(globalT * 3.4 + phaseSeed) * 0.14 * speakBoost : 0;
+    return {
+      x,
+      fy: gY,
+      s,
+      flip,
+      seatedOnChair: true,
+      seatDescentProgress: 1.0,
+      targetPropId: beat.target_prop || null,
+      interactionState: {
+        phase: 'manipulation',
+        targetPropType: 'chair',
+        targetPropId: beat.target_prop || null,
+        attached: true,
+        contactProgress: 1.0,
+      },
+      pose: P({
+        hipY: gY - 75.5 * s + breath * 0.25 * s,
+        lean: 0.04 + 0.01 * slowShift,
+        head: 0.02 + 0.02 * breath,
+        spineCurve: 2.2 * s,
+        fl: [x + facing * 34 * s, gY],
+        fr: [x + facing * 25 * s, gY],
+        bendL: 1,
+        bendR: 1,
+        legIkw: 1,
+        footAngleL: 0,
+        footAngleR: 0,
+        al: [0.32 + talkWave, 1.28 + talkWave * 0.8],
+        ar: [0.24, 1.18],
+        handL: speakBoost > 0.4 ? 'open' : 'relaxed',
+        handR: 'relaxed',
+      }),
+    };
+  }
+
   if (action === 'sit_desk_type' || action === 'sit_desk_slump') {
     const slump = action === 'sit_desk_slump';
     const burstPhase = ((globalT + phaseSeed) % 3.7 + 3.7) % 3.7;
     const typingActive = burstPhase < 2.55 ? 1.0 : 0.12;
-    const readLift = burstPhase >= 2.55 ? Math.sin(((burstPhase - 2.55) / 1.15) * Math.PI) * 0.10 : 0;
-    const t1 = Math.sin(globalT * 12.4) * 0.08 * typingActive;
-    const t2 = Math.cos(globalT * 10.6) * 0.08 * typingActive;
+    const readLift = burstPhase >= 2.55 ? Math.sin(((burstPhase - 2.55) / 1.15) * Math.PI) * 0.08 : 0;
+    const t1 = Math.sin(globalT * 12.4) * 0.06 * typingActive;
+    const t2 = Math.cos(globalT * 10.6) * 0.06 * typingActive;
     return {
       x,
       fy: gY,
       s,
       flip,
       seatedAtDesk: true,
+      seatedOnChair: true,
+      seatDescentProgress: 1.0,
+      typingTapL: Math.sin(globalT * 13.2) * typingActive,
+      typingTapR: Math.cos(globalT * 11.4) * typingActive,
+      targetPropId: beat.target_prop || null,
+      interactionState: {
+        phase: 'manipulation',
+        targetPropType: 'desk',
+        targetPropId: beat.target_prop || null,
+        attached: true,
+        contactProgress: 1.0,
+      },
+      lookX: slump ? 0.15 : 0.35,
+      lookY: slump ? 0.38 : 0.16 - readLift * 0.5,
       pose: P({
-        hipY: gY - 65 * s,
-        lean: slump ? 0.36 + 0.02 * breath : 0.11 - readLift * 0.3,
-        head: slump ? 0.36 + 0.02 * breath : 0.08 - readLift,
-        spineCurve: slump ? -8.5 * s : 1.5 * s,
-        al: slump ? [0.72, 2.34] : [0.56 + t1, 1.54 - t1],
-        ar: slump ? [0.64, 2.26] : [0.46 + t2, 1.46 - t2],
-        // Offset front vs back seated knee/shin slightly so BOTH legs are clearly visible!
-        ll: [1.46, 0.03],
-        lr: [1.34, 0.15],
-        legIkw: 0,
+        hipY: gY - 75.5 * s,
+        lean: slump ? 0.34 + 0.02 * breath : 0.10 - readLift * 0.25,
+        head: slump ? 0.34 + 0.02 * breath : 0.09 - readLift,
+        spineCurve: slump ? -7.5 * s : 1.8 * s,
+        al: slump ? [0.72, 2.34] : [0.56 + t1, 1.52 - t1],
+        ar: slump ? [0.64, 2.26] : [0.48 + t2, 1.46 - t2],
+        fl: [x + facing * 34 * s, gY],
+        fr: [x + facing * 24 * s, gY],
+        bendL: 1,
+        bendR: 1,
+        legIkw: 1,
         handL: slump ? 'relaxed' : 'open',
         handR: slump ? 'relaxed' : 'open',
       }),
@@ -1382,30 +1589,529 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
     };
   }
 
-  if (action === 'phone_scroll') {
-    const thumb = Math.sin(globalT * 5.4) * 0.07;
-    const pose = P({
-      ...plantedStandingLegs(),
-      lean: 0.16,
-      head: 0.34,
-      spineCurve: -3.5 * s,
-      al: [0.48, 1.92 + thumb],
-      ar: [0.36, 1.72],
-      handL: 'grip',
-      handR: 'open',
-    });
-    const sk = skeleton(x, gY, s, pose, flip);
+  if (
+    action === 'reach_phone' ||
+    action === 'pick_up_phone' ||
+    action === 'hold_phone' ||
+    action === 'phone_scroll' ||
+    action === 'phone_type' ||
+    action === 'put_down_phone'
+  ) {
+    const isSeated = Boolean(beat.seated);
+    const baseLegs = isSeated
+      ? {
+          hipY: gY - 75.5 * s + breath * 0.2 * s,
+          fl: [x + facing * 34 * s, gY],
+          fr: [x + facing * 25 * s, gY],
+          bendL: 1,
+          bendR: 1,
+          legIkw: 1,
+        }
+      : plantedStandingLegs();
+
+    // Default ergonomic world-space hand anchors for 3/4 rig:
+    // `visAR` (far/facing-side arm) sits at `shFar` (+19.5*s forward of spine), so skeleton target `hr`
+    // is offset by `-facing * 19.5 * s` so the rendered 3/4 hand lands at the exact world target!
+    const shFarOffX = facing * 19.5 * s;
+    const shApproxY = (baseLegs.hipY ?? (gY - 115 * s)) - BONES.TORSO * s;
+    const restHand = [x + facing * 6 * s, shApproxY + 86 * s];
+    const rawSurfaceContact = [
+      beat.target_x !== undefined ? beat.target_x * W : x + facing * 62 * s,
+      gY - (beat.surface_height ?? 108) * s,
+    ];
+    const surfaceContact = [rawSurfaceContact[0] - shFarOffX, rawSurfaceContact[1] - 2.6 * s];
+    // Natural mid-rib/chest open-space phone viewing anchor (`visAR` wrist lands at `x + facing * 81 * s`, `shApproxY + 46 * s`)
+    const viewHand = [
+      x + facing * (isSeated ? 54 : 62) * s,
+      shApproxY + (isSeated ? 44 : 46) * s,
+    ];
+
+    if (action === 'reach_phone') {
+      const noticeU = ease(clamp(u / 0.28));
+      const antiCoil = u >= 0.16 && u < 0.38 ? Math.sin(((u - 0.16) / 0.22) * Math.PI) : 0;
+      const reachU = u < 0.34 ? 0 : ease(clamp((u - 0.34) / 0.56));
+      const phase = u < 0.20 ? 'approach' : (u < 0.36 ? 'anticipation' : (u < 0.88 ? 'manipulation' : 'contact'));
+      const curTarget = arcPoint(
+        [restHand[0] - facing * 5 * s * antiCoil, restHand[1] - 4 * s * antiCoil],
+        surfaceContact,
+        reachU,
+        -20 * s
+      );
+      return {
+        x,
+        fy: gY,
+        s,
+        flip,
+        seatedAtDesk: isSeated,
+        seatedOnChair: isSeated,
+        targetPropId: beat.target_prop || null,
+        phoneAction: 'reach_phone',
+        phoneProgress: reachU,
+        lookX: 0.48 * noticeU,
+        lookY: 0.34 * noticeU,
+        interactionState: {
+          phase,
+          targetPropType: 'phone',
+          targetPropId: beat.target_prop || null,
+          attached: false,
+          contactProgress: reachU,
+        },
+        pose: P({
+          ...baseLegs,
+          lean: (isSeated ? 0.08 : 0.03) + 0.09 * reachU - 0.02 * antiCoil,
+          head: 0.20 * ease(clamp((u - 0.08) / 0.34)),
+          spineCurve: (2.0 - 2.2 * reachU) * s,
+          ikwR: clamp((u - 0.16) / 0.22),
+          hr: curTarget,
+          armBendR: -1,
+          al: isSeated ? [0.24, 1.12] : [-0.05, 0.18],
+          ar: [0.16 - 0.08 * antiCoil, 0.38 + 0.12 * antiCoil],
+          handL: 'relaxed',
+          handR: reachU > 0.78 ? 'grip' : (reachU > 0.15 ? 'open' : 'relaxed'),
+        }),
+      };
+    }
+
+    if (action === 'pick_up_phone') {
+      const fromReach = beat._prevAction === 'reach_phone';
+      const reachFrac = fromReach ? 0.08 : 0.36;
+      const gripEnd = fromReach ? 0.20 : 0.48;
+      let phase = 'approach';
+      let handTarget = restHand;
+      let attached = false;
+      let lean = isSeated ? 0.08 : 0.03;
+      let head = 0.06;
+      let handShape = 'open';
+
+      if (u < reachFrac) {
+        phase = u < reachFrac * 0.45 ? 'anticipation' : 'contact';
+        const ru = fromReach ? 1 : ease(u / reachFrac);
+        handTarget = fromReach ? surfaceContact : arcPoint(restHand, surfaceContact, ru, -18 * s);
+        lean += 0.09 * ru;
+        head = lerp(0.08, 0.20, ru);
+        handShape = ru > 0.8 ? 'grip' : 'open';
+      } else if (u < gripEnd) {
+        phase = 'grip';
+        handTarget = surfaceContact;
+        attached = true;
+        lean += 0.09;
+        head = 0.20;
+        handShape = 'grip';
+      } else {
+        phase = u < 0.88 ? 'manipulation' : 'recovery';
+        const liftU = springEase(clamp((u - gripEnd) / (1 - gripEnd)), { bounce: 0.08 });
+        handTarget = arcPoint(surfaceContact, viewHand, liftU, -14 * s);
+        attached = true;
+        lean = lerp((isSeated ? 0.16 : 0.11), (isSeated ? 0.08 : 0.05), liftU);
+        head = lerp(0.20, 0.22, liftU);
+        handShape = 'grip';
+      }
+
+      const pose = P({
+        ...baseLegs,
+        lean,
+        head,
+        spineCurve: -1.2 * s,
+        ikwR: 1.0,
+        hr: handTarget,
+        armBendR: -1,
+        al: isSeated ? [0.24, 1.14] : [-0.05, 0.18],
+        ar: [0.16, 1.48],
+        handL: 'relaxed',
+        handR: handShape,
+      });
+      const sk = skeleton(x, gY, s, pose, flip);
+      return {
+        x,
+        fy: gY,
+        s,
+        flip,
+        seatedAtDesk: isSeated,
+        seatedOnChair: isSeated,
+        targetPropId: beat.target_prop || null,
+        phoneAction: 'pick_up_phone',
+        phoneReachFrac: reachFrac,
+        phoneGripEnd: gripEnd,
+        phoneProgress: u,
+        lookX: 0.46,
+        lookY: attached ? 0.28 : 0.36,
+        interactionState: {
+          phase,
+          targetPropType: 'phone',
+          targetPropId: beat.target_prop || null,
+          attached,
+          contactProgress: u < reachFrac ? u / Math.max(0.01, reachFrac) : 1.0,
+        },
+        pose,
+        heldPhone: attached
+          ? {
+              inHand: true,
+              hand: 'far',
+              lit: u > gripEnd + 0.08,
+              scrollPhase: 0,
+              x: sk.world.gripR[0] + shFarOffX,
+              y: sk.world.gripR[1] + 2.2 * s,
+              facing,
+            }
+          : null,
+      };
+    }
+
+    if (action === 'hold_phone' || action === 'phone_scroll' || action === 'phone_type') {
+      const isScroll = action === 'phone_scroll';
+      const isType = action === 'phone_type';
+      const swipeCyc = ((bt * 0.92 + phaseSeed * 0.3) % 1 + 1) % 1;
+      const thumbScroll = isScroll
+        ? (swipeCyc < 0.64 ? lerp(-0.85, 0.90, ease(swipeCyc / 0.64)) : lerp(0.90, -0.85, ease((swipeCyc - 0.64) / 0.36)))
+        : 0;
+      const thumbTap = isType ? Math.sin(globalT * 14.0) * 0.85 : 0;
+      const wristMicroY = isScroll
+        ? Math.sin(swipeCyc * Math.PI * 2) * 2.2 * s
+        : (isType ? Math.sin(globalT * 10.5) * 1.4 * s : Math.sin(globalT * 2.1 + phaseSeed) * 1.2 * s);
+      const wristMicroX = facing * (breathLag * 1.4 * s + (isScroll ? Math.cos(swipeCyc * Math.PI * 2) * 1.1 * s : 0));
+      const phoneHandMicro = [wristMicroX, breath * 1.6 * s + wristMicroY];
+      const targetPt = [viewHand[0] + phoneHandMicro[0], viewHand[1] + phoneHandMicro[1]];
+      // For two-handed typing, near arm (`visAL` at `shNear`) smoothly rises to meet `visAR`
+      const typeRamp = isType ? ease(clamp(bt / 0.32)) : 0;
+      const nearTypeTarget = [targetPt[0] + shFarOffX + facing * 12.0 * s, targetPt[1] + 4.5 * s];
+
+      const pose = P({
+        ...baseLegs,
+        lean: (isSeated ? 0.08 : 0.045) + 0.012 * breath + 0.008 * slowShift,
+        head: 0.21 + 0.02 * breath + (isScroll ? 0.024 * Math.sin(swipeCyc * Math.PI * 2) : 0),
+        spineCurve: (-1.2 + 0.6 * breath) * s,
+        ikwR: 1.0,
+        hr: targetPt,
+        armBendR: -1,
+        ikwL: isType ? 0.92 * typeRamp : 0,
+        hl: isType ? nearTypeTarget : undefined,
+        armBendL: -1,
+        al: isType ? [0.44, 1.62] : (isSeated ? [0.24, 1.14] : [-0.04 + 0.02 * breathLag, 0.18 + 0.03 * breathLag]),
+        ar: [0.16, 1.48],
+        handL: isType && typeRamp > 0.45 ? 'grip' : 'relaxed',
+        handR: 'grip',
+        thumbScroll,
+        thumbTap,
+      });
+      const sk = skeleton(x, gY, s, pose, flip);
+      return {
+        x,
+        fy: gY,
+        s,
+        flip,
+        seatedAtDesk: isSeated,
+        seatedOnChair: isSeated,
+        targetPropId: beat.target_prop || null,
+        phoneAction: action,
+        phoneHandMicro,
+        phoneTypeRamp: typeRamp,
+        lookX: 0.48,
+        lookY: 0.30 + (isScroll ? 0.04 * Math.sin(swipeCyc * Math.PI * 2) : 0),
+        interactionState: {
+          phase: 'manipulation',
+          targetPropType: 'phone',
+          targetPropId: beat.target_prop || null,
+          attached: true,
+          contactProgress: 1.0,
+        },
+        pose,
+        heldPhone: {
+          inHand: true,
+          hand: 'far',
+          twoHand: isType,
+          lit: true,
+          scrollPhase: isScroll ? bt * 1.25 : (isType ? bt * 0.3 : 0),
+          x: sk.world.gripR[0] + shFarOffX,
+          y: sk.world.gripR[1] + 2.2 * s,
+          facing,
+        },
+      };
+    }
+
+    if (action === 'put_down_phone') {
+      const releaseAt = 0.66;
+      let phase = 'anticipation';
+      let handTarget = viewHand;
+      let attached = true;
+      let ikWeight = 1.0;
+      let lean = isSeated ? 0.08 : 0.05;
+      let head = 0.22;
+      let handShape = 'grip';
+
+      if (u < 0.15) {
+        phase = 'anticipation';
+        const au = ease(u / 0.15);
+        handTarget = [viewHand[0], viewHand[1] - 3 * s * Math.sin(au * Math.PI)];
+        head = lerp(0.22, 0.20, au);
+      } else if (u < releaseAt) {
+        phase = 'manipulation';
+        const du = ease((u - 0.15) / (releaseAt - 0.15));
+        handTarget = arcPoint(viewHand, surfaceContact, du, -14 * s);
+        lean = lerp((isSeated ? 0.08 : 0.05), (isSeated ? 0.16 : 0.11), du);
+        head = lerp(0.20, 0.22, du);
+      } else if (u < 0.78) {
+        phase = 'release';
+        attached = false;
+        handTarget = surfaceContact;
+        lean = isSeated ? 0.15 : 0.10;
+        head = 0.18;
+        handShape = 'open';
+      } else {
+        phase = 'recovery';
+        attached = false;
+        const ru = ease((u - 0.78) / 0.22);
+        handTarget = arcPoint(surfaceContact, restHand, ru, -12 * s);
+        ikWeight = 1 - ru;
+        lean = lerp((isSeated ? 0.15 : 0.10), (isSeated ? 0.05 : 0.02), ru);
+        head = lerp(0.18, 0.02, ru);
+        handShape = ru > 0.5 ? 'relaxed' : 'open';
+      }
+
+      const pose = P({
+        ...baseLegs,
+        lean,
+        head,
+        spineCurve: lerp(-1.2, 2.0, clamp((u - 0.66) / 0.34)) * s,
+        ikwR: ikWeight,
+        hr: handTarget,
+        armBendR: -1,
+        al: isSeated ? [0.24, 1.14] : [-0.05, 0.18],
+        ar: isSeated ? [0.26, 1.18] : [0.06, 0.20],
+        handL: 'relaxed',
+        handR: handShape,
+      });
+      const sk = skeleton(x, gY, s, pose, flip);
+      return {
+        x,
+        fy: gY,
+        s,
+        flip,
+        seatedAtDesk: isSeated,
+        seatedOnChair: isSeated,
+        targetPropId: beat.target_prop || null,
+        phoneAction: 'put_down_phone',
+        phoneReleaseAt: releaseAt,
+        phoneProgress: u,
+        releaseXNorm: beat.release_x,
+        lookX: attached ? 0.45 : lerp(0.45, 0.10, clamp((u - 0.66) / 0.34)),
+        lookY: attached ? 0.30 : lerp(0.30, 0.02, clamp((u - 0.66) / 0.34)),
+        interactionState: {
+          phase,
+          targetPropType: 'phone',
+          targetPropId: beat.target_prop || null,
+          attached,
+          contactProgress: attached ? 1.0 : 1 - clamp((u - releaseAt) / 0.34),
+        },
+        pose,
+        heldPhone: attached
+          ? {
+              inHand: true,
+              hand: 'far',
+              lit: u < 0.48,
+              scrollPhase: 0,
+              x: sk.world.gripR[0] + shFarOffX,
+              y: sk.world.gripR[1] + 2.2 * s,
+              facing,
+            }
+          : null,
+      };
+    }
+  }
+
+  if (action === 'interact_table') {
+    // Approach/anticipation [0..0.18] -> curved reach to tabletop [0.18..0.42] -> tactile manipulation [0.42..0.78] -> release/recovery [0.78..1.0]
+    const shY = gY - 115 * s - BONES.TORSO * s;
+    const restPt = [x + facing * 14 * s, shY + 86 * s];
+    const tablePt = [
+      beat.target_x !== undefined ? beat.target_x * W : x + facing * 54 * s,
+      gY - (beat.surface_height ?? 104) * s - 4 * s,
+    ];
+    let handPt = restPt;
+    let ikwL = 0;
+    let lean = 0.03;
+    let head = 0.04;
+    let phase = 'approach';
+    let hShape = 'relaxed';
+
+    if (u < 0.18) {
+      phase = 'anticipation';
+      const au = ease(u / 0.18);
+      lean = lerp(0.03, 0.08, au);
+      head = lerp(0.02, 0.16, au);
+    } else if (u < 0.42) {
+      phase = u < 0.36 ? 'approach' : 'contact';
+      const ru = ease((u - 0.18) / 0.24);
+      handPt = arcPoint(restPt, tablePt, ru, -18 * s);
+      ikwL = ru;
+      lean = lerp(0.08, 0.15, ru);
+      head = lerp(0.16, 0.22, ru);
+      hShape = 'open';
+    } else if (u < 0.78) {
+      phase = 'manipulation';
+      const mu = (u - 0.42) / 0.36;
+      const slide = Math.sin(mu * Math.PI * 2) * 8 * s;
+      handPt = [tablePt[0] + facing * slide, tablePt[1] - Math.abs(Math.cos(mu * Math.PI * 2)) * 2 * s];
+      ikwL = 1.0;
+      lean = 0.15;
+      head = 0.22;
+      hShape = 'open';
+    } else {
+      phase = u < 0.86 ? 'release' : 'recovery';
+      const ku = ease((u - 0.78) / 0.22);
+      handPt = arcPoint(tablePt, restPt, ku, -12 * s);
+      ikwL = 1 - ku;
+      lean = lerp(0.15, 0.03, ku);
+      head = lerp(0.22, 0.03, ku);
+      hShape = ku > 0.5 ? 'relaxed' : 'open';
+    }
+
     return {
       x,
       fy: gY,
       s,
       flip,
-      pose,
-      heldPhone: {
-        x: sk.world.al[2][0] + facing * 6 * s,
-        y: sk.world.al[2][1] - 5 * s,
-        facing,
+      tableAction: 'interact_table',
+      tableProgress: u,
+      targetPropId: beat.target_prop || null,
+      lookX: 0.42 * ikwL,
+      lookY: 0.26 * ikwL,
+      interactionState: {
+        phase,
+        targetPropType: 'table',
+        targetPropId: beat.target_prop || null,
+        attached: u >= 0.42 && u < 0.78,
+        contactProgress: ikwL,
       },
+      pose: P({
+        ...plantedStandingLegs(10, 12),
+        lean,
+        head,
+        spineCurve: (2.2 - 2.0 * ikwL) * s,
+        ikwL,
+        hl: handPt,
+        armBendL: -1,
+        al: [0.12, 0.28],
+        ar: [-0.08, 0.18],
+        handL: hShape,
+        handR: 'relaxed',
+      }),
+    };
+  }
+
+  if (action === 'open_door') {
+    // Synchronized door handle reach, grip, lever turn + swing, and release:
+    // [0..0.18] Notice & anticipation -> [0.18..0.40] Curved reach to handle -> [0.40..0.80] Grip & swing door -> [0.80..1.0] Release & recover
+    const shY = gY - 115 * s - BONES.TORSO * s;
+    const restPt = [x + facing * 14 * s, shY + 86 * s];
+    const defaultHandle = [x + facing * 62 * s, gY - 132 * s];
+    let ikwL = 0;
+    let handPt = restPt;
+    let hShape = 'relaxed';
+    let lean = 0.03;
+    let head = 0.02;
+    let phase = 'approach';
+    let doorOpenProgress = 0;
+
+    if (u < 0.18) {
+      phase = 'anticipation';
+      const au = ease(u / 0.18);
+      lean = lerp(0.03, 0.07, au);
+      head = lerp(0.0, 0.08, au);
+    } else if (u < 0.40) {
+      phase = u < 0.34 ? 'approach' : 'contact';
+      const ru = ease((u - 0.18) / 0.22);
+      handPt = arcPoint(restPt, defaultHandle, ru, -14 * s);
+      ikwL = ru;
+      lean = lerp(0.07, 0.11, ru);
+      head = 0.08;
+      hShape = ru > 0.75 ? 'grip' : 'open';
+    } else if (u < 0.80) {
+      phase = u < 0.48 ? 'grip' : 'manipulation';
+      doorOpenProgress = ease((u - 0.44) / 0.36);
+      handPt = [defaultHandle[0] - facing * 18 * s * doorOpenProgress, defaultHandle[1]];
+      ikwL = 1.0;
+      lean = lerp(0.11, 0.06, doorOpenProgress);
+      head = 0.04;
+      hShape = 'grip';
+    } else {
+      phase = u < 0.88 ? 'release' : 'recovery';
+      doorOpenProgress = 1.0;
+      const ku = ease((u - 0.80) / 0.20);
+      const openHandlePt = [defaultHandle[0] - facing * 18 * s, defaultHandle[1]];
+      handPt = arcPoint(openHandlePt, restPt, ku, -10 * s);
+      ikwL = 1 - ku;
+      lean = lerp(0.06, 0.03, ku);
+      hShape = ku > 0.45 ? 'relaxed' : 'open';
+    }
+
+    return {
+      x,
+      fy: gY,
+      s,
+      flip,
+      doorAction: 'open_door',
+      doorProgress: u,
+      doorOpenProgress,
+      targetPropId: beat.target_prop || null,
+      lookX: 0.38 * ikwL,
+      lookY: 0.08 * ikwL,
+      interactionState: {
+        phase,
+        targetPropType: 'door',
+        targetPropId: beat.target_prop || null,
+        attached: u >= 0.38 && u < 0.80,
+        contactProgress: ikwL,
+      },
+      pose: P({
+        ...plantedStandingLegs(11, 13),
+        lean,
+        head,
+        spineCurve: 2.5 * s,
+        ikwL,
+        hl: handPt,
+        armBendL: -1,
+        al: [0.12, 0.26],
+        ar: [-0.08, 0.16],
+        handL: hShape,
+        handR: 'relaxed',
+      }),
+    };
+  }
+
+  if (action === 'react_surprise') {
+    // Classical 3-beat reaction: [0..0.24] Crisp intake recoil -> [0.24..0.50] Tense alert breath -> [0.50..1.0] Balanced forward recovery!
+    let recoil = 0;
+    let recovery = 0;
+    if (u < 0.24) {
+      recoil = ease(u / 0.24);
+    } else if (u < 0.50) {
+      recoil = 1.0 + 0.08 * Math.sin(((u - 0.24) / 0.26) * Math.PI);
+    } else {
+      recovery = ease((u - 0.50) / 0.50);
+      recoil = lerp(1.0, 0.22, recovery);
+    }
+    const tenseBreath = Math.sin(globalT * 3.8 + phaseSeed) * 0.015;
+    const rc = clamp(recoil, 0, 1.10);
+    return {
+      x: x - facing * 3.8 * s * rc,
+      fy: gY,
+      s,
+      flip,
+      lookX: lerp(0.50, 0.28 + 0.12 * Math.sin(bt * 2.2), recovery),
+      lookY: lerp(-0.10, 0.06, recovery),
+      expression: beat.expression || (u < 0.54 ? 'shocked' : 'curious'),
+      pose: P({
+        ...plantedStandingLegs(10.5, 12.5),
+        hipY: gY - (116.2 - 2.4 * rc) * s + tenseBreath * 16 * s,
+        lean: lerp(-0.042 * rc, 0.032, recovery) + tenseBreath,
+        head: lerp(-0.075 * rc, 0.035, recovery) + tenseBreath,
+        spineCurve: lerp(3.6 * s * rc, 2.4 * s, recovery),
+        // Tucked, organic human startle reflex near upper ribs (never stiff straight-out sleepwalker arms!)
+        al: [lerp(0.09, 0.24, rc), lerp(0.24, 1.88, rc)],
+        ar: [lerp(-0.07, 0.14, rc), lerp(0.16, 1.66, rc)],
+        handL: rc > 0.35 ? 'open' : 'relaxed',
+        handR: rc > 0.35 ? 'open' : 'relaxed',
+      }),
     };
   }
 
@@ -1455,18 +2161,19 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
   }
 
   if (action === 'kneel_exhausted') {
+    const heavyBreath = Math.sin(globalT * 2.1 + phaseSeed);
     return {
       x,
       fy: gY,
       s,
       flip,
       pose: P({
-        hipY: gY - 56 * s,
-        lean: 0.42,
-        head: 0.38,
-        spineCurve: -7.5 * s,
-        al: [0.65, 2.25],
-        ar: [0.42, 0.25],
+        hipY: gY - 56 * s + heavyBreath * 1.1 * s,
+        lean: 0.42 + 0.024 * heavyBreath,
+        head: 0.38 + 0.03 * heavyBreath,
+        spineCurve: (-7.5 - 0.9 * heavyBreath) * s,
+        al: [0.65 + 0.025 * heavyBreath, 2.25],
+        ar: [0.42 + 0.02 * heavyBreath, 0.25],
         ll: [1.45, 0.04],
         lr: [-0.25, -1.52],
         legIkw: 0,
@@ -1596,32 +2303,36 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
       fy: gY,
       s,
       flip,
+      lookX: 0.42 + 0.10 * microGaze,
+      lookY: -0.14 + 0.04 * breath,
       pose: P({
         ...plantedStandingLegs(11, 13),
-        lean: 0.015,
-        head: -0.08,
-        spineCurve: 3.5 * s,
-        al: [0.08, 0.22],
-        ar: [-0.08, 0.14],
+        lean: 0.018 + 0.012 * breath + 0.010 * slowShift,
+        head: -0.075 + 0.024 * breath + 0.015 * microGaze,
+        spineCurve: (3.6 + 0.8 * breath) * s,
+        al: [0.08 + 0.022 * breathLag, 0.22 + 0.038 * breathLag],
+        ar: [-0.07 - 0.018 * breathLag, 0.15 + 0.032 * breathLag],
         handL: 'relaxed',
         handR: 'relaxed',
       }),
     };
   }
 
-  // Default: idle_stand (grounded IK stance feet, calm breathing, subtle micro-sway)
+  // Default: idle_stand (grounded IK stance feet, calm ribcage breathing, overlapping forearm lag, subtle eye-life)
   return {
     x,
     fy: gY,
     s,
     flip,
+    lookX: 0.16 + 0.12 * microGaze,
+    lookY: 0.03 + 0.04 * slowShift,
     pose: P({
       ...plantedStandingLegs(10, 12),
-      lean: 0.02 + 0.008 * slowShift,
-      head: 0.018 * breath,
-      spineCurve: 2.5 * s,
-      al: [0.09, 0.22 + 0.02 * breath],
-      ar: [-0.08, 0.14 - 0.02 * breath],
+      lean: 0.022 + 0.012 * breath + 0.010 * slowShift,
+      head: 0.015 + 0.024 * breath + 0.016 * slowShift,
+      spineCurve: (2.6 + 0.7 * breath) * s,
+      al: [0.09 + 0.022 * breathLag, 0.22 + 0.038 * breathLag],
+      ar: [-0.07 - 0.018 * breathLag, 0.15 + 0.032 * breathLag],
       handL: 'relaxed',
       handR: 'relaxed',
     }),
@@ -1665,8 +2376,10 @@ function evaluateCharacterState(actor, ts, sceneDur, globalT, W, floorY, speechC
   for (let i = 0; i < beats.length; i++) {
     if (ts >= beats[i].start) activeIdx = i;
   }
+  const prevActionName = activeIdx > 0 ? (beats[activeIdx - 1].action || 'idle_stand') : null;
   const cur = {
     ...beats[activeIdx],
+    _prevAction: prevActionName,
     _actorSeed: actorSeed,
     _isSpeaking: isSpeaking,
     _hasDialogueInScene: hasDialogueInScene,
@@ -1674,14 +2387,32 @@ function evaluateCharacterState(actor, ts, sceneDur, globalT, W, floorY, speechC
   const curDur = Math.max(0.05, cur.end - cur.start);
   const curState = computeBeatState(cur, clamp(ts - cur.start, 0, curDur), curDur, globalT, W, floorY, scale);
 
-  // Height-aware blend window: longer blends for larger height changes (prevents teleport)
-  // Based on foot IK research: 200px height change needs ~0.6s for natural descent
-  const baseBlendWin = 0.36;
-  // Peek at previous state to estimate height delta
+  const PHONE_CHAIN_ACTIONS = new Set([
+    'reach_phone',
+    'pick_up_phone',
+    'hold_phone',
+    'phone_scroll',
+    'phone_type',
+    'put_down_phone',
+  ]);
+  const SEAT_CHAIN_ACTIONS = new Set([
+    'sit_down',
+    'sit_chair',
+    'sit_desk_type',
+    'sit_desk_slump',
+    'stand_from_desk',
+  ]);
+  const curAct = cur.action || 'idle_stand';
+  const isTightHandoff =
+    (prevActionName && PHONE_CHAIN_ACTIONS.has(prevActionName) && PHONE_CHAIN_ACTIONS.has(curAct)) ||
+    (prevActionName && SEAT_CHAIN_ACTIONS.has(prevActionName) && SEAT_CHAIN_ACTIONS.has(curAct));
+
+  const baseBlendWin = isTightHandoff ? 0.12 : 0.36;
   let blendWin = baseBlendWin;
   if (activeIdx > 0) {
     const prev = {
       ...beats[activeIdx - 1],
+      _prevAction: activeIdx > 1 ? (beats[activeIdx - 2].action || 'idle_stand') : null,
       _actorSeed: actorSeed,
       _isSpeaking: isSpeaking,
       _hasDialogueInScene: hasDialogueInScene,
@@ -1691,12 +2422,12 @@ function evaluateCharacterState(actor, ts, sceneDur, globalT, W, floorY, speechC
     const curDur_peek = Math.max(0.05, cur.end - cur.start);
     const curState_peek = computeBeatState(cur, 0, curDur_peek, globalT, W, floorY, scale);
     const heightDelta = Math.abs(prevState.fy - curState_peek.fy);
-    // Scale blend window: 0.36s base + 0.001s per pixel of height change, capped at 0.8s
     blendWin = Math.min(0.8, baseBlendWin + heightDelta * 0.001);
   }
   if (activeIdx > 0 && ts - cur.start < blendWin) {
     const prev = {
       ...beats[activeIdx - 1],
+      _prevAction: activeIdx > 1 ? (beats[activeIdx - 2].action || 'idle_stand') : null,
       _actorSeed: actorSeed,
       _isSpeaking: isSpeaking,
       _hasDialogueInScene: hasDialogueInScene,
@@ -1705,11 +2436,13 @@ function evaluateCharacterState(actor, ts, sceneDur, globalT, W, floorY, speechC
     const prevState = computeBeatState(prev, prevDur, prevDur, globalT, W, floorY, scale);
     const k = ease(clamp((ts - cur.start) / blendWin));
     const flipChanged = prevState.flip !== curState.flip;
-    // Smooth horizontal foreshortening turn when changing facing direction (eliminates 1-frame mirror pop!)
-    const turnScaleX = flipChanged ? Math.max(0.56, Math.abs(Math.cos(k * Math.PI))) : 1.0;
+    const baseTurn = flipChanged ? Math.max(0.24, Math.abs(Math.cos(k * Math.PI))) : 1.0;
+    const turnScaleX = baseTurn * lerp(prevState.turnScaleX ?? 1.0, curState.turnScaleX ?? 1.0, k);
     const pose = prevState.flip === curState.flip
       ? lerpPose(prevState.pose, curState.pose, k)
       : (k < 0.5 ? prevState.pose : curState.pose);
+    const prevHasPropAlign = Boolean(prevState.phoneAction || prevState.tableAction || prevState.doorAction);
+    const curHasPropAlign = Boolean(curState.phoneAction || curState.tableAction || curState.doorAction);
 
     return {
       x: lerp(prevState.x, curState.x, k),
@@ -1718,13 +2451,43 @@ function evaluateCharacterState(actor, ts, sceneDur, globalT, W, floorY, speechC
       flip: k < 0.5 ? prevState.flip : curState.flip,
       turnScaleX,
       pose,
-      seatedAtDesk: curState.seatedAtDesk,
+      propAlignWeight: lerp(prevHasPropAlign ? 1 : 0, curHasPropAlign ? 1 : 0, k),
+      propAlignOnly: !curHasPropAlign && prevHasPropAlign,
+      seatedAtDesk: curState.seatedAtDesk || (k < 0.45 && prevState.seatedAtDesk),
+      seatedOnChair: curState.seatedOnChair || prevState.seatedOnChair,
+      seatDescentProgress: lerp(
+        prevState.seatedOnChair ? (prevState.seatDescentProgress ?? 1.0) : 0.0,
+        curState.seatedOnChair ? (curState.seatDescentProgress ?? 1.0) : 0.0,
+        k
+      ),
+      sketchingAtDesk: curState.sketchingAtDesk || prevState.sketchingAtDesk,
+      sketchDeskWeight: lerp(prevState.sketchingAtDesk ? 1 : 0, curState.sketchingAtDesk ? 1 : 0, k),
+      sketchStroke: curState.sketchStroke ?? prevState.sketchStroke,
+      sketchSweep: curState.sketchSweep ?? prevState.sketchSweep,
+      typingTapL: curState.typingTapL ?? prevState.typingTapL,
+      typingTapR: curState.typingTapR ?? prevState.typingTapR,
+      typingDeskWeight: lerp(prevState.typingTapL !== undefined ? 1 : 0, curState.typingTapL !== undefined ? 1 : 0, k),
+      targetPropId: curState.targetPropId || prevState.targetPropId || null,
+      phoneAction: curState.phoneAction || prevState.phoneAction || null,
+      phoneHandMicro: curState.phoneHandMicro || prevState.phoneHandMicro,
+      phoneTypeRamp: curState.phoneTypeRamp ?? prevState.phoneTypeRamp,
+      phoneReachFrac: curState.phoneReachFrac,
+      phoneGripEnd: curState.phoneGripEnd,
+      phoneReleaseAt: curState.phoneReleaseAt,
+      phoneProgress: curState.phoneProgress ?? prevState.phoneProgress,
+      releaseXNorm: curState.releaseXNorm ?? prevState.releaseXNorm,
+      tableAction: curState.tableAction || prevState.tableAction,
+      tableProgress: curState.tableProgress ?? prevState.tableProgress,
+      doorAction: curState.doorAction || prevState.doorAction,
+      doorProgress: curState.doorProgress ?? prevState.doorProgress,
+      doorOpenProgress: curState.doorOpenProgress,
+      interactionState: curState.interactionState || prevState.interactionState || null,
       interactionType: curState.interactionType,
       partnerId: curState.partnerId,
       wrapAmount: curState.wrapAmount,
       reachAmount: curState.reachAmount,
-      heldPhone: curState.heldPhone,
-      heldPen: curState.heldPen,
+      heldPhone: curState.heldPhone || (k < 0.45 ? prevState.heldPhone : null),
+      heldPen: curState.heldPen || (k < 0.45 ? prevState.heldPen : null),
       heldCup: curState.heldCup,
       heldBlueprint: curState.heldBlueprint,
       heldUmbrella: curState.heldUmbrella,
@@ -1732,24 +2495,367 @@ function evaluateCharacterState(actor, ts, sceneDur, globalT, W, floorY, speechC
       wetShoulder: curState.wetShoulder,
       pushedBoulder: curState.pushedBoulder,
       callout: cur.callout,
-      expression: cur.expression,
+      expression: curState.expression || cur.expression,
       actorSeed,
-      lookX: curState.lookX ?? cur.look_x ?? cur.lookX ?? 0,
-      lookY: curState.lookY ?? cur.look_y ?? cur.lookY ?? 0,
+      lookX: lerp(prevState.lookX ?? prev.look_x ?? prev.lookX ?? 0, curState.lookX ?? cur.look_x ?? cur.lookX ?? 0, k),
+      lookY: lerp(prevState.lookY ?? prev.look_y ?? prev.lookY ?? 0, curState.lookY ?? cur.look_y ?? cur.lookY ?? 0, k),
       posture: Number.isFinite(prev.posture) && Number.isFinite(cur.posture)
         ? lerp(prev.posture, cur.posture, k)
         : cur.posture,
     };
   }
 
-  curState.turnScaleX = 1.0;
+  curState.turnScaleX = curState.turnScaleX ?? 1.0;
+  const prevWasPropAlign = Boolean(
+    prevActionName && (PHONE_CHAIN_ACTIONS.has(prevActionName) || prevActionName === 'interact_table' || prevActionName === 'open_door')
+  );
+  curState.propAlignWeight = (curState.phoneAction || curState.tableAction || curState.doorAction)
+    ? (activeIdx === 0 || prevWasPropAlign ? 1.0 : ease(clamp((ts - cur.start) / Math.max(0.24, blendWin))))
+    : 0.0;
+  curState.propAlignOnly = false;
+  curState.sketchDeskWeight = curState.sketchingAtDesk ? 1.0 : 0.0;
+  curState.typingDeskWeight = curState.typingTapL !== undefined ? 1.0 : 0.0;
   curState.callout = cur.callout;
-  curState.expression = cur.expression;
+  curState.expression = curState.expression || cur.expression;
   curState.actorSeed = actorSeed;
   curState.lookX = curState.lookX ?? cur.look_x ?? cur.lookX ?? 0;
   curState.lookY = curState.lookY ?? cur.look_y ?? cur.lookY ?? 0;
   curState.posture = cur.posture;
   return curState;
+}
+
+/**
+ * Pure deterministic prop + actor physical interaction solver at scene timestamp `ts`:
+ *  1. Evaluates persistent prop timeline history across `[0..ts]` (so a phone picked up in beat 2
+ *     stays attached in beat 3 and stays at its released tabletop position in beat 5 across parallel workers!).
+ *  2. Binds actor IK hand targets, chair/desk seat heights, laptop keyboard contact, tabletop contact,
+ *     and door-handle trajectories to the ACTUAL world coordinates of the scene's props!
+ */
+function resolveScenePropInteractions(rawProps, entries, actors, ts, sceneDur, W = 1920, floorY = 855) {
+  const props = (rawProps || []).map((p) => ({ ...p }));
+  if (props.length === 0) return props;
+
+  // Auto-snap surface props (`phone`, `laptop`, `computer`, `cup`, `book`, `books`) resting over or near
+  // a `desk`/`table` so they always sit flush on the real tabletop and never hover off the table edge!
+  const surfaces = props
+    .filter((p) => p.type === 'desk' || p.type === 'clean_desk' || p.type === 'messy_desk' || p.type === 'table' || p.type === 'cafe_table')
+    .map((p) => computePropAnchors(p, W, floorY));
+  for (const p of props) {
+    if (
+      p.elevation !== 0 &&
+      (p.type === 'phone' || p.type === 'laptop' || p.type === 'computer' || p.type === 'cup' || p.type === 'book' || p.type === 'books')
+    ) {
+      const px = (p.x ?? 0.5) * W;
+      const host = surfaces.find((sf) => sf && px >= (sf.tabletopLeft ?? sf.bounds.left) - 42 && px <= (sf.tabletopRight ?? sf.bounds.right) + 42);
+      if (host && Number.isFinite(host.surfaceTopY)) {
+        p.elevation = floorY - host.surfaceTopY;
+        const leftLim = (host.tabletopLeft ?? host.bounds.left) + 18 * (host.scale || 1);
+        const rightLim = (host.tabletopRight ?? host.bounds.right) - 18 * (host.scale || 1);
+        if (rightLim > leftLim) {
+          p.x = clamp(px, leftLim, rightLim) / W;
+        }
+      }
+    }
+  }
+
+  const findMatchingProp = (typeSet, targetId, refX) => {
+    if (targetId) {
+      const exact = props.find((p) => p.id && String(p.id) === String(targetId));
+      if (exact) return exact;
+    }
+    let best = null;
+    let bestD = Infinity;
+    for (const p of props) {
+      if (!typeSet.has(p.type)) continue;
+      const d = Math.abs(((p.x ?? 0.5) * W) - refX);
+      if (d < bestD) {
+        bestD = d;
+        best = p;
+      }
+    }
+    return best;
+  };
+
+  // Step A: Reconstruct deterministic persistent prop state up to `ts` from actor beat history
+  for (const actor of (actors || [])) {
+    const beats = normalizeBeats(actor, sceneDur);
+    for (let bi = 0; bi < beats.length; bi++) {
+      const b = beats[bi];
+      if (ts < b.start) break;
+      const bDur = Math.max(0.05, b.end - b.start);
+      const localU = ts >= b.end ? 1.0 : clamp((ts - b.start) / bDur);
+      const act = b.action || 'idle_stand';
+      const actorX = ((b.toX ?? b.to_x ?? b.x ?? 0.5) * W);
+
+      if (act === 'pick_up_phone' || act === 'hold_phone' || act === 'phone_scroll' || act === 'phone_type') {
+        const phoneProp = findMatchingProp(new Set(['phone']), b.target_prop, actorX);
+        if (phoneProp) {
+          const prevAct = bi > 0 ? beats[bi - 1].action : null;
+          const reachFrac = act === 'pick_up_phone' ? (prevAct === 'reach_phone' ? 0.08 : 0.36) : 0;
+          if (localU >= reachFrac) {
+            phoneProp._attachedToActor = actor.id || 'char';
+          }
+        }
+      } else if (act === 'put_down_phone') {
+        const phoneProp = findMatchingProp(new Set(['phone']), b.target_prop, actorX);
+        if (phoneProp) {
+          if (localU < 0.66) {
+            phoneProp._attachedToActor = actor.id || 'char';
+          } else {
+            phoneProp._attachedToActor = null;
+            if (b.release_x !== undefined) {
+              phoneProp.x = b.release_x;
+              const px = b.release_x * W;
+              const host = surfaces.find((sf) => sf && px >= sf.bounds.left - 30 && px <= sf.bounds.right + 30);
+              if (host && Number.isFinite(host.surfaceTopY)) {
+                phoneProp.elevation = floorY - host.surfaceTopY;
+              }
+            }
+          }
+        }
+      } else if (act === 'open_door') {
+        const doorProp = findMatchingProp(new Set(['door']), b.target_prop, actorX);
+        if (doorProp) {
+          const initialOpen = Number(doorProp._baseOpen ?? doorProp.open ?? 0.0);
+          doorProp._baseOpen = initialOpen;
+          const targetOpen = Number(b.target_open ?? 0.85);
+          if (localU >= 0.40) {
+            const openU = localU >= 0.80 ? 1.0 : ease((localU - 0.40) / 0.40);
+            doorProp.open = lerp(initialOpen, targetOpen, openU);
+          } else {
+            doorProp.open = initialOpen;
+          }
+        }
+      }
+    }
+  }
+
+  // Step B: Bind active character IK/seat/hand targets to exact live prop coordinates!
+  for (const entry of (entries || [])) {
+    const st = entry.state;
+    const s = st.s || 1.0;
+    let facing = st.flip ? -1 : 1;
+
+    const alignStandingReach = (anchorX, maxReach = 60 * s, obstacleBounds = null) => {
+      if (st.seatedOnChair || st.seatedAtDesk || !Number.isFinite(anchorX)) return;
+      const dx = anchorX - st.x;
+      if (Math.abs(dx) <= maxReach || Math.abs(dx) > 360 * s) return;
+      const dir = dx >= 0 ? 1 : -1;
+      let targetX = anchorX - dir * maxReach;
+      // Never step inside the solid span of a table/desk while standing beside it
+      if (obstacleBounds && targetX > obstacleBounds.left - 16 * s && targetX < obstacleBounds.right + 16 * s) {
+        targetX = dir >= 0 ? obstacleBounds.left - 16 * s : obstacleBounds.right + 16 * s;
+      }
+      const alignW = clamp(st.propAlignWeight ?? 1.0);
+      const newX = lerp(st.x, targetX, alignW);
+      const shift = newX - st.x;
+      st.x = newX;
+      if (alignW > 0.35) {
+        st.flip = dir < 0;
+        facing = dir;
+      }
+      if (st.pose.fl) st.pose.fl = [st.pose.fl[0] + shift, st.pose.fl[1]];
+      if (st.pose.fr) st.pose.fr = [st.pose.fr[0] + shift, st.pose.fr[1]];
+      if (st.pose.hr) st.pose.hr = [st.pose.hr[0] + shift, st.pose.hr[1]];
+    };
+
+    // 1. Chair / Desk / Sofa seating grounding (exact thigh-to-seat + foot-to-floor contact!)
+    if (st.seatedOnChair || st.seatedAtDesk) {
+      const seatProp = findMatchingProp(
+        new Set(['desk', 'clean_desk', 'messy_desk', 'chair', 'sofa', 'bench']),
+        st.targetPropId,
+        st.x
+      );
+      if (seatProp) {
+        const anc = computePropAnchors(seatProp, W, floorY);
+        if (anc && Math.abs(anc.seatX - st.x) < 240) {
+          const targetSeatHipY = anc.seatTopY - 11.2 * s;
+          const descU = clamp(st.seatDescentProgress ?? 1.0);
+          const seatBlend = ease(descU);
+          if (seatBlend > 0.001) {
+            st.x = lerp(st.x, anc.seatX, seatBlend * 0.88);
+            st.pose.hipY = lerp(st.pose.hipY ?? (st.fy - 116.2 * s), targetSeatHipY, seatBlend);
+            const footReach = lerp(10 * s, 34 * s, seatBlend);
+            const curFlX = st.pose.fl ? st.pose.fl[0] : (st.x + facing * 10 * s);
+            const curFrX = st.pose.fr ? st.pose.fr[0] : (st.x - facing * 10 * s);
+            st.pose.fl = [lerp(curFlX, st.x + facing * footReach, seatBlend), st.fy];
+            st.pose.fr = [lerp(curFrX, st.x + facing * (footReach - 9 * s), seatBlend), st.fy];
+            st.pose.legIkw = 1;
+          }
+
+          // Exact keyboard hand contact when typing at a desk or laptop!
+          if (st.typingTapL !== undefined) {
+            const laptopProp = findMatchingProp(new Set(['laptop', 'computer']), null, anc.centerX);
+            const kbAnchor = laptopProp
+              ? computePropAnchors(laptopProp, W, floorY).keyboardContact
+              : anc.keyboardContact;
+            if (kbAnchor) {
+              const tw = ease(clamp(st.typingDeskWeight ?? 1.0));
+              const tapL = Math.max(0, st.typingTapL || 0) * 3.2 * s;
+              const tapR = Math.max(0, st.typingTapR || 0) * 3.2 * s;
+              st.pose.ikwL = 0.96 * tw;
+              st.pose.ikwR = 0.94 * tw;
+              st.pose.hl = [kbAnchor[0] - facing * 4 * s, kbAnchor[1] - tapL];
+              st.pose.hr = [kbAnchor[0] + facing * 5 * s, kbAnchor[1] - tapR - 1.5 * s];
+              st.pose.armBendL = -1;
+              st.pose.armBendR = -1;
+            }
+          } else if (st.sketchingAtDesk && Number.isFinite(anc.surfaceTopY)) {
+            // Smooth pen-on-paper tabletop contact across any character/desk scale!
+            const swDesk = ease(clamp(st.sketchDeskWeight ?? 1.0));
+            const stroke = Number(st.sketchStroke || 0);
+            const sweep = Number(st.sketchSweep || 0);
+            const writeX = clamp(
+              st.x + facing * (52 + 8.5 * stroke + 4.5 * sweep) * s,
+              anc.bounds.left + 20,
+              anc.bounds.right - 20
+            );
+            const restX = clamp(st.x + facing * 42 * s, anc.bounds.left + 16, anc.bounds.right - 24);
+            const writeY = anc.surfaceTopY - (4.5 + Math.max(0, -stroke) * 2.2) * s;
+            st.pose.ikwL = 0.95 * swDesk;
+            st.pose.ikwR = 0.90 * swDesk;
+            st.pose.hl = [writeX + facing * 16 * s, writeY];
+            st.pose.hr = [restX - facing * 14 * s, anc.surfaceTopY - 4.0 * s];
+            st.pose.armBendL = -1;
+            st.pose.armBendR = -1;
+            const skDesk = skeleton(st.x, st.fy, s, st.pose, st.flip);
+            st.heldPen = swDesk > 0.35
+              ? { x: skDesk.world.al[2][0] - facing * 16 * s, y: skDesk.world.al[2][1] + 2 * s, dir: facing }
+              : null;
+          }
+        }
+      }
+    }
+
+    // 2. Phone reach / pickup / hold / scroll / type / put-down world-prop binding
+    if (st.phoneAction) {
+      const phoneProp = findMatchingProp(new Set(['phone']), st.targetPropId, st.x);
+      const surfaceProp = findMatchingProp(new Set(['table', 'desk', 'clean_desk', 'messy_desk', 'cafe_table']), null, st.x);
+      const surfAnc = surfaceProp ? computePropAnchors(surfaceProp, W, floorY) : null;
+      const phoneAnc = phoneProp ? computePropAnchors(phoneProp, W, floorY) : null;
+
+      let contactPt = null;
+      if (st.phoneAction === 'put_down_phone' && st.releaseXNorm !== undefined) {
+        const rx = st.releaseXNorm * W;
+        const ry = surfAnc ? surfAnc.surfaceTopY - 3 * s : (phoneAnc ? phoneAnc.gripAnchor[1] : st.fy - 106 * s);
+        contactPt = [rx, ry];
+      } else if (phoneAnc) {
+        contactPt = phoneAnc.gripAnchor;
+      } else if (surfAnc) {
+        contactPt = [st.x + facing * 48 * s, surfAnc.surfaceTopY - 3 * s];
+      }
+
+      if (contactPt) {
+        alignStandingReach(contactPt[0], 58 * s, surfAnc ? surfAnc.bounds : null);
+        if (st.propAlignOnly) {
+          // Exiting a phone/table/door beat into a non-prop beat: align `st.x` smoothly by `propAlignWeight` (`1 -> 0`)
+          // without overwriting the blended `lerpPose` hand target!
+          continue;
+        }
+        // Clamp release X inside reachable span of surface so arm never overstretches across a wide table
+        if (st.phoneAction === 'put_down_phone' && Math.abs(contactPt[0] - st.x) > 78 * s) {
+          contactPt = [st.x + facing * 74 * s, contactPt[1]];
+        }
+        const shFarOffX = facing * 19.5 * s;
+        const shY = (st.pose.hipY ?? (st.fy - 115 * s)) - BONES.TORSO * s;
+        const restHand = [st.x + facing * 6 * s, shY + 86 * s];
+        const micro = st.phoneHandMicro || [0, 0];
+        const viewHand = [st.x + facing * 62 * s + micro[0], shY + 46 * s + micro[1]];
+        const adjContactPt = [contactPt[0] - shFarOffX, contactPt[1] - 2.6 * s];
+
+        if (st.phoneAction === 'reach_phone') {
+          const ru = clamp(st.phoneProgress ?? 1);
+          st.pose.hr = arcPoint(restHand, adjContactPt, ru, -20 * s);
+        } else if (st.phoneAction === 'pick_up_phone') {
+          const u = clamp(st.phoneProgress ?? 1);
+          const rf = st.phoneReachFrac ?? 0.36;
+          const ge = st.phoneGripEnd ?? 0.48;
+          if (u < rf) {
+            st.pose.hr = rf <= 0.10 ? adjContactPt : arcPoint(restHand, adjContactPt, ease(u / rf), -18 * s);
+          } else if (u < ge) {
+            st.pose.hr = adjContactPt;
+          } else {
+            const liftU = springEase(clamp((u - ge) / (1 - ge)), { bounce: 0.08 });
+            st.pose.hr = arcPoint(adjContactPt, viewHand, liftU, -14 * s);
+          }
+        } else if (st.phoneAction === 'hold_phone' || st.phoneAction === 'phone_scroll' || st.phoneAction === 'phone_type') {
+          st.pose.hr = viewHand;
+          if (st.phoneAction === 'phone_type') {
+            const tr = clamp(st.phoneTypeRamp ?? 1.0);
+            st.pose.ikwL = 0.92 * tr;
+            st.pose.hl = [viewHand[0] + shFarOffX + facing * 12.0 * s, viewHand[1] + 4.5 * s];
+          }
+        } else if (st.phoneAction === 'put_down_phone') {
+          const u = clamp(st.phoneProgress ?? 1);
+          const relAt = st.phoneReleaseAt ?? 0.66;
+          if (u < 0.15) {
+            st.pose.hr = viewHand;
+          } else if (u < relAt) {
+            st.pose.hr = arcPoint(viewHand, adjContactPt, ease((u - 0.15) / (relAt - 0.15)), -14 * s);
+          } else if (u < 0.78) {
+            st.pose.hr = adjContactPt;
+          } else {
+            st.pose.hr = arcPoint(adjContactPt, restHand, ease((u - 0.78) / 0.22), -12 * s);
+          }
+        }
+        if (st.heldPhone) {
+          const sk = skeleton(st.x, st.fy, s, st.pose, st.flip);
+          st.heldPhone.x = sk.world.gripR[0] + shFarOffX;
+          st.heldPhone.y = sk.world.gripR[1] + 2.2 * s;
+        }
+      }
+    }
+
+    // 3. Table surface interaction binding
+    if (st.tableAction === 'interact_table') {
+      const tableProp = findMatchingProp(new Set(['table', 'cafe_table', 'desk', 'clean_desk']), st.targetPropId, st.x);
+      if (tableProp) {
+        const tAnc = computePropAnchors(tableProp, W, floorY);
+        if (tAnc && Number.isFinite(tAnc.surfaceTopY)) {
+          const nearEdgeX = st.x <= tAnc.centerX ? tAnc.bounds.left + 22 : tAnc.bounds.right - 22;
+          alignStandingReach(nearEdgeX, 54 * s);
+          if (st.propAlignOnly) continue;
+          const shY = (st.pose.hipY ?? (st.fy - 115 * s)) - BONES.TORSO * s;
+          const restPt = [st.x + facing * 14 * s, shY + 86 * s];
+          const contactX = clamp(st.x + facing * 54 * s, tAnc.bounds.left + 18, tAnc.bounds.right - 18);
+          const tablePt = [contactX, tAnc.surfaceTopY - 4 * s];
+          const u = clamp(st.tableProgress ?? 0.5);
+          if (u >= 0.18 && u < 0.42) {
+            st.pose.hl = arcPoint(restPt, tablePt, ease((u - 0.18) / 0.24), -18 * s);
+          } else if (u >= 0.42 && u < 0.78) {
+            const mu = (u - 0.42) / 0.36;
+            st.pose.hl = [tablePt[0] + facing * Math.sin(mu * Math.PI * 2) * 8 * s, tablePt[1]];
+          } else if (u >= 0.78) {
+            st.pose.hl = arcPoint(tablePt, restPt, ease((u - 0.78) / 0.22), -12 * s);
+          }
+        }
+      }
+    }
+
+    // 4. Door handle tracking (`0.0px` miss throughout door swing!)
+    if (st.doorAction === 'open_door') {
+      const doorProp = findMatchingProp(new Set(['door']), st.targetPropId, st.x);
+      if (doorProp) {
+        const dAnc = computePropAnchors(doorProp, W, floorY);
+        if (dAnc && dAnc.handleGrip) {
+          alignStandingReach(dAnc.handleGrip[0], 56 * s);
+          if (st.propAlignOnly) continue;
+          const shY = (st.pose.hipY ?? (st.fy - 115 * s)) - BONES.TORSO * s;
+          const restPt = [st.x + facing * 14 * s, shY + 86 * s];
+          const u = clamp(st.doorProgress ?? 0.5);
+          if (u >= 0.18 && u < 0.40) {
+            st.pose.hl = arcPoint(restPt, dAnc.handleGrip, ease((u - 0.18) / 0.22), -14 * s);
+          } else if (u >= 0.40 && u < 0.80) {
+            st.pose.hl = dAnc.handleGrip;
+          } else if (u >= 0.80) {
+            st.pose.hl = arcPoint(dAnc.handleGrip, restPt, ease((u - 0.80) / 0.20), -10 * s);
+          }
+        }
+      }
+    }
+  }
+
+  return props;
 }
 
 /**
@@ -1993,9 +3099,11 @@ function extractCharacterFootsteps(actor, sceneStartSec, sceneDur, W) {
 }
 
 module.exports = {
+  INTERACTION_PHASES,
   SUPPORTED_ACTIONS,
   normalizeBeats,
   evaluateCharacterState,
+  resolveScenePropInteractions,
   resolveSceneInteractions,
   extractCharacterFootsteps,
 };

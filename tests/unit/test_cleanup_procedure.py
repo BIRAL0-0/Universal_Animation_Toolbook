@@ -1,10 +1,11 @@
+from pathlib import Path
 import os
 import shutil
 import unittest
 
 class TestCleanupProcedure(unittest.TestCase):
     def setUp(self):
-        self.repo_root = "/home/user/Universal_Animation_Toolbook"
+        self.repo_root = str(Path(__file__).resolve().parents[2])
         self.runtime_path = os.path.join(self.repo_root, "runtime")
         # Create temporary files for testing
         self.test_job = os.path.join(self.runtime_path, "jobs", "test-job")

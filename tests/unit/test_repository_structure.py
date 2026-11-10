@@ -20,8 +20,12 @@ VALIDATOR = ROOT / "tools" / "validate_structure.py"
 POLISH = ROOT / "docs" / "production" / "prompts" / "VOICEOVER_POLISH_PROMPT.md"
 POLISH_SHA256 = "aeef0850347ae43535379981d2cd9f4a90e747b7de63b6bb5bd93c31518dc1ea"
 SKILLS = (
-    "youtube-research", "scriptwriting", "stickman-animation", "animation-production",
-    "voiceover-audio", "production-quality",
+    "youtube-research", "youtube-storytelling-and-hooks", "scriptwriting",
+    "animation-scriptwriting", "character-design-and-rigging", "stickman-animation",
+    "physical-interactions-and-props", "animation-principles", "cinematic-composition",
+    "environment-and-asset-continuity", "subtitles-and-typography", "sound-design",
+    "animation-quality-assurance", "animation-production", "voiceover-audio",
+    "production-quality",
 )
 
 
@@ -101,9 +105,16 @@ def test_no_generated_media_in_source_directories():
 def test_historical_project_archives_remain_complete():
     mod = _load_validator()
     tracked = _tracked()
+    tracked_set = set(tracked)
+    video_slugs = sorted({rel.split("/")[1] for rel in tracked
+                          if rel.startswith("videos/") and rel.count("/") >= 2})
+    assert len(video_slugs) >= 4, video_slugs
+    assert "videos/index.json" in tracked_set
+    for vslug in video_slugs:
+        assert f"videos/{vslug}/final.mp4" in tracked_set, vslug
+        assert f"videos/{vslug}/record.json" in tracked_set, vslug
     slugs = sorted({rel.split("/")[1] for rel in tracked
                     if rel.startswith("projects/") and rel.count("/") >= 2})
-    assert len(slugs) >= 2, slugs
     for slug in slugs:
         base = f"projects/{slug}/"
         for alternatives in mod.PROJECT_REQUIRED_GROUPS:

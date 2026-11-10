@@ -1,3 +1,4 @@
+from pathlib import Path
 import json
 import os
 import sys
@@ -5,7 +6,7 @@ import unittest
 
 class TestFullWorkflow(unittest.TestCase):
     def setUp(self):
-        self.repo_root = "/home/user/Universal_Animation_Toolbook"
+        self.repo_root = str(Path(__file__).resolve().parents[2])
         self.index_path = os.path.join(self.repo_root, "videos", "index.json")
         sys.path.append(os.path.join(self.repo_root, "universal_toolbook", "config"))
         from duplicate_detection import check_duplicate, load_index
