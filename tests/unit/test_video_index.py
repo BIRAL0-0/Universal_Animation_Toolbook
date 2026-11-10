@@ -1,10 +1,11 @@
+from pathlib import Path
 import json
 import os
 import unittest
 
 class TestVideoIndex(unittest.TestCase):
     def setUp(self):
-        self.repo_root = "/home/user/Universal_Animation_Toolbook"
+        self.repo_root = str(Path(__file__).resolve().parents[2])
         self.index_path = os.path.join(self.repo_root, "videos", "index.json")
         
     def test_index_exists(self):
