@@ -1,0 +1,47 @@
+{
+  "id": "video-004",
+  "slug": "the-two-inch-bridge",
+  "title": "The Two-Inch Bridge",
+  "filename": "the-two-inch-bridge.mp4",
+  "script": "script.md",
+  "thumbnail": "thumbnail.jpg",
+  "youtube_description": "The chasm at Kessa is eight hundred metres of nothing. The city wants a bridge in twelve weeks. Nia writes the number down and quietly plans for nine.\n\nNine days in, she finds two inches. Two inches off every joint — ninety joints — and nobody would ever measure. The deck rises faster than any bridge at Kessa has ever risen and meets the far side five weeks early. Her senior engineer Okoro says nothing at all, which is somehow worse than praise.\n\nThen June arrives, the river comes up four metres, and the deck begins to sing a note it has never made before.\n\nThis is a short cel-animated film about the difference between a structure that holds today and one that survives a bad day — and about how the part of the work nobody can see is usually the part holding everything up.\n\nIf you build anything, ship anything, or have ever shaved two inches off a job to hit a deadline, this one is going to feel personal.\n\n#engineering #safety #craftsmanship #quality #shortcuts #stickman #bridge\n\nSubscribe for more short films about the invisible parts of good work.\n\nMusic: \"Where Stars Fall\" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Where_Stars_Fall.oga\nMusic: \"Softly\" by Loyalty Freak Music (CC0 1.0 Public Domain) — https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_06_-_Softly.ogg\nMusic: \"The Distant Sun (Monomyth 1)\" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Distant_Sun_(Monomyth_1).oga\nMusic: \"The Restoration (Monomyth 12)\" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Restoration_(Monomyth_12).oga",
+  "pinned_comment": "Okoro's rule is the whole film for me: a structure is not safe because it holds today, it is safe because it survives a bad day. Two inches off ninety joints is nothing until the river comes up four metres.\n\nHave you ever shipped the fast version and had it come back at you later? I would like to hear what the \"June flood\" was in your line of work — the thing that found the margin you did not leave.",
+  "format": "landscape",
+  "aspect_ratio": "16:9",
+  "resolution": "1920x1080",
+  "duration_seconds": 102.914,
+  "created_at": "2026-11-10T00:00:00Z",
+  "topic": "Safety margin: why small shortcuts fail when conditions change",
+  "summary": "Nia shaves two inches off every joint to finish the Kessa bridge five weeks early. In June the river rises four metres and the deck begins to sing.",
+  "key_angle": "The shortcut is measured in inches and the consequence arrives as weather — the film never moralises, it lets the callipers and the flood do the arguing.",
+  "tags": [
+    "engineering",
+    "safety-margin",
+    "shortcuts",
+    "craftsmanship",
+    "stickman",
+    "quality",
+    "bridge"
+  ],
+  "production_version": "3.0.0",
+  "status": "completed",
+  "directory": "videos/the-two-inch-bridge",
+  "video_path": "videos/the-two-inch-bridge/the-two-inch-bridge.mp4",
+  "thumbnail_spec": {
+    "width": 1280,
+    "height": 720,
+    "aspect_ratio": "16:9",
+    "text_on_image": [
+      "2 INCHES",
+      "IS NOTHING"
+    ],
+    "design": "AI-generated cel-stickman base art + Poppins-Bold text overlay, inspected at 1080x1920 / 1280x720 and at mobile preview size"
+  },
+  "content_fingerprint": "sha256:6beb0df9f1f30d3e31dde568acdcc51e",
+  "duration_sec": 102.914,
+  "final_video": "the-two-inch-bridge.mp4",
+  "script_summary": "Nia shaves two inches off every joint to finish the Kessa bridge five weeks early. In June the river rises four metres and the deck begins to sing.",
+  "duration_label": "1:43",
+  "format_policy_exception": null
+}

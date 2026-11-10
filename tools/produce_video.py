@@ -13,6 +13,8 @@ Implements the ordered stages of ``AGENTS.md`` §1.2 for a project whose
     Stage  G  measure audio     (peak / RMS on the mixed WAV)
     Stage  H  extract QA frames (for real inspection, mute-legibility test)
     Stage  I  verify container  (dimensions, fps, duration, streams, full decode)
+    Stage  J  publish package   (videos/<slug>/<slug>.mp4 + script.md + thumbnail.jpg
+                                 + record.json + index entry, then the publishing gate)
 
 Usage::
 
@@ -43,7 +45,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 STUDIO = REPO_ROOT / "universal_toolbook" / "run_studio.py"
 
-STAGES = ["validate", "stills", "draft", "master", "measure", "frames", "verify"]
+STAGES = ["validate", "stills", "draft", "master", "measure", "frames", "verify", "publish"]
 
 
 def run(cmd: list[str], cwd: Path, log) -> subprocess.CompletedProcess:
@@ -95,6 +97,8 @@ def main() -> int:
     ap.add_argument("--chunk-sec", type=int, default=45)
     ap.add_argument("--preset", default="veryfast")
     ap.add_argument("--crf", type=int, default=24)
+    ap.add_argument("--slug", default=None,
+                    help="publishing slug for videos/<slug>/ (defaults to the project folder name)")
     args = ap.parse_args()
 
     proj = (REPO_ROOT / args.project).resolve() if not Path(args.project).is_absolute() \
@@ -303,6 +307,28 @@ def main() -> int:
             log(f"verify: {v.get('dimensions')} @ {v.get('fps')} fps, "
                 f"full_decode_ok={v['full_decode_ok']}")
         measurements["stages"]["verify"] = v
+
+    # ---------------------------------------------------------- J publish
+    if stage("publish"):
+        log("STAGE J — publishing package (videos/<slug>/)")
+        if not final.exists():
+            log("GATE FAILED: cannot publish without a verified master")
+            _append_log(proj, log_lines)
+            return 2
+        slug = args.slug or proj.name
+        r = run([py, str(REPO_ROOT / "tools" / "package_video.py"), str(final),
+                 "--slug", slug, "--project", str(proj)], REPO_ROOT, log)
+        if r.returncode != 0:
+            log("GATE FAILED: publishing package could not be assembled")
+            _append_log(proj, log_lines)
+            return 2
+        r = run([py, str(REPO_ROOT / "tools" / "validate_publishing.py")], REPO_ROOT, log)
+        if r.returncode != 0:
+            log("GATE FAILED: tools/validate_publishing.py reports an incomplete package")
+            _append_log(proj, log_lines)
+            return 2
+        measurements["stages"]["publish"] = {"slug": slug, "validated": True}
+        log(f"publish OK — videos/{slug}/")
 
     (proj / "qa_measurements.json").write_text(json.dumps(measurements, indent=2),
                                                encoding="utf-8")

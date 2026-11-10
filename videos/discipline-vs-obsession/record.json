@@ -1,0 +1,47 @@
+{
+  "id": "video-002",
+  "slug": "discipline-vs-obsession",
+  "title": "Discipline vs Obsession — The Man Who Sacrificed Everything",
+  "filename": "discipline-vs-obsession.mp4",
+  "script": "script.md",
+  "thumbnail": "thumbnail.jpg",
+  "youtube_description": "Two men wanted exactly the same thing: to build a life that mattered.\n\nBoth worked hard. Both gave up comfort for it. Ten years later, one of them could look back with pride — and the other looked around and realised he had sacrificed almost everything to get somewhere he could no longer enjoy.\n\nThe difference was not talent, intelligence, or hours. It was something much harder to spot from the inside: one man had discipline, the other had obsession.\n\nThis is a six-minute story about Daniel, who learns to take responsibility only for the minutes that matter, and Marcus, who turns every achievement into a new starting line and every hour of rest into proof that he is falling behind. They argue about it. Marcus loses the argument and keeps going anyway. Then one evening he calls his mother, and the conversation is not about work at all.\n\nIf you have ever finished a project and felt nothing, or felt guilty for closing the laptop on time, Marcus is going to be uncomfortably familiar.\n\n#discipline #obsession #burnout #ambition #worklifebalance #psychology #stickman\n\nSubscribe if you want more stories that take an uncomfortable idea seriously instead of turning it into a quote.\n\nMusic: \"Where Stars Fall\" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Where_Stars_Fall.oga\nMusic: \"Softly\" by Loyalty Freak Music (CC0 1.0 Public Domain) — https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_06_-_Softly.ogg\nMusic: \"The Distant Sun (Monomyth 1)\" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Distant_Sun_(Monomyth_1).oga\nMusic: \"One Cool Minute\" by Loyalty Freak Music (CC0 1.0 Public Domain) — https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_02_-_One_Cool_Minute.ogg\nMusic: \"The Restoration (Monomyth 12)\" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Restoration_(Monomyth_12).oga",
+  "pinned_comment": "The line that does the most work in this story: \"You don't know when your work is enough.\" Marcus never had a stopping rule — he only ever had a starting one.\n\nWhat is your actual stopping rule? Not the aspirational one — the one you genuinely use on a normal weeknight. Do you have one written down anywhere?",
+  "format": "landscape",
+  "aspect_ratio": "16:9",
+  "resolution": "1920x1080",
+  "duration_seconds": 404.942,
+  "created_at": "2026-11-10T00:00:00Z",
+  "topic": "Where discipline ends and self-destructive obsession begins",
+  "summary": "Daniel and Marcus want the same thing and work equally hard. Ten years later one has a life he can sustain and the other has a scoreboard he can never finish.",
+  "key_angle": "Two parallel ten-year timelines built on the same ambition — the story withholds the verdict until a single phone call to Marcus's mother reframes what he was working for.",
+  "tags": [
+    "discipline",
+    "obsession",
+    "burnout",
+    "ambition",
+    "stickman",
+    "psychology",
+    "work-life-balance"
+  ],
+  "production_version": "3.0.0",
+  "status": "completed",
+  "directory": "videos/discipline-vs-obsession",
+  "video_path": "videos/discipline-vs-obsession/discipline-vs-obsession.mp4",
+  "thumbnail_spec": {
+    "width": 1280,
+    "height": 720,
+    "aspect_ratio": "16:9",
+    "text_on_image": [
+      "DISCIPLINE",
+      "OBSESSION"
+    ],
+    "design": "AI-generated cel-stickman base art + Poppins-Bold text overlay, inspected at 1080x1920 / 1280x720 and at mobile preview size"
+  },
+  "content_fingerprint": "sha256:1b253fa0f6b4283fb77787d43101e732",
+  "duration_sec": 404.942,
+  "final_video": "discipline-vs-obsession.mp4",
+  "script_summary": "Daniel and Marcus want the same thing and work equally hard. Ten years later one has a life he can sustain and the other has a scoreboard he can never finish.",
+  "duration_label": "6:44",
+  "format_policy_exception": null
+}

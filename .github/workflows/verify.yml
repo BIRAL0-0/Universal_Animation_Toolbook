@@ -39,6 +39,10 @@ jobs:
               | sed 's/^/::error::docs check: /'
           fi
           exit "$code"
+      - name: Every completed video is a validated publishing package
+        run: |
+          pip install --quiet imageio-ffmpeg pillow
+          python tools/validate_publishing.py
       - name: Workflow files must parse as YAML
         run: python tools/check_workflows.py
       - name: Structure unit tests
