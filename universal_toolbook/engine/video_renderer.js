@@ -798,6 +798,39 @@ function renderCharacterPass(ctx, entry, drawMode, parchmentMode, activeLight, s
   });
 }
 
+/**
+ * Drop signpost label plates that a portrait crop would show as unreadable clipped fragments.
+ *
+ * The 9:16 master is a `viewport.width`-wide crop of the 1920-wide stage, and the crop follows
+ * the speaker/camera, so its left edge moves every frame. Drawing a 148px label plate whose
+ * visible part is only a few pixels produces a floating colour chip with no text. Keep a label
+ * only when at least 70% of its plate lies inside the crop. Landscape renders pass a full-width
+ * viewport and are untouched, so their output is byte-identical.
+ */
+function pruneClippedSignpostLabels(prop, { zoom, focusX, panX, viewport, baseW }) {
+  if (!viewport || viewport.width >= baseW || prop.type !== 'signpost') return prop;
+  if (!prop.left_label && !prop.right_label) return prop;
+  const s = prop.scale ?? 1.0;
+  const px = (prop.x ?? 0.5) * baseW;
+  const stageX = (worldX) => baseW * 0.5 + zoom * (worldX - focusX - panX);
+  const visibleFraction = (x0, x1) => {
+    const a = stageX(Math.min(x0, x1));
+    const b = stageX(Math.max(x0, x1));
+    const visible = Math.max(0, Math.min(b, viewport.right) - Math.max(a, viewport.left));
+    return visible / Math.max(1, b - a);
+  };
+  let result = prop;
+  if (prop.left_label && visibleFraction(px - 155 * s, px - 7 * s) < 0.7) {
+    result = { ...result };
+    delete result.left_label;
+  }
+  if (prop.right_label && visibleFraction(px + 7 * s, px + 155 * s) < 0.7) {
+    result = { ...result };
+    delete result.right_label;
+  }
+  return result;
+}
+
 function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREEN_VIEWPORT, cameraZoomScale = 1) {
   const globalT = frameIdx / episode.fps;
   const frame = normalizeScreenViewport(viewport);
@@ -879,13 +912,22 @@ function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREE
   }
   resolveSceneInteractions(rawActiveChars, globalT, speechState);
 
+  // Portrait output is a narrow crop of the 1920-wide authoring stage. A signpost label plate
+  // that the camera pushes mostly outside that crop used to leave an unreadable coloured sliver
+  // pinned to the frame edge (KI-012). Prune such labels per frame; the crop moves continuously,
+  // so a static prop x cannot keep every label readable for a whole scene.
+  const portraitCrop = viewport && viewport.width < BASE_W ? viewport : null;
+  const safeProp = (prop) => pruneClippedSignpostLabels(prop, {
+    zoom, focusX, panX, viewport: portraitCrop, baseW: BASE_W,
+  });
+
   // 3. Build Unified Continuous Z-Depth Render Queue (Boards + Props + Vehicles + Split-Furniture + Characters)
   const activeProps = [];
   sc.props.forEach((prop, pIdx) => {
     if (prop.from_t !== undefined && ts < prop.from_t) return;
     if (prop.to_t !== undefined && ts > prop.to_t) return;
     activeProps.push({
-      prop,
+      prop: safeProp(prop),
       z: resolveLayerZ(prop, -4),
       order: pIdx,
       splitOwners: [],
@@ -1571,6 +1613,7 @@ module.exports = {
   setFrame,
   BASE_W,
   BASE_H,
+  pruneClippedSignpostLabels,
   renderEpisodeFrame,
   renderVideoSegment,
   renderSceneStills,

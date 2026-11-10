@@ -196,6 +196,18 @@ def test_docs_checker_treats_session_branch_names_as_git_refs():
     assert mod.is_claim("`deliverables/video-003-first-plank/final.mp4`") is True
 
 
+def test_portrait_crop_prunes_clipped_signpost_labels():
+    """A moving 9:16 crop must not paint unreadable fragments of world-prop labels (KI-012)."""
+    renderer = (ROOT / "universal_toolbook" / "engine" / "video_renderer.js").read_text(encoding="utf-8")
+    assert "function pruneClippedSignpostLabels" in renderer
+    assert "viewport.width < BASE_W" in renderer
+    regression = (ROOT / "tests" / "regression" / "run_all_tests.js").read_text(encoding="utf-8")
+    assert "pruneClippedSignpostLabels" in regression
+    assert "clipped_signpost_label_pruning_verified" in regression
+    prompt = (ROOT / "templates" / "MASTER_VIDEO_PRODUCTION_PROMPT.md").read_text(encoding="utf-8")
+    assert "KI-012" in prompt
+
+
 def test_produce_video_invalidates_stale_render_caches():
     """A spec edit must not be silently ignored by --resume chunk/reuse state."""
     text = (ROOT / "tools" / "produce_video.py").read_text(encoding="utf-8")

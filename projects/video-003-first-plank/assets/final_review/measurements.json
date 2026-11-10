@@ -3,50 +3,36 @@
   "final_review_frames": [
     {
       "scene": "S01",
-      "board_reveal_global": 2.78,
-      "board_hide_global": 17.196,
       "frame_t": 4.38,
       "frame": "assets/final_review/board_01.png"
     },
     {
       "scene": "S02",
-      "board_reveal_global": 30.594,
-      "board_hide_global": 34.02,
       "frame_t": 32.194,
       "frame": "assets/final_review/board_02.png"
     },
     {
       "scene": "S03",
-      "board_reveal_global": 43.661,
-      "board_hide_global": 51.442,
       "frame_t": 45.261,
       "frame": "assets/final_review/board_03.png"
     },
     {
       "scene": "S04",
-      "board_reveal_global": 59.487,
-      "board_hide_global": 64.082,
       "frame_t": 61.087,
       "frame": "assets/final_review/board_04.png"
     },
     {
       "scene": "S05",
-      "board_reveal_global": 73.266,
-      "board_hide_global": 82.368,
       "frame_t": 74.866,
       "frame": "assets/final_review/board_05.png"
     },
     {
       "scene": "S06",
-      "board_reveal_global": 97.903,
-      "board_hide_global": 106.5,
       "frame_t": 99.503,
       "frame": "assets/final_review/board_06.png"
     },
     {
       "scene": "S07",
-      "board_reveal_global": 111.805,
-      "board_hide_global": 121.057,
       "frame_t": 113.405,
       "frame": "assets/final_review/board_07.png"
     },
@@ -98,25 +84,25 @@
   "one_fps_frame_stats": {
     "9x16": {
       "frames_sampled": 126,
-      "min_mean": 23.34,
-      "max_mean": 86.78,
-      "min_std": 20.3,
+      "min_mean": 23.22,
+      "max_mean": 86.77,
+      "min_std": 20.98,
       "black_or_flat_frames": 0,
       "black_or_flat_times": []
     },
     "16x9": {
       "frames_sampled": 126,
-      "min_mean": 20.97,
-      "max_mean": 75.46,
-      "min_std": 13.91,
+      "min_mean": 20.89,
+      "max_mean": 75.37,
+      "min_std": 15.3,
       "black_or_flat_frames": 0,
       "black_or_flat_times": []
     }
   },
   "muxed_aac": {
-    "peak_dbfs": -1.27,
-    "rms_dbfs": -17.51,
-    "samples": 11114496
+    "peak_dbfs": -1.25,
+    "rms_dbfs": -17.53,
+    "samples": 11116552
   },
   "chapters": {
     "lines": 7,
@@ -134,7 +120,7 @@
     "last_line": "01:48 Chapter Seven | The Other Side"
   },
   "sha256": {
-    "final.mp4": "7a21ad65b6185f814e1e55cf4e8fb87512611a0daf65ed4d58a9f3b840424ba4",
-    "final_16x9.mp4": "67c2512daf0795aa1d8f6f9744dd0253903d5f324697fa9493eeea081ccfb8ed"
+    "final.mp4": "1ec6f53e7979683d8f2825fa0c47a2ea218b784c9158067ff24c1bbba76a3a72",
+    "final_16x9.mp4": "14a00dcf0dd1549fb3aaf408af9159eb98bac6aa29eae2228a6f85ad5252d317"
   }
 }

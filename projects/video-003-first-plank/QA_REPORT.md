@@ -2,12 +2,13 @@
 
 Status: **PASS — signed off for delivery on 2026-11-10**. Every value below was read from a
 produced report, measurement file or an image actually opened with `read_file`. No subjective
-listening or full-film real-time viewing is claimed.
+listening or full-film real-time viewing is claimed. This revision follows the KI-012 re-render:
+the moving 9:16 crop no longer paints clipped world-prop label fragments in the closing frames.
 
 | Gate | Result | Evidence |
 |---|---|---|
 | `validate` warnings `[]` | PASS | `run_studio.py validate`: 140 s planning duration, 7 scenes, 42 lines, 49 sound events, `warnings: []`; `qa_measurements.json` Stage A. |
-| Full-resolution 9:16 stills inspected | PASS | 7 PNGs in `assets/stills_9x16/`; min std 25.28, max near-black fraction 0.426, 0 flat-black; `assets/stills_pixel_measurements.json`. |
+| Full-resolution 9:16 stills inspected | PASS | 7 PNGs in `assets/stills_9x16/`; min std 25.28, 0 flat-black; `assets/stills_pixel_measurements.json`. |
 | Full-resolution 16:9 stills inspected | PASS | 7 PNGs in `assets/stills_16x9/`; `assets/final_review/stills_9x16_contact_sheet.png` and
   `assets/final_review/stills_16x9_contact_sheet.png` opened. |
 | Draft voiced, `warnings: []` | PASS | `renders/draft_9x16_report.json`: `COMPLETE`, `voiced: true`, `kokoro-offline:am_michael`, `warnings: []`, 126.038 s, 540×960, 30 fps. |
@@ -16,12 +17,13 @@ listening or full-film real-time viewing is claimed.
 | 16:9 master voiced, `warnings: []` | PASS | `renders/final_16x9_report.json`: same backend/warnings, 126.038 s, 1920×1080, 30 fps. |
 | Dimensions match declared aspect | PASS | `final_validation_report.json`: `valid: true`, `[1080,1920]`, 3781 frames; 16:9 validation `[1920,1080]`, 3781 frames. |
 | Full decode | PASS | `ffmpeg -v error -i … -f null -` exited 0 for both masters; `assets/final_review/measurements.json` `full_decode`. |
-| Measured container and audio | PASS | H.264 High + AAC 44.1 kHz stereo; mixed WAV 2 ch / 44,100 Hz / 126.04 s; WAV peak -1.22 dBFS, RMS -17.50 dBFS; muxed AAC peak -1.27 dBFS, RMS -17.51 dBFS; all in target. |
+| Measured container and audio | PASS | H.264 High + AAC 44.1 kHz stereo; mixed WAV 2 ch / 44,100 Hz / 126.04 s; WAV peak -1.22 dBFS, RMS -17.5 dBFS; muxed AAC peak -1.25 dBFS, RMS -17.53 dBFS; all in target. |
 | At least six inspected final frames | PASS | 8 `assets/qa_frames/t*.png`, 7 `board_XX.png`, `start.png`, `closing_question.png`, `closing_question_full.png`, `s07_board_fade.png`, `end.png`, and four contact sheets opened. |
-| Mute-legibility and no black sections | PASS | `mute_legibility_contact_sheet.png`, `wide_qa_contact_sheet.png` and `board_contact_sheet.png` opened; one-fps grayscale over 126 samples: 9:16 min std 20.30, 16:9 min std 13.91, 0 black/flat frames in either master. |
+| Mute-legibility and no black sections | PASS | `mute_legibility_contact_sheet.png`, `wide_qa_contact_sheet.png` and `board_contact_sheet.png` opened; one-fps grayscale over 126 samples: 9:16 min std 20.98, 16:9 min std 15.3, 0 black/flat frames in either master. |
 | Audio tools | PASS | `tools/audio_report.py` PASS (true peak -1.25, RMS -17.51, 0 clipping); `tools/subtitle_check.py` PASS (358 script words, 0 overlaps, 104.9 % coverage); `tools/mix_probe.py` PASS (18.59 dB / 23.59 dB separation). |
 | Chapters and credits | PASS | `final_chapters.txt`: 7 chapter lines at 00:00, 00:19, 00:37, 00:53, 01:11, 01:30, 01:48, all within 126.038 s, plus four music credits. |
-| Repository gates | PASS | `tools/validate_structure.py`, `tools/check_docs.py`, `tools/check_workflows.py`, `tools/validate_specs.py`, `pytest tests/unit/test_repository_structure.py`, JS regression and `git diff --check` recorded in `PRODUCTION_LOG.md`. |
+| Closing-frame edge fragments | PASS | KI-012 fix prunes signpost label plates outside the moving portrait crop. The re-rendered `closing_question_full.png` and `end.png` were opened: no clipped colour chip at the left edge; S01's fully visible `NEAR` label is retained. |
+| Repository gates | PASS | `tools/validate_structure.py`, `tools/check_docs.py`, `tools/check_workflows.py`, `tools/validate_specs.py`, `pytest tests/unit tests/production -q`, JS regression and `git diff --check` recorded in `PRODUCTION_LOG.md`. |
 
 ## Visual findings actually inspected
 

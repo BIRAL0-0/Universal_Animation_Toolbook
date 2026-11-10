@@ -13,7 +13,8 @@ AAC 44.1 kHz stereo, `voiced: true`, `kokoro-offline:am_michael`, `warnings: []`
 PASS, mixed WAV peak -1.22 dBFS / RMS -17.50 dBFS, 7 chapters + 4 CC music credits, 0 black/flat
 frames in one-fps sampling. Board-cue frames and contact sheets from the final master were opened
 and inspected; S01's name tag is clear and S07's board is fully opaque before its intentional exit
-fade.
+fade. The closing frames were re-inspected after the KI-012 re-render and carry no clipped
+world-prop label fragment.
 
 No subjective listening or full-film real-time viewing is claimed. No publish, upload or YouTube
 API action was performed.

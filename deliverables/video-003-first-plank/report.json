@@ -2,7 +2,7 @@
   "status": "COMPLETE",
   "title": "The First Plank",
   "output_mp4": "/home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/final.mp4",
-  "size_mb": 12.314,
+  "size_mb": 12.293,
   "resolution": "1080x1920",
   "aspect_ratio": "9:16",
   "output_profile": "shorts",
@@ -24,7 +24,7 @@
     "sfx_events": 47,
     "peak_dbfs": -1.22,
     "rms_dbfs": -17.5,
-    "rms_dbfs_before_makeup": -24.04,
+    "rms_dbfs_before_makeup": -24.03,
     "loudness_makeup_gain_db": 7.32,
     "bgm": {
       "mode": "dynamic_cc",
@@ -166,5 +166,5 @@
     }
   },
   "chapters_file": "/home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/final_chapters.txt",
-  "elapsed_sec": 319.99
+  "elapsed_sec": 310.01
 }

@@ -188,3 +188,154 @@
 [2026-11-10 01:15:45] verify: 1080x1920 @ 30 fps, full_decode_ok=True
 ```
 
+## Run 2026-11-10 02:02:13
+
+```
+[2026-11-10 01:51:11] episode spec changed -> cleared stale .work_* render caches (9ce521e061e9)
+[2026-11-10 01:51:12] STAGE A — validate (gate: warnings must be [])
+[2026-11-10 01:51:12] $ /home/user/Universal_Animation_Toolbook/.venv/bin/python /home/user/Universal_Animation_Toolbook/universal_toolbook/run_studio.py validate /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/episode.json
+[2026-11-10 01:51:13]       "accent_colors_used": [
+[2026-11-10 01:51:13]         "#22d3ee",
+[2026-11-10 01:51:13]         "#34d399",
+[2026-11-10 01:51:13]         "#60a5fa",
+[2026-11-10 01:51:13]         "#93c5fd",
+[2026-11-10 01:51:13]         "#a78bfa",
+[2026-11-10 01:51:13]         "#f87171",
+[2026-11-10 01:51:13]         "#fbbf24"
+[2026-11-10 01:51:13]       ],
+[2026-11-10 01:51:13]       "sound_events": 49,
+[2026-11-10 01:51:13]       "warnings": []
+[2026-11-10 01:51:13]     }
+[2026-11-10 01:51:13] validate OK — 140s, 7 scenes, 49 sound events, warnings []
+[2026-11-10 01:51:13] STAGE B/C — stills 9x16
+[2026-11-10 01:51:13] $ /home/user/Universal_Animation_Toolbook/.venv/bin/python /home/user/Universal_Animation_Toolbook/universal_toolbook/run_studio.py stills /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/episode.json --out-dir /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/assets/stills_9x16 --width 1080 --height 1920
+[2026-11-10 01:51:14]           "environment": "sunrise_summit",
+[2026-11-10 01:51:14]           "frame": 3348,
+[2026-11-10 01:51:14]           "path": "/home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/assets/stills_9x16/S06_sunrise_summit.png"
+[2026-11-10 01:51:14]         },
+[2026-11-10 01:51:14]         {
+[2026-11-10 01:51:14]           "sceneId": "S07",
+[2026-11-10 01:51:14]           "environment": "sunrise_summit",
+[2026-11-10 01:51:14]           "frame": 3948,
+[2026-11-10 01:51:14]           "path": "/home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/assets/stills_9x16/S07_sunrise_summit.png"
+[2026-11-10 01:51:14]         }
+[2026-11-10 01:51:14]       ]
+[2026-11-10 01:51:14]     }
+[2026-11-10 01:51:14] stills 9x16: 7 frames in assets/stills_9x16
+[2026-11-10 01:51:14] STAGE B/C — stills 16x9
+[2026-11-10 01:51:14] $ /home/user/Universal_Animation_Toolbook/.venv/bin/python /home/user/Universal_Animation_Toolbook/universal_toolbook/run_studio.py stills /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/episode.json --out-dir /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/assets/stills_16x9 --width 1920 --height 1080
+[2026-11-10 01:51:16]           "environment": "sunrise_summit",
+[2026-11-10 01:51:16]           "frame": 3348,
+[2026-11-10 01:51:16]           "path": "/home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/assets/stills_16x9/S06_sunrise_summit.png"
+[2026-11-10 01:51:16]         },
+[2026-11-10 01:51:16]         {
+[2026-11-10 01:51:16]           "sceneId": "S07",
+[2026-11-10 01:51:16]           "environment": "sunrise_summit",
+[2026-11-10 01:51:16]           "frame": 3948,
+[2026-11-10 01:51:16]           "path": "/home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/assets/stills_16x9/S07_sunrise_summit.png"
+[2026-11-10 01:51:16]         }
+[2026-11-10 01:51:16]       ]
+[2026-11-10 01:51:16]     }
+[2026-11-10 01:51:16] stills 16x9: 7 frames in assets/stills_16x9
+[2026-11-10 01:51:16] STAGE D — draft render 9:16
+[2026-11-10 01:51:16] $ /home/user/Universal_Animation_Toolbook/.venv/bin/python /home/user/Universal_Animation_Toolbook/universal_toolbook/run_studio.py render /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/episode.json --shorts --draft --voice auto --workers 2 --chunk-sec 20 --out /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/renders/draft_9x16.mp4
+[2026-11-10 01:53:56]               ],
+[2026-11-10 01:53:56]               "description": "Uplifting cinematic strings and horizon resolve for inspirational arcs, breakthroughs, and triumphant storytelling.",
+[2026-11-10 01:53:56]               "duration_sec": 178.33,
+[2026-11-10 01:53:56]               "size_mb": 2.04
+[2026-11-10 01:53:56]             }
+[2026-11-10 01:53:56]           ],
+[2026-11-10 01:53:56]           "credits_text": "Music: \"Where Stars Fall\" by Scott Buckley (CC BY 4.0) \u2014 https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Where_Stars_Fall.oga\nMusic: \"Softly\" by Loyalty Freak Music (CC0 1.0 Public Domain) \u2014 https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_06_-_Softly.ogg\nMusic: \"The Distant Sun (Monomyth 1)\" by Scott Buckley (CC BY 4.0) \u2014 https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Distant_Sun_(Monomyth_1).oga\nMusic: \"The Restoration (Monomyth 12)\" by Scott Buckley (CC BY 4.0) \u2014 https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Restoration_(Monomyth_12).oga"
+[2026-11-10 01:53:56]         }
+[2026-11-10 01:53:56]       },
+[2026-11-10 01:53:56]       "chapters_file": "/home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/renders/draft_9x16_chapters.txt",
+[2026-11-10 01:53:56]       "elapsed_sec": 160.13
+[2026-11-10 01:53:56]     }
+[2026-11-10 01:53:56] draft OK — 13.4 MB
+[2026-11-10 01:53:56] STAGE E — master 9:16 (final.mp4)
+[2026-11-10 01:53:56] $ /home/user/Universal_Animation_Toolbook/.venv/bin/python /home/user/Universal_Animation_Toolbook/universal_toolbook/run_studio.py render /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/episode.json --shorts --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto --out /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/final.mp4
+[2026-11-10 01:59:07]               ],
+[2026-11-10 01:59:07]               "description": "Uplifting cinematic strings and horizon resolve for inspirational arcs, breakthroughs, and triumphant storytelling.",
+[2026-11-10 01:59:07]               "duration_sec": 178.33,
+[2026-11-10 01:59:07]               "size_mb": 2.04
+[2026-11-10 01:59:07]             }
+[2026-11-10 01:59:07]           ],
+[2026-11-10 01:59:07]           "credits_text": "Music: \"Where Stars Fall\" by Scott Buckley (CC BY 4.0) \u2014 https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Where_Stars_Fall.oga\nMusic: \"Softly\" by Loyalty Freak Music (CC0 1.0 Public Domain) \u2014 https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_06_-_Softly.ogg\nMusic: \"The Distant Sun (Monomyth 1)\" by Scott Buckley (CC BY 4.0) \u2014 https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Distant_Sun_(Monomyth_1).oga\nMusic: \"The Restoration (Monomyth 12)\" by Scott Buckley (CC BY 4.0) \u2014 https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Restoration_(Monomyth_12).oga"
+[2026-11-10 01:59:07]         }
+[2026-11-10 01:59:07]       },
+[2026-11-10 01:59:07]       "chapters_file": "/home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/final_chapters.txt",
+[2026-11-10 01:59:07]       "elapsed_sec": 310.01
+[2026-11-10 01:59:07]     }
+[2026-11-10 01:59:07] master validation OK: [1080, 1920] @ 9:16, voice_backend=kokoro-offline:am_michael
+[2026-11-10 01:59:07] STAGE F — master 16:9
+[2026-11-10 01:59:07] $ /home/user/Universal_Animation_Toolbook/.venv/bin/python /home/user/Universal_Animation_Toolbook/universal_toolbook/run_studio.py render /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/episode.json --aspect-ratio 16:9 --full --preset veryfast --crf 24 --chunk-sec 45 --workers 2 --resume --voice auto --out /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/renders/final_16x9.mp4
+[2026-11-10 02:02:05]               ],
+[2026-11-10 02:02:05]               "description": "Uplifting cinematic strings and horizon resolve for inspirational arcs, breakthroughs, and triumphant storytelling.",
+[2026-11-10 02:02:05]               "duration_sec": 178.33,
+[2026-11-10 02:02:05]               "size_mb": 2.04
+[2026-11-10 02:02:05]             }
+[2026-11-10 02:02:05]           ],
+[2026-11-10 02:02:05]           "credits_text": "Music: \"Where Stars Fall\" by Scott Buckley (CC BY 4.0) \u2014 https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Where_Stars_Fall.oga\nMusic: \"Softly\" by Loyalty Freak Music (CC0 1.0 Public Domain) \u2014 https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_06_-_Softly.ogg\nMusic: \"The Distant Sun (Monomyth 1)\" by Scott Buckley (CC BY 4.0) \u2014 https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Distant_Sun_(Monomyth_1).oga\nMusic: \"The Restoration (Monomyth 12)\" by Scott Buckley (CC BY 4.0) \u2014 https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Restoration_(Monomyth_12).oga"
+[2026-11-10 02:02:05]         }
+[2026-11-10 02:02:05]       },
+[2026-11-10 02:02:05]       "chapters_file": "/home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/renders/final_16x9_chapters.txt",
+[2026-11-10 02:02:05]       "elapsed_sec": 178.45
+[2026-11-10 02:02:05]     }
+[2026-11-10 02:02:05] master 9:16 OK — 12.9 MB; 16:9 ok=True
+[2026-11-10 02:02:05] STAGE G — measure mixed audio
+[2026-11-10 02:02:05] audio: 126.04s peak -1.22 dBFS rms -17.5 dBFS (targets peak -3..-1, rms -16..-19)
+[2026-11-10 02:02:05] STAGE H — extract QA frames from final.mp4
+[2026-11-10 02:02:05] $ /home/user/Universal_Animation_Toolbook/.venv/lib/python3.11/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v9.0.2 -v error -ss 5.04 -i /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/final.mp4 -frames:v 1 -y /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/assets/qa_frames/t005.04.png
+[2026-11-10 02:02:06] $ /home/user/Universal_Animation_Toolbook/.venv/lib/python3.11/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v9.0.2 -v error -ss 20.16 -i /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/final.mp4 -frames:v 1 -y /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/assets/qa_frames/t020.16.png
+[2026-11-10 02:02:06] $ /home/user/Universal_Animation_Toolbook/.venv/lib/python3.11/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v9.0.2 -v error -ss 37.81 -i /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/final.mp4 -frames:v 1 -y /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/assets/qa_frames/t037.81.png
+[2026-11-10 02:02:06] $ /home/user/Universal_Animation_Toolbook/.venv/lib/python3.11/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v9.0.2 -v error -ss 56.71 -i /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/final.mp4 -frames:v 1 -y /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/assets/qa_frames/t056.71.png
+[2026-11-10 02:02:06] $ /home/user/Universal_Animation_Toolbook/.venv/lib/python3.11/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v9.0.2 -v error -ss 75.62 -i /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/final.mp4 -frames:v 1 -y /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/assets/qa_frames/t075.62.png
+[2026-11-10 02:02:06] $ /home/user/Universal_Animation_Toolbook/.venv/lib/python3.11/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v9.0.2 -v error -ss 94.52 -i /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/final.mp4 -frames:v 1 -y /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/assets/qa_frames/t094.52.png
+[2026-11-10 02:02:07] $ /home/user/Universal_Animation_Toolbook/.venv/lib/python3.11/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v9.0.2 -v error -ss 110.91 -i /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/final.mp4 -frames:v 1 -y /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/assets/qa_frames/t110.91.png
+[2026-11-10 02:02:07] $ /home/user/Universal_Animation_Toolbook/.venv/lib/python3.11/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v9.0.2 -v error -ss 122.25 -i /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/final.mp4 -frames:v 1 -y /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/assets/qa_frames/t122.25.png
+[2026-11-10 02:02:07] extracted 8 QA frames over 126.03s
+[2026-11-10 02:02:07] STAGE I — verify container + full decode
+[2026-11-10 02:02:07] $ /home/user/Universal_Animation_Toolbook/.venv/lib/python3.11/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v9.0.2 -hide_banner -i /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/final.mp4
+[2026-11-10 02:02:07]   !     minor_version   : 512
+[2026-11-10 02:02:07]   !     compatible_brands: isomiso2avc1mp41
+[2026-11-10 02:02:07]   !     encoder         : Lavf63.1.102
+[2026-11-10 02:02:07]   !   Duration: 00:02:06.03, start: 0.000000, bitrate: 818 kb/s
+[2026-11-10 02:02:07]   !   Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1080x1920, 614 kb/s, 30 fps, 30 tbr, 15360 tbn (default)
+[2026-11-10 02:02:07]   !     Metadata:
+[2026-11-10 02:02:07]   !       handler_name    : VideoHandler
+[2026-11-10 02:02:07]   !       encoder         : Lavc63.1.102 libx264
+[2026-11-10 02:02:07]   !   Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 44100 Hz, stereo, fltp, 195 kb/s (default)
+[2026-11-10 02:02:07]   !     Metadata:
+[2026-11-10 02:02:07]   !       handler_name    : SoundHandler
+[2026-11-10 02:02:07]   ! At least one output file must be specified
+[2026-11-10 02:02:07] $ /home/user/Universal_Animation_Toolbook/.venv/lib/python3.11/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v9.0.2 -v error -i /home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/final.mp4 -f null -
+[2026-11-10 02:02:13] verify: 1080x1920 @ 30 fps, full_decode_ok=True
+```
+
+## Stage 21 — 2026-11-10: closing-frame edge fragment found, fixed in the engine, masters re-rendered
+
+Verification of the shipped 9:16 master found a small yellow rounded rectangle pinned to the
+left edge during the closing question and the end frame. It was the `NEAR` plate of S07's
+`signpost` prop: the 9:16 output is a ~607 px crop of the 1920-wide stage, and that crop follows
+the camera, so the plate was mostly outside the visible window. Earlier scenes showed the same
+failure as truncated words (`AIT` instead of `WAIT`). A static prop `x` cannot fix a moving crop.
+
+**Fix (PC-013 / KI-012):** `pruneClippedSignpostLabels` in
+`universal_toolbook/engine/video_renderer.js` computes, per frame, the fraction of each signpost
+label plate inside the portrait crop and drops plates below 70% visible. Full-width landscape
+viewports bypass the guard, so 16:9 output is unchanged by the fix itself. The JS regression
+suite asserts pruning, retention of fully visible labels, no spec mutation and landscape identity;
+`test_portrait_crop_prunes_clipped_signpost_labels` guards the wiring, and
+`templates/MASTER_VIDEO_PRODUCTION_PROMPT.md` §9/§10 now requires closing-frame inspection.
+
+**Re-render:** the `.work_cache_state/spec_sha256` marker was removed to force PC-012 cache
+invalidation, then `.venv/bin/python tools/produce_video.py projects/video-003-first-plank
+--workers 2 --chunk-sec 45 --preset veryfast --crf 24` ran Stages A–I. Both voiced masters,
+the draft, all 14 stills, the mixed WAV, eight QA frames and `qa_measurements.json` were
+regenerated. Runtime stayed 126.038 s with `warnings: []`; full decode PASS for both masters.
+
+**Re-measured delivery:** all final-review frames, four contact sheets, waveform, poster, SVG
+storyboard, measurement JSONs, `QA_REPORT.md`, `NOTES.md`, authoring copies and the release ZIP
+were rebuilt from the new masters. `tools/audio_report.py`, `tools/subtitle_check.py` and
+`tools/mix_probe.py` all PASS on the new mix. The re-rendered `closing_question_full.png` and
+`end.png` were opened: no edge fragment remains, while S01's fully visible `NEAR` label is kept.

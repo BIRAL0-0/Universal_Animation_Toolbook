@@ -18,6 +18,10 @@ its documentation and its regression tests in the same task.
 - `templates/MASTER_VIDEO_PRODUCTION_PROMPT.md` documents `h>=250`, `y~74`, 42-pixel spacing,
   `portrait_w:460`, `portrait_x:0.5` and final-master board-frame inspection, guarded by
   `test_master_prompt_documents_multiline_board_geometry`.
+- `universal_toolbook/engine/video_renderer.js` prunes `signpost` label plates that the moving
+  9:16 crop would show as unreadable edge fragments, guarded by the JS regression suite and
+  `test_portrait_crop_prunes_clipped_signpost_labels` (PC-013 / KI-012 / L-12). Landscape output
+  is unchanged.
 
 ### Recorded
 - PC-009 / PC-010 / PC-011 / PC-012, KI-010 / KI-011 and L-10 / L-11 capture the video-003
@@ -30,6 +34,10 @@ its documentation and its regression tests in the same task.
   signed off from opened frames and measured audio.
 - `deliverables/releases/video-003-first-plank_RELEASE.zip`: both masters, text mirrors, poster,
   SVG storyboard, authoring set, QA contact sheets and rebuild notes.
+- Re-rendered both masters after PC-013 / KI-012. Final-verification found a clipped world-prop
+  label fragment at the left edge of the closing 9:16 frames; the portrait crop now prunes it per
+  frame. All hashes, QA frames, contact sheets, measurements and the release package were rebuilt
+  from the corrected masters, and the closing frames were re-opened.
 
 ## 2026-11-09 — post-reorganization validation and delivery evidence
 

@@ -160,3 +160,15 @@ Format: date · type · what changed · why · verification.
   the first re-rendered master still contained the old boards.
 - **Verification:** `test_produce_video_invalidates_stale_render_caches`; the delivered master
   was produced after that invalidation, and its board-cue frames were inspected.
+
+### PC-013 · Portrait crops prune unreadable world-prop label fragments (KI-012)
+- **Type:** engine fix + regression
+- **What:** `universal_toolbook/engine/video_renderer.js` computes how much of each `signpost`
+  label plate lies inside the portrait crop for the current camera frame, and drops labels whose
+  visible fraction is below 70%. `pruneClippedSignpostLabels` is exported for testing; the 16:9
+  path supplies a full-width viewport and is unchanged.
+- **Why:** the 9:16 crop follows the camera, so a label that is off-screen in the stills can
+  drift into the frame later as a clipped colour chip with no text. That fragment appeared in the
+  closing frames of the first video-003 master. Moving the prop once cannot fix a moving crop.
+- **Verification:** the JS regression suite asserts pruning, retention, non-mutation and
+  landscape identity; a freshly rendered closing frame was opened and has no edge fragment.

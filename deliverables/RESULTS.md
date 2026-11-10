@@ -63,6 +63,9 @@ backend actually used. The folder ships one 9:16 master plus verbatim `chapters.
 `video-003-first-plank/audio/master_mix.m4a`,
 `video-003-first-plank/authoring/`, `QA_REPORT.md` and `README.md`.
 
+The masters and every hash in `video-003-first-plank/NOTES.md` were refreshed after the
+KI-012 portrait-crop fix and a full re-render; the closing 9:16 frames were re-inspected.
+
 The secondary 1920×1080 master and the complete release ZIP are in
 [`releases/video-003-first-plank_RELEASE.zip`](releases/video-003-first-plank_RELEASE.zip). The
 full measured WAV stays with the source project at

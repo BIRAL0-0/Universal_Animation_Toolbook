@@ -13,16 +13,16 @@
     },
     "draft": {
       "path": "renders/draft_9x16.mp4",
-      "bytes": 13428469
+      "bytes": 13400384
     },
     "master": {
       "9x16": {
         "path": "final.mp4",
-        "bytes": 12911980
+        "bytes": 12890634
       },
       "16x9": {
         "path": "renders/final_16x9.mp4",
-        "bytes": 9446336
+        "bytes": 9444918
       },
       "wide_ok": true
     },
@@ -61,9 +61,9 @@
     },
     "verify": {
       "probe_lines": [
-        "Duration: 00:02:06.03, start: 0.000000, bitrate: 819 kb/s",
-        "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1080x1920, 615 kb/s, 30 fps, 30 tbr, 15360 tbn (default)",
-        "Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 44100 Hz, stereo, fltp, 196 kb/s (default)"
+        "Duration: 00:02:06.03, start: 0.000000, bitrate: 818 kb/s",
+        "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1080x1920, 614 kb/s, 30 fps, 30 tbr, 15360 tbn (default)",
+        "Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 44100 Hz, stereo, fltp, 195 kb/s (default)"
       ],
       "full_decode_ok": true,
       "dimensions": "1080x1920",

@@ -2,7 +2,7 @@
   "status": "COMPLETE",
   "title": "The First Plank",
   "output_mp4": "/home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/renders/final_16x9.mp4",
-  "size_mb": 9.009,
+  "size_mb": 9.007,
   "resolution": "1920x1080",
   "aspect_ratio": "16:9",
   "output_profile": "landscape",
@@ -166,5 +166,5 @@
     }
   },
   "chapters_file": "/home/user/Universal_Animation_Toolbook/projects/video-003-first-plank/renders/final_16x9_chapters.txt",
-  "elapsed_sec": 185.34
+  "elapsed_sec": 178.45
 }

@@ -161,12 +161,19 @@ geometry: `h>=250`, `y~74`, fixed 42-pixel line spacing, plus `portrait_w:460` a
 tag clear. After any such edit, inspect the **final-master** board-cue frames, not only the
 draft: `--resume` caches must be invalidated (KI-011). See PC-010 / PC-012.
 
+The 9:16 crop pans with the camera, so world props can drift into the frame edge. The renderer
+prunes `signpost` label plates that would appear as clipped, unreadable fragments (KI-012), but
+QA must still open the **closing** master frames after the last camera push: a prop that was
+off-screen in a still can become visible there. Landscape masters use the full stage and are
+unchanged by that guard.
+
 ## 10. Quality requirements — all must actually pass, with evidence
 
 1. `validate` reports `warnings: []` before any render.
 2. Portrait (and landscape, if delivered) stills inspected for every scene: key visuals readable,
    boards inside the safe crop, no name-tag collision, no clipped limbs. After any board/geometry
    edit, repeat the check on final-master board-cue frames; a corrected draft is not enough.
+   Also open the closing/end master frames for clipped world-prop labels or other edge fragments.
 3. Draft render reviewed for timing, board build, camera cuts, subtitle speaker and highlight.
 4. Master decodes end-to-end: `ffmpeg -v error -i final.mp4 -f null -` exits clean.
 5. Measured container matches spec: dimensions, fps, duration, one video + one audio stream.

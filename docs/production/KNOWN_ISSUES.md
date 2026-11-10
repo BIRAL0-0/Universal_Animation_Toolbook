@@ -200,3 +200,21 @@ Every entry: **stage** · **symptom** · **root cause** · **status** · **regre
   delivered master was produced after that invalidation, and its board-cue frames were inspected.
 - **Regression check / verification:** `test_produce_video_invalidates_stale_render_caches`;
   corrected final-master frames show the name tag below the board.
+
+### KI-012 — Portrait crop leaves unreadable slivers of world-prop labels (resolved)
+- **Stage:** master 9:16 visual QA, closing frames
+- **First seen:** video-003, final-master verification, 2026-11-10
+- **Symptom:** during the closing question and end frame, a small yellow rounded rectangle sat at
+  the left edge with no readable text. Earlier scenes showed label plates with truncated words
+  (`AIT` instead of `WAIT`).
+- **Root cause:** the 9:16 master is a ~607 px crop of the 1920-wide authoring stage, and the crop
+  follows the camera/speaker, so its left edge moves every frame. A `signpost` label plate is
+  148 px wide; when the crop only intersects a few pixels of it, the renderer still painted that
+  fragment. No static `x` can keep a plate readable for a whole scene.
+- **Fix:** `pruneClippedSignpostLabels` in `universal_toolbook/engine/video_renderer.js` drops a
+  label plate when less than 70% of it lies inside the portrait crop. The decision is per frame.
+  Full-width (landscape) viewports bypass the guard, so 16:9 masters stay byte-identical. Fully
+  readable plates such as S01's `NEAR` are retained.
+- **Regression check / verification:** `tests/regression/run_all_tests.js` asserts pruning of
+  mostly-clipped labels, retention of fully visible labels, no spec mutation and landscape
+  identity; the re-rendered closing master frame was opened and has no edge fragment.
