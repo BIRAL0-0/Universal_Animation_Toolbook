@@ -74,6 +74,87 @@ def _is_shorts_duration(duration_sec: float) -> bool:
         return False
 
 
+FORMAT_DURATION_BOUNDARY_SEC = 60.0
+
+
+def estimate_planned_duration_sec(spec: Dict[str, Any], words_per_sec: float = 2.55) -> float:
+    """Estimate planned video duration from scene durations & narration text (never scene count or filename)."""
+    scenes = spec.get("scenes") or []
+    total = 0.0
+    for sc in scenes:
+        authored = sc.get("duration")
+        if authored is not None:
+            try:
+                val = float(authored)
+                if math.isfinite(val) and val > 0:
+                    total += max(1.5, val)
+                    continue
+            except (TypeError, ValueError):
+                pass
+        # Fallback when duration is omitted: estimate from planned spoken words + punctuation pauses
+        dialogue = sc.get("dialogue") or []
+        if dialogue:
+            words = sum(len(str(d.get("text") or "").split()) for d in dialogue)
+            pauses = sum(float(d.get("pause_after") or 0.28) for d in dialogue)
+            total += max(1.5, words / max(0.5, words_per_sec) + pauses)
+        else:
+            narr = str(sc.get("narration") or "")
+            words = len(narr.split())
+            total += max(1.5, words / max(0.5, words_per_sec) + 0.5)
+    outro = spec.get("outro")
+    if outro is not False and (outro or spec.get("include_outro")):
+        total += float((outro.get("duration") if isinstance(outro, dict) else None) or 4.5)
+    return round(total, 3)
+
+
+def select_video_format_for_duration(
+    duration_sec: float,
+    explicit_format: Optional[str] = None,
+    draft: bool = False,
+) -> Dict[str, Any]:
+    """Automatic Video Format & Duration Policy:
+    - `< 60.0s` (`00:59` or less)  -> Portrait `9:16` (`1080x1920`) for YouTube Shorts
+    - `>= 60.0s` (`01:00` or longer) -> Landscape `16:9` (`1920x1080`) for YouTube Long-Form
+    - Explicit user override is respected and explicitly reported.
+    """
+    dur = max(0.0, float(duration_sec)) if math.isfinite(float(duration_sec)) else 0.0
+    auto_format = "9:16" if dur < FORMAT_DURATION_BOUNDARY_SEC else "16:9"
+
+    norm_explicit: Optional[str] = None
+    if explicit_format in ("9:16", "portrait", "shorts"):
+        norm_explicit = "9:16"
+    elif explicit_format in ("16:9", "landscape"):
+        norm_explicit = "16:9"
+
+    chosen = norm_explicit or auto_format
+    width, height = _render_dimensions(chosen, draft=draft)
+    master_w, master_h = _render_dimensions(chosen, draft=False)
+    overridden = bool(norm_explicit and norm_explicit != auto_format)
+    return {
+        "format": chosen,
+        "aspect_ratio": chosen,
+        "orientation": "portrait" if chosen == "9:16" else "landscape",
+        "width": width,
+        "height": height,
+        "master_resolution": [master_w, master_h],
+        "platform": "youtube_shorts" if chosen == "9:16" else "youtube_long_form",
+        "duration_sec": round(dur, 3),
+        "boundary_sec": FORMAT_DURATION_BOUNDARY_SEC,
+        "auto_recommended_format": auto_format,
+        "policy_applied": (
+            "explicit_override"
+            if norm_explicit
+            else ("auto_duration_under_60s" if chosen == "9:16" else "auto_duration_60s_or_longer")
+        ),
+        "overridden": overridden,
+        "override_notice": (
+            f"Explicit format {chosen} overrides automatic duration policy ({auto_format} for {dur:.1f}s)."
+            if overridden
+            else None
+        ),
+    }
+
+
 def ensure_dependencies(auto_install: bool = True) -> Dict[str, Any]:
     """Verify (and auto-install in fresh AI sandboxes if needed) Node canvas & Python packages."""
     status: Dict[str, Any] = {}
@@ -324,6 +405,7 @@ def cmd_validate(args: argparse.Namespace) -> int:
         "duration_sec": ep["totalDuration"],
         "duration_min": round(ep["totalDuration"] / 60.0, 2),
         "scene_count": len(ep["scenes"]),
+        "format_policy": ep.get("formatPolicy"),
         "bgm": ep.get("bgm", "auto"),
         "cast": list(ep["cast"].keys()),
         "settings_used": sorted({s["settingSignature"] for s in ep["scenes"]}),
@@ -415,15 +497,12 @@ def cmd_render(args: argparse.Namespace) -> int:
         # 9:16 label once (see docs/production/KNOWN_ISSUES.md KI-007).
         if getattr(args, "portrait", False) and args.aspect_ratio in (None, ""):
             args.aspect_ratio = "9:16"
-        aspect_ratio = _resolve_aspect_ratio(args.aspect_ratio, args.shorts)
-        # _render_dimensions is the single source of truth for output pixels. Nothing below may
-        # overwrite it; the KI-007 bug was a legacy branch doing exactly that.
-        width, height = _render_dimensions(aspect_ratio, args.draft)
+        # Validate CLI flag compatibility up front (raises ValueError on conflicting --shorts + --aspect-ratio 16:9)
+        _ = _resolve_aspect_ratio(args.aspect_ratio, args.shorts)
     except ValueError as exc:
         print(str(exc), file=sys.stderr)
         return 2
     short_form = bool(args.short_form or args.shorts)
-    output_profile = "shorts" if args.shorts else ("portrait" if aspect_ratio == "9:16" else "landscape")
 
     t0 = time.time()
     deps = ensure_dependencies(auto_install=True)
@@ -440,6 +519,24 @@ def cmd_render(args: argparse.Namespace) -> int:
     work_dir.mkdir(parents=True, exist_ok=True)
 
     raw_spec = json.loads(ep_path.read_text(encoding="utf-8"))
+
+    # Determine whether an explicit format override was supplied via CLI or episode spec;
+    # otherwise Automatic Video Format & Duration Policy (<60.0s -> 9:16, >=60.0s -> 16:9) governs.
+    cli_explicit_format: Optional[str] = None
+    if args.shorts or args.aspect_ratio in ("9:16", "16:9"):
+        cli_explicit_format = _resolve_aspect_ratio(args.aspect_ratio, args.shorts)
+    spec_explicit_format = (
+        raw_spec.get("video_format_override")
+        or raw_spec.get("explicit_format")
+        or None
+    )
+    explicit_format = cli_explicit_format or (
+        spec_explicit_format if spec_explicit_format in ("9:16", "16:9", "portrait", "landscape") else None
+    )
+    planned_duration_sec = estimate_planned_duration_sec(raw_spec)
+    planned_policy = select_video_format_for_duration(
+        planned_duration_sec, explicit_format=explicit_format, draft=args.draft
+    )
 
     from engine.voice_engine import prepare_episode_voiceover
     retimed_ep_file = work_dir / "episode_retimed.json"
@@ -465,6 +562,32 @@ def cmd_render(args: argparse.Namespace) -> int:
             json.dumps({"backend": vo_backend, "segments": vo_segments}, indent=2),
             encoding="utf-8",
         )
+
+    # Measure exact post-TTS speech-locked duration, re-evaluate the 60.0s format boundary,
+    # and recompose output format/dimensions BEFORE rendering any video frames!
+    probe_comp = _compile_episode_via_node(retimed_ep_file, 1920, 1080, args.subtitles)["episode"]
+    actual_duration_sec = float(probe_comp["totalDuration"])
+    format_policy = select_video_format_for_duration(
+        actual_duration_sec, explicit_format=explicit_format, draft=args.draft
+    )
+    format_policy["planned_duration_sec"] = planned_duration_sec
+    format_policy["planned_format"] = planned_policy["format"]
+    format_policy["recomposed_after_boundary_crossing"] = bool(
+        planned_policy["format"] != format_policy["format"]
+    )
+
+    aspect_ratio = format_policy["format"]
+    # _render_dimensions is the single source of truth for output pixels. Nothing below may
+    # overwrite it; the KI-007 bug was a legacy branch doing exactly that.
+    width, height = _render_dimensions(aspect_ratio, args.draft)
+    output_profile = (
+        "shorts"
+        if (args.shorts or (explicit_format is None and aspect_ratio == "9:16"))
+        else ("portrait" if aspect_ratio == "9:16" else "landscape")
+    )
+
+    retimed_spec["selected_video_format"] = format_policy
+    retimed_ep_file.write_text(json.dumps(retimed_spec, indent=2), encoding="utf-8")
 
     comp_wrap = _compile_episode_via_node(retimed_ep_file, width, height, args.subtitles)
     compiled = comp_wrap["episode"]
@@ -661,6 +784,7 @@ def cmd_render(args: argparse.Namespace) -> int:
                 "dimensions": [width, height],
                 "aspect_ratio": aspect_ratio,
                 "output_profile": output_profile,
+                "format_policy": format_policy,
                 "short_form": short_form,
                 "fps": fps,
                 "film_grain": False,
@@ -681,6 +805,7 @@ def cmd_render(args: argparse.Namespace) -> int:
         "resolution": f"{width}x{height}",
         "aspect_ratio": aspect_ratio,
         "output_profile": output_profile,
+        "format_policy": format_policy,
         "short_form": short_form,
         "fps": fps,
         "film_grain": False,

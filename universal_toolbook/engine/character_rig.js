@@ -66,6 +66,37 @@ function backOut(t, overshoot = 1.70158) {
   const t1 = c - 1;
   return t1 * t1 * ((s + 1) * t1 + s) + 1;
 }
+
+/**
+ * Classical anticipation + slow-in/slow-out curve:
+ * Dips gently to `-antiDepth` during `[0..antiFrac]` (anticipation), then accelerates smoothly
+ * and settles into `1.0` with zero robotic linear segments.
+ */
+function anticipationEase(t, antiFrac = 0.18, antiDepth = 0.10) {
+  const c = clamp(t);
+  const af = clamp(antiFrac, 0.05, 0.40);
+  if (c < af) {
+    const u = c / af;
+    return -antiDepth * Math.sin(u * Math.PI);
+  }
+  const u = (c - af) / (1 - af);
+  // Asymmetric cubic/quintic slow-out for crisp drive and cushioned settle
+  return 1 - Math.pow(1 - u, 2.6) * (1 - 0.35 * u * u);
+}
+
+/**
+ * Natural parabolic/curved arc interpolation between two 2D points `[x0, y0]` and `[x1, y1]`.
+ * Prevents robotic straight-line point-to-point hand reaches and transfers.
+ */
+function arcPoint(p0, p1, u, arcLiftPx = -18) {
+  const k = clamp(u);
+  const lift = Math.sin(k * Math.PI) * arcLiftPx;
+  return [
+    lerp(p0[0], p1[0], k),
+    lerp(p0[1], p1[1], k) + lift,
+  ];
+}
+
 const eio = ease;
 const eo = (k) => 1 - Math.pow(1 - clamp(k), 3);
 const ca = (x) => Math.max(0, Math.min(1, Number.isFinite(x) ? x : 0)).toFixed(3);
@@ -81,14 +112,38 @@ const BONES = Object.freeze({
   NECK: 9,
 });
 
+const CANONICAL_CHARACTER_SPEC = Object.freeze({
+  defaultBaseColor: '#f1f5f9',
+  outlineColor: '#05070c',
+  strokeWidthPx: 3.0,
+  thinStrokeWidthPx: 2.2,
+  defaultHairstyle: 'none',
+  singleColorBody: true,
+  uniformLimbFill: true,
+  bones: BONES,
+  radii: Object.freeze({
+    torsoHip: 11.6,
+    torsoMid: 13.2,
+    torsoShoulder: 14.6,
+    neckBase: 6.4,
+    neckTop: 5.6,
+    upperArmTop: 7.4,
+    elbow: 6.4,
+    wrist: 5.3,
+    thighTop: 10.8,
+    knee: 8.2,
+    ankle: 6.4,
+  }),
+});
+
 const BUILDS = Object.freeze({
-  standard: { torsoW: 1.0, limbW: 1.0, headW: 1.0 },
-  slim:     { torsoW: 0.85, limbW: 0.88, headW: 0.96 },
-  lean:     { torsoW: 0.88, limbW: 0.90, headW: 0.98 },
-  athletic: { torsoW: 1.16, limbW: 1.08, headW: 1.0 },
-  broad:    { torsoW: 1.28, limbW: 1.16, headW: 1.04 },
-  heavy:    { torsoW: 1.35, limbW: 1.20, headW: 1.05 },
-  compact:  { torsoW: 0.95, limbW: 0.95, headW: 1.06 },
+  standard: { torsoW: 1.0, shoulderW: 1.0, limbW: 1.0, headW: 1.0 },
+  slim:     { torsoW: 0.86, shoulderW: 0.88, limbW: 0.88, headW: 0.96 },
+  lean:     { torsoW: 0.90, shoulderW: 0.92, limbW: 0.90, headW: 0.98 },
+  athletic: { torsoW: 1.08, shoulderW: 1.14, limbW: 1.06, headW: 1.0 },
+  broad:    { torsoW: 1.18, shoulderW: 1.24, limbW: 1.12, headW: 1.04 },
+  heavy:    { torsoW: 1.26, shoulderW: 1.26, limbW: 1.16, headW: 1.05 },
+  compact:  { torsoW: 0.95, shoulderW: 0.96, limbW: 0.95, headW: 1.06 },
 });
 
 const SUPPORTED_ACCESSORIES = Object.freeze([
@@ -147,6 +202,8 @@ const DEF = Object.freeze({
   footAngleL: 0,
   footAngleR: 0,
   spineCurve: 0,
+  thumbScroll: 0,
+  thumbTap: 0,
 });
 
 const P = (o = {}) => ({
@@ -308,8 +365,17 @@ function skeleton(x, fy, s, p0 = {}, flip = false) {
 
   const legL = blendLimb(hip, p.ll, toLocal(p.fl), p.fl ? (p.legIkw ?? 1) : 0, th, sh, p.bendL ?? 1);
   const legR = blendLimb(hip, p.lr, toLocal(p.fr), p.fr ? (p.legIkw ?? 1) : 0, th, sh, p.bendR ?? 1);
-  const armL = blendLimb(shoulder, p.al, toLocal(p.hl), p.ikw ?? 0, ua, fa, p.armBendL ?? -1);
-  const armR = blendLimb(shoulder, p.ar, toLocal(p.hr), p.ikw ?? 0, ua, fa, p.armBendR ?? -1);
+  const armL = blendLimb(shoulder, p.al, toLocal(p.hl), p.ikwL ?? p.ikw ?? 0, ua, fa, p.armBendL ?? -1);
+  const armR = blendLimb(shoulder, p.ar, toLocal(p.hr), p.ikwR ?? p.ikw ?? 0, ua, fa, p.armBendR ?? -1);
+
+  const computeGripLocal = (armPts) => {
+    const elbow = armPts[1];
+    const wrist = armPts[2];
+    const ang = Math.atan2(wrist[1] - elbow[1], wrist[0] - elbow[0]);
+    return [wrist[0] + Math.cos(ang) * 7.5 * s, wrist[1] + Math.sin(ang) * 7.5 * s];
+  };
+  const gripL = computeGripLocal(armL.points);
+  const gripR = computeGripLocal(armR.points);
 
   return {
     hip,
@@ -325,6 +391,8 @@ function skeleton(x, fy, s, p0 = {}, flip = false) {
     lr: legR.points,
     al: armL.points,
     ar: armR.points,
+    gripL,
+    gripR,
     legAnglesL: legL.angles,
     legAnglesR: legR.angles,
     armAnglesL: armL.angles,
@@ -338,6 +406,8 @@ function skeleton(x, fy, s, p0 = {}, flip = false) {
       lr: toWorldChain(legR.points),
       al: toWorldChain(armL.points),
       ar: toWorldChain(armR.points),
+      gripL: [mirror(gripL[0]), gripL[1]],
+      gripR: [mirror(gripR[0]), gripR[1]],
     },
     mirror,
     pose: p,
@@ -581,21 +651,15 @@ function normalizeAccessoryList(acc) {
 }
 
 function resolveDefaultHairstyle(opts = {}, accList = []) {
-  if (opts.hair !== undefined && opts.hair !== null) {
-    return String(opts.hair).toLowerCase();
+  if (opts.hair !== undefined && opts.hair !== null && opts.hair !== '') {
+    const requested = String(opts.hair).toLowerCase();
+    if (SUPPORTED_HAIRSTYLES.includes(requested)) {
+      return requested;
+    }
   }
-  // Hats/helmets cover top hair cleanly unless explicit
-  if (accList.includes('helmet') || accList.includes('cap') || accList.includes('hat')) {
-    return 'short';
-  }
-  // Deterministic subtle default hair based on build/name so characters never look like bald cue-balls
-  const tag = String(opts.id || opts.nameTag || opts.build || '').toLowerCase();
-  if (tag.includes('mother') || tag.includes('mom') || tag.includes('woman') || tag.includes('lily') || tag.includes('girl')) {
-    return 'bun';
-  }
-  if (opts.build === 'slim') return 'parted';
-  if (opts.build === 'lean') return 'messy';
-  return 'short';
+  // Canonical single-colour minimalist stickman: smooth round head unless hairstyle is explicitly specified.
+  void accList;
+  return CANONICAL_CHARACTER_SPEC.defaultHairstyle;
 }
 
 function resolveHairRgb(opts = {}, mainRgb = [241, 245, 249]) {
@@ -1230,344 +1294,268 @@ function drawFaceExpression(g, hd, hr, s, rawExpression = 'neutral', anim = {}) 
   g.restore();
 }
 
-// ---------------- ANATOMICAL TAPERED LIMBS, HANDS, SHOES & TORSO ----------------
+// ---------------- CANONICAL SEAMLESS SINGLE-COLOUR CAPSULE RIG ----------------
 
-function buildTaperedChainPolygon(points, widths) {
-  // Construct left and right offset contour points for a 2-segment (3-point) limb `[p0, p1, p2]`
-  // Rounded joint: the knee/elbow point is replaced by a small arc so the limb has smooth
-  // organic corners instead of sharp V-shapes when bent.
-  const [p0, p1, p2] = points;
-  const [r0, r1, r2] = widths.map((w) => w * 0.5);
-
-  const segNormal = (a, b) => {
-    const dx = b[0] - a[0];
-    const dy = b[1] - a[1];
-    const l = Math.max(1e-4, Math.hypot(dx, dy));
-    return [-dy / l, dx / l];
-  };
-  const n01 = segNormal(p0, p1);
-  const n12 = segNormal(p1, p2);
-
-  // Compute the angle between the two segments to determine joint roundness
-  const seg1Angle = Math.atan2(p1[1] - p0[1], p1[0] - p0[0]);
-  const seg2Angle = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]);
-  const jointBend = Math.abs(Math.atan2(Math.sin(seg2Angle - seg1Angle), Math.cos(seg2Angle - seg1Angle)));
-  // Inset distance along each segment from p1 where the arc starts (larger bend = more inset for visible arc)
-  const insetFactor = clamp(jointBend / Math.PI, 0, 1);
-  const arcInset = r1 * (0.45 + 0.55 * insetFactor);
-
-  // Points where the arc meets each segment (inset from p1 along each segment direction)
-  const seg1Len = Math.max(1e-4, Math.hypot(p1[0] - p0[0], p1[1] - p0[1]));
-  const seg2Len = Math.max(1e-4, Math.hypot(p2[0] - p1[0], p2[1] - p1[1]));
-  const t1 = clamp(arcInset / seg1Len, 0, 0.45);
-  const t2 = clamp(arcInset / seg2Len, 0, 0.45);
-  const j01 = [p0[0] + (p1[0] - p0[0]) * (1 - t1), p0[1] + (p1[1] - p0[1]) * (1 - t1)];
-  const j12 = [p1[0] + (p2[0] - p1[0]) * t2, p1[1] + (p2[1] - p1[1]) * t2];
-
-  // Normals at the arc endpoints (use segment normals — consistent with the rest of the limb)
-  const n_j01 = n01;
-  const n_j12 = n12;
-
-  return {
-    left: [
-      [p0[0] + n01[0] * r0, p0[1] + n01[1] * r0],
-      [j01[0] + n_j01[0] * r1, j01[1] + n_j01[1] * r1],
-      [j12[0] + n_j12[0] * r1, j12[1] + n_j12[1] * r1],
-      [p2[0] + n12[0] * r2, p2[1] + n12[1] * r2],
-    ],
-    right: [
-      [p2[0] - n12[0] * r2, p2[1] - n12[1] * r2],
-      [j12[0] - n_j12[0] * r1, j12[1] - n_j12[1] * r1],
-      [j01[0] - n_j01[0] * r1, j01[1] - n_j01[1] * r1],
-      [p0[0] - n01[0] * r0, p0[1] - n01[1] * r0],
-    ],
-    r0,
-    r1,
-    r2,
-    // Store the joint arc center and radius for rounded knee rendering
-    jointCenter: p1,
-    jointRadius: r1 * (0.85 + 0.35 * insetFactor),
-  };
+/**
+ * Exact convex hull (Minkowski tangent-capsule) of two circles `(pA, rA)` and `(pB, rB)`.
+ * Strictly convex at every orientation and separation:
+ *  - Zero self-intersection or nonzero-winding cancellation at any bend angle (0°..180°).
+ *  - Expanding both radii by `sw` yields the exact Euclidean parallel offset at distance `sw`.
+ */
+function traceTangentCapsule(g, pA, rA0, pB, rB0) {
+  const rA = Math.max(0.2, rA0);
+  const rB = Math.max(0.2, rB0);
+  const dx = pB[0] - pA[0];
+  const dy = pB[1] - pA[1];
+  const d = Math.hypot(dx, dy);
+  g.beginPath();
+  if (d <= Math.abs(rA - rB) + 1e-4) {
+    const useA = rA >= rB;
+    const c = useA ? pA : pB;
+    g.arc(c[0], c[1], Math.max(rA, rB), 0, Math.PI * 2);
+    g.closePath();
+    return;
+  }
+  const theta = Math.atan2(dy, dx);
+  const alpha = Math.acos(clamp((rA - rB) / d, -1, 1));
+  g.arc(pA[0], pA[1], rA, theta + alpha, theta - alpha, false);
+  g.arc(pB[0], pB[1], rB, theta - alpha, theta + alpha, false);
+  g.closePath();
 }
 
-function drawTaperedLimb(g, points, widths, colors) {
-  const { outlineCol, outlinePad, fillCol, rimCol, rimAlpha, isFlat, isBack } = colors;
-  const poly = buildTaperedChainPolygon(points, widths);
-  const [p0, , p2] = points;
-  const ang0 = Math.atan2(poly.left[0][1] - p0[1], poly.left[0][0] - p0[0]);
-  const ang2 = Math.atan2(poly.right[0][1] - p2[1], poly.right[0][0] - p2[0]);
+function fillTangentCapsule(g, pA, rA, pB, rB, colorCss) {
+  g.fillStyle = colorCss;
+  traceTangentCapsule(g, pA, rA, pB, rB);
+  g.fill();
+}
 
-  // 4-point polygon: [ankle, kneeStart, kneeEnd, hip] on each side, with a rounded arc at the knee
-  const tracePath = () => {
-    g.beginPath();
-    g.moveTo(poly.left[0][0], poly.left[0][1]);
-    g.lineTo(poly.left[1][0], poly.left[1][1]);
-    // Rounded knee arc: sweep from left knee-start around the joint to left knee-end
-    const jc = poly.jointCenter;
-    const jr = poly.jointRadius;
-    // Angle from joint center to left[1] (where arc starts on left side)
-    const arcStartAngL = Math.atan2(poly.left[1][1] - jc[1], poly.left[1][0] - jc[0]);
-    // Angle from joint center to left[2] (where arc ends on left side, continuing to hip)
-    const arcEndAngL = Math.atan2(poly.left[2][1] - jc[1], poly.left[2][0] - jc[0]);
-    g.arc(jc[0], jc[1], jr, arcStartAngL, arcEndAngL, false);
-    g.lineTo(poly.left[3][0], poly.left[3][1]);
-    g.arc(p2[0], p2[1], poly.r2, ang2 + Math.PI, ang2, false);
-    g.lineTo(poly.right[1][0], poly.right[1][1]);
-    // Rounded knee arc on right side (reverse direction)
-    const arcStartAngR = Math.atan2(poly.right[1][1] - jc[1], poly.right[1][0] - jc[0]);
-    const arcEndAngR = Math.atan2(poly.right[2][1] - jc[1], poly.right[2][0] - jc[0]);
-    g.arc(jc[0], jc[1], jr, arcStartAngR, arcEndAngR, false);
-    g.lineTo(poly.right[3][0], poly.right[3][1]);
-    g.arc(p0[0], p0[1], poly.r0, ang0 + Math.PI, ang0, false);
+function traceHandSilhouette(g, handPose, s) {
+  g.beginPath();
+  if (handPose === 'point') {
+    g.moveTo(-2.5 * s, -4.4 * s);
+    g.lineTo(6.5 * s, -4.6 * s);
+    g.lineTo(15.5 * s, -3.5 * s);
+    g.quadraticCurveTo(17.5 * s, -1.7 * s, 15.2 * s, -0.2 * s);
+    g.lineTo(8.5 * s, 0.3 * s);
+    g.quadraticCurveTo(9.4 * s, 4.4 * s, 4.5 * s, 4.8 * s);
+    g.lineTo(-2.5 * s, 4.0 * s);
     g.closePath();
-  };
+  } else if (handPose === 'open' || handPose === 'wave' || handPose === 'clasp') {
+    g.moveTo(-2.5 * s, -4.2 * s);
+    g.lineTo(3.2 * s, -8.5 * s);
+    g.quadraticCurveTo(5.9 * s, -8.8 * s, 5.8 * s, -5.2 * s);
+    g.lineTo(13.0 * s, -4.2 * s);
+    g.quadraticCurveTo(15.5 * s, 0, 12.4 * s, 4.4 * s);
+    g.lineTo(3.5 * s, 5.0 * s);
+    g.lineTo(-2.5 * s, 4.0 * s);
+    g.closePath();
+  } else if (handPose === 'fist' || handPose === 'grip') {
+    g.roundRect(-2.5 * s, -4.9 * s, 11.2 * s, 9.6 * s, 3.8 * s);
+  } else {
+    g.moveTo(-2.5 * s, -4.2 * s);
+    g.lineTo(4.0 * s, -6.5 * s);
+    g.quadraticCurveTo(6.6 * s, -6.1 * s, 6.0 * s, -3.7 * s);
+    g.lineTo(11.4 * s, -2.9 * s);
+    g.quadraticCurveTo(13.6 * s, 1.0 * s, 9.6 * s, 4.5 * s);
+    g.lineTo(-2.5 * s, 3.8 * s);
+    g.closePath();
+  }
+}
+
+/**
+ * Renders a complete seamless arm (`shoulder -> elbow -> wrist -> hand`) using a strict
+ * two-pass silhouette-outline + unified-fill pass:
+ *  - Zero black/discoloured circles on bent elbows at any angle.
+ *  - Zero wrist seam between forearm and palm.
+ *  - Identical `fillCol` and `sw` outline thickness along the entire limb.
+ */
+function drawSeamlessArm(g, points, radii, handPose, s, colors) {
+  const { outlineCol, sw, fillCol } = colors;
+  const [p0, p1, p2] = points;
+  const [r0, r1, r2] = radii;
+  const forearmAngle = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]);
 
   g.save();
   g.lineJoin = 'round';
   g.lineCap = 'round';
-  tracePath();
-  g.lineWidth = outlinePad;
-  g.strokeStyle = outlineCol;
-  g.stroke();
+
+  // Pass 1: Unified outer silhouette border of exact thickness `sw`
+  fillTangentCapsule(g, p0, r0 + sw, p1, r1 + sw, outlineCol);
+  fillTangentCapsule(g, p1, r1 + sw, p2, r2 + sw, outlineCol);
+  g.save();
+  g.translate(p2[0], p2[1]);
+  g.rotate(forearmAngle);
+  traceHandSilhouette(g, handPose, s);
+  g.fillStyle = outlineCol;
+  g.fill();
+  if (sw > 0.05) {
+    g.strokeStyle = outlineCol;
+    g.lineWidth = sw * 2;
+    g.stroke();
+  }
+  g.restore();
+
+  // Pass 2: Unified single-colour interior fill (seamless across elbow & wrist)
+  fillTangentCapsule(g, p0, r0, p1, r1, fillCol);
+  fillTangentCapsule(g, p1, r1, p2, r2, fillCol);
+  g.save();
+  g.translate(p2[0], p2[1]);
+  g.rotate(forearmAngle);
+  traceHandSilhouette(g, handPose, s);
   g.fillStyle = fillCol;
   g.fill();
+  g.restore();
 
-  if (!isFlat && !isBack && rimAlpha > 0.02) {
-    g.strokeStyle = `rgba(${rimCol[0]},${rimCol[1]},${rimCol[2]},${rimAlpha.toFixed(3)})`;
-    g.lineWidth = Math.max(1.2, widths[1] * 0.16);
-    g.beginPath();
-    // Rim highlight traces the outer (right/forward) contour including rounded knee
-    g.moveTo(poly.right[3][0], poly.right[3][1]);
-    g.lineTo(poly.right[2][0], poly.right[2][1]);
-    g.arc(poly.jointCenter[0], poly.jointCenter[1], poly.jointRadius,
-      Math.atan2(poly.right[2][1] - poly.jointCenter[1], poly.right[2][0] - poly.jointCenter[0]),
-      Math.atan2(poly.right[1][1] - poly.jointCenter[1], poly.right[1][0] - poly.jointCenter[0]), false);
-    g.lineTo(poly.right[0][0], poly.right[0][1]);
-    g.stroke();
-  }
   g.restore();
 }
 
-function drawHand(g, elbow, wrist, s, handPose = 'relaxed', colors) {
-  const { outlineCol, outlinePad, fillCol, rimCol, isBack } = colors;
-  const dx = wrist[0] - elbow[0];
-  const dy = wrist[1] - elbow[1];
-  const forearmAngle = Math.atan2(dy, dx); // rad in canvas space where 0 = +x, PI/2 = +y
-
-  g.save();
-  g.translate(wrist[0], wrist[1]);
-  g.rotate(forearmAngle);
-  g.fillStyle = fillCol;
-  g.strokeStyle = outlineCol;
-  g.lineWidth = Math.max(1.8 * s, outlinePad * 0.58);
-  g.lineJoin = 'round';
-  g.lineCap = 'round';
-
-  const drawShape = () => {
-    g.beginPath();
-    if (handPose === 'point') {
-      // Palm + extended index finger + curled lower fingers + thumb
-      g.moveTo(-2 * s, -4.4 * s);
-      g.lineTo(6.5 * s, -4.6 * s);
-      g.lineTo(15.5 * s, -3.6 * s);
-      g.quadraticCurveTo(17.5 * s, -1.8 * s, 15.2 * s, -0.3 * s);
-      g.lineTo(8.5 * s, 0.2 * s);
-      g.quadraticCurveTo(9.5 * s, 4.4 * s, 4.5 * s, 4.8 * s);
-      g.lineTo(-2 * s, 4.0 * s);
-      g.closePath();
-    } else if (handPose === 'open' || handPose === 'wave' || handPose === 'clasp') {
-      // Expressive open hand: distinct upward thumb + palm + rounded finger fan
-      g.moveTo(-2 * s, -4.2 * s);
-      g.lineTo(3.2 * s, -8.8 * s);
-      g.quadraticCurveTo(6.0 * s, -9.2 * s, 5.8 * s, -5.4 * s);
-      g.lineTo(13.2 * s, -4.4 * s);
-      g.quadraticCurveTo(15.8 * s, 0, 12.6 * s, 4.5 * s);
-      g.lineTo(3.5 * s, 5.2 * s);
-      g.lineTo(-2 * s, 4.0 * s);
-      g.closePath();
-    } else if (handPose === 'fist' || handPose === 'grip') {
-      // Compact clenched fist / grip knuckle silhouette
-      g.roundRect(-2 * s, -5.0 * s, 10.8 * s, 9.8 * s, 3.8 * s);
-    } else {
-      // 'relaxed' / 'write': natural relaxed palm + subtle thumb + gently curved fingers
-      g.moveTo(-2 * s, -4.2 * s);
-      g.lineTo(4.2 * s, -6.8 * s);
-      g.quadraticCurveTo(6.8 * s, -6.4 * s, 6.2 * s, -3.8 * s);
-      g.lineTo(11.6 * s, -3.0 * s);
-      g.quadraticCurveTo(13.8 * s, 1.0 * s, 9.8 * s, 4.6 * s);
-      g.lineTo(-2 * s, 3.8 * s);
-      g.closePath();
-    }
-    g.fill();
-    g.stroke();
-  };
-
-  drawShape();
-
-  // Subtle finger separation / knuckle crease for visual clarity at 1080p
-  if (!isBack && (handPose === 'open' || handPose === 'wave' || handPose === 'clasp' || handPose === 'relaxed')) {
-    g.strokeStyle = 'rgba(6, 9, 18, 0.42)';
-    g.lineWidth = 1.2 * s;
-    g.beginPath();
-    g.moveTo(7.5 * s, -1.2 * s);
-    g.lineTo(12.2 * s, -0.8 * s);
-    g.moveTo(7.2 * s, 1.6 * s);
-    g.lineTo(11.4 * s, 2.0 * s);
-    g.stroke();
-  }
-  if (!isBack && rimCol) {
-    g.strokeStyle = `rgba(${rimCol[0]},${rimCol[1]},${rimCol[2]},0.35)`;
-    g.lineWidth = 1.2 * s;
-    g.beginPath();
-    g.moveTo(0, -3.6 * s);
-    g.lineTo(8 * s, -2.8 * s);
-    g.stroke();
-  }
-  g.restore();
+function traceFootSilhouette(g, s) {
+  const heelX = -6.4 * s;
+  const toeX = 20.2 * s;
+  const soleY = 3.2 * s;
+  const cuffY = -6.2 * s;
+  g.beginPath();
+  g.moveTo(heelX + 0.4 * s, cuffY + 1.2 * s);
+  g.lineTo(5.0 * s, cuffY);
+  g.quadraticCurveTo(13.0 * s, -4.4 * s, toeX - 1.2 * s, -2.4 * s);
+  g.quadraticCurveTo(toeX + 2.6 * s, 0.2 * s, toeX, soleY);
+  g.lineTo(heelX + 0.6 * s, soleY);
+  g.quadraticCurveTo(heelX - 0.6 * s, 0.4 * s, heelX + 0.4 * s, cuffY + 1.2 * s);
+  g.closePath();
 }
 
-function drawShoe(g, ankle, fy, s, footAngle = 0, shoeRgb, soleRgb, outlineCol, outlinePad, isBack = false) {
-  // Grounded directional sneaker/shoe: heel behind ankle, instep arch, rounded toe box forward (+x in local space)
-  // Clamp vertical offset if ankle is right on floor so pitched toes never sink under `fy + 3*s`
-  const maxToeLen = 22.5 * s;
+/**
+ * Renders a complete seamless leg (`hip -> knee -> ankle -> grounded foot`) using
+ * two-pass silhouette-outline + unified-fill rendering:
+ *  - Zero black/dark circles or notches on bent knees (seated 90°, running, crouching).
+ *  - Zero ankle seam when using canonical single-colour body fill.
+ *  - Strict floor guard so pitched feet never sink below the floor plane.
+ */
+function drawSeamlessLeg(g, points, radii, fy, s, footAngle, colors) {
+  const { outlineCol, sw, fillCol, footFillCol } = colors;
+  const [p0, p1, p2] = points;
+  const [r0, r1, r2] = radii;
+  const maxToeLen = 21.5 * s;
   const rawPitch = clamp(footAngle || 0, -0.55, 0.65);
   const sinkEstimate = Math.max(0, Math.sin(rawPitch) * maxToeLen);
-  const liftGuard = (ankle[1] + 2.5 * s + sinkEstimate > fy + 3.2 * s)
-    ? (ankle[1] + 2.5 * s + sinkEstimate) - (fy + 3.2 * s)
+  const liftGuard = (p2[1] + 2.5 * s + sinkEstimate > fy + 3.0 * s)
+    ? (p2[1] + 2.5 * s + sinkEstimate) - (fy + 3.0 * s)
     : 0;
+  const footCenter = [p2[0], p2[1] - liftGuard];
+  const unifiedFoot = !footFillCol || footFillCol === fillCol;
 
   g.save();
-  g.translate(ankle[0], ankle[1] - liftGuard);
-  g.rotate(rawPitch);
   g.lineJoin = 'round';
   g.lineCap = 'round';
 
-  const heelX = -8.5 * s;
-  const toeX = 21.5 * s;
-  const soleY = 2.8 * s;
-  const cuffY = -8.2 * s;
-
-  const traceShoe = () => {
-    g.beginPath();
-    g.moveTo(heelX + 1.5 * s, cuffY + 1.0 * s);
-    g.lineTo(5.5 * s, cuffY);
-    g.quadraticCurveTo(13.5 * s, -5.5 * s, toeX - 1.5 * s, -3.2 * s);
-    g.quadraticCurveTo(toeX + 2.8 * s, -0.2 * s, toeX, soleY);
-    g.lineTo(heelX, soleY);
-    g.quadraticCurveTo(heelX - 1.6 * s, -2.5 * s, heelX + 1.5 * s, cuffY + 1.0 * s);
-    g.closePath();
-  };
-
-  traceShoe();
-  g.lineWidth = Math.max(2.2 * s, outlinePad * 0.68);
-  g.strokeStyle = outlineCol;
-  g.stroke();
-  g.fillStyle = rgbCss(shoeRgb);
-  g.fill();
-
-  // Crisp contrasting sneaker/dress sole strip along bottom of shoe
-  g.strokeStyle = rgbCss(soleRgb);
-  g.lineWidth = 2.4 * s;
-  g.beginPath();
-  g.moveTo(heelX + 1.2 * s, soleY - 1.0 * s);
-  g.lineTo(toeX - 1.2 * s, soleY - 1.0 * s);
-  g.stroke();
-
-  if (!isBack) {
-    // Subtle tongue/lace accent tick
-    g.strokeStyle = 'rgba(255,255,255,0.28)';
-    g.lineWidth = 1.4 * s;
-    g.beginPath();
-    g.moveTo(6.5 * s, -5.4 * s);
-    g.lineTo(9.8 * s, -4.0 * s);
-    g.stroke();
+  // Pass 1: Outer silhouette outline (`sw` border)
+  fillTangentCapsule(g, p0, r0 + sw, p1, r1 + sw, outlineCol);
+  fillTangentCapsule(g, p1, r1 + sw, p2, r2 + sw, outlineCol);
+  if (unifiedFoot) {
+    g.save();
+    g.translate(footCenter[0], footCenter[1]);
+    g.rotate(rawPitch);
+    traceFootSilhouette(g, s);
+    g.fillStyle = outlineCol;
+    g.fill();
+    if (sw > 0.05) {
+      g.strokeStyle = outlineCol;
+      g.lineWidth = sw * 2;
+      g.stroke();
+    }
+    g.restore();
   }
+
+  // Pass 2: Unified single-colour interior fill across thigh, knee, shin, and foot
+  fillTangentCapsule(g, p0, r0, p1, r1, fillCol);
+  fillTangentCapsule(g, p1, r1, p2, r2, fillCol);
+  g.save();
+  g.translate(footCenter[0], footCenter[1]);
+  g.rotate(rawPitch);
+  traceFootSilhouette(g, s);
+  if (!unifiedFoot) {
+    if (sw > 0.05) {
+      g.strokeStyle = outlineCol;
+      g.lineWidth = sw * 2;
+      g.stroke();
+    }
+    g.fillStyle = footFillCol;
+    g.fill();
+  } else {
+    g.fillStyle = fillCol;
+    g.fill();
+  }
+  g.restore();
+
   g.restore();
 }
 
-function drawSculptedTorso(g, r, build, colors) {
-  const { outlineCol, outlinePad, mainRgb, frontShadow, rimRgb, isFlat } = colors;
+function computeTorsoRadii(s, build) {
+  const spec = CANONICAL_CHARACTER_SPEC.radii;
+  return {
+    hipR: spec.torsoHip * s * build.torsoW,
+    midR: spec.torsoMid * s * lerp(build.torsoW, build.shoulderW || build.torsoW, 0.52),
+    shR: spec.torsoShoulder * s * (build.shoulderW || build.torsoW),
+  };
+}
+
+function drawSeamlessTorsoAndNeck(g, r, build, includeNeck, colors) {
+  const { outlineCol, sw, fillCol } = colors;
   const s = r.scale;
   const hip = r.hip;
   const sh = r.shoulder;
   const mid = r.spineMid || [lerp(hip[0], sh[0], 0.54), lerp(hip[1], sh[1], 0.54)];
+  const { hipR, midR, shR } = computeTorsoRadii(s, build);
+  const neckBaseR = CANONICAL_CHARACTER_SPEC.radii.neckBase * s * build.headW;
+  const neckTopR = CANONICAL_CHARACTER_SPEC.radii.neckTop * s * build.headW;
+  const neckEnd = [
+    r.head[0] - Math.sin(r.headAngle) * r.radius * build.headW * 0.42,
+    r.head[1] + Math.cos(r.headAngle) * r.radius * build.headW * 0.42,
+  ];
 
-  const dx = sh[0] - hip[0];
-  const dy = sh[1] - hip[1];
-  const len = Math.max(1e-4, Math.hypot(dx, dy));
-  const nx = -dy / len; // forward normal (+x when upright)
-  const ny = dx / len;
+  // Pass 1: Silhouette outline
+  fillTangentCapsule(g, hip, hipR + sw, mid, midR + sw, outlineCol);
+  fillTangentCapsule(g, mid, midR + sw, sh, shR + sw, outlineCol);
+  if (includeNeck) {
+    fillTangentCapsule(g, sh, neckBaseR + sw, neckEnd, neckTopR + sw, outlineCol);
+  }
 
-  const hipR = 11.8 * s * build.torsoW;
-  const midBackR = 12.2 * s * build.torsoW;
-  const midChestR = 13.8 * s * build.torsoW;
-  const shR = 14.2 * s * build.torsoW;
+  // Pass 2: Single-colour interior fill (torso + neck weld seamlessly with zero collar ring)
+  fillTangentCapsule(g, hip, hipR, mid, midR, fillCol);
+  fillTangentCapsule(g, mid, midR, sh, shR, fillCol);
+  if (includeNeck) {
+    fillTangentCapsule(g, sh, neckBaseR, neckEnd, neckTopR, fillCol);
+  }
+}
 
-  const traceTorso = () => {
-    g.beginPath();
-    // Back contour: hip back -> curved mid-spine back -> shoulder back
-    g.moveTo(hip[0] - nx * hipR, hip[1] - ny * hipR);
-    g.quadraticCurveTo(
-      mid[0] - nx * midBackR,
-      mid[1] - ny * midBackR,
-      sh[0] - nx * shR * 0.94,
-      sh[1] - ny * shR * 0.94
-    );
-    // Rounded shoulder dome
-    g.quadraticCurveTo(
-      sh[0] + (dx / len) * 6.5 * s,
-      sh[1] + (dy / len) * 6.5 * s,
-      sh[0] + nx * shR,
-      sh[1] + ny * shR
-    );
-    // Chest/front contour: shoulder front -> sternum/chest curve -> pelvis front
-    g.quadraticCurveTo(
-      mid[0] + nx * midChestR,
-      mid[1] + ny * midChestR,
-      hip[0] + nx * hipR * 1.02,
-      hip[1] + ny * hipR * 1.02
-    );
-    // Pelvis rounded base cap so thighs join torso with zero gap
-    g.quadraticCurveTo(
-      hip[0] - (dx / len) * 10.5 * s,
-      hip[1] - (dy / len) * 10.5 * s,
-      hip[0] - nx * hipR,
-      hip[1] - ny * hipR
-    );
-    g.closePath();
-  };
+/**
+ * Welds a limb socket (`hip` or `shoulder`) seamlessly into the torso interior without erasing
+ * either the outer torso border or the limb's cross-body separation contour.
+ */
+function weldLimbSocketIntoTorso(g, r, build, jointCenter, limbNextPt, jointRadius, sw, fillCol) {
+  const s = r.scale;
+  const hip = r.hip;
+  const sh = r.shoulder;
+  const mid = r.spineMid || [lerp(hip[0], sh[0], 0.54), lerp(hip[1], sh[1], 0.54)];
+  const { hipR, midR, shR } = computeTorsoRadii(s, build);
+
+  const limbDir = Math.atan2(limbNextPt[1] - jointCenter[1], limbNextPt[0] - jointCenter[0]);
 
   g.save();
-  g.lineJoin = 'round';
-  traceTorso();
-  g.lineWidth = outlinePad;
-  g.strokeStyle = outlineCol;
-  g.stroke();
-
-  if (isFlat) {
-    g.fillStyle = rgbCss(mainRgb);
-  } else {
-    const tg = g.createLinearGradient(
-      mid[0] + nx * midChestR,
-      mid[1] + ny * midChestR,
-      mid[0] - nx * midBackR,
-      mid[1] - ny * midBackR
-    );
-    tg.addColorStop(0, rgbCss(mixRgb(mainRgb, rimRgb, 0.24)));
-    tg.addColorStop(0.55, rgbCss(mainRgb));
-    tg.addColorStop(1, rgbCss(frontShadow));
-    g.fillStyle = tg;
-  }
-  g.fill();
-
-  // Subtle collar/clavicle rim highlight
-  if (!isFlat) {
-    g.strokeStyle = `rgba(${rimRgb[0]},${rimRgb[1]},${rimRgb[2]},0.42)`;
-    g.lineWidth = 2.0 * s;
+  for (const [cA, rA, cB, rB] of [
+    [hip, Math.max(1, hipR), mid, Math.max(1, midR)],
+    [mid, Math.max(1, midR), sh, Math.max(1, shR)],
+  ]) {
+    g.save();
+    traceTangentCapsule(g, cA, rA, cB, rB);
+    g.clip();
+    g.fillStyle = fillCol;
     g.beginPath();
-    g.moveTo(sh[0] + nx * shR * 0.85, sh[1] + ny * shR * 0.85 + 2 * s);
-    g.quadraticCurveTo(mid[0] + nx * midChestR * 0.90, mid[1] + ny * midChestR * 0.90, hip[0] + nx * hipR * 0.85, hip[1] + ny * hipR * 0.85);
-    g.stroke();
+    g.moveTo(jointCenter[0], jointCenter[1]);
+    g.arc(jointCenter[0], jointCenter[1], jointRadius + sw + 1.5 * s, limbDir + Math.PI * 0.46, limbDir - Math.PI * 0.46, false);
+    g.closePath();
+    g.fill();
+    g.restore();
   }
   g.restore();
 }
@@ -1576,32 +1564,31 @@ function drawFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
   const posed = applyPostureToPose(p0, opts.posture ?? 0, s);
   const r = skeleton(x, fy, s, posed, flip);
   const build = BUILDS[opts.build] || BUILDS.standard;
-  const isFlat = opts.style === 'flat';
   const drawMode = opts.drawMode || 'full'; // 'full' | 'back_arm_only' | 'body_no_front_arm' | 'front_arm_only' | 'lower_and_torso' | 'upper_front'
 
-  const outlinePad = opts.outlineWidth === 'thin' ? 2.8 * s : 4.0 * s;
-  const headOutlinePad = opts.outlineWidth === 'thin' ? 1.8 * s : 2.3 * s;
-  const mainRgb = hexToRgb(opts.color || '#f1f5f9');
-  const lightRgb = hexToRgb(opts.lightColor || '#ffffff');
-  const rimRgb = mixRgb(mainRgb, lightRgb, 0.62);
-  const backMain = mixRgb(mainRgb, [8, 12, 22], 0.34);
-  const frontShadow = mixRgb(mainRgb, [10, 15, 28], 0.24);
-  // Subtle trousers contrast so legs read clearly even under coats or seated poses
-  const legFrontRgb = mixRgb(mainRgb, [15, 23, 42], 0.16);
-  const legBackRgb = mixRgb(mainRgb, [8, 12, 22], 0.42);
-  const shoeFrontRgb = opts.shoeColor ? hexToRgb(opts.shoeColor) : mixRgb(mainRgb, [12, 18, 32], 0.68);
-  const shoeBackRgb = mixRgb(shoeFrontRgb, [6, 9, 18], 0.35);
-  const soleRgb = mixRgb(mainRgb, [248, 250, 252], 0.65);
-  const outlineCol = '#060912';
+  const sw = (opts.outlineWidth === 'thin'
+    ? CANONICAL_CHARACTER_SPEC.thinStrokeWidthPx
+    : CANONICAL_CHARACTER_SPEC.strokeWidthPx) * s;
+  const mainRgb = hexToRgb(opts.color || CANONICAL_CHARACTER_SPEC.defaultBaseColor);
+  const bodyFill = rgbCss(mainRgb);
+  const footFill = opts.shoeColor ? rgbCss(hexToRgb(opts.shoeColor)) : bodyFill;
+  const outlineCol = opts.outlineColor || CANONICAL_CHARACTER_SPEC.outlineColor;
+  const rimRgb = mainRgb;
   const accList = normalizeAccessoryList(opts.accessories || opts.accessory);
   const hairStyle = resolveDefaultHairstyle(opts, accList);
   const hairRgb = resolveHairRgb(opts, mainRgb);
 
-  const luma = 0.299 * mainRgb[0] + 0.587 * mainRgb[1] + 0.114 * mainRgb[2];
-  const rimAlpha = luma > 195 ? 0.24 : 0.78;
-
-  const armWidths = [16.8 * s * build.limbW, 13.8 * s * build.limbW, 10.6 * s * build.limbW];
-  const legWidths = [20.6 * s * build.limbW, 16.2 * s * build.limbW, 11.8 * s * build.limbW];
+  const specR = CANONICAL_CHARACTER_SPEC.radii;
+  const armRadii = [
+    specR.upperArmTop * s * build.limbW,
+    specR.elbow * s * build.limbW,
+    specR.wrist * s * build.limbW,
+  ];
+  const legRadii = [
+    specR.thighTop * s * build.limbW,
+    specR.knee * s * build.limbW,
+    specR.ankle * s * build.limbW,
+  ];
 
   const turnScaleX = Number.isFinite(opts.turnScaleX) ? clamp(opts.turnScaleX, 0.25, 1.0) : 1.0;
 
@@ -1617,55 +1604,26 @@ function drawFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
   const drawHeadLayer = drawMode === 'full' || drawMode === 'body_no_front_arm' || drawMode === 'upper_front';
   const drawFrontArmLayer = drawMode === 'full' || drawMode === 'front_arm_only' || drawMode === 'upper_front';
 
-  // 1. Height-attenuated grounded contact shadow (shrinks & softens naturally during jumps / flight!)
+  // 1. Grounded height-attenuated contact shadow
   if (drawMode === 'full' || drawMode === 'body_no_front_arm' || drawMode === 'lower_and_torso') {
     const shadowFootX = 0.5 * (r.ll[2][0] + r.lr[2][0]);
     const lowestFootY = Math.max(r.ll[2][1], r.lr[2][1]);
     const airHeight = Math.max(0, fy - lowestFootY);
     const airFactor = clamp(1 - airHeight / (135 * s), 0.22, 1.0);
     g.save();
-    g.fillStyle = `rgba(0,0,0,${(0.46 * airFactor).toFixed(3)})`;
+    g.fillStyle = `rgba(0,0,0,${(0.42 * airFactor).toFixed(3)})`;
     g.beginPath();
-    g.ellipse(shadowFootX, fy + 2.5, 46 * s * build.torsoW * airFactor, 7.5 * s * airFactor, 0, 0, Math.PI * 2);
+    g.ellipse(shadowFootX, fy + 2.5, 42 * s * build.torsoW * airFactor, 6.8 * s * airFactor, 0, 0, Math.PI * 2);
     g.fill();
     g.restore();
   }
 
-  // 2. Back arm + back hand
-  if (drawShadowAndBack && drawMode !== 'lower_and_torso') {
-    drawTaperedLimb(g, r.ar, armWidths, {
+  // 2. Back arm + back hand (identical single character colour, cleanly behind torso)
+  if (drawShadowAndBack) {
+    drawSeamlessArm(g, r.ar, armRadii, posed.handR || 'relaxed', s, {
       outlineCol,
-      outlinePad,
-      fillCol: rgbCss(backMain),
-      rimCol: rimRgb,
-      rimAlpha: 0,
-      isFlat,
-      isBack: true,
-    });
-    drawHand(g, r.ar[1], r.ar[2], s, posed.handR || 'relaxed', {
-      outlineCol,
-      outlinePad,
-      fillCol: rgbCss(backMain),
-      rimCol: null,
-      isBack: true,
-    });
-  } else if (drawMode === 'lower_and_torso') {
-    // Back arm drawn with torso when split across a desk
-    drawTaperedLimb(g, r.ar, armWidths, {
-      outlineCol,
-      outlinePad,
-      fillCol: rgbCss(backMain),
-      rimCol: rimRgb,
-      rimAlpha: 0,
-      isFlat,
-      isBack: true,
-    });
-    drawHand(g, r.ar[1], r.ar[2], s, posed.handR || 'relaxed', {
-      outlineCol,
-      outlinePad,
-      fillCol: rgbCss(backMain),
-      rimCol: null,
-      isBack: true,
+      sw,
+      fillCol: bodyFill,
     });
   }
 
@@ -1676,13 +1634,15 @@ function drawFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
       hr: r.world.ar[2],
       fl: r.world.ll[2],
       fr: r.world.lr[2],
+      gripL: r.world.gripL,
+      gripR: r.world.gripR,
       head: r.world.head,
       sh: r.world.shoulder,
       hip: r.world.hip,
     };
   }
 
-  // 3. Back accessories, legs + grounded shoes, sculpted torso, front leg + shoe
+  // 3. Back accessories, back leg, seamless torso + neck, front leg + hip socket weld
   if (drawLegsAndTorso) {
     if (accList.includes('cape')) {
       drawBackCape(g, r, mainRgb);
@@ -1691,92 +1651,57 @@ function drawFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
       drawBackBackpack(g, r, opts.bagColor || '#eab308');
     }
 
-    // Back leg + back shoe
-    drawTaperedLimb(g, r.lr, legWidths, {
+    drawSeamlessLeg(g, r.lr, legRadii, fy, s, posed.footAngleR || 0, {
       outlineCol,
-      outlinePad,
-      fillCol: rgbCss(legBackRgb),
-      rimCol: rimRgb,
-      rimAlpha: 0,
-      isFlat,
-      isBack: true,
+      sw,
+      fillCol: bodyFill,
+      footFillCol: footFill,
     });
-    drawShoe(g, r.lr[2], fy, s, posed.footAngleR || 0, shoeBackRgb, mixRgb(soleRgb, [15, 23, 42], 0.32), outlineCol, outlinePad, true);
 
-    // Sculpted curved torso
-    drawSculptedTorso(g, r, build, {
+    drawSeamlessTorsoAndNeck(g, r, build, drawHeadLayer, {
       outlineCol,
-      outlinePad,
-      mainRgb,
-      frontShadow,
-      rimRgb,
-      isFlat,
+      sw,
+      fillCol: bodyFill,
     });
     if (accList.includes('coat')) {
       drawTorsoCoat(g, r, build, opts.coatColor || '#1e293b');
     }
 
-    // Front leg + front shoe
-    drawTaperedLimb(g, r.ll, legWidths, {
+    drawSeamlessLeg(g, r.ll, legRadii, fy, s, posed.footAngleL || 0, {
       outlineCol,
-      outlinePad,
-      fillCol: rgbCss(legFrontRgb),
-      rimCol: rimRgb,
-      rimAlpha: rimAlpha * 0.75,
-      isFlat,
-      isBack: false,
+      sw,
+      fillCol: bodyFill,
+      footFillCol: footFill,
     });
-    drawShoe(g, r.ll[2], fy, s, posed.footAngleL || 0, shoeFrontRgb, soleRgb, outlineCol, outlinePad, false);
+
+    if (!accList.includes('coat')) {
+      weldLimbSocketIntoTorso(g, r, build, r.ll[0], r.ll[1], legRadii[0], sw, bodyFill);
+    }
+  } else if (drawHeadLayer) {
+    drawSeamlessTorsoAndNeck(g, r, build, true, {
+      outlineCol,
+      sw,
+      fillCol: bodyFill,
+    });
   }
 
-  // 4. Anatomical Neck + Head + Hair + Face + Head/Torso Accessories
+  // 4. Head + Face + Optional Hair & Head/Torso Accessories
   const hd = r.head;
   const hr = r.radius * build.headW;
   if (drawHeadLayer) {
-    // Back hair (ponytail, bun, long hair behind head)
     drawHairBack(g, hd, hr, r.headAngle, s, hairStyle, hairRgb, outlineCol);
 
-    // Neck cylinder connecting shoulder to head base
-    g.save();
-    g.lineCap = 'round';
+    // Head cranium: uniform `sw` outer outline + pure `bodyFill` interior
     g.beginPath();
-    g.moveTo(r.shoulder[0], r.shoulder[1] - 2 * s);
-    g.lineTo(hd[0] - Math.sin(r.headAngle) * hr * 0.45, hd[1] + Math.cos(r.headAngle) * hr * 0.45);
-    g.lineWidth = 11.5 * s * build.headW + outlinePad * 0.72;
-    g.strokeStyle = outlineCol;
-    g.stroke();
-    g.lineWidth = 11.5 * s * build.headW;
-    g.strokeStyle = rgbCss(frontShadow);
-    g.stroke();
-    g.restore();
-
-    // Head cranium
-    g.beginPath();
-    g.arc(hd[0], hd[1], hr + headOutlinePad, 0, Math.PI * 2);
+    g.arc(hd[0], hd[1], hr + sw, 0, Math.PI * 2);
     g.fillStyle = outlineCol;
     g.fill();
 
-    if (isFlat) {
-      g.fillStyle = rgbCss(mainRgb);
-    } else {
-      const hg = g.createRadialGradient(
-        hd[0] + hr * 0.28,
-        hd[1] - hr * 0.34,
-        hr * 0.08,
-        hd[0],
-        hd[1],
-        hr * 1.04
-      );
-      hg.addColorStop(0, rgbCss(mixRgb(rimRgb, [255, 255, 255], 0.55)));
-      hg.addColorStop(0.45, rgbCss(mainRgb));
-      hg.addColorStop(1, rgbCss(frontShadow));
-      g.fillStyle = hg;
-    }
     g.beginPath();
     g.arc(hd[0], hd[1], hr, 0, Math.PI * 2);
+    g.fillStyle = bodyFill;
     g.fill();
 
-    // Face always draws subtle lively eyes/brows/nose/mouth unless explicitly disabled (`eyes === false && !expression && opts.hideFace`)
     if (!opts.hideFace) {
       drawFaceExpression(g, hd, hr, s, opts.expression || 'neutral', {
         ...(opts.faceAnim || {}),
@@ -1784,7 +1709,6 @@ function drawFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
       });
     }
 
-    // Front hair crown/fringe (skipped under full-coverage helmets/hats if needed)
     if (!accList.includes('helmet') && !accList.includes('hat') && !accList.includes('cap')) {
       drawHairFront(g, hd, hr, r.headAngle, s, hairStyle, hairRgb, rimRgb, outlineCol);
     }
@@ -1796,27 +1720,34 @@ function drawFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
     }
   }
 
-  // 5. Front arm + articulated front hand (+ wristwatch if worn)
+  // 5. Front arm + shoulder socket weld + optional split-layer hand grip overlay
   if (drawFrontArmLayer) {
-    drawTaperedLimb(g, r.al, armWidths, {
+    drawSeamlessArm(g, r.al, armRadii, posed.handL || 'relaxed', s, {
       outlineCol,
-      outlinePad,
-      fillCol: rgbCss(mainRgb),
-      rimCol: rimRgb,
-      rimAlpha,
-      isFlat,
-      isBack: false,
+      sw,
+      fillCol: bodyFill,
     });
+    if ((drawLegsAndTorso || drawHeadLayer) && !accList.includes('coat')) {
+      weldLimbSocketIntoTorso(g, r, build, r.al[0], r.al[1], armRadii[0], sw, bodyFill);
+    }
     if (accList.includes('watch')) {
       drawSingleAccessory(g, r, 'watch', mainRgb, rimRgb, opts);
     }
-    drawHand(g, r.al[1], r.al[2], s, posed.handL || 'relaxed', {
-      outlineCol,
-      outlinePad,
-      fillCol: rgbCss(mainRgb),
-      rimCol: rimRgb,
-      isBack: false,
-    });
+    if (typeof opts.frontHandOverlay === 'function') {
+      const forearmAngle = Math.atan2(r.al[2][1] - r.al[1][1], r.al[2][0] - r.al[1][0]);
+      opts.frontHandOverlay(g, {
+        elbow: r.al[1],
+        wrist: r.al[2],
+        grip: r.gripL,
+        forearmAngle,
+        scale: s,
+        bodyFill,
+        outlineCol,
+        sw,
+        thumbScroll: posed.thumbScroll || 0,
+        thumbTap: posed.thumbTap || 0,
+      });
+    }
   }
 
   g.restore();
@@ -1836,13 +1767,13 @@ function drawFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
     const txt = String(opts.nameTag).toUpperCase();
     const tw = g.measureText(txt).width + 20;
     g.fillStyle = 'rgba(8,12,22,0.860)';
-    g.strokeStyle = rgbCss(mainRgb);
+    g.strokeStyle = bodyFill;
     g.lineWidth = 2;
     g.beginPath();
     g.roundRect(wh[0] - tw * 0.5, tagY - 14, tw, 28, 8);
     g.fill();
     g.stroke();
-    g.fillStyle = rgbCss(mixRgb(mainRgb, [255, 255, 255], 0.35));
+    g.fillStyle = bodyFill;
     g.textAlign = 'center';
     g.textBaseline = 'middle';
     g.fillText(txt, wh[0], tagY);
@@ -1854,6 +1785,8 @@ function drawFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
     hr: r.world.ar[2],
     fl: r.world.ll[2],
     fr: r.world.lr[2],
+    gripL: r.world.gripL,
+    gripR: r.world.gripR,
     head: r.world.head,
     sh: r.world.shoulder,
     hip: r.world.hip,
@@ -1862,6 +1795,7 @@ function drawFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
 
 module.exports = {
   BONES,
+  CANONICAL_CHARACTER_SPEC,
   BUILDS,
   SUPPORTED_ACCESSORIES,
   SUPPORTED_HAIRSTYLES,
@@ -1875,6 +1809,8 @@ module.exports = {
   springEase,
   backEase,
   backOut,
+  anticipationEase,
+  arcPoint,
   eio,
   eo,
   ca,
@@ -1890,5 +1826,6 @@ module.exports = {
   hexToRgb,
   mixRgb,
   rgbCss,
+  traceTangentCapsule,
   drawFigure,
 };

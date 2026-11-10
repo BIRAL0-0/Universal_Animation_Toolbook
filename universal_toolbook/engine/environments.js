@@ -1,25 +1,119 @@
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
 const { clamp, ca, hexToRgb } = require('./character_rig');
 
 const FLOOR_Y = 855;
 
+const FALLBACK_VISUAL_IDENTITY = Object.freeze({
+  mode: 'near_black_minimal',
+  lock_identity: true,
+  sky_top: '#040507',
+  sky_mid: '#080a0f',
+  sky_bottom: '#0c1017',
+  floor_top: '#07090e',
+  floor_bottom: '#030407',
+  horizon_line: '#94a3b8',
+  horizon_alpha: 0.16,
+  center_lift_alpha: 0.032,
+});
+
+function loadVisualIdentityConfig() {
+  try {
+    const cfgPath = path.join(__dirname, '..', 'config', 'studio_config.json');
+    const raw = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
+    if (raw && raw.visual_identity && typeof raw.visual_identity === 'object') {
+      return Object.freeze({ ...FALLBACK_VISUAL_IDENTITY, ...raw.visual_identity });
+    }
+  } catch (_) {
+    // Fall back to canonical near-black identity if config cannot be read.
+  }
+  return FALLBACK_VISUAL_IDENTITY;
+}
+
+const DEFAULT_VISUAL_IDENTITY = loadVisualIdentityConfig();
+
 const ENVIRONMENT_THEMES = Object.freeze({
-  night_city:         { lightColor: '#38bdf8', ambient: '#0b1936', floorColor: '#091122', accent: '#38bdf8', mood: 'focus' },
-  modern_office:      { lightColor: '#67e8f9', ambient: '#101d30', floorColor: '#0b1320', accent: '#22d3ee', mood: 'focus' },
-  bedroom_late:       { lightColor: '#818cf8', ambient: '#121533', floorColor: '#090b1c', accent: '#a78bfa', mood: 'tension' },
-  storm_road:         { lightColor: '#fb7185', ambient: '#1b2434', floorColor: '#0c111a', accent: '#fb7185', mood: 'tension' },
-  lecture_stage:      { lightColor: '#a78bfa', ambient: '#151130', floorColor: '#0a0818', accent: '#38bdf8', mood: 'focus' },
-  library_study:      { lightColor: '#34d399', ambient: '#0f2226', floorColor: '#091417', accent: '#34d399', mood: 'calm' },
-  tech_lab:           { lightColor: '#22d3ee', ambient: '#082030', floorColor: '#05121c', accent: '#06b6d4', mood: 'focus' },
-  park_twilight:      { lightColor: '#2dd4bf', ambient: '#113040', floorColor: '#091a24', accent: '#2dd4bf', mood: 'calm' },
-  crossroads_duality: { lightColor: '#38bdf8', ambient: '#141829', floorColor: '#090c16', accent: '#38bdf8', mood: 'tension' },
-  canyon_bridge:      { lightColor: '#60a5fa', ambient: '#0f2344', floorColor: '#091428', accent: '#60a5fa', mood: 'focus' },
-  mind_space:         { lightColor: '#818cf8', ambient: '#11162c', floorColor: '#080b18', accent: '#818cf8', mood: 'calm' },
-  sunrise_summit:     { lightColor: '#fb923c', ambient: '#2d2346', floorColor: '#121024', accent: '#fbbf24', mood: 'triumph' },
+  studio_dark:        { lightColor: '#e2e8f0', ambient: '#080a0f', floorColor: '#07090e', accent: '#94a3b8', mood: 'focus' },
+  minimal_void:       { lightColor: '#e2e8f0', ambient: '#06080c', floorColor: '#05070b', accent: '#94a3b8', mood: 'calm' },
+  night_city:         { lightColor: '#e2e8f0', ambient: '#080a0f', floorColor: '#07090e', accent: '#94a3b8', mood: 'focus' },
+  modern_office:      { lightColor: '#e2e8f0', ambient: '#080b10', floorColor: '#07090e', accent: '#94a3b8', mood: 'focus' },
+  bedroom_late:       { lightColor: '#e2e8f0', ambient: '#07090e', floorColor: '#06080c', accent: '#94a3b8', mood: 'tension' },
+  storm_road:         { lightColor: '#cbd5e1', ambient: '#080a10', floorColor: '#06080d', accent: '#94a3b8', mood: 'tension' },
+  lecture_stage:      { lightColor: '#e2e8f0', ambient: '#080a0f', floorColor: '#07090e', accent: '#94a3b8', mood: 'focus' },
+  library_study:      { lightColor: '#e2e8f0', ambient: '#080a0f', floorColor: '#07090e', accent: '#94a3b8', mood: 'calm' },
+  tech_lab:           { lightColor: '#e2e8f0', ambient: '#080a0f', floorColor: '#07090e', accent: '#94a3b8', mood: 'focus' },
+  park_twilight:      { lightColor: '#e2e8f0', ambient: '#080a0f', floorColor: '#07090e', accent: '#94a3b8', mood: 'calm' },
+  crossroads_duality: { lightColor: '#e2e8f0', ambient: '#080a0f', floorColor: '#07090e', accent: '#94a3b8', mood: 'tension' },
+  canyon_bridge:      { lightColor: '#cbd5e1', ambient: '#080a10', floorColor: '#06080d', accent: '#94a3b8', mood: 'focus' },
+  mind_space:         { lightColor: '#e2e8f0', ambient: '#07090e', floorColor: '#06080c', accent: '#94a3b8', mood: 'calm' },
+  sunrise_summit:     { lightColor: '#e2e8f0', ambient: '#090b11', floorColor: '#07090e', accent: '#cbd5e1', mood: 'triumph' },
 });
 
 const SUPPORTED_ENVIRONMENTS = Object.freeze(Object.keys(ENVIRONMENT_THEMES));
+
+/**
+ * Canonical Near-Black Minimal Stage Renderer.
+ * Applies a uniform, restrained near-black vertical gradient, subtle central studio depth lift,
+ * and grounded dark floor plane across all scenes so individual scene presets cannot accidentally
+ * inject colourful or noisy decorative backgrounds.
+ */
+function renderNearBlackBackground(g, W = 1920, H = 1080, floorY = FLOOR_Y, cfg = DEFAULT_VISUAL_IDENTITY) {
+  const id = { ...DEFAULT_VISUAL_IDENTITY, ...(cfg || {}) };
+  g.save();
+
+  // Generous overscan so camera pan/zoom or full-bleed 9:16 portrait vector framing never exposes edges
+  const padX = 1200;
+  const padTop = 1200;
+  const padBot = 1200;
+
+  const skyGrad = g.createLinearGradient(0, -480, 0, floorY);
+  skyGrad.addColorStop(0, id.sky_top);
+  skyGrad.addColorStop(0.56, id.sky_mid);
+  skyGrad.addColorStop(1, id.sky_bottom);
+  g.fillStyle = skyGrad;
+  g.fillRect(-padX, -padTop, W + padX * 2, floorY + padTop + 4);
+
+  // Subtle neutral studio depth falloff behind central staging area (zero colour tint)
+  const liftAlpha = clamp(Number(id.center_lift_alpha ?? 0.032), 0, 0.08);
+  if (liftAlpha > 0.002) {
+    const cx = W * 0.5;
+    const cy = floorY * 0.64;
+    const rad = g.createRadialGradient(cx, cy, 40, cx, cy, Math.max(W, H) * 0.56);
+    rad.addColorStop(0, `rgba(226, 232, 240, ${ca(liftAlpha)})`);
+    rad.addColorStop(0.58, `rgba(203, 213, 225, ${ca(liftAlpha * 0.35)})`);
+    rad.addColorStop(1, 'rgba(15, 23, 42, 0.000)');
+    g.fillStyle = rad;
+    g.fillRect(-padX, -padTop, W + padX * 2, floorY + padTop + 4);
+  }
+
+  // Restrained near-black ground plane
+  const floorGrad = g.createLinearGradient(0, floorY, 0, H + 540);
+  floorGrad.addColorStop(0, id.floor_top);
+  floorGrad.addColorStop(1, id.floor_bottom);
+  g.fillStyle = floorGrad;
+  g.fillRect(-padX, floorY, W + padX * 2, H - floorY + padBot);
+
+  // Crisp, low-contrast ground contact horizon line for unambiguous foot grounding
+  const [hr, hg, hb] = hexToRgb(id.horizon_line || '#94a3b8');
+  const hAlpha = clamp(Number(id.horizon_alpha ?? 0.16), 0.04, 0.30);
+  const lineGrad = g.createLinearGradient(0, 0, W, 0);
+  lineGrad.addColorStop(0, `rgba(${hr},${hg},${hb},${ca(hAlpha * 0.35)})`);
+  lineGrad.addColorStop(0.15, `rgba(${hr},${hg},${hb},${ca(hAlpha)})`);
+  lineGrad.addColorStop(0.85, `rgba(${hr},${hg},${hb},${ca(hAlpha)})`);
+  lineGrad.addColorStop(1, `rgba(${hr},${hg},${hb},${ca(hAlpha * 0.35)})`);
+  g.fillStyle = lineGrad;
+  g.fillRect(-padX, floorY - 1, W + padX * 2, 2);
+
+  g.restore();
+  return {
+    lightColor: '#e2e8f0',
+    accent: '#94a3b8',
+    floorColor: id.floor_top,
+    visualIdentity: id.mode,
+  };
+}
 
 function hash01(i, s = 1) {
   const x = Math.sin(i * 127.1 + s * 311.7) * 43758.5453;
@@ -113,8 +207,11 @@ function drawSkyGradient(g, W, floorY, stops) {
 }
 
 function renderEnvironment(g, envName, W, H, floorY, t, opts = {}) {
-  const key = ENVIRONMENT_THEMES[envName] ? envName : 'night_city';
+  const key = ENVIRONMENT_THEMES[envName] ? envName : 'studio_dark';
   const theme = ENVIRONMENT_THEMES[key];
+  if (DEFAULT_VISUAL_IDENTITY.lock_identity && !opts.override_visual_identity) {
+    return renderNearBlackBackground(g, W, H, floorY, opts.visualIdentity);
+  }
   const lightColor = opts.lightColor || theme.lightColor;
   const panX = opts.panX || 0;
   const farShift = -panX * 0.18;
@@ -652,6 +749,10 @@ function renderCustomSetting(g, setting, W, H, floorY, t, panX = 0, accentOverri
     return { lightColor: '#ffffff', accent: '#ffffff', floorColor: '#000000' };
   }
 
+  if (DEFAULT_VISUAL_IDENTITY.lock_identity && !setting.override_visual_identity) {
+    return renderNearBlackBackground(g, W, H, floorY, setting.visual_identity);
+  }
+
   const farShift = -panX * 0.20;
   const midShift = -panX * 0.48;
 
@@ -936,11 +1037,11 @@ function renderCustomSetting(g, setting, W, H, floorY, t, panX = 0, accentOverri
   return { lightColor, accent: lightColor, floorColor };
 }
 
-function drawEnvironment(g, envOrSetting, t, panX = 0, accentColor = null) {
+function drawEnvironment(g, envOrSetting, t, panX = 0, accentColor = null, width = 1920, height = 1080, floorY = FLOOR_Y) {
   if (envOrSetting && typeof envOrSetting === 'object') {
-    return renderCustomSetting(g, envOrSetting, 1920, 1080, FLOOR_Y, t, panX, accentColor);
+    return renderCustomSetting(g, envOrSetting, width, height, floorY, t, panX, accentColor);
   }
-  return renderEnvironment(g, envOrSetting, 1920, 1080, FLOOR_Y, t, {
+  return renderEnvironment(g, envOrSetting, width, height, floorY, t, {
     panX,
     lightColor: accentColor || undefined,
     accent: accentColor || undefined,
@@ -949,11 +1050,13 @@ function drawEnvironment(g, envOrSetting, t, panX = 0, accentColor = null) {
 
 module.exports = {
   FLOOR_Y,
+  DEFAULT_VISUAL_IDENTITY,
   ENVIRONMENT_THEMES,
   ENVIRONMENTS: ENVIRONMENT_THEMES,
   SUPPORTED_ENVIRONMENTS,
   drawLightCone,
   drawSoftGlow,
+  renderNearBlackBackground,
   renderEnvironment,
   renderCustomSetting,
   drawEnvironment,

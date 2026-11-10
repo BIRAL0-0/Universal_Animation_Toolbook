@@ -1,78 +1,77 @@
 ---
 name: stickman-animation
-description: "Author episode specs, characters, poses, actions, environments, boards, storyboards and camera framing for the stickman canvas renderer."
+description: "Choreograph expressive minimalist stick-figure performances, action beat chains, locomotion cycles, seated postures, and two-actor staging using the 70-action motion library."
 ---
 
 # Skill: stickman-animation
 
-**Activate when:** designing or changing characters, poses, actions, environments, props, boards,
-camera framing, visual style, storyboards, `cast`, `beats[]`, `camera_shots[]` or any
-`episode.json` visual field. Always activate alongside
-[`animation-production`](../animation-production/SKILL.md) for a video request.
+## Purpose
 
-**Authority:** the engine is the only source of truth for what can be drawn. Full schema:
-[`universal_toolbook/01_TOOLBOOK_REFERENCE.md`](../../universal_toolbook/01_TOOLBOOK_REFERENCE.md).
-Geometry rules: [`universal_toolbook/process/04_VISUAL_GEOMETRY.md`](../../universal_toolbook/process/04_VISUAL_GEOMETRY.md).
-Worked specs: [`examples/`](../../examples/). Module map:
-[`docs/architecture/ENGINE_MODULES.md`](../../docs/architecture/ENGINE_MODULES.md).
+Turn narrative beats into clear, grounded, physically expressive stickman performances using `universal_toolbook/engine/motion_library.js` and `universal_toolbook/engine/character_rig.js`. Every beat must read clearly even with audio muted, transition smoothly without pose popping, and keep feet grounded to world coordinates.
 
-## Character consistency
+## Trigger Conditions
 
-- `episode.json` → `cast` is the single source of truth. Mirror it byte-for-byte into `CHARACTERS.md`;
-  never maintain a second competing design.
-- Hard constraint: **at most two characters in any scene**. Design the cast around that limit.
-- Give each character a distinct `build`, `hair`, `hair_color`, `shoe_color`, `posture`
-  (−1..+1), `scale` (1.52..1.65 for cinema presence), `accessories`, `color` and expression arc.
-  Reuse the same `id` across scenes; `compileEpisode()` resolves the profile from `cast`.
-- Choose one visual style: `cel` (cinematic) or parchment / `ink_stick` (hand-inked parable).
-  Parchment backdrops come from `parchment_ink_style.js`, `beacon_harbor.js` and
-  `impossible_wall.js`.
-- Set `channel_name` to `""` or omit it entirely. No branding, watermark or channel name anywhere.
+Activate whenever:
+- authoring `scenes[].characters[].beats[]` in `episode.json`,
+- adding or refining actions in `universal_toolbook/engine/motion_library.js`,
+- staging locomotion (`walk`, `run`), seated postures (`sit_down`, `sit_chair`, `sit_desk_type`), gestures, or emotional reactions (`react_surprise`, `celebrate_arms_up`, `slump`),
+- fixing robotic motion, pose jumps between beats, foot sliding, or stiff idle poses.
 
-## Animation
+## Core Rules & Non-Negotiable Constraints
 
-- Every scene needs at least one real action. A static pose plus a zoom is not animation.
-- Actions must be one of the 60 `SUPPORTED_ACTIONS` in
-  [`universal_toolbook/engine/motion_library.js`](../../universal_toolbook/engine/motion_library.js)
-  (`walk`, `run`, `climb_stairs`, `jump`, `hug`, `handshake`, `sit_desk_type`, `check_watch`,
-  `hold_umbrella`, `point_board`, …). Unknown actions silently become `idle_stand`.
-- Beats are time-boxed: `start`, `end` (seconds, scene-local), `action`, `from_x`/`to_x` or `x`,
-  `facing`, `expression`, `seated`. Keep foot-grounded locomotion physically consistent; the rig's
-  IK solver and footstep times are tested for 0 px bone stretch and 0 px stance foot slip.
-- Paired interactions (`hug`, `handshake`, `high_five`, `handoff_give`/`receive`) use world-space
-  midpoint locking. Prop occlusion (`desk`, `cafe_table`, `podium`, `passing_car`, etc.) is
-  automatic; use `z` / `lane` for depth.
-- Use only `SUPPORTED_BOARDS` (13 types: `stat_cards`, `notebook_page`, `line_graph`,
-  `phone_card`, `checklist_card`, …) and `SUPPORTED_PROPS` in
-  [`world_props_and_boards.js`](../../universal_toolbook/engine/world_props_and_boards.js).
-  If a needed visual has no primitive, substitute an existing one and log it, or add a reusable
-  primitive to the engine — never fake it per-video.
+1. **Every action must exist in `SUPPORTED_ACTIONS`.** `universal_toolbook/engine/motion_library.js` exports 70 validated actions; unknown action names trigger validation warnings and are blocked by `tools/validate_specs.py`.
+2. **Continuous beat-chain handoff.** Consecutive beats in `characters[].beats[]` must carry spatial continuity (`to_x` of a `walk` becomes the resting `x` of the next beat). `evaluateCharacterState` blends beat boundaries (`0.22s`, tightened automatically for sequential object manipulation) so limbs never teleport.
+3. **World-locked gait cycles.** `walkMotion` and `runMotion` derive stride count from world distance (`dist / stepLen`) and lock stance feet to exact world coordinates (`0.0 px` foot slip). Match beat duration to distance (`~0.16–0.24` normalized stage width per `2.5–3.5s` walk).
+4. **Expressive silhouette first.** Favour asymmetric stances, subtle spine curves, head leads, breathing micro-motion, and natural eye-lines (`lookX`, `lookY`) over symmetric mannequin poses.
+5. **Maximum two characters per scene by default.** Keep silhouettes separated in `x` (`>= 0.16` stage width apart unless paired in `handshake`, `high_five`, `handoff`, or `hug`) so limbs and gestures never tangle.
 
-## Camera, framing and transitions
+## Practical Workflow
 
-- `camera` drives a slow drift (`zoom_from`, `zoom_to`, `pan_from`, `pan_to`, `focus_x`, `focus_y`,
-  `move_dur`). `camera_shots[]` drives motivated cuts (`start` or `cue_on`, zoom/focus range,
-  `move_dur`, `cut`, `blend_sec`).
-- Prefer multi-word `cue_on` phrases so pushes land on the spoken beat. Verify against a draft
-  frame at the cue time.
-- 16:9 is 1920×1080, 9:16 is 1080×1920, both 30 fps. Portrait reframing is uniform and
-  subject-aware (`portrait_framing.js`). Boards are automatically fitted into the safe crop.
-  Do not hand-author `portrait_focus`, `portrait_focus_x`, `portrait_w` or `portrait_x` unless a
-  specific draft frame proves a defect (KI-009), and log the evidence.
-- Transitions: automatic environment-change fades, `fade_to_black`, `cut_to_black_at`,
-  `wind_blackout_at`, `flashback_window`, `split_screen`, `intertitle`, `end_card`, chapter ribbons.
-  No generic cross-dissolve exists; adding one is an engine change with a regression test.
+1. **Break each scene into 2–4 physical beats.** Map each spoken thought to a concrete physical action (`walk -> reach_phone -> pick_up_phone -> phone_scroll -> put_down_phone`), never leaving a character in `idle_stand` for 10+ seconds.
+2. **Bind seated and object beats to real props.** Pair `sit_down` / `sit_chair` with a `chair` or `sofa` prop (`target_prop`), `sit_desk_type` with a `desk` + `laptop`/`computer`, and phone actions with a `phone` prop on a `table`/`desk`.
+3. **Stage clear facing directions.** Set `facing: 1` (right) or `facing: -1` (left) toward the conversation partner or target prop.
+4. **Inspect motion across multiple timestamps.** Render scene stills or a multi-frame contact sheet across beat transitions (`t = beatEnd - 0.1s`, `beatEnd`, `beatEnd + 0.15s`) to confirm smooth arcs and zero popping.
 
-## Procedure
+## Common Failure Modes & Fixes
 
-1. Read the polished script and `STORYBOARD.md`; assign one visual objective per scene.
-2. Define `cast`, environments, props and boards; check every name against the engine lists.
-3. Author beats and camera shots in `episode.json`; derive `SCENE_PLAN.json` with
-   `python3 tools/make_scene_plan.py projects/<slug>`.
-4. Run `validate` and require `warnings: []`.
-5. Render full-resolution stills in **every** delivered aspect and actually look at them for
-   anatomy, occlusion, subtitle/board collisions, clipped limbs and safe areas.
-6. Draft-render to inspect cue-locked boards (`board_pop + ~1.6 s`) and camera cuts; stills do not
-   contain TTS timings (KI-003).
-7. Fix reusable defects in the engine and add a test in `tests/regression/run_all_tests.js`; do not
-   patch one video's spec to hide a shared bug.
+| Failure mode | Root cause | Fix |
+|---|---|---|
+| Moonwalking / skating feet | `walk` beat covers huge distance (`0.1 -> 0.9`) in `< 1.0s` | Give `walk` realistic travel time (`~2.5–4.0s` across mid-stage) or use `run` |
+| Character teleports at beat boundary | Next beat sets a different `x` from previous `walk`'s `to_x` | Omit redundant `x` on the following beat (engine inherits `prevX`) or match `to_x` exactly |
+| Floating seated character | `sit_chair` used with no `chair` prop in `props[]` | Place `{ "id": "ch1", "type": "chair", "x": 0.50 }` and set `"target_prop": "ch1"` |
+| Robotic frozen listener | Second character left in static pose during dialogue | Use `listen_nod`, `idle_breathe`, `arms_crossed`, or `react_surprise` with speaker gaze tracking |
+
+## Quality Checklist
+
+- [ ] Every `action` in `episode.json` is in `SUPPORTED_ACTIONS` (`validate` reports `warnings: []`).
+- [ ] Walk and run beats exhibit zero stance-foot sliding and natural counter-swinging arms.
+- [ ] Beat transitions blend smoothly with no single-frame limb snaps or horizontal teleports.
+- [ ] Characters read clearly on mute from body language and silhouette alone.
+
+## External References & Attribution
+
+- Williams, R. (2001), *The Animator's Survival Kit* — contact/down/passing/up walk-cycle mechanics and weight shifts (adapted in `walkMotion` / `runMotion`).
+- Thomas, F. & Johnston, O. (1981), *The Illusion of Life* — staging, pose-to-pose clarity, and secondary action.
+- Official Remotion Agent Skills (`https://github.com/remotion-dev/skills`) — deterministic frame-driven sequencing concepts; see `docs/decisions/ADR-0001-remotion-evaluation.md`.
+
+## Concrete Engine Recipes
+
+### Walk in -> sit on chair -> react (`episode.json`)
+
+```json
+{
+  "props": [
+    { "id": "study_chair", "type": "chair", "x": 0.52, "facing": "right" }
+  ],
+  "characters": [
+    {
+      "id": "alex",
+      "beats": [
+        { "start": 0.0, "end": 2.4, "action": "walk", "from_x": 0.24, "to_x": 0.48 },
+        { "start": 2.4, "end": 4.2, "action": "sit_down", "target_prop": "study_chair" },
+        { "start": 4.2, "end": 7.0, "action": "sit_chair", "target_prop": "study_chair" }
+      ]
+    }
+  ]
+}
+```

@@ -135,12 +135,47 @@ def _make_sfx_clip(sfx_type: str) -> np.ndarray:
         wood = np.sin(2.0 * np.pi * 420.0 * t) * np.exp(-75.0 * t)
         return ((click * 0.65 + wood * 0.35) * 0.09).astype(np.float32)
 
-    if sfx_type == "phone_buzz":
+    if sfx_type == "phone_vibrate":
         n = int(0.46 * SAMPLE_RATE)
         t = np.arange(n, dtype=np.float32) / SAMPLE_RATE
         gate = ((t < 0.18) | ((t > 0.25) & (t < 0.43))).astype(np.float32)
         hum = (np.sin(2.0 * np.pi * 142.0 * t) + 0.4 * np.sin(2.0 * np.pi * 284.0 * t)) * gate
         return (hum * 0.075).astype(np.float32)
+
+    if sfx_type == "phone_pickup":
+        n = int(0.075 * SAMPLE_RATE)
+        t = np.arange(n, dtype=np.float32) / SAMPLE_RATE
+        lift = np.sin(2.0 * np.pi * (540.0 + 380.0 * t * 8.0) * t) * np.exp(-62.0 * t)
+        brush = rng.normal(0.0, 0.22, n).astype(np.float32) * np.exp(-55.0 * t)
+        return ((lift * 0.65 + brush * 0.35) * 0.068).astype(np.float32)
+
+    if sfx_type == "phone_setdown":
+        n = int(0.11 * SAMPLE_RATE)
+        t = np.arange(n, dtype=np.float32) / SAMPLE_RATE
+        wood = np.sin(2.0 * np.pi * 175.0 * t) * np.exp(-42.0 * t)
+        glass = np.sin(2.0 * np.pi * 920.0 * t) * np.exp(-85.0 * t)
+        return ((wood * 0.72 + glass * 0.28) * 0.082).astype(np.float32)
+
+    if sfx_type in ("phone_tap", "keyboard_tap"):
+        n = int(0.038 * SAMPLE_RATE)
+        t = np.arange(n, dtype=np.float32) / SAMPLE_RATE
+        tap = np.sin(2.0 * np.pi * 1120.0 * t) * np.exp(-115.0 * t)
+        body = np.sin(2.0 * np.pi * 310.0 * t) * np.exp(-80.0 * t)
+        return ((tap * 0.52 + body * 0.48) * 0.052).astype(np.float32)
+
+    if sfx_type in ("door_open", "door_latch"):
+        n = int(0.28 * SAMPLE_RATE)
+        t = np.arange(n, dtype=np.float32) / SAMPLE_RATE
+        latch = np.sin(2.0 * np.pi * 980.0 * t) * np.exp(-75.0 * t) + 0.6 * np.sin(2.0 * np.pi * 420.0 * t) * np.exp(-52.0 * t)
+        swing = np.convolve(rng.normal(0.0, 0.25, n).astype(np.float32), np.hanning(24).astype(np.float32) / 12.0, mode="same") * np.sin(np.pi * t / 0.28)
+        return ((latch * 0.58 + swing * 0.42) * 0.088).astype(np.float32)
+
+    if sfx_type == "chair_sit":
+        n = int(0.16 * SAMPLE_RATE)
+        t = np.arange(n, dtype=np.float32) / SAMPLE_RATE
+        cush = np.sin(2.0 * np.pi * (96.0 * np.exp(-8.0 * t)) * t) * np.exp(-26.0 * t)
+        fabric = np.convolve(rng.normal(0.0, 0.22, n).astype(np.float32), np.ones(6, dtype=np.float32) / 6.0, mode="same") * np.exp(-22.0 * t)
+        return ((cush * 0.68 + fabric * 0.32) * 0.075).astype(np.float32)
 
     if sfx_type == "door_bell":
         n = int(0.85 * SAMPLE_RATE)

@@ -18,8 +18,19 @@ or a request to animate/storyboard/render/QA a scene. Also activate when a produ
 reveals that the shared system needs a reusable fix. A bare "Create a new video." already
 authorises the entire workflow below; do not ask the user to restate the master prompt.
 
-Consult the specialist skills alongside this one: [`scriptwriting`](../scriptwriting/SKILL.md),
+Consult the specialist skills alongside this one:
+[`character-design-and-rigging`](../character-design-and-rigging/SKILL.md),
 [`stickman-animation`](../stickman-animation/SKILL.md),
+[`physical-interactions-and-props`](../physical-interactions-and-props/SKILL.md),
+[`animation-principles`](../animation-principles/SKILL.md),
+[`cinematic-composition`](../cinematic-composition/SKILL.md),
+[`environment-and-asset-continuity`](../environment-and-asset-continuity/SKILL.md),
+[`subtitles-and-typography`](../subtitles-and-typography/SKILL.md),
+[`animation-scriptwriting`](../animation-scriptwriting/SKILL.md),
+[`youtube-storytelling-and-hooks`](../youtube-storytelling-and-hooks/SKILL.md),
+[`sound-design`](../sound-design/SKILL.md),
+[`animation-quality-assurance`](../animation-quality-assurance/SKILL.md),
+[`scriptwriting`](../scriptwriting/SKILL.md),
 [`voiceover-audio`](../voiceover-audio/SKILL.md),
 [`youtube-research`](../youtube-research/SKILL.md) and
 [`production-quality`](../production-quality/SKILL.md). The authoritative activation table is in
@@ -28,15 +39,16 @@ Consult the specialist skills alongside this one: [`scriptwriting`](../scriptwri
 ## Non-negotiable invariants
 
 1. `run_studio.py validate` must print `warnings: []` before any render.
-2. Render and **look at** full-resolution stills in every delivered aspect ratio before any full render.
-3. Film grain stays off. Never stretch artwork: 16:9 and 9:16 reframes are computed by the engine.
-4. `"status": "COMPLETE"` alone is not proof: read `"voiced"`, `"warnings"` and the validation report. `COMPLETE_SILENT` / exit code 3 means no narration was synthesized.
-5. Default narrator is Kokoro `am_michael`; `af_bella` is the preferred secondary voice. Never change this default silently.
-6. Polish scripts with [`docs/production/prompts/VOICEOVER_POLISH_PROMPT.md`](../../docs/production/prompts/VOICEOVER_POLISH_PROMPT.md) **byte-for-byte**. Never edit, weaken or replace that file.
-7. Every video gets a new, independent folder under `projects/`; never overwrite an old project or prompt.
-8. Report only numbers that came out of a file the run produced. Never claim a visual or audio check that was not performed.
-9. Fixes go into the shared engine, skills, templates, tests and docs — not into one video's spec.
-10. No channel name, watermark or branding; English narration unless explicitly requested otherwise.
+2. **Automatic Video Format & Duration Policy:** `< 60.0s` (`00:59` or less) renders natively in Portrait `9:16` (`1080x1920`) for YouTube Shorts; `>= 60.0s` (`01:00` or longer) renders in Landscape `16:9` (`1920x1080`) for YouTube long-form, unless explicitly overridden by the user. Re-evaluate after TTS synthesis if speech duration crosses `60.0s`.
+3. Render and **look at** full-resolution stills in every delivered aspect ratio before any full render.
+4. Film grain stays off, and the locked near-black minimal studio visual identity (`studio_config.json`) stays consistent across scenes. Never stretch artwork: 16:9 and 9:16 compositions are projected natively in vector space by the engine.
+5. `"status": "COMPLETE"` alone is not proof: read `"voiced"`, `"warnings"` and the validation report. `COMPLETE_SILENT` / exit code 3 means no narration was synthesized.
+6. Default narrator is Kokoro `am_michael`; `af_bella` is the preferred secondary voice. Never change this default silently.
+7. Polish scripts with [`docs/production/prompts/VOICEOVER_POLISH_PROMPT.md`](../../docs/production/prompts/VOICEOVER_POLISH_PROMPT.md) **byte-for-byte**. Never edit, weaken or replace that file.
+8. Completed final videos live cleanly in `videos/video-XXX/final.mp4` + `record.json` (with `videos/index.json`); temporary scratch workspaces stay in git-ignored `runtime/` (or per-run `projects/<slug>/` during active authoring). Never delete an existing completed video without verified replacement.
+9. Report only numbers that came out of a file the run produced. Never claim a visual or audio check that was not performed.
+10. Fixes go into the shared engine, skills, templates, tests and docs — not into one video's spec.
+11. No channel name, watermark or branding; English narration unless explicitly requested otherwise.
 
 ## 1. Inspect the repository architecture first
 

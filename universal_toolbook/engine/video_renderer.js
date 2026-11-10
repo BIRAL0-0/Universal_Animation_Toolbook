@@ -8,21 +8,32 @@ const { createCanvas, rawFrameBytes, rawPixelFormat } = require('./canvas_backen
 const { registerFonts } = require('./font');
 const { drawWallProp } = require('./impossible_wall');
 const { clamp, lerp, ease, eio, eo, ca, hexToRgb, mixRgb, rgbCss, BONES, drawFigure } = require('./character_rig');
-const { FLOOR_Y: FLOOR_Y_LANDSCAPE, drawEnvironment, drawSoftGlow } = require('./environments');
-// Mutable so a portrait frame can move the ground line down with the taller canvas.
-let FLOOR_Y = FLOOR_Y_LANDSCAPE;
-const FLOOR_RATIO = FLOOR_Y_LANDSCAPE / 1080;
+const { FLOOR_Y: FLOOR_Y_LANDSCAPE, drawEnvironment, drawSoftGlow, renderNearBlackBackground } = require('./environments');
+const FLOOR_Y = FLOOR_Y_LANDSCAPE;
+const BASE_W = 1920;
+const BASE_H = 1080;
 
-/** Re-target the authoring space (and the ground line) to a new frame size. */
-function setFrame(w, h) {
-  BASE_W = w;
-  BASE_H = h;
-  // Portrait keeps the ground line lower in the frame (more headroom above), landscape keeps the
-  // original 855/1080 ratio so every existing film renders byte-identically.
-  FLOOR_Y = h > w ? Math.round(h * 0.82) : Math.round(h * FLOOR_RATIO);
+/**
+ * Retained for API compatibility. World authoring space stays canonical (1920x1080, FLOOR_Y=855)
+ * while `renderEpisodeFrame` natively projects vector geometry and screen-space typography to any
+ * target output frame (`1920x1080`, `1080x1920`, `960x540`, `540x960`).
+ */
+function setFrame(_w, _h) {
+  return { width: BASE_W, height: BASE_H, floorY: FLOOR_Y };
 }
-const { drawWorldProp, drawWorldBoard, drawForegroundLayer } = require('./world_props_and_boards');
-const { evaluateCharacterState, resolveSceneInteractions } = require('./motion_library');
+const {
+  drawWorldProp,
+  drawWorldBoard,
+  drawForegroundLayer,
+  computePropAnchors,
+  drawHeldPhoneInHand,
+  drawHeldCupInHand,
+} = require('./world_props_and_boards');
+const {
+  evaluateCharacterState,
+  resolveSceneInteractions,
+  resolveScenePropInteractions,
+} = require('./motion_library');
 const { compileEpisode } = require('./episode');
 const {
   computePortraitViewport,
@@ -36,6 +47,8 @@ const {
   coverRect,
   fitCanvasFont,
   wrapWordsByWidth,
+  getLayoutConfig,
+  measureAndPlaceSubtitle,
 } = require('./render_layout');
 const {
   getParchmentBackdrop,
@@ -47,13 +60,6 @@ const {
   drawParchmentSubtitle,
   drawParchmentIntertitle,
 } = require('./parchment_ink_style');
-
-// Authoring space. Landscape by default; `setFrame()` swaps it to a portrait canvas (1080x1920)
-// for vertical/Shorts cuts. Every layout constant below is derived from these two numbers, so a
-// portrait render reframes instead of cropping.
-let BASE_W = 1920;
-let BASE_H = 1080;
-const portraitScratchByContext = new WeakMap();
 
 const SPLIT_FURNITURE_TYPES = new Set([
   'desk',
@@ -77,8 +83,9 @@ function resolveLayerZ(item, defaultZ = -4) {
   return defaultZ;
 }
 
-function drawHeldAccessoriesAndCallouts(g, state, joints, actor, sceneAccent, globalT = 0) {
+function drawHeldAccessoriesAndCallouts(g, state, joints, actor, sceneAccent, globalT = 0, parchmentMode = false) {
   const s = state.s || 1.0;
+  const useLegacyFlatProp = Boolean(parchmentMode || (actor && actor.style === 'ink_stick'));
 
   if (state.wetShoulder && joints && joints.sh) {
     const sx = joints.sh[0] - (state.flip ? -10 * s : 10 * s);
@@ -96,7 +103,7 @@ function drawHeldAccessoriesAndCallouts(g, state, joints, actor, sceneAccent, gl
     g.restore();
   }
 
-  if (state.heldCup) {
+  if (state.heldCup && useLegacyFlatProp) {
     const { x, y, tilt } = state.heldCup;
     g.save();
     g.translate(x, y);
@@ -229,7 +236,7 @@ function drawHeldAccessoriesAndCallouts(g, state, joints, actor, sceneAccent, gl
     g.restore();
   }
 
-  if (state.heldPhone) {
+  if (state.heldPhone && useLegacyFlatProp) {
     const { x, y, facing } = state.heldPhone;
     g.save();
     drawSoftGlow(g, x + facing * 8 * s, y - 8 * s, 58 * s, '#38bdf8', 0.38);
@@ -742,6 +749,81 @@ function drawScreenCaptionPass(g, sc, ts) {
   }
 }
 
+function projectPoint(matrix, wx, wy) {
+  return [
+    matrix.a * wx + matrix.c * wy + matrix.e,
+    matrix.b * wx + matrix.d * wy + matrix.f,
+  ];
+}
+
+function projectWorldRectToScreen(ctx, left, top, right, bottom) {
+  const m = ctx.getTransform();
+  const [x0, y0] = projectPoint(m, left, top);
+  const [x1, y1] = projectPoint(m, right, bottom);
+  return {
+    left: Math.min(x0, x1),
+    top: Math.min(y0, y1),
+    right: Math.max(x0, x1),
+    bottom: Math.max(y0, y1),
+  };
+}
+
+function recordCharacterScreenObstacles(ctx, joints, state, obstacles) {
+  if (!joints || !Array.isArray(obstacles)) return;
+  const s = state.s || 1.0;
+  if (joints.head) {
+    const hr = BONES.HEAD_R * s * 1.18;
+    obstacles.push({
+      kind: 'face',
+      ...projectWorldRectToScreen(ctx, joints.head[0] - hr, joints.head[1] - hr, joints.head[0] + hr, joints.head[1] + hr),
+    });
+  }
+  const handPts = [joints.hl, joints.hr, joints.al && joints.al[2], joints.ar && joints.ar[2]].filter(
+    (p) => Array.isArray(p) && p.length >= 2
+  );
+  for (const hp of handPts) {
+    const hPad = 14 * s;
+    obstacles.push({
+      kind: 'hand',
+      ...projectWorldRectToScreen(ctx, hp[0] - hPad, hp[1] - hPad, hp[0] + hPad, hp[1] + hPad),
+    });
+  }
+  if (state.heldPhone) {
+    const px = state.heldPhone.x ?? (joints.hl ? joints.hl[0] : state.x);
+    const py = state.heldPhone.y ?? (joints.hl ? joints.hl[1] : state.fy - 140 * s);
+    obstacles.push({
+      kind: 'prop',
+      ...projectWorldRectToScreen(ctx, px - 18 * s, py - 24 * s, px + 18 * s, py + 24 * s),
+    });
+  }
+  if (state.heldCup) {
+    const cx = state.heldCup.x ?? state.x;
+    const cy = state.heldCup.y ?? state.fy - 130 * s;
+    obstacles.push({
+      kind: 'prop',
+      ...projectWorldRectToScreen(ctx, cx - 14 * s, cy - 16 * s, cx + 14 * s, cy + 16 * s),
+    });
+  }
+  const pts = [joints.head, joints.hip, joints.sh, joints.hl, joints.hr, joints.fl, joints.fr]
+    .concat(joints.ll || [], joints.lr || [], joints.al || [], joints.ar || [])
+    .filter((p) => Array.isArray(p) && p.length >= 2);
+  if (pts.length > 0) {
+    const xs = pts.map((p) => p[0]);
+    const ys = pts.map((p) => p[1]);
+    const headPad = BONES.HEAD_R * s;
+    obstacles.push({
+      kind: 'body',
+      ...projectWorldRectToScreen(
+        ctx,
+        Math.min(...xs) - 14 * s,
+        Math.min(...ys) - headPad,
+        Math.max(...xs) + 14 * s,
+        Math.max(...ys) + 12 * s
+      ),
+    });
+  }
+}
+
 function renderCharacterPass(ctx, entry, drawMode, parchmentMode, activeLight, speechState, globalT) {
   const { actor, state } = entry;
   const actorIsSpeaking = Boolean(
@@ -766,6 +848,18 @@ function renderCharacterPass(ctx, entry, drawMode, parchmentMode, activeLight, s
     });
   }
 
+  const hasFrontHandProp = Boolean((state.heldPhone && state.heldPhone.inHand !== false) || state.heldCup);
+  const frontHandOverlay = hasFrontHandProp
+    ? (gHand, handInfo) => {
+        if (state.heldPhone && state.heldPhone.inHand !== false) {
+          drawHeldPhoneInHand(gHand, handInfo, state.heldPhone, globalT);
+        }
+        if (state.heldCup) {
+          drawHeldCupInHand(gHand, handInfo, state.heldCup, globalT);
+        }
+      }
+    : null;
+
   return drawFigure(ctx, state.x, state.fy, state.s, state.pose, state.flip, {
     id: actor.id,
     color: actor.color,
@@ -787,6 +881,7 @@ function renderCharacterPass(ctx, entry, drawMode, parchmentMode, activeLight, s
     nameTag: actor.showNameTag ? actor.name : null,
     turnScaleX: state.turnScaleX ?? 1.0,
     drawMode,
+    frontHandOverlay,
     faceAnim: {
       talkAmount: actorIsSpeaking ? speechState.talkAmount : 0,
       viseme: actorIsSpeaking ? (speechState.viseme || 'open') : 'open',
@@ -831,7 +926,14 @@ function pruneClippedSignpostLabels(prop, { zoom, focusX, panX, viewport, baseW 
   return result;
 }
 
-function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREEN_VIEWPORT, cameraZoomScale = 1) {
+function renderBaseEpisodeFrame(
+  ctx,
+  episode,
+  frameIdx,
+  viewport = DEFAULT_SCREEN_VIEWPORT,
+  cameraZoomScale = 1,
+  renderMeta = null
+) {
   const globalT = frameIdx / episode.fps;
   const frame = normalizeScreenViewport(viewport);
   const hit = findSceneAtFrame(episode, frameIdx);
@@ -846,6 +948,7 @@ function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREE
   const { zoom: sceneZoom, panX, focusX, focusY } = evaluateSceneCamera(sc, ts);
   const zoom = sceneZoom * Math.max(0.05, Number(cameraZoomScale) || 1);
   const speechState = evaluateSceneSpeechState(sc, ts);
+  const obstacles = renderMeta && Array.isArray(renderMeta.screenObstacles) ? renderMeta.screenObstacles : null;
 
   const parchmentMode = isParchmentScene(sc);
   if (parchmentMode) {
@@ -896,7 +999,7 @@ function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREE
     }
   }
 
-  // 2. Evaluate all active characters & solve paired 2-character interactions (`hug`, `handshake`, eye-lines)
+  // 2. Evaluate all active characters & solve paired 2-character + physical prop interactions
   const rawActiveChars = [];
   for (let cIdx = 0; cIdx < sc.characters.length; cIdx++) {
     const actor = sc.characters[cIdx];
@@ -921,15 +1024,31 @@ function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREE
     zoom, focusX, panX, viewport: portraitCrop, baseW: BASE_W,
   });
 
-  // 3. Build Unified Continuous Z-Depth Render Queue (Boards + Props + Vehicles + Split-Furniture + Characters)
-  const activeProps = [];
+  // 3. Synchronize physical prop anchors, parent switching, persistent moved coordinates, & door hinges
+  const rawVisibleProps = [];
+  const rawPropOrders = [];
   sc.props.forEach((prop, pIdx) => {
     if (prop.from_t !== undefined && ts < prop.from_t) return;
     if (prop.to_t !== undefined && ts > prop.to_t) return;
+    rawVisibleProps.push(prop);
+    rawPropOrders.push(pIdx);
+  });
+  const resolvedProps = resolveScenePropInteractions(
+    rawVisibleProps,
+    rawActiveChars,
+    sc.characters,
+    ts,
+    sc.duration,
+    BASE_W,
+    FLOOR_Y
+  );
+
+  const activeProps = [];
+  resolvedProps.forEach((prop, idx) => {
     activeProps.push({
       prop: safeProp(prop),
       z: resolveLayerZ(prop, -4),
-      order: pIdx,
+      order: rawPropOrders[idx],
       splitOwners: [],
     });
   });
@@ -1043,6 +1162,9 @@ function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREE
   renderQueue.sort((a, b) => (a.z !== b.z ? a.z - b.z : a.order - b.order));
 
   // 4. Execute Unified Depth-Sorted World Render Queue
+  const KEY_PROP_OBSTACLE_TYPES = new Set([
+    'phone', 'laptop', 'computer', 'cup', 'books', 'briefcase', 'treasure_chest',
+  ]);
   for (const item of renderQueue) {
     if (item.kind === 'board') {
       ctx.save();
@@ -1053,9 +1175,28 @@ function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREE
         ctx.scale(portraitTransform.scale, portraitTransform.scale);
       }
       drawWorldBoard(ctx, item.board, ts, sc.duration, BASE_W, FLOOR_Y, activeLight);
+      if (obstacles) {
+        const bx = (item.board.x ?? 0.56) * BASE_W;
+        const by = (item.board.y ?? 0.34) * BASE_H;
+        const bw = item.board.width ?? 480;
+        const bh = item.board.height ?? 270;
+        obstacles.push({
+          kind: 'text',
+          ...projectWorldRectToScreen(ctx, bx - bw * 0.5, by - bh * 0.5, bx + bw * 0.5, by + bh * 0.5),
+        });
+      }
       ctx.restore();
     } else if (item.kind === 'prop') {
       drawWorldProp(ctx, item.prop, BASE_W, FLOOR_Y, globalT, activeLight, ts, 'full');
+      if (obstacles && item.prop && !item.prop._attachedToActor && KEY_PROP_OBSTACLE_TYPES.has(item.prop.type)) {
+        const anc = computePropAnchors(item.prop, BASE_W, FLOOR_Y);
+        if (anc && anc.bounds) {
+          obstacles.push({
+            kind: 'prop',
+            ...projectWorldRectToScreen(ctx, anc.bounds.left, anc.bounds.top, anc.bounds.right, anc.bounds.bottom),
+          });
+        }
+      }
     } else if (item.kind === 'split_group') {
       // Multi-actor two-plane split-furniture occlusion: chairs behind -> all seated legs/torsos -> table/desk front -> heads & arms!
       drawWorldProp(ctx, item.prop, BASE_W, FLOOR_Y, globalT, activeLight, ts, 'back_only');
@@ -1065,7 +1206,8 @@ function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREE
       drawWorldProp(ctx, item.prop, BASE_W, FLOOR_Y, globalT, activeLight, ts, 'front_only');
       for (const m of item.members) {
         const joints = renderCharacterPass(ctx, m, 'upper_front', parchmentMode, activeLight, speechState, globalT);
-        drawHeldAccessoriesAndCallouts(ctx, m.state, joints, m.actor, activeLight, globalT);
+        drawHeldAccessoriesAndCallouts(ctx, m.state, joints, m.actor, activeLight, globalT, parchmentMode);
+        recordCharacterScreenObstacles(ctx, joints, m.state, obstacles);
       }
     } else if (item.kind === 'hug_group') {
       // 3-pass interleaved embrace: back arms -> bodies & heads -> front arms wrapped across each other's backs!
@@ -1079,7 +1221,9 @@ function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREE
       }
       for (const m of item.members) {
         const jFront = renderCharacterPass(ctx, m, 'front_arm_only', parchmentMode, activeLight, speechState, globalT);
-        drawHeldAccessoriesAndCallouts(ctx, m.state, jFront || jointMap.get(m), m.actor, activeLight, globalT);
+        const resolvedJoints = jFront || jointMap.get(m);
+        drawHeldAccessoriesAndCallouts(ctx, m.state, resolvedJoints, m.actor, activeLight, globalT, parchmentMode);
+        recordCharacterScreenObstacles(ctx, resolvedJoints, m.state, obstacles);
       }
     } else if (item.kind === 'char') {
       const cEntry = item.entry;
@@ -1108,10 +1252,12 @@ function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREE
         renderCharacterPass(ctx, cEntry, 'lower_and_torso', parchmentMode, activeLight, speechState, globalT);
         drawWorldProp(ctx, cEntry.splitProp, BASE_W, FLOOR_Y, globalT, activeLight, ts, 'front_only');
         const joints = renderCharacterPass(ctx, cEntry, 'upper_front', parchmentMode, activeLight, speechState, globalT);
-        drawHeldAccessoriesAndCallouts(ctx, state, joints, actor, activeLight, globalT);
+        drawHeldAccessoriesAndCallouts(ctx, state, joints, actor, activeLight, globalT, parchmentMode);
+        recordCharacterScreenObstacles(ctx, joints, state, obstacles);
       } else {
         const joints = renderCharacterPass(ctx, cEntry, 'full', parchmentMode, activeLight, speechState, globalT);
-        drawHeldAccessoriesAndCallouts(ctx, state, joints, actor, activeLight, globalT);
+        drawHeldAccessoriesAndCallouts(ctx, state, joints, actor, activeLight, globalT, parchmentMode);
+        recordCharacterScreenObstacles(ctx, joints, state, obstacles);
       }
     }
   }
@@ -1231,6 +1377,13 @@ function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREE
   if (sc.chapter) {
     if (parchmentMode) {
       drawParchmentHeadline(ctx, sc.chapter, ts, frame);
+    } else if (renderMeta && renderMeta.deferSubtitlesToScreen) {
+      renderMeta.pendingChapter = {
+        title: sc.chapter,
+        ts,
+        accentColor: activeLight,
+        channelName: episode.channelName,
+      };
     } else {
       drawChapterRibbon(ctx, sc.chapter, ts, activeLight, episode.channelName, frame);
     }
@@ -1245,15 +1398,15 @@ function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREE
 
   if (parchmentMode) {
     drawParchmentSubtitle(ctx, sc.subtitles, ts, episode.subtitlesMode, frame);
+  } else if (renderMeta && renderMeta.deferSubtitlesToScreen) {
+    renderMeta.pendingSubtitle = {
+      subtitles: sc.subtitles,
+      ts,
+      accentColor: activeLight,
+      mode: episode.subtitlesMode,
+    };
   } else {
     drawCinemaSubtitle(ctx, sc.subtitles, ts, activeLight, episode.subtitlesMode, frame);
-  }
-
-  if (sc.cutToBlackAt !== null && sc.cutToBlackAt !== undefined && ts >= sc.cutToBlackAt) {
-    ctx.save();
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(0, 0, BASE_W, BASE_H);
-    ctx.restore();
   }
 
   if (sc.intertitle && ts >= (sc.intertitle.start_at ?? 0)) {
@@ -1263,7 +1416,7 @@ function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREE
       const iu = ease(clamp((ts - (sc.intertitle.start_at ?? 0)) / 0.85));
       ctx.save();
       ctx.fillStyle = `rgba(4, 7, 14, ${ca(iu * (sc.intertitle.backdrop_alpha ?? 0.92))})`;
-      ctx.fillRect(0, 0, BASE_W, BASE_H);
+      ctx.fillRect(-1200, -1200, BASE_W + 2400, BASE_H + 2400);
       ctx.globalAlpha = iu;
       const lines = sc.intertitle.lines || [];
       const lh = 56;
@@ -1286,7 +1439,7 @@ function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREE
   if (sc.windBlackoutAt !== null && sc.windBlackoutAt !== undefined && ts >= sc.windBlackoutAt) {
     const wu = ease(clamp((ts - sc.windBlackoutAt) / Math.max(0.25, sc.duration - sc.windBlackoutAt)));
     ctx.save();
-    const rMax = Math.hypot(BASE_W, BASE_H) * 1.08;
+    const rMax = Math.hypot(BASE_W, BASE_H) * 2.2;
     const rad = lerp(60, rMax, wu);
     ctx.fillStyle = '#03050a';
     ctx.beginPath();
@@ -1295,28 +1448,278 @@ function renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport = DEFAULT_SCREE
     ctx.restore();
   }
 
-  if (sc.fadeToBlack && sc.duration - ts < 1.8) {
-    const f = 1 - ease((sc.duration - ts) / 1.8);
-    ctx.fillStyle = parchmentMode ? `rgba(235, 218, 188, ${ca(f)})` : `rgba(0, 0, 0, ${ca(f)})`;
-    ctx.fillRect(0, 0, BASE_W, BASE_H);
-  }
-
   const prevSc = sc.index > 0 ? episode.scenes[sc.index - 1] : null;
   const nextSc = sc.index < episode.scenes.length - 1 ? episode.scenes[sc.index + 1] : null;
   const envChangedFromPrev = !prevSc || prevSc.settingSignature !== sc.settingSignature;
   const envChangesToNext = !nextSc || nextSc.settingSignature !== sc.settingSignature;
   const transRgb = parchmentMode ? '243, 229, 202' : '5, 8, 16';
 
-  if (envChangedFromPrev && ts < 0.32) {
-    const fade = 1 - ease(ts / 0.32);
-    ctx.fillStyle = `rgba(${transRgb}, ${ca(fade * (sc.index === 0 ? 0.85 : 0.48))})`;
-    ctx.fillRect(0, 0, BASE_W, BASE_H);
-  } else if (envChangesToNext && sc.duration - ts < 0.28) {
-    const fade = 1 - ease((sc.duration - ts) / 0.28);
-    ctx.fillStyle = `rgba(${transRgb}, ${ca(fade * 0.48)})`;
-    ctx.fillRect(0, 0, BASE_W, BASE_H);
+  if (renderMeta) {
+    renderMeta.postOverlays = {
+      cutToBlack: Boolean(sc.cutToBlackAt !== null && sc.cutToBlackAt !== undefined && ts >= sc.cutToBlackAt),
+      fadeToBlackAlpha: sc.fadeToBlack && sc.duration - ts < 1.8 ? 1 - ease((sc.duration - ts) / 1.8) : 0,
+      fadeToBlackRgb: parchmentMode ? '235, 218, 188' : '0, 0, 0',
+      transAlpha: envChangedFromPrev && ts < 0.32
+        ? (1 - ease(ts / 0.32)) * (sc.index === 0 ? 0.85 : 0.48)
+        : (envChangesToNext && sc.duration - ts < 0.28 ? (1 - ease((sc.duration - ts) / 0.28)) * 0.48 : 0),
+      transRgb,
+    };
+  } else {
+    if (sc.cutToBlackAt !== null && sc.cutToBlackAt !== undefined && ts >= sc.cutToBlackAt) {
+      ctx.save();
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, BASE_W, BASE_H);
+      ctx.restore();
+    }
+    if (sc.fadeToBlack && sc.duration - ts < 1.8) {
+      const f = 1 - ease((sc.duration - ts) / 1.8);
+      ctx.fillStyle = parchmentMode ? `rgba(235, 218, 188, ${ca(f)})` : `rgba(0, 0, 0, ${ca(f)})`;
+      ctx.fillRect(0, 0, BASE_W, BASE_H);
+    }
+    if (envChangedFromPrev && ts < 0.32) {
+      const fade = 1 - ease(ts / 0.32);
+      ctx.fillStyle = `rgba(${transRgb}, ${ca(fade * (sc.index === 0 ? 0.85 : 0.48))})`;
+      ctx.fillRect(0, 0, BASE_W, BASE_H);
+    } else if (envChangesToNext && sc.duration - ts < 0.28) {
+      const fade = 1 - ease((sc.duration - ts) / 0.28);
+      ctx.fillStyle = `rgba(${transRgb}, ${ca(fade * 0.48)})`;
+      ctx.fillRect(0, 0, BASE_W, BASE_H);
+    }
+  }
+}
+
+function drawNativeScreenChapterRibbon(g, outW, outH, pendingChapter, obstacles = []) {
+  if (!pendingChapter || !pendingChapter.title || pendingChapter.ts > 4.2) return null;
+  const { title: rawTitle, ts, accentColor, channelName } = pendingChapter;
+  const enter = eo(clamp(ts / 0.45));
+  const exit = ts > 3.5 ? 1 - ease(clamp((ts - 3.5) / 0.7)) : 1;
+  const vis = enter * exit;
+  if (vis <= 0.01) return null;
+
+  const layout = getLayoutConfig(outW, outH);
+  const s = layout.scale;
+  const title = String(rawTitle).toUpperCase();
+  const channel = String(channelName || '').toUpperCase();
+  const hasChannel = Boolean(channel.trim());
+  const maxTextW = Math.max(120 * s, (layout.headerSafeRegion.right - layout.headerSafeRegion.left) - 64 * s);
+
+  g.save();
+  g.setTransform(1, 0, 0, 1, 0, 0);
+  const titleSize = fitCanvasFont(g, title, {
+    family: 'PopB',
+    baseSize: Math.max(14, Math.round(23 * s)),
+    minSize: Math.max(11, Math.round(14 * s)),
+    maxWidth: maxTextW,
+  });
+  const titleW = g.measureText(title).width;
+  let subW = 0;
+  let subSize = Math.max(9, Math.round(13 * s));
+  if (hasChannel) {
+    subSize = fitCanvasFont(g, channel, {
+      family: 'PopR',
+      weight: '600',
+      baseSize: subSize,
+      minSize: Math.max(8, Math.round(10 * s)),
+      maxWidth: maxTextW,
+    });
+    subW = g.measureText(channel).width;
   }
 
+  const boxW = Math.min(
+    layout.headerSafeRegion.right - layout.headerSafeRegion.left,
+    Math.max(titleW, subW) + 50 * s
+  );
+  const boxH = (hasChannel ? 66 : 48) * s;
+  const x = lerp(-boxW * 0.4, layout.headerSafeRegion.left, enter);
+  const y = layout.headerSafeRegion.top;
+
+  g.globalAlpha = vis;
+  g.fillStyle = 'rgba(8, 12, 22, 0.88)';
+  g.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+  g.lineWidth = Math.max(1, 1.5 * s);
+  g.beginPath();
+  g.roundRect(x, y, boxW, boxH, 11 * s);
+  g.fill();
+  g.stroke();
+
+  g.fillStyle = accentColor || '#cbd5e1';
+  g.beginPath();
+  g.roundRect(x, y, 6.5 * s, boxH, [11 * s, 0, 0, 11 * s]);
+  g.fill();
+
+  if (hasChannel) {
+    g.font = `600 ${subSize}px PopR`;
+    g.fillStyle = accentColor || '#cbd5e1';
+    g.textAlign = 'left';
+    g.textBaseline = 'top';
+    g.fillText(channel, x + 20 * s, y + 11 * s, Math.max(1, boxW - 30 * s));
+
+    g.font = `bold ${titleSize}px PopB`;
+    g.fillStyle = '#f8fafc';
+    g.fillText(title, x + 20 * s, y + 30 * s, Math.max(1, boxW - 30 * s));
+  } else {
+    g.font = `bold ${titleSize}px PopB`;
+    g.fillStyle = '#f8fafc';
+    g.textAlign = 'left';
+    g.textBaseline = 'middle';
+    g.fillText(title, x + 20 * s, y + boxH * 0.5 + 1 * s, Math.max(1, boxW - 30 * s));
+  }
+  g.restore();
+
+  const rect = { left: x, top: y, right: x + boxW, bottom: y + boxH };
+  if (Array.isArray(obstacles)) {
+    obstacles.push({ kind: 'text', ...rect });
+  }
+  return rect;
+}
+
+function drawNativeScreenSubtitle(g, outW, outH, pending, obstacles = []) {
+  if (!pending || pending.mode === 'off' || !Array.isArray(pending.subtitles) || pending.subtitles.length === 0) {
+    return null;
+  }
+  const { subtitles, ts, accentColor } = pending;
+  let active = null;
+  for (const sub of subtitles) {
+    if (ts >= sub.start && ts <= sub.end) {
+      active = sub;
+      break;
+    }
+  }
+  if (!active) return null;
+
+  const fadeIn = clamp((ts - active.start) / 0.10);
+  const fadeOut = clamp((active.end - ts) / 0.11);
+  const alpha = Math.min(fadeIn, fadeOut);
+  if (alpha <= 0.02) return null;
+
+  const layout = getLayoutConfig(outW, outH);
+  const tokensForMeasure = active.tokens.map((tok) => ({
+    ...tok,
+    word: tok.isSpeakerLabel ? `${tok.raw} ` : tok.raw,
+  }));
+  const placement = measureAndPlaceSubtitle(g, tokensForMeasure, layout, obstacles, outW * 0.5);
+  if (!placement) return null;
+
+  const s = layout.scale;
+  const baseAccentRgb = hexToRgb(accentColor || '#cbd5e1');
+  const brightAccentCss = rgbCss(mixRgb(baseAccentRgb, [255, 255, 255], 0.32));
+  const goldRgb = [251, 191, 36];
+
+  g.save();
+  g.setTransform(1, 0, 0, 1, 0, 0);
+  g.globalAlpha = alpha;
+  g.font = `bold ${placement.fontSize}px PopB`;
+  g.textBaseline = 'middle';
+
+  // Restrained frosted near-black subtitle pill inside safe margins
+  g.fillStyle = 'rgba(7, 10, 18, 0.90)';
+  g.strokeStyle = 'rgba(148, 163, 184, 0.26)';
+  g.lineWidth = Math.max(1, 1.5 * s);
+  g.beginPath();
+  g.roundRect(placement.boxX, placement.boxY, placement.boxW, placement.boxH, placement.radius);
+  g.fill();
+  g.stroke();
+
+  let globalActiveLine = -1;
+  let globalActiveIdx = -1;
+  let globalStrength = 0;
+
+  placement.lines.forEach((line, lIdx) => {
+    line.items.forEach((it, idx) => {
+      if (it.isSpeakerLabel || it.tStart === undefined || it.tEnd === undefined) return;
+      if (ts >= it.tStart - 0.025 && ts <= it.tEnd + 0.03) {
+        const span = Math.max(0.06, it.tEnd - it.tStart);
+        const atk = clamp((ts - (it.tStart - 0.025)) / Math.min(0.055, span * 0.45));
+        const rel = clamp(((it.tEnd + 0.03) - ts) / Math.min(0.06, span * 0.50));
+        const str = Math.min(atk, rel);
+        if (str >= globalStrength) {
+          globalStrength = str;
+          globalActiveLine = lIdx;
+          globalActiveIdx = idx;
+        }
+      }
+    });
+  });
+
+  g.textAlign = 'left';
+  placement.lines.forEach((line, lIdx) => {
+    let x = placement.centerX - line.width * 0.5;
+    const y = placement.centerY - ((placement.lines.length - 1) * placement.lineHeight) * 0.5 + lIdx * placement.lineHeight + 1 * s;
+
+    line.items.forEach((it, idx) => {
+      const hasTiming = it.tStart !== undefined && it.tEnd !== undefined;
+      const isSpokenNow = lIdx === globalActiveLine && idx === globalActiveIdx && globalStrength > 0.04;
+      const alreadySpoken = !hasTiming || it.isSpeakerLabel || ts > it.tEnd;
+
+      if (it.isSpeakerLabel) {
+        g.save();
+        g.fillStyle = `rgba(${baseAccentRgb[0]}, ${baseAccentRgb[1]}, ${baseAccentRgb[2]}, 0.16)`;
+        g.strokeStyle = `rgba(${baseAccentRgb[0]}, ${baseAccentRgb[1]}, ${baseAccentRgb[2]}, 0.58)`;
+        g.lineWidth = Math.max(1, 1.3 * s);
+        g.beginPath();
+        g.roundRect(x - 5 * s, y - 16 * s, it.width, 32 * s, 7 * s);
+        g.fill();
+        g.stroke();
+        g.fillStyle = brightAccentCss;
+        g.fillText(it.raw, x, y);
+        g.restore();
+      } else if (isSpokenNow) {
+        const midX = x + it.width * 0.5;
+        const liftY = -1.4 * s * globalStrength;
+        const textOffX = it.highlight ? 3 * s : 0;
+        g.save();
+        if (it.highlight) {
+          drawSoftGlow(g, midX, y + liftY, Math.max(38 * s, it.width * 0.72), '#fbbf24', 0.28 * globalStrength);
+          g.fillStyle = `rgba(${goldRgb[0]}, ${goldRgb[1]}, ${goldRgb[2]}, ${ca(0.22 * globalStrength)})`;
+          g.strokeStyle = `rgba(${goldRgb[0]}, ${goldRgb[1]}, ${goldRgb[2]}, ${ca(0.88 * globalStrength)})`;
+          g.lineWidth = Math.max(1, 1.5 * s);
+          g.beginPath();
+          g.roundRect(x - 2 * s, y - 18 * s + liftY, it.width + 4 * s, 36 * s, 8 * s);
+          g.fill();
+          g.stroke();
+          g.fillStyle = 'rgba(0, 0, 0, 0.72)';
+          g.fillText(it.raw, x + textOffX + 1 * s, y + liftY + 1.5 * s);
+          g.fillStyle = '#fef08a';
+          g.fillText(it.raw, x + textOffX, y + liftY);
+        } else {
+          drawSoftGlow(g, midX, y + liftY, Math.max(32 * s, it.width * 0.60), '#f8fafc', 0.12 * globalStrength);
+          g.fillStyle = 'rgba(0, 0, 0, 0.72)';
+          g.fillText(it.raw, x + 1 * s, y + liftY + 1.5 * s);
+          g.fillStyle = '#ffffff';
+          g.fillText(it.raw, x, y + liftY);
+        }
+        g.restore();
+      } else if (alreadySpoken) {
+        const textOffX = it.highlight ? 3 * s : 0;
+        g.save();
+        g.fillStyle = 'rgba(0, 0, 0, 0.60)';
+        g.fillText(it.raw, x + textOffX + 1 * s, y + 1.5 * s);
+        if (it.highlight) {
+          g.fillStyle = '#fde047';
+          g.fillText(it.raw, x + textOffX, y);
+          g.fillStyle = 'rgba(251, 191, 36, 0.76)';
+          g.beginPath();
+          g.roundRect(x + textOffX, y + 16 * s, it.width - 6 * s, Math.max(1.5, 2.5 * s), 1.2 * s);
+          g.fill();
+        } else {
+          g.fillStyle = '#f8fafc';
+          g.fillText(it.raw, x, y);
+        }
+        g.restore();
+      } else {
+        const textOffX = it.highlight ? 3 * s : 0;
+        g.fillStyle = it.highlight
+          ? 'rgba(253, 224, 71, 0.76)'
+          : 'rgba(203, 213, 225, 0.64)';
+        g.fillText(it.raw, x + textOffX, y);
+      }
+
+      x += it.width + (idx < line.items.length - 1 ? placement.spaceW : 0);
+    });
+  });
+
+  g.restore();
+  return placement;
 }
 
 function gTextCenter(ctx, txt, x, y) {
@@ -1325,7 +1728,7 @@ function gTextCenter(ctx, txt, x, y) {
   ctx.fillText(txt, x, y);
 }
 
-function clearContext(ctx, width, height, color = '#03050a') {
+function clearContext(ctx, width, height, color = '#07090e') {
   ctx.save();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, width, height);
@@ -1334,52 +1737,21 @@ function clearContext(ctx, width, height, color = '#03050a') {
   ctx.restore();
 }
 
-function getPortraitScratch(ctx) {
-  let scratch = portraitScratchByContext.get(ctx);
-  if (!scratch) {
-    const canvas = createCanvas(BASE_W, BASE_H);
-    scratch = { canvas, context: canvas.getContext('2d') };
-    scratch.context.quality = 'best';
-    scratch.context.patternQuality = 'best';
-    portraitScratchByContext.set(ctx, scratch);
-  }
-  return scratch;
-}
-
-function compositePortraitFrame(ctx, sourceCanvas, viewport, outW, outH) {
+function applyNativePostOverlays(ctx, width, height, postOverlays) {
+  if (!postOverlays) return;
   ctx.save();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.fillStyle = '#030611';
-  ctx.fillRect(0, 0, outW, outH);
-
-  // A subdued, uniformly scaled scene fill keeps any contain-space atmospheric rather than black.
-  // The crisp foreground below is never stretched: both source axes use the same scale factor.
-  const cover = coverRect(BASE_W, BASE_H, outW, outH);
-  const { x: coverX, y: coverY, width: coverW, height: coverH } = cover;
-  ctx.save();
-  ctx.globalAlpha = 0.34;
-  try { ctx.filter = 'blur(24px)'; } catch (_) { /* older canvas backends ignore filter */ }
-  ctx.drawImage(sourceCanvas, coverX, coverY, coverW, coverH);
-  try { ctx.filter = 'none'; } catch (_) { /* older canvas backends ignore filter */ }
-  ctx.restore();
-  ctx.fillStyle = 'rgba(3, 7, 18, 0.74)';
-  ctx.fillRect(0, 0, outW, outH);
-
-  const foreground = containRect(viewport.width, BASE_H, outW, outH);
-  const { x: drawX, y: drawY, width: drawW, height: drawH } = foreground;
-  ctx.imageSmoothingEnabled = true;
-  try { ctx.imageSmoothingQuality = 'high'; } catch (_) { /* backend-dependent */ }
-  if (drawH < outH - 1) {
-    ctx.save();
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.48)';
-    ctx.shadowBlur = 22;
-    ctx.drawImage(sourceCanvas, viewport.left, 0, viewport.width, BASE_H, drawX, drawY, drawW, drawH);
-    ctx.restore();
-    ctx.strokeStyle = 'rgba(226, 232, 240, 0.12)';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(drawX + 1, drawY + 1, Math.max(1, drawW - 2), Math.max(1, drawH - 2));
-  } else {
-    ctx.drawImage(sourceCanvas, viewport.left, 0, viewport.width, BASE_H, drawX, drawY, drawW, drawH);
+  if (postOverlays.cutToBlack) {
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, width, height);
+  }
+  if (postOverlays.fadeToBlackAlpha > 0.001) {
+    ctx.fillStyle = `rgba(${postOverlays.fadeToBlackRgb}, ${ca(postOverlays.fadeToBlackAlpha)})`;
+    ctx.fillRect(0, 0, width, height);
+  }
+  if (postOverlays.transAlpha > 0.001) {
+    ctx.fillStyle = `rgba(${postOverlays.transRgb}, ${ca(postOverlays.transAlpha)})`;
+    ctx.fillRect(0, 0, width, height);
   }
   ctx.restore();
 }
@@ -1390,7 +1762,18 @@ function renderEpisodeFrame(ctx, outW, outH, episode, frameIdx) {
   }
   const width = Math.round(outW);
   const height = Math.round(outH);
-  clearContext(ctx, width, height);
+  clearContext(ctx, width, height, '#07090e');
+
+  const renderMeta = {
+    outW: width,
+    outH: height,
+    isPortrait: height > width,
+    screenObstacles: [],
+    deferSubtitlesToScreen: true,
+    pendingChapter: null,
+    pendingSubtitle: null,
+    postOverlays: null,
+  };
 
   if (height > width) {
     const viewport = computePortraitViewport(episode, frameIdx, width, height, {
@@ -1401,14 +1784,38 @@ function renderEpisodeFrame(ctx, outW, outH, episode, frameIdx) {
       evaluateSceneCamera,
       evaluateSceneSpeechState,
     });
-    const scratch = getPortraitScratch(ctx);
-    scratch.context.setTransform(1, 0, 0, 1, 0, 0);
-    clearContext(scratch.context, BASE_W, BASE_H, '#03050a');
-    scratch.context.save();
-    renderBaseEpisodeFrame(scratch.context, episode, frameIdx, viewport, viewport.cameraZoomScale || 1);
-    scratch.context.restore();
-    compositePortraitFrame(ctx, scratch.canvas, viewport, width, height);
-    return { orientation: 'portrait', width, height, viewport };
+    const hit = findSceneAtFrame(episode, frameIdx);
+    if (hit.type === 'scene' && isParchmentScene(hit.scene)) {
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.drawImage(getParchmentBackdrop(width, height), 0, 0);
+      ctx.restore();
+    } else {
+      renderNearBlackBackground(ctx, width, height, Math.round(height * 0.725));
+    }
+
+    // Native full-bleed vector projection onto 9:16 canvas (zero bitmap crop, zero blur bars)
+    const stageScale = width / Math.max(1, viewport.width);
+    const targetFloorScreenY = Math.round(height * 0.725);
+    const stageOffsetX = -stageScale * viewport.left;
+    const stageOffsetY = targetFloorScreenY - stageScale * FLOOR_Y;
+
+    ctx.save();
+    ctx.setTransform(stageScale, 0, 0, stageScale, stageOffsetX, stageOffsetY);
+    renderBaseEpisodeFrame(ctx, episode, frameIdx, viewport, viewport.cameraZoomScale || 1, renderMeta);
+    ctx.restore();
+
+    drawNativeScreenChapterRibbon(ctx, width, height, renderMeta.pendingChapter, renderMeta.screenObstacles);
+    const subtitleLayout = drawNativeScreenSubtitle(ctx, width, height, renderMeta.pendingSubtitle, renderMeta.screenObstacles);
+    applyNativePostOverlays(ctx, width, height, renderMeta.postOverlays);
+    return {
+      orientation: 'portrait',
+      width,
+      height,
+      viewport,
+      subtitleLayout,
+      screenObstacles: renderMeta.screenObstacles,
+    };
   }
 
   const landscape = containRect(BASE_W, BASE_H, width, height);
@@ -1421,9 +1828,20 @@ function renderEpisodeFrame(ctx, outW, outH, episode, frameIdx) {
   });
   ctx.save();
   ctx.setTransform(landscape.scale, 0, 0, landscape.scale, landscape.x, landscape.y);
-  renderBaseEpisodeFrame(ctx, episode, frameIdx, DEFAULT_SCREEN_VIEWPORT, cameraZoomScale);
+  renderBaseEpisodeFrame(ctx, episode, frameIdx, DEFAULT_SCREEN_VIEWPORT, cameraZoomScale, renderMeta);
   ctx.restore();
-  return { orientation: 'landscape', width, height, ...landscape };
+
+  drawNativeScreenChapterRibbon(ctx, width, height, renderMeta.pendingChapter, renderMeta.screenObstacles);
+  const subtitleLayout = drawNativeScreenSubtitle(ctx, width, height, renderMeta.pendingSubtitle, renderMeta.screenObstacles);
+  applyNativePostOverlays(ctx, width, height, renderMeta.postOverlays);
+  return {
+    orientation: 'landscape',
+    width,
+    height,
+    ...landscape,
+    subtitleLayout,
+    screenObstacles: renderMeta.screenObstacles,
+  };
 }
 
 async function renderVideoSegment({

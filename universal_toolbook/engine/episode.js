@@ -4,8 +4,14 @@ const fs = require('fs');
 const path = require('path');
 const { PALETTES } = require('./character_rig');
 const { ENVIRONMENTS } = require('./environments');
-const { SUPPORTED_ACTIONS, extractCharacterFootsteps } = require('./motion_library');
-const { SUPPORTED_PROPS, SUPPORTED_BOARDS } = require('./world_props_and_boards');
+const {
+  SUPPORTED_ACTIONS,
+  extractCharacterFootsteps,
+  evaluateCharacterState,
+  resolveScenePropInteractions,
+} = require('./motion_library');
+const { SUPPORTED_PROPS, SUPPORTED_BOARDS, CANONICAL_ASSET_LIBRARY } = require('./world_props_and_boards');
+const { selectVideoFormatForDuration } = require('./render_layout');
 
 const DEFAULT_CONFIG_PATH = path.join(__dirname, '..', 'config', 'studio_config.json');
 
@@ -339,22 +345,28 @@ function buildSubtitlesFromLineTimings(lineTimings, accentWords = []) {
       const spokenSlice = slice.filter(
         (t) => !t.isSpeakerLabel && !t.isPunctuationOnly && Number.isFinite(t.tStart) && Number.isFinite(t.tEnd)
       );
-      const cueStart = spokenSlice.length > 0 ? Math.max(0, spokenSlice[0].tStart - 0.04) : Number(item.start);
-      const rawCueEnd = spokenSlice.length > 0 ? spokenSlice[spokenSlice.length - 1].tEnd : Number(item.end);
-      const cueEnd = cIdx === chunkRanges.length - 1 ? rawCueEnd + 0.18 : rawCueEnd + 0.06;
+      const lineSpeechEnd = Number(item.end);
+      const cueStart = spokenSlice.length > 0 ? Math.max(0, spokenSlice[0].tStart - 0.03) : Number(item.start);
+      const rawCueEnd = spokenSlice.length > 0 ? spokenSlice[spokenSlice.length - 1].tEnd : lineSpeechEnd;
+      // Strict speech-synced cutoff: NEVER linger past the end of the voiced audio clip (`item.end`)!
+      const cueEnd = Math.min(
+        lineSpeechEnd,
+        cIdx === chunkRanges.length - 1 ? rawCueEnd + 0.04 : rawCueEnd + 0.03
+      );
       subs.push({
         text: cr.display,
         speaker,
+        lineEnd: lineSpeechEnd,
         start: +cueStart.toFixed(3),
-        end: +Math.max(cueStart + 0.22, cueEnd).toFixed(3),
+        end: +Math.min(lineSpeechEnd, Math.max(cueStart + 0.16, cueEnd)).toFixed(3),
         tokens: slice,
       });
     });
   }
   for (let i = 0; i < subs.length - 1; i++) {
     const gap = subs[i + 1].start - subs[i].end;
-    if (gap < 0 || (gap <= 0.38 && subs[i].speaker === subs[i + 1].speaker)) {
-      subs[i].end = +subs[i + 1].start.toFixed(3);
+    if (gap < 0 || (gap <= 0.14 && subs[i].speaker === subs[i + 1].speaker && subs[i].end < subs[i].lineEnd)) {
+      subs[i].end = +Math.min(subs[i].lineEnd, subs[i + 1].start).toFixed(3);
     }
   }
   return subs;
@@ -375,7 +387,10 @@ function buildCinemaSubtitles(narration, sceneDur, accentWords = [], wordTimings
       const toks = text.split(' ').map((tok) => ({ raw: tok, highlight: false }));
       return markAccentPhrases(toks, accentWords);
     });
-    const aligned = mapDisplayTokensToWordTimings(allToks, wordTimings, 0, sceneDur, false);
+    const lastWordEnd = Number.isFinite(Number(wordTimings[wordTimings.length - 1]?.end))
+      ? Math.min(sceneDur, Number(wordTimings[wordTimings.length - 1].end))
+      : sceneDur;
+    const aligned = mapDisplayTokensToWordTimings(allToks, wordTimings, 0, lastWordEnd, false);
     let wCursor = 0;
     const built = chunks.map((text, idx) => {
       const cw = text.split(' ');
@@ -384,32 +399,37 @@ function buildCinemaSubtitles(narration, sceneDur, accentWords = [], wordTimings
       const spokenSlice = slice.filter(
         (t) => !t.isSpeakerLabel && !t.isPunctuationOnly && Number.isFinite(t.tStart) && Number.isFinite(t.tEnd)
       );
-      const s0 = spokenSlice.length > 0 ? Math.max(0, spokenSlice[0].tStart - 0.04) : 0;
-      const e0 = spokenSlice.length > 0 ? spokenSlice[spokenSlice.length - 1].tEnd : sceneDur;
+      const s0 = spokenSlice.length > 0 ? Math.max(0, spokenSlice[0].tStart - 0.03) : 0;
+      const e0 = spokenSlice.length > 0 ? spokenSlice[spokenSlice.length - 1].tEnd : lastWordEnd;
+      // Never linger past `lastWordEnd`
+      const endCapped = Math.min(lastWordEnd, e0 + (idx === chunks.length - 1 ? 0.04 : 0.03));
       return {
         text,
         start: +s0.toFixed(3),
-        end: +Math.min(sceneDur, e0 + (idx === chunks.length - 1 ? 0.18 : 0.06)).toFixed(3),
+        end: +Math.min(sceneDur, Math.max(s0 + 0.16, endCapped)).toFixed(3),
         tokens: slice,
       };
     });
     for (let i = 0; i < built.length - 1; i++) {
       const gap = built[i + 1].start - built[i].end;
-      if (gap < 0 || gap <= 0.38) built[i].end = +built[i + 1].start.toFixed(3);
+      if (gap < 0 || gap <= 0.14) built[i].end = +Math.min(lastWordEnd, built[i + 1].start).toFixed(3);
     }
     return built;
   }
 
-  const leadIn = Math.min(0.20, sceneDur * 0.04);
-  const tailOut = Math.min(0.28, sceneDur * 0.06);
-  const avail = Math.max(0.4, sceneDur - leadIn - tailOut);
+  const leadIn = Math.min(0.16, sceneDur * 0.04);
+  // Estimate realistic spoken window (~2.65 words/sec) so subtitles disappear when speech finishes,
+  // rather than lingering across silent visual tail beats!
+  const estimatedSpeechSec = Math.max(0.55, words.length / 2.65);
+  const tailGuard = Math.min(0.32, sceneDur * 0.08);
+  const avail = Math.max(0.4, Math.min(sceneDur - leadIn - tailGuard, estimatedSpeechSec));
   const totalChars = Math.max(1, chunks.reduce((acc, c) => acc + c.length + 4, 0));
 
   let cursor = leadIn;
-  return chunks.map((text, idx) => {
+  return chunks.map((text) => {
     const share = ((text.length + 4) / totalChars) * avail;
     const start = cursor;
-    const end = idx === chunks.length - 1 ? sceneDur - tailOut * 0.5 : cursor + share;
+    const end = cursor + share;
     cursor = end;
     const rawToks = markAccentPhrases(
       text.split(' ').map((tok) => ({ raw: tok, highlight: false })),
@@ -472,6 +492,22 @@ function compileEpisode(spec, options = {}) {
   const seenCastIds = new Set();
   const chapters = [];
   let cursorSec = 0;
+
+  // Canonical Episode Asset & Prop Continuity Registry:
+  // Preserves prop identity, scale, facing, coordinates, and moved/attached/opened state across cuts!
+  const propRegistry = {};
+  const continuityEvents = [];
+  if (spec.assets && typeof spec.assets === 'object') {
+    for (const [assetId, def] of Object.entries(spec.assets)) {
+      if (!def || typeof def !== 'object') continue;
+      propRegistry[assetId] = {
+        ...def,
+        id: assetId,
+        scale: def.scale ?? (CANONICAL_ASSET_LIBRARY[def.type]?.defaultScale ?? 1.0),
+      };
+    }
+  }
+  let prevLocationId = null;
 
   const compiledScenes = spec.scenes.map((sc, idx) => {
     const id = sc.id || `S${String(idx + 1).padStart(2, '0')}`;
@@ -585,13 +621,88 @@ function compileEpisode(spec, options = {}) {
     const PROP_ALIASES = {
       staircase: 'stairs',
     };
-    const props = (sc.props || []).map((rawP) => {
-      const p = rawP && rawP.type && PROP_ALIASES[rawP.type] ? { ...rawP, type: PROP_ALIASES[rawP.type] } : rawP;
+    const sceneLocationId = sc.location_id || sc.room_id || null;
+    const rawPropsList = Array.isArray(sc.props) ? sc.props.map((p) => ({ ...p })) : [];
+
+    // If situated inside a named `location_id` (and `inherit_props !== false`),
+    // automatically carry forward persistent canonical props from `propRegistry` for that location
+    // across both adjacent shots AND cross-cuts!
+    if (sceneLocationId && sc.inherit_props !== false) {
+      for (const [regId, regProp] of Object.entries(propRegistry)) {
+        if (regProp._locationId !== sceneLocationId) continue;
+        if (!rawPropsList.some((rp) => rp && rp.id === regId)) {
+          rawPropsList.push({ ...regProp, _inherited: true });
+          continuityEvents.push({ sceneId: id, propId: regId, event: 'inherited_across_cut' });
+        }
+      }
+    }
+
+    const props = rawPropsList.map((rawP) => {
+      let p = rawP && rawP.type && PROP_ALIASES[rawP.type] ? { ...rawP, type: PROP_ALIASES[rawP.type] } : { ...rawP };
+      if (p.id && propRegistry[p.id]) {
+        const reg = propRegistry[p.id];
+        const allowOverride = Boolean(p.allow_override || sc.allow_prop_override);
+        const keepMovedX = reg._movedByInteraction && !allowOverride && (rawP._inherited || rawP.x === undefined || rawP.x === reg._initialX);
+        const keepMovedElev = reg._movedByInteraction && !allowOverride && (rawP._inherited || rawP.elevation === undefined || rawP.elevation === reg._initialElevation);
+        const keepOpenState = reg._openedByInteraction && !allowOverride && (rawP._inherited || rawP.open_amount === undefined);
+        // Hydrate identity & persisted moved/opened/attached state from canonical registry
+        p = {
+          ...reg,
+          ...p,
+          type: allowOverride ? (p.type || reg.type) : reg.type,
+          scale: allowOverride && p.scale !== undefined ? p.scale : (reg.scale ?? p.scale ?? 1.0),
+          facing: allowOverride && p.facing !== undefined ? p.facing : (reg.facing ?? p.facing),
+          x: keepMovedX ? reg.x : (p.x !== undefined ? p.x : reg.x),
+          elevation: keepMovedElev ? reg.elevation : (p.elevation !== undefined ? p.elevation : reg.elevation),
+          open_amount: keepOpenState ? reg.open_amount : (p.open_amount !== undefined ? p.open_amount : reg.open_amount),
+          _attachedToActor: p.detached ? null : (p._attachedToActor ?? reg._attachedToActor ?? null),
+        };
+      }
       if (p.type && !SUPPORTED_PROPS.includes(p.type)) {
         warnings.push(`[${id}] Unknown prop type "${p.type}".`);
       }
+      if (p.id) {
+        const prevReg = propRegistry[p.id];
+        propRegistry[p.id] = {
+          ...p,
+          _initialX: prevReg ? prevReg._initialX : p.x,
+          _initialElevation: prevReg ? prevReg._initialElevation : p.elevation,
+          _locationId: sceneLocationId || prevReg?._locationId || null,
+        };
+      }
       return p;
     });
+
+    // Evaluate deterministic end-of-scene interaction state so moved props, opened doors,
+    // and held objects persist accurately into subsequent shots!
+    if (props.some((p) => p && p.id) && characters.length > 0) {
+      const endTs = Math.max(0, dur - 0.001);
+      const endChars = characters
+        .filter((actor) => (actor.from_t === undefined || endTs >= actor.from_t) && (actor.to_t === undefined || endTs <= actor.to_t))
+        .map((actor) => ({
+          actor,
+          state: evaluateCharacterState(actor, endTs, dur, startSec + endTs, 1920, 855, null),
+        }));
+      const endProps = resolveScenePropInteractions(props, endChars, characters, endTs, dur, 1920, 855);
+      for (const ep of endProps) {
+        if (ep && ep.id && propRegistry[ep.id]) {
+          const prev = propRegistry[ep.id];
+          const moved = (ep.x !== undefined && Math.abs((ep.x ?? 0) - (prev.x ?? 0)) > 1e-6) ||
+                        (ep.elevation !== undefined && Math.abs((ep.elevation ?? 0) - (prev.elevation ?? 0)) > 1e-6);
+          const opened = ep.open_amount !== undefined && Math.abs((ep.open_amount ?? 0) - (prev.open_amount ?? 0)) > 1e-6;
+          propRegistry[ep.id] = {
+            ...prev,
+            x: ep.x,
+            elevation: ep.elevation,
+            open_amount: ep.open_amount,
+            _movedByInteraction: Boolean(prev._movedByInteraction || moved),
+            _openedByInteraction: Boolean(prev._openedByInteraction || opened),
+            _attachedToActor: ep._attachedToActor || null,
+          };
+        }
+      }
+    }
+    prevLocationId = sceneLocationId;
 
     // Auto-bind `stairs` geometry (`stair_scale`, `stairs_x`, `steps`, `dir`) onto `climb_stairs` / `descend_stairs` beats
     const stairsProp = props.find((p) => p && p.type === 'stairs');
@@ -778,6 +889,29 @@ function compileEpisode(spec, options = {}) {
     for (const ch of sc.characters) {
       const steps = extractCharacterFootsteps(ch, sc.startSec, sc.duration, W);
       soundEvents.push(...steps);
+
+      // Subtle automatic foley synchronized to physical object & furniture contact
+      if (sc.auto_interaction_sfx !== false) {
+        const beatList = Array.isArray(ch.beats)
+          ? ch.beats
+          : [{ start: 0, end: sc.duration, action: ch.action || 'idle_stand' }];
+        for (const bt of beatList) {
+          if (!bt) continue;
+          const b0 = Number(bt.start ?? 0);
+          const b1 = Number(bt.end ?? sc.duration);
+          const span = Math.max(0.2, b1 - b0);
+          const pan = ((Number(bt.x ?? ch.x ?? 0.5) - 0.5) * 1.1);
+          if (bt.action === 'pick_up_phone') {
+            soundEvents.push({ t: +(sc.startSec + b0 + span * 0.44).toFixed(3), type: 'phone_pickup', pan });
+          } else if (bt.action === 'put_down_phone') {
+            soundEvents.push({ t: +(sc.startSec + b0 + span * 0.42).toFixed(3), type: 'phone_setdown', pan });
+          } else if (bt.action === 'open_door') {
+            soundEvents.push({ t: +(sc.startSec + b0 + span * 0.34).toFixed(3), type: 'door_open', pan });
+          } else if (bt.action === 'sit_down') {
+            soundEvents.push({ t: +(sc.startSec + b0 + span * 0.62).toFixed(3), type: 'chair_sit', pan });
+          }
+        }
+      }
     }
 
     for (const cue of sc.sfx) {
@@ -794,6 +928,21 @@ function compileEpisode(spec, options = {}) {
   }
   soundEvents.sort((a, b) => a.t - b.t);
 
+  const explicitFormat =
+    options.explicitFormat ||
+    spec.explicit_format ||
+    spec.video_format_override ||
+    (spec.format_policy && spec.format_policy.overridden ? spec.format_policy.format : null) ||
+    null;
+  const formatPolicy = selectVideoFormatForDuration(totalDuration, {
+    explicitFormat,
+    draft: Boolean(options.draft),
+  });
+  const notices = [];
+  if (formatPolicy.overridden && formatPolicy.overrideNotice) {
+    notices.push(formatPolicy.overrideNotice);
+  }
+
   return {
     title: spec.title || 'Animated Story Episode',
     thesis: spec.thesis || '',
@@ -805,6 +954,10 @@ function compileEpisode(spec, options = {}) {
     height: H,
     totalDuration,
     totalFrames,
+    formatPolicy,
+    notices,
+    propRegistry,
+    continuityEvents,
     cast,
     chapters,
     scenes: compiledScenes,

@@ -16,16 +16,15 @@ video."* — is bound by these rules.
 | Location | Sole responsibility | Must not contain |
 |---|---|---|
 | [`universal_toolbook/`](universal_toolbook/README.md) | reusable, copyable production kit: CLI, JS renderer, Python audio/TTS, config, assets, schema, templates and kit-internal process docs | repository-level dev tools, project-specific files, generated renders |
-| [`skills/`](skills/README.md) | permanent agent knowledge and procedures (6 skills) | runtime code, duplicate rules, copied framework documentation |
+| [`skills/`](skills/README.md) | permanent agent knowledge and procedures (16 specialist skills) | runtime code, duplicate rules, copied framework documentation |
 | [`AGENTS.md`](AGENTS.md) | rules, architecture boundaries, skill activation map | full procedures (link to skills instead) |
 | [`templates/`](templates/README.md) | one master production prompt + project skeleton | per-video prompts |
-| [`projects/`](projects/) | one independent folder per finished video, never overwritten | shared engine code |
+| [`videos/`](videos/index.json) | completed durable video outputs (`videos/video-XXX/final.mp4` + `record.json` + `videos/index.json`); active authoring may stage in `projects/` or `runtime/` | shared engine code or temporary chunk caches |
 | [`docs/`](docs/architecture/SYSTEM_OVERVIEW.md) | technical documentation: architecture, setup, development, production detail, troubleshooting, decisions | generated reports or per-video logs |
 | [`examples/`](examples/) | complete, validated reference episode specs | generated media |
 | [`tests/`](tests/README.md) | regression protection and fixtures | production output |
 | [`tools/`](tools/README.md) | repository maintenance, validation and QA tools | engine runtime dependencies |
 | [`scripts/`](scripts/README.md) | developer entry points: project creation, fresh-checkout verification | engine runtime dependencies |
-| [`deliverables/`](deliverables/README.md) | finished distributable packages, benchmark evidence and durable text results | temporary renders |
 | [`runtime/`](runtime/README.md) | **git-ignored** temporary workspace: `cache/`, `work/`, `renders/`, `previews/`, `logs/` | anything tracked except `runtime/README.md` |
 
 **Boundary rule:** `universal_toolbook/` must remain copyable on its own. It resolves its own
@@ -50,10 +49,19 @@ A bare video request activates the **full workflow**, without the user restating
 |---|---|---|
 | Any video creation, animation, render or pipeline repair | **animation-production** (primary) + all relevant specialists | [`skills/animation-production/SKILL.md`](skills/animation-production/SKILL.md) |
 | Discover a YouTube topic, research, fact-check | youtube-research | [`skills/youtube-research/SKILL.md`](skills/youtube-research/SKILL.md) |
+| Design opening hooks, retention pacing, Shorts vs long-form narrative arcs | youtube-storytelling-and-hooks | [`skills/youtube-storytelling-and-hooks/SKILL.md`](skills/youtube-storytelling-and-hooks/SKILL.md) |
 | Create or improve a script, polish narration | scriptwriting | [`skills/scriptwriting/SKILL.md`](skills/scriptwriting/SKILL.md) |
-| Design stickman characters, poses, actions, boards, camera | stickman-animation | [`skills/stickman-animation/SKILL.md`](skills/stickman-animation/SKILL.md) |
-| Animate scenes, define timing and transitions | animation-production | [`skills/animation-production/SKILL.md`](skills/animation-production/SKILL.md) |
-| Generate narration and mix audio | voiceover-audio | [`skills/voiceover-audio/SKILL.md`](skills/voiceover-audio/SKILL.md) |
+| Author visually staged animated scripts (`dialogue[]`, `pause_after`, `accent_words`, scene choreography) | animation-scriptwriting | [`skills/animation-scriptwriting/SKILL.md`](skills/animation-scriptwriting/SKILL.md) |
+| Canonical single-colour character silhouette, capsule rig anatomy, seamless joints | character-design-and-rigging | [`skills/character-design-and-rigging/SKILL.md`](skills/character-design-and-rigging/SKILL.md) |
+| Character locomotion, posture, expressions, action choreography | stickman-animation | [`skills/stickman-animation/SKILL.md`](skills/stickman-animation/SKILL.md) |
+| Phone, desk, table, chair, cup, laptop, book and door contact/parent-switching interactions | physical-interactions-and-props | [`skills/physical-interactions-and-props/SKILL.md`](skills/physical-interactions-and-props/SKILL.md) |
+| Classical 12 animation principles, easing, anticipation, follow-through, beat handoff | animation-principles | [`skills/animation-principles/SKILL.md`](skills/animation-principles/SKILL.md) |
+| 16:9 & 9:16 shot framing, locked near-black stage, safe zones, camera transitions | cinematic-composition | [`skills/cinematic-composition/SKILL.md`](skills/cinematic-composition/SKILL.md) |
+| Persistent room geography, canonical prop IDs, cross-cut state continuity | environment-and-asset-continuity | [`skills/environment-and-asset-continuity/SKILL.md`](skills/environment-and-asset-continuity/SKILL.md) |
+| Collision-aware subtitle layout, highlight spacing, speech-end cutoff, unclipped headers | subtitles-and-typography | [`skills/subtitles-and-typography/SKILL.md`](skills/subtitles-and-typography/SKILL.md) |
+| Kokoro voiceover synthesis, word-level retiming and narration setup | voiceover-audio | [`skills/voiceover-audio/SKILL.md`](skills/voiceover-audio/SKILL.md) |
+| Stereo foley contacts, BGM selection/ducking, loudness normalization | sound-design | [`skills/sound-design/SKILL.md`](skills/sound-design/SKILL.md) |
+| Automated 17-scenario visual regression suite + frame-by-frame visual inspection | animation-quality-assurance | [`skills/animation-quality-assurance/SKILL.md`](skills/animation-quality-assurance/SKILL.md) |
 | Render and inspect MP4, QA sign-off, error recovery | production-quality | [`skills/production-quality/SKILL.md`](skills/production-quality/SKILL.md) |
 
 Read `AGENTS.md` → primary skill → relevant specialist skills → the linked technical docs. Do not
@@ -82,8 +90,11 @@ not need to repeat the master prompt or walk through stages.
 
 Decide ordinary implementation decisions without interrupting the user (tool, scene split, render
 method, sound design, encoder). Ask only when an essential creative decision cannot be inferred or
-proceeding would change the user's meaning. Format default: requested format, else 9:16 for
-short-form and 16:9 for long-form.
+proceeding would change the user's meaning. **Automatic Video Format & Duration Policy:** unless
+the user explicitly overrides the format, any video strictly shorter than `60.0s` (`00:59` or less)
+automatically renders in **Portrait `9:16` (`1080x1920`)** for YouTube Shorts, and any video `60.0s`
+or longer (`01:00` or more) automatically renders in **Landscape `16:9` (`1920x1080`)** for YouTube
+long-form (re-evaluated automatically after TTS synthesis if speech duration crosses `60.0s`).
 
 **Stages (order is mandatory):** input analysis · research · fact-checking · title/concept ·
 script · save original + polished · **save the video-specific prompt before production** ·

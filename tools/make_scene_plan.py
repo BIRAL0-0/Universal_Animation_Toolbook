@@ -23,10 +23,22 @@ from pathlib import Path
 
 
 def plan_from_spec(spec: dict) -> dict:
+    planned_dur = sum(float(sc.get("duration") or 8.0) for sc in spec.get("scenes", []))
+    explicit_fmt = spec.get("video_format_override") or spec.get("explicit_format")
+    auto_fmt = "9:16" if planned_dur < 60.0 else "16:9"
+    chosen_fmt = explicit_fmt if explicit_fmt in ("9:16", "16:9") else auto_fmt
+    selected_format = spec.get("selected_video_format") or {
+        "format": chosen_fmt,
+        "master_resolution": [1080, 1920] if chosen_fmt == "9:16" else [1920, 1080],
+        "planned_duration_sec": round(planned_dur, 3),
+        "auto_recommended_format": auto_fmt,
+        "overridden": bool(explicit_fmt and explicit_fmt in ("9:16", "16:9") and explicit_fmt != auto_fmt),
+    }
     out = {
         "title": spec.get("title"),
         "thesis": spec.get("thesis"),
         "style": spec.get("style"),
+        "selected_video_format": selected_format,
         "bgm_mode": spec.get("bgm"),
         "voices": spec.get("voices", {}),
         "cast": {cid: {k: v for k, v in prof.items()} for cid, prof in spec.get("cast", {}).items()},

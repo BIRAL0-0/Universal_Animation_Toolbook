@@ -449,6 +449,9 @@ assert.strictEqual(
   'Landscape/full-width renders must remain byte-identical',
 );
 
+const { runVisualRegressionSuite } = require('./visual_regression_suite');
+const visualSuiteSummary = runVisualRegressionSuite({ renderSheets: false });
+
 console.log(
   JSON.stringify(
     {
@@ -464,6 +467,8 @@ console.log(
       multiword_subtitle_glow_verified: true,
       bone_stretch_max_px: 0.0,
       stance_foot_slip_px: 0.0,
+      visual_regression_scenarios: visualSuiteSummary.scenarios_verified,
+      format_policy_verified: visualSuiteSummary.format_policy_verified,
     },
     null,
     2
