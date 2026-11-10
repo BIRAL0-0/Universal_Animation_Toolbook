@@ -111,8 +111,12 @@ def test_historical_project_archives_remain_complete():
     assert len(video_slugs) >= 4, video_slugs
     assert "videos/index.json" in tracked_set
     for vslug in video_slugs:
-        assert f"videos/{vslug}/final.mp4" in tracked_set, vslug
+        # every completed video is a full publishing package, not an anonymous MP4
+        assert f"videos/{vslug}/{vslug}.mp4" in tracked_set, vslug
+        assert f"videos/{vslug}/script.md" in tracked_set, vslug
+        assert f"videos/{vslug}/thumbnail.jpg" in tracked_set, vslug
         assert f"videos/{vslug}/record.json" in tracked_set, vslug
+        assert f"videos/{vslug}/final.mp4" not in tracked_set, vslug
     slugs = sorted({rel.split("/")[1] for rel in tracked
                     if rel.startswith("projects/") and rel.count("/") >= 2})
     for slug in slugs:

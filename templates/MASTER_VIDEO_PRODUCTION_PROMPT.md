@@ -167,6 +167,32 @@ QA must still open the **closing** master frames after the last camera push: a p
 off-screen in a still can become visible there. Landscape masters use the full stage and are
 unchanged by that guard.
 
+## 9b. Publishing package (required for delivery)
+
+A finished master is not a deliverable until it is a complete YouTube publishing package:
+
+```
+videos/{{SLUG}}/
+├── {{SLUG}}.mp4     # master filename == directory slug; never final.mp4
+├── script.md        # final approved script — retained permanently
+├── thumbnail.jpg    # designed (not a frame grab): 1280x720 16:9 or 1080x1920 9:16, <2 MB
+└── record.json      # title, full description, pinned comment, technical metadata
+```
+
+Plus one compact entry in `videos/index.json` (id, title, slug, topic, summary, key angle,
+duration, format, produced date, directory, content fingerprint).
+
+- **Title** — curiosity + clarity, natural to read, true to the film, no clickbait, no keyword
+  stuffing, no emoji. Generate candidates internally; only the selected title is kept.
+- **Thumbnail** — concept distinct from an ordinary scene, strong silhouette, readable at phone
+  size, minimal text only when it improves the concept. Inspect the generated image, re-check
+  spelling, re-check at small size, regenerate if wrong. It must represent the film truthfully.
+- **Description** — written for viewers: opening, premise, reason to watch, real search terms,
+  hashtags, CTA, verified music/asset credits. No invented links or unverified credits.
+- **Pinned comment** — one genuine question tied to the film's central idea, inviting real
+  experience. Never "like, subscribe and comment".
+- **Gate:** `python3 tools/validate_publishing.py` must print `PASS`.
+
 ## 10. Quality requirements — all must actually pass, with evidence
 
 1. `validate` reports `warnings: []` before any render.
@@ -182,6 +208,7 @@ unchanged by that guard.
 8. Frames extracted and **actually looked at** at ≥6 timestamps; findings in `QA_REPORT.md`.
 9. Mute-legibility test: the extracted frame sequence tells the story without audio.
 10. `tools/validate_structure.py`, `tests/` and CI-relevant checks pass.
+11. `tools/validate_publishing.py` prints `PASS` for the delivered package.
 
 **Never claim a visual or audio check passed if it was not performed.** Full gate:
 [`skills/production-quality/SKILL.md`](../skills/production-quality/SKILL.md).

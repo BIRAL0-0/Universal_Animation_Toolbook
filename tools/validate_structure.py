@@ -19,6 +19,8 @@ Usage: python3 tools/validate_structure.py [--json]
 """
 from __future__ import annotations
 
+import re
+
 import argparse
 import json
 import re
@@ -110,6 +112,7 @@ TRACKED_BAD = (
     "runtime/cache/", "runtime/work/", "runtime/renders/", "runtime/previews/",
     "runtime/logs/", "output/", "work/", "cache/", ".work_",
 )
+SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 PROTECTED_PROMPT_HASH = "aeef0850347ae43535379981d2cd9f4a90e747b7de63b6bb5bd93c31518dc1ea"
 LEGACY_PATHS = (
     "docs/production-workflow/", "outputs/", "downloads/",
@@ -203,15 +206,21 @@ def problems() -> list[str]:
         if f"skills/{name}/SKILL.md" not in agents:
             p.append(f"AGENTS.md activation map does not reference skills/{name}/SKILL.md")
 
-    # Durable completed video folders must each ship final.mp4 + record.json.
+    # Durable completed videos are publishing packages:
+    #   videos/<slug>/<slug>.mp4 + script.md + thumbnail.jpg + record.json
     video_dirs = sorted({rel.split("/")[1] for rel in tracked
                          if rel.startswith("videos/") and rel.count("/") >= 2})
     if not video_dirs:
         p.append("videos/ contains no completed video archives")
     for vslug in video_dirs:
-        for req in ("final.mp4", "record.json"):
+        if not SLUG_RE.match(vslug):
+            p.append(f"video archive directory is not a descriptive slug: videos/{vslug}/")
+        for req in (f"{vslug}.mp4", "script.md", "thumbnail.jpg", "record.json"):
             if f"videos/{vslug}/{req}" not in tracked_set:
                 p.append(f"video archive {vslug} missing required file: {req}")
+        for banned in ("final.mp4", "output.mp4", "video1.mp4", "movie.mp4"):
+            if f"videos/{vslug}/{banned}" in tracked_set:
+                p.append(f"video archive {vslug} uses generic filename: {banned}")
 
     # Project structure: source/QA files, not just a media dump.
     project_dirs = sorted({rel.split("/")[1] for rel in tracked

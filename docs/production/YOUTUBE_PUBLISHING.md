@@ -1,11 +1,42 @@
 # YOUTUBE PUBLISHING — Stage 13
 
-**Status: PARTIAL.** Preparation is tool-supported; **platform publishing is not
-implemented** — there is no YouTube Data API integration, no upload step, and nothing in
-this repository will publish, push, or upload without the user doing it explicitly. This is
-a standing rule from the agent contract
-([`AGENTS.md`](../../AGENTS.md),
-ASK-FIRST tier: "publishing, pushing, or overwriting a previous deliverable").
+**Status: PACKAGE COMPLETE, UPLOAD MANUAL.** Every completed video ships as a full publishing
+package under `videos/<slug>/` and is validated by `tools/validate_publishing.py`. Platform
+publishing is still **not automated** — there is no YouTube Data API integration and nothing in
+this repository will upload without the user doing it explicitly. This is a standing rule from the
+agent contract ([`AGENTS.md`](../../AGENTS.md), ASK-FIRST tier: "publishing, pushing, or
+overwriting a previous deliverable").
+
+---
+
+## 13.0 The publishing package (NORMATIVE)
+
+Every completed video is one directory, and nothing else:
+
+```
+videos/<slug>/
+├── <slug>.mp4        # master; filename == directory slug (never final.mp4)
+├── script.md         # final approved script, retained permanently
+├── thumbnail.jpg     # designed thumbnail: 1280x720 (16:9) or 1080x1920 (9:16), <2 MB
+└── record.json       # title, full description, pinned comment, technical metadata
+```
+
+plus one compact entry in `videos/index.json`. The authoritative retention rule is
+[`universal_toolbook/process/09_LEAN_REPOSITORY_POLICY.md`](../../universal_toolbook/process/09_LEAN_REPOSITORY_POLICY.md).
+
+**Gate:** `python3 tools/validate_publishing.py` must print `PASS` before a video may be called
+complete. It verifies the MP4 plays and matches the recorded duration and dimensions, that
+`script.md` matches the record, that the thumbnail exists at the right size and under 2 MB, that
+`record.json` carries every required field, that the index entry and content fingerprint are
+current, and that no temporary file is sitting in the package.
+
+**`record.json`** (required keys): `id`, `slug`, `title`, `filename`, `script`, `thumbnail`,
+`youtube_description`, `pinned_comment`, `format` (`portrait`|`landscape`), `aspect_ratio`
+(`9:16`|`16:9`), `resolution` (`1080x1920`|`1920x1080`), `duration_seconds`, `created_at`, `topic`,
+`summary`, `key_angle`, `tags`, `production_version`, `content_fingerprint`.
+
+**Format policy.** `<60.0s` → 9:16 `1080x1920` Shorts. `>=60.0s` → 16:9 `1920x1080` long-form.
+Approved exceptions are recorded in `record.json` and reported as `note` lines by the validator.
 
 ---
 
@@ -29,7 +60,8 @@ runtime/renders/player.html`; and the SVG storyboard as the last resort.
 
 ## 13.2 What the agent prepares (PROCESS-STANDARD)
 
-After the Stage 12 sign-off, produce `deliverables/<film>/publishing.md` with:
+After the Stage 12 sign-off, the publishing package above is written **and** a
+`deliverables/<film>/publishing.md` hand-off note is produced with:
 
 ```markdown
 # <Film> — publishing kit
@@ -76,7 +108,7 @@ is a Stage 12 finding, not a Stage 13 fix.
 | --- | --- | --- |
 | YouTube upload automation | YouTube Data API OAuth client, upload + metadata call behind an explicit per-video approval token, credentials stored outside the repo | F3 in [`../development/ROADMAP.md`](../development/ROADMAP.md) |
 | SRT/VTT caption file | Small exporter from the compiled word timings (the data already exists in `episode_retimed.json` / `vo_manifest.json`) | F4 |
-| 1280×720 thumbnail pipeline | Extend `tools/make_poster.js` with a thumbnail layout mode (title placement for small sizes, max-2MB check) | F5 |
+| Thumbnail *concept* automation | `thumbnail.jpg` is designed and inspected per video (concept → generate → inspect → small-size check → resize). A reusable generator script would remove the manual step | F5 |
 | Analytics feedback loop | Read back performance, append to the film's output folder, feed Stage 1/2 research | F1 |
 
 None of these is required for a working pipeline today — the manual upload is the

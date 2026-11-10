@@ -1,0 +1,47 @@
+{
+  "id": "video-003",
+  "slug": "the-first-plank",
+  "title": "The First Plank",
+  "filename": "the-first-plank.mp4",
+  "script": "script.md",
+  "thumbnail": "thumbnail.jpg",
+  "youtube_description": "Mira stands at the near edge of a bridge where every plank is drawn except one — the first one.\n\nThe far side is perfect. Every distant beam inked in, every plank beyond the gap numbered and finished. She has spent the morning on it, and she calls that planning, because planning feels like movement. The first plank is still blank, and the page has not moved.\n\nSo she tries the louder answers first: jump harder, wait longer, draw more planks. None of them are a place to put your foot.\n\nThis two-minute story is about the specific kind of stuck that looks like productivity — the version where the plan is beautiful and the first step is missing. It is not a speech about motivation. It is just what happens when someone finally writes one small, embarrassing, finishable line and stands on it.\n\nWatch to the end for the question she turns around and asks you.\n\n#procrastination #firststep #overthinking #focus #motivation #stickman #discipline\n\nIf this one landed, subscribe — new short stories about the small mechanics of getting started.\n\nMusic: \"Where Stars Fall\" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Where_Stars_Fall.oga\nMusic: \"Softly\" by Loyalty Freak Music (CC0 1.0 Public Domain) — https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_06_-_Softly.ogg\nMusic: \"The Distant Sun (Monomyth 1)\" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Distant_Sun_(Monomyth_1).oga\nMusic: \"The Restoration (Monomyth 12)\" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Restoration_(Monomyth_12).oga",
+  "pinned_comment": "Mira can draw the entire far end of the bridge but not the first plank — and that is the most accurate description of procrastination in the story. The far end is never the hard part. The blank plank at her feet is.\n\nSo: what is the nearest plank for you right now? Not the project, not the goal. The single smallest thing you could actually finish today.",
+  "format": "portrait",
+  "aspect_ratio": "9:16",
+  "resolution": "1080x1920",
+  "duration_seconds": 126.038,
+  "created_at": "2026-11-10T00:00:00Z",
+  "topic": "Procrastination as over-planning, and the power of the nearest first step",
+  "summary": "Mira has drawn the far end of a bridge in perfect detail while the first plank stays blank. Planning feels like movement until she names the nearest edge and steps on it.",
+  "key_angle": "The far end of the bridge is shown fully finished from the first frame — the obstacle is never the destination, only the blank plank at her feet.",
+  "tags": [
+    "procrastination",
+    "first-step",
+    "focus",
+    "stickman",
+    "beginning",
+    "overthinking",
+    "motivation"
+  ],
+  "production_version": "3.0.0",
+  "status": "completed",
+  "directory": "videos/the-first-plank",
+  "video_path": "videos/the-first-plank/the-first-plank.mp4",
+  "thumbnail_spec": {
+    "width": 1080,
+    "height": 1920,
+    "aspect_ratio": "9:16",
+    "text_on_image": [
+      "THE FIRST",
+      "PLANK"
+    ],
+    "design": "AI-generated cel-stickman base art + Poppins-Bold text overlay, inspected at 1080x1920 / 1280x720 and at mobile preview size"
+  },
+  "content_fingerprint": "sha256:58c06c453f559ca7becba8b3d25254c2",
+  "duration_sec": 126.038,
+  "final_video": "the-first-plank.mp4",
+  "script_summary": "Mira has drawn the far end of a bridge in perfect detail while the first plank stays blank. Planning feels like movement until she names the nearest edge and steps on it.",
+  "duration_label": "2:06",
+  "format_policy_exception": "126.04s under the auto policy would imply 16:9; the approved master is portrait 9:16 and was delivered as a Shorts-style story."
+}

@@ -19,7 +19,7 @@ video."* — is bound by these rules.
 | [`skills/`](skills/README.md) | permanent agent knowledge and procedures (16 specialist skills) | runtime code, duplicate rules, copied framework documentation |
 | [`AGENTS.md`](AGENTS.md) | rules, architecture boundaries, skill activation map | full procedures (link to skills instead) |
 | [`templates/`](templates/README.md) | one master production prompt + project skeleton | per-video prompts |
-| [`videos/`](videos/index.json) | completed durable video outputs (`videos/video-XXX/final.mp4` + `record.json` + `videos/index.json`); active authoring may stage in `projects/` or `runtime/` | shared engine code or temporary chunk caches |
+| [`videos/`](videos/index.json) | completed, publishable video packages: `videos/<slug>/<slug>.mp4` + `script.md` + `thumbnail.jpg` + `record.json`, catalogued in `videos/index.json`; active authoring may stage in `projects/` or `runtime/` | shared engine code, anonymous `final.mp4` dumps, or temporary chunk caches |
 | [`docs/`](docs/architecture/SYSTEM_OVERVIEW.md) | technical documentation: architecture, setup, development, production detail, troubleshooting, decisions | generated reports or per-video logs |
 | [`examples/`](examples/) | complete, validated reference episode specs | generated media |
 | [`tests/`](tests/README.md) | regression protection and fixtures | production output |
@@ -186,8 +186,8 @@ fixed, not retried blindly.
   frames, `runtime/cache/` for downloads and voice caches, `runtime/logs/` for run logs.
   These are git-ignored. `output/`, `work/`, `.work_*/` and `cache/` remain ignored legacy aliases.
 - No generated media (`.mp4`, `.wav`, `.zip`, `.png` QA frames, `.onnx`, `.npz`) in source
-  directories. Finished deliverables belong in `deliverables/` or a project's own `final.mp4` /
-  `renders/` / `assets/` / `audio/` folders.
+  directories. Finished videos belong in `videos/<slug>/` as complete publishing packages; work in
+  progress stays under `projects/` or `runtime/`.
 - `tools/validate_structure.py` enforces these rules; CI runs it on every push.
 
 ---

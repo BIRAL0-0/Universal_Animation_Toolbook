@@ -1,0 +1,47 @@
+{
+  "id": "video-005",
+  "slug": "the-two-second-reach",
+  "title": "The Two-Second Reach",
+  "filename": "the-two-second-reach.mp4",
+  "script": "script.md",
+  "thumbnail": "thumbnail.jpg",
+  "youtube_description": "You never lose an hour all at once. You lose it in a two-second reach.\n\nOne quick check becomes a scroll, the scroll becomes a reply, the reply becomes noise — and willpower loses every time the screen is already inside arm's reach. That is not a character flaw, it is just proximity.\n\nThe fix in this short is deliberately unheroic. No discipline, no blocking app, no 5 AM routine. Just put the phone down across the table before you sit, so the reach costs three more steps than the impulse is willing to spend.\n\nThirty seconds, one idea, and it will probably work better than the last productivity system you tried.\n\n#focus #deepwork #habits #distraction #willpower #stickman #productivity\n\nSubscribe for more short videos about attention — the mechanics, not the motivation.\n\nMusic: \"Softly\" by Loyalty Freak Music (CC0 1.0 Public Domain) — https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_06_-_Softly.ogg",
+  "pinned_comment": "The uncomfortable part is that willpower was never the problem — proximity was. The screen sitting within arm's reach loses the fight for you before you have even decided anything.\n\nWhere does your phone live while you work? On the desk, in a pocket, in another room? I keep hearing that \"another room\" is the only version that actually sticks.",
+  "format": "portrait",
+  "aspect_ratio": "9:16",
+  "resolution": "1080x1920",
+  "duration_seconds": 32.66,
+  "created_at": "2026-11-10T00:00:00Z",
+  "topic": "Designing your environment to beat distraction instead of relying on willpower",
+  "summary": "An hour is never lost at once — it goes in two-second reaches. Move the phone two steps further away than your impulse and the hour stays yours.",
+  "key_angle": "The fix is architectural, not motivational: change the room, not your brain. The camera keeps the phone and the hand in the same frame the whole time.",
+  "tags": [
+    "willpower",
+    "environment-design",
+    "focus",
+    "distraction",
+    "stickman",
+    "habits",
+    "deep-work"
+  ],
+  "production_version": "3.0.0",
+  "status": "completed",
+  "directory": "videos/the-two-second-reach",
+  "video_path": "videos/the-two-second-reach/the-two-second-reach.mp4",
+  "thumbnail_spec": {
+    "width": 1080,
+    "height": 1920,
+    "aspect_ratio": "9:16",
+    "text_on_image": [
+      "JUST",
+      "2 SECONDS"
+    ],
+    "design": "AI-generated cel-stickman base art + Poppins-Bold text overlay, inspected at 1080x1920 / 1280x720 and at mobile preview size"
+  },
+  "content_fingerprint": "sha256:07deaf6b387d30e35a1c4bf8db862bce",
+  "duration_sec": 32.66,
+  "final_video": "the-two-second-reach.mp4",
+  "script_summary": "An hour is never lost at once — it goes in two-second reaches. Move the phone two steps further away than your impulse and the hour stays yours.",
+  "duration_label": "0:33",
+  "format_policy_exception": null
+}

@@ -1,0 +1,47 @@
+{
+  "id": "video-001",
+  "slug": "what-if-every-notification-cost-you-23-minutes",
+  "title": "What If Every Notification Cost You 23 Minutes?",
+  "filename": "what-if-every-notification-cost-you-23-minutes.mp4",
+  "script": "script.md",
+  "thumbnail": "thumbnail.jpg",
+  "youtube_description": "Two hundred and forty minutes. That is roughly how much real focus you get in a working day — and every single notification quietly takes a bite out of it.\n\nIn this short, a counter floats beside Kai and counts that focus down in real time. A buzz takes two seconds to read. Coming back from it takes much longer. Researchers at the University of California, Irvine measured the average resumption lag at twenty-three minutes and fifteen seconds, and the research team found that people rarely return to the same task first — two other things slip in ahead of it.\n\nWhich means the phone is not really stealing your minutes. The switching is.\n\nYou will see what a normal Tuesday looks like when you price each interruption honestly, and the one unglamorous thing Kai does that gets an hour of his day back. No productivity system, no app, no heroic discipline — just a drawer.\n\nIf you have ever looked up at 3 PM and wondered where the day went, this one is for you.\n\n#productivity #attention #deepwork #notifications #focus #stickman\n\nIf you found this useful, subscribe — one short, honest idea about attention every week.\n\nSources: Gloria Mark, Daniela Gudith and Ulrich Klocke, \"The Cost of Interrupted Work: More Speed and Stress\" (University of California, Irvine); Gloria Mark et al., \"A Pace of Life in 24 Hours\" — average sustained screen attention fell from 2.5 minutes to 47 seconds.\n\nMusic: \"Where Stars Fall\" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Where_Stars_Fall.oga\nMusic: \"Softly\" by Loyalty Freak Music (CC0 1.0 Public Domain) — https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_06_-_Softly.ogg\nMusic: \"The Distant Sun (Monomyth 1)\" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Distant_Sun_(Monomyth_1).oga\nMusic: \"The Restoration (Monomyth 12)\" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Restoration_(Monomyth_12).oga",
+  "pinned_comment": "The 23-minute number is the one that stops you: two seconds to read, twenty-three minutes to come back. And the researchers found the return trip is rarely direct — two other things slip in first.\n\nHave you ever counted how many times you check your phone during a single work session? Did the number surprise you, or was it about what you expected?",
+  "format": "portrait",
+  "aspect_ratio": "9:16",
+  "resolution": "1080x1920",
+  "duration_seconds": 158.957,
+  "created_at": "2026-11-10T00:00:00Z",
+  "topic": "The hidden cost of notification-driven context switching",
+  "summary": "Kai starts the day with 240 minutes of real focus. Each notification takes two seconds to read and about 23 minutes to recover from, so the day drains without a single dramatic event.",
+  "key_angle": "An on-screen focus counter counts down in real time while a narrator explains the researched 23-minute resumption lag — the loss is invisible, not catastrophic.",
+  "tags": [
+    "productivity",
+    "notifications",
+    "context-switching",
+    "attention",
+    "stickman",
+    "time-management",
+    "deep-work"
+  ],
+  "production_version": "3.0.0",
+  "status": "completed",
+  "directory": "videos/what-if-every-notification-cost-you-23-minutes",
+  "video_path": "videos/what-if-every-notification-cost-you-23-minutes/what-if-every-notification-cost-you-23-minutes.mp4",
+  "thumbnail_spec": {
+    "width": 1080,
+    "height": 1920,
+    "aspect_ratio": "9:16",
+    "text_on_image": [
+      "EVERY BUZZ COSTS",
+      "23 MINUTES"
+    ],
+    "design": "AI-generated cel-stickman base art + Poppins-Bold text overlay, inspected at 1080x1920 / 1280x720 and at mobile preview size"
+  },
+  "content_fingerprint": "sha256:1abd7c1815140211ecbadcf1e4c8a419",
+  "duration_sec": 158.957,
+  "final_video": "what-if-every-notification-cost-you-23-minutes.mp4",
+  "script_summary": "Kai starts the day with 240 minutes of real focus. Each notification takes two seconds to read and about 23 minutes to recover from, so the day drains without a single dramatic event.",
+  "duration_label": "2:39",
+  "format_policy_exception": "158.96s under the auto policy (<60s -> 9:16, >=60s -> 16:9) would imply 16:9; the approved master is portrait 9:16 Shorts-format."
+}
