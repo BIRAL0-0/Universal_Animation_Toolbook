@@ -35,7 +35,7 @@ invalidated by removing the spec-SHA marker before the run.
 
 - **Episode spec:** `projects/video-003-first-plank/episode.json`
 - **Delivery branch:** `arena/d8a141d7-universal-animation-toolbook`
-- **Delivery commit:** ``8a37666568b1dd807aa4e28721126d23d1769b87``
+- **Delivery commit:** `8a37666568b1dd807aa4e28721126d23d1769b87`
 - **Voice backend actually used:** `kokoro-offline:am_michael`
 - **Measured runtime:** 126.038 s (retimed from real Kokoro speech; authored spec is 140 s)
 - **Chapters:** 7 lines + 4 CC music credits in `chapters.txt`
