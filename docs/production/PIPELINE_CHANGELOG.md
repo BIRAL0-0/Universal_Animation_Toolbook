@@ -122,3 +122,53 @@ Format: date · type · what changed · why · verification.
 - Documentation verification exposed references to removed output folders after repository cleanup.
 - Updated the workflow and orientation examples to use existing tracked outputs or specs; retained the path-checking gate rather than weakening it.
 - Verification: `python3 tools/check_docs.py` resolves the references.
+
+### PC-009 · Multi-line board cards need explicit height and spacing
+- **Type:** authoring rule
+- **What:** 3–4-line `notebook_page`, `sketch_card` and `checklist_card` boards use `h>=250`,
+  `y~74` and fixed 42-pixel line spacing so every intended line stays inside the card.
+- **Why:** video-003's first draft clipped lines from short `h:168` cards; the fix was project
+  authoring geometry, not a renderer change.
+- **Verification:** corrected board-cue frames were extracted and every line was inspected.
+
+### PC-010 · 9:16 portrait boards need explicit width, centre and final-master inspection
+- **Type:** authoring rule + tooling
+- **What:** adds `portrait_w:460` and `portrait_x:0.5` to the PC-009 rule; documents that a
+  corrected voiced draft is not proof a corrected master was rendered, and requires final-master
+  board-cue frames after any geometry edit.
+- **Why:** `fitBoardToPortraitViewport` otherwise leaves a wide board behind the character name
+  tag in 9:16. The first video-003 master re-render reused a stale retimed spec and still showed
+  the collision.
+- **Verification:** `test_master_prompt_documents_multiline_board_geometry` guards all four
+  values; the corrected master's S01 board frame shows a clear `MIRA` tag below the card.
+
+### PC-011 · Docs checker ignores evidence labels and ffprobe language tags
+- **Type:** tooling / regression
+- **What:** `tools/check_docs.py` ignores `[M]/[O]/[P]`, `[V]/[I]/[A]`, individual evidence
+  labels and the `und` target emitted by ffprobe as `[0x1](und)` / `[0x2](und)`.
+- **Why:** copied production logs were being reported as unresolved markdown links/paths.
+- **Verification:** `test_docs_checker_ignores_evidence_taxonomy_and_ffprobe_language_tags`;
+  `python3 tools/check_docs.py` passes with the fresh video-003 run records present.
+
+### PC-012 · Orchestrator invalidates stale `--resume` caches on spec changes
+- **Type:** tooling / regression
+- **What:** `tools/produce_video.py` stores the authoritative `episode.json` SHA-256 in an
+  ignored `.work_cache_state/` directory and deletes stale `.work_*` render caches before a run
+  when that hash changes. A unit test guards the implementation.
+- **Why:** video-003 changed board geometry, but a manually regenerated `.work_final` retimed
+  spec from the previous version was reused by `--resume`; the corrected draft looked right while
+  the first re-rendered master still contained the old boards.
+- **Verification:** `test_produce_video_invalidates_stale_render_caches`; the delivered master
+  was produced after that invalidation, and its board-cue frames were inspected.
+
+### PC-013 · Portrait crops prune unreadable world-prop label fragments (KI-012)
+- **Type:** engine fix + regression
+- **What:** `universal_toolbook/engine/video_renderer.js` computes how much of each `signpost`
+  label plate lies inside the portrait crop for the current camera frame, and drops labels whose
+  visible fraction is below 70%. `pruneClippedSignpostLabels` is exported for testing; the 16:9
+  path supplies a full-width viewport and is unchanged.
+- **Why:** the 9:16 crop follows the camera, so a label that is off-screen in the stills can
+  drift into the frame later as a clipped colour chip with no text. That fragment appeared in the
+  closing frames of the first video-003 master. Moving the prop once cannot fix a moving crop.
+- **Verification:** the JS regression suite asserts pruning, retention, non-mutation and
+  landscape identity; a freshly rendered closing frame was opened and has no edge fragment.

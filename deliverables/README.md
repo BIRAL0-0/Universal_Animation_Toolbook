@@ -7,10 +7,11 @@ source and QA evidence live in [`projects/`](../projects/).
 | Path | What it is |
 |---|---|
 | [`RESULTS.md`](RESULTS.md) | the durable-results convention: one folder per finished film, text mirrors of chapters/reports/cues/validation, optional master MP4, `NOTES.md` with SHA-256 and exact rebuild command |
-| [`releases/`](releases/) | finished ZIP packages: `discipline_vs_obsession_release.zip`, `the_wall_you_agreed_with_1080x1920.zip`, `video-001_RELEASE.zip` |
+| [`releases/`](releases/) | finished ZIP packages: `discipline_vs_obsession_release.zip`, `the_wall_you_agreed_with_1080x1920.zip`, `video-001_RELEASE.zip`, `video-003-first-plank_RELEASE.zip` |
 | [`universal_animation_toolbook_tts.zip`](universal_animation_toolbook_tts.zip) | the 2026-11-03/09 self-hosted TTS source deliverable (repository minus heavy runtime artifacts) |
 | [`tts_benchmark/`](tts_benchmark/README.md) | committed MP3 listening samples for 16 Kokoro/Piper voices, with attribution |
 | [`two_inch_bridge_cel/`](two_inch_bridge_cel/NOTES.md) | a complete shipped master MP4 plus chapters, report, validation, cues, SVG storyboard and measured notes |
+| [`video-003-first-plank/`](video-003-first-plank/NOTES.md) | "The First Plank": primary 9:16 master, text mirrors, poster, SVG storyboard, authoring set and QA sign-off; 16:9 master and full ZIP in `releases/` |
 | [`the_wall_you_agreed_with/`](the_wall_you_agreed_with/index.html) | historical hand-off page plus real MP4, ZIP and poster files; the earlier broken symlinks were replaced with byte-identical release assets, and the package is also in `releases/` |
 
 ## TTS source ZIP (historical)

@@ -26,7 +26,7 @@ const {
   bridgeContinuousWordGaps,
   buildSubtitlesFromLineTimings,
 } = require('../../universal_toolbook/engine/episode');
-const { renderEpisodeFrame } = require('../../universal_toolbook/engine/video_renderer');
+const { renderEpisodeFrame, pruneClippedSignpostLabels } = require('../../universal_toolbook/engine/video_renderer');
 const { containRect, coverRect } = require('../../universal_toolbook/engine/render_layout');
 const {
   computePortraitViewport,
@@ -423,10 +423,37 @@ assert(Math.abs(settledSpeakerFrame - beforeSpeakerChange) > 120, 'Portrait fram
 const portraitPixels = portraitCtx.getImageData(270, 480, 1, 1).data;
 assert.strictEqual(portraitPixels[3], 255, 'Portrait renderer must produce an opaque full-frame image');
 
+// Portrait crops must never leave an unreadable fragment of a world-prop label at the frame edge.
+// The crop follows the camera, so the pruning decision is per-frame rather than a static prop x.
+const labelCropCamera = { zoom: 1.18, focusX: 0.54 * 1920, panX: 0 };
+const closingLabelCrop = { left: 450.83, width: 607.5, centerX: 754.58, right: 1058.33 };
+const edgeLabelSignpost = { type: 'signpost', x: 0.25, scale: 1, left_label: 'FAR', right_label: 'NEAR' };
+const prunedEdgeLabels = pruneClippedSignpostLabels(edgeLabelSignpost, {
+  ...labelCropCamera, viewport: closingLabelCrop, baseW: 1920,
+});
+assert(!prunedEdgeLabels.right_label, 'A mostly clipped right label must be pruned from the portrait crop');
+assert(!prunedEdgeLabels.left_label, 'A fully off-crop left label must be pruned from the portrait crop');
+assert.strictEqual(edgeLabelSignpost.right_label, 'NEAR', 'Pruning must not mutate the authored spec');
+const centeredLabelSignpost = { ...edgeLabelSignpost, x: 0.5 };
+const keptLabels = pruneClippedSignpostLabels(centeredLabelSignpost, {
+  ...labelCropCamera, viewport: closingLabelCrop, baseW: 1920,
+});
+assert.strictEqual(keptLabels.left_label, 'FAR', 'A fully visible label must not be pruned');
+assert.strictEqual(keptLabels.right_label, 'NEAR', 'A fully visible label must not be pruned');
+const labelFullWidthViewport = { left: 0, width: 1920, centerX: 960, right: 1920 };
+assert.strictEqual(
+  pruneClippedSignpostLabels(edgeLabelSignpost, {
+    ...labelCropCamera, viewport: labelFullWidthViewport, baseW: 1920,
+  }),
+  edgeLabelSignpost,
+  'Landscape/full-width renders must remain byte-identical',
+);
+
 console.log(
   JSON.stringify(
     {
       js_tests: 'PASSED',
+      clipped_signpost_label_pruning_verified: true,
       actions_verified: SUPPORTED_ACTIONS.length,
       builds_verified: Object.keys(BUILDS).length,
       hairstyles_verified: SUPPORTED_HAIRSTYLES.length,

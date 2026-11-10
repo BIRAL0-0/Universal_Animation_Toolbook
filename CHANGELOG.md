@@ -6,6 +6,39 @@ All notable changes to this repository. Historical workflow and pipeline records
 authoritative repository-level change index. A change that affects the documented pipeline updates
 its documentation and its regression tests in the same task.
 
+## 2026-11-10 — video-003 reusable pipeline fixes
+
+### Added
+- `tools/produce_video.py` now ties `.work_*` resume caches to the `episode.json` SHA-256 and
+  clears them on change, with `test_produce_video_invalidates_stale_render_caches`.
+- `tools/check_docs.py` ignores evidence-taxonomy labels and ffprobe's `(und)` tag in copied
+  production logs, with `test_docs_checker_ignores_evidence_taxonomy_and_ffprobe_language_tags`.
+- `tools/check_docs.py` recognizes Arena session branches by shape as Git refs rather than
+  hardcoding one branch name, with `test_docs_checker_treats_session_branch_names_as_git_refs`.
+- `templates/MASTER_VIDEO_PRODUCTION_PROMPT.md` documents `h>=250`, `y~74`, 42-pixel spacing,
+  `portrait_w:460`, `portrait_x:0.5` and final-master board-frame inspection, guarded by
+  `test_master_prompt_documents_multiline_board_geometry`.
+- `universal_toolbook/engine/video_renderer.js` prunes `signpost` label plates that the moving
+  9:16 crop would show as unreadable edge fragments, guarded by the JS regression suite and
+  `test_portrait_crop_prunes_clipped_signpost_labels` (PC-013 / KI-012 / L-12). Landscape output
+  is unchanged.
+
+### Recorded
+- PC-009 / PC-010 / PC-011 / PC-012, KI-010 / KI-011 and L-10 / L-11 capture the video-003
+  board-geometry, docs-checker and stale-cache findings with their verification evidence.
+
+### Delivered
+- `projects/video-003-first-plank/` and `deliverables/video-003-first-plank/`: "The First Plank",
+  7 scenes / 42 lines, voiced `kokoro-offline:am_michael`, measured 126.038 s, primary 1080×1920
+  and secondary 1920×1080 masters, 30 fps, `warnings: []`, full decode PASS, `QA_REPORT.md`
+  signed off from opened frames and measured audio.
+- `deliverables/releases/video-003-first-plank_RELEASE.zip`: both masters, text mirrors, poster,
+  SVG storyboard, authoring set, QA contact sheets and rebuild notes.
+- Re-rendered both masters after PC-013 / KI-012. Final-verification found a clipped world-prop
+  label fragment at the left edge of the closing 9:16 frames; the portrait crop now prunes it per
+  frame. All hashes, QA frames, contact sheets, measurements and the release package were rebuilt
+  from the corrected masters, and the closing frames were re-opened.
+
 ## 2026-11-09 — post-reorganization validation and delivery evidence
 
 ### Added

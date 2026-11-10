@@ -95,3 +95,32 @@ folder is not finished.
 
 ### Removed example outputs leave stale documentation references
 When removing a production output, run `python3 tools/check_docs.py` and replace links with existing examples. Keep the documentation gate enabled; do not create empty placeholder directories to hide broken references.
+
+### L-10 · Stills and drafts are not the master
+A corrected still or voiced draft can look perfect while the delivered master still carries the
+old geometry. Speech-locked boards are absent from TTS-less stills, and `--resume` can reuse a
+retimed spec from before an edit.
+
+**Lesson:** after any board/geometry change, extract and actually open final-master board-cue
+frames. Record the measured portrait overrides in the reusable brief.
+**Changed:** master template §9/§10, PC-009 / PC-010, KI-010 and the unit regression test.
+
+### L-11 · `--resume` remembers the old film
+A corrected draft is not proof that a corrected master was rendered. Resume caches contain a
+retimed spec and finished chunks; both can survive an edit to the authoritative spec.
+
+**Lesson:** tie every resume cache to the spec hash, invalidate on change, and inspect the final
+master — not the draft — after any geometry correction.
+**Changed:** `tools/produce_video.py`, PC-012, KI-011 and a unit regression test.
+
+### L-12 · A frame edge can expose geometry that stills never show
+The portrait crop is not a fixed window: it pans with the camera and the active speaker. A world
+prop that is wholly off-screen in a still or a draft frame can drift into the crop later and leave
+a clipped, textless colour chip pinned to the edge during the closing line.
+
+**Lesson:** inspect opening, middle and **closing** frames of the final master, both at board
+cues and after the last camera push. When a defect depends on a moving crop, fix it in the
+renderer per frame rather than nudging a static prop coordinate until one sampled frame looks
+right.
+**Changed:** `pruneClippedSignpostLabels` + the JS regression assertions; PC-013, KI-012, master
+template §9/§10, and the re-rendered video-003 master.

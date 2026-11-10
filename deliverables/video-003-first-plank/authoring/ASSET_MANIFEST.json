@@ -1,0 +1,59 @@
+{
+  "project": "video-003-first-plank",
+  "title": "The First Plank",
+  "bgm_tracks": [
+    {
+      "id": "reflective_piano",
+      "scenes": [
+        "S01",
+        "S04",
+        "S07"
+      ]
+    },
+    {
+      "id": "chill_focus",
+      "scenes": [
+        "S02",
+        "S05"
+      ]
+    },
+    {
+      "id": "suspense_tension",
+      "scenes": [
+        "S03"
+      ]
+    },
+    {
+      "id": "triumph_horizon",
+      "scenes": [
+        "S06"
+      ]
+    }
+  ],
+  "voice": {
+    "engine": "Kokoro-82M",
+    "model": "kokoro",
+    "voice": "am_michael",
+    "rate": "+1%",
+    "pitch": "-1Hz",
+    "licence": "Apache-2.0"
+  },
+  "fonts": [
+    "universal_toolbook/assets/Poppins-Regular.ttf",
+    "universal_toolbook/assets/Poppins-Bold.ttf"
+  ],
+  "procedural_sfx": [
+    "page_turn",
+    "paper_slide",
+    "paper_rustle",
+    "step",
+    "wind_gust",
+    "body_thud",
+    "door_bell",
+    "final_piano_note",
+    "chapter_chime",
+    "board_pop"
+  ],
+  "branding": "none",
+  "licence_note": "BGM licences and attribution are copied from universal_toolbook/assets/bgm/BGM_CATALOG.json; the authoritative licence text is universal_toolbook/assets/bgm/CREATIVE_COMMONS_LICENSES.md. The renderer also writes attribution into the generated chapters file."
+}

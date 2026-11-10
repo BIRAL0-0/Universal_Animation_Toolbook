@@ -33,3 +33,6 @@ runtime/*
 output/
 work/
 .work_*/
+
+# Generated draft renders are QA-only; shipped masters are committed explicitly.
+projects/*/renders/draft_*.mp4

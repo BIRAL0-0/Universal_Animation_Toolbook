@@ -166,3 +166,51 @@ def test_kit_is_copyable_and_validates_standalone(tmp_path):
     assert (kit_copy / "engine" / "video_renderer.js").is_file()
     assert (kit_copy / "assets" / "Poppins-Regular.ttf").is_file()
     assert (kit_copy / "config" / "studio_config.json").is_file()
+
+
+def test_master_prompt_documents_multiline_board_geometry():
+    """The reusable brief must carry every measured board-geometry value."""
+    text = (ROOT / "templates" / "MASTER_VIDEO_PRODUCTION_PROMPT.md").read_text(encoding="utf-8")
+    for value in ("h>=250", "y~74", "42-pixel", "portrait_w:460", "portrait_x:0.5",
+                  "final-master"):
+        assert value in text, value
+
+
+def test_docs_checker_ignores_evidence_taxonomy_and_ffprobe_language_tags():
+    """Copied production logs must not be read as broken links."""
+    text = (ROOT / "tools" / "check_docs.py").read_text(encoding="utf-8")
+    for token in ("[M]/[O]/[P]", "[V]/[I]/[A]", "und"):
+        assert token in text, token
+
+
+def test_docs_checker_treats_session_branch_names_as_git_refs():
+    """A new session's branch must not require another hardcoded IGNORE_EXACT entry."""
+    spec = importlib.util.spec_from_file_location("check_docs_for_test", ROOT / "tools" / "check_docs.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    # Any session hex is accepted, not just the branch that happened to ship this fix.
+    assert mod.is_git_ref("`arena/0000abcd-universal-animation-toolbook`") is True
+    assert mod.is_claim("`arena/deadbeef-universal-animation-toolbook`") is False
+    # A real path with the same slashes must still be a verifiable claim.
+    assert mod.is_claim("`tools/check_docs.py`") is True
+    assert mod.is_claim("`deliverables/video-003-first-plank/final.mp4`") is True
+
+
+def test_portrait_crop_prunes_clipped_signpost_labels():
+    """A moving 9:16 crop must not paint unreadable fragments of world-prop labels (KI-012)."""
+    renderer = (ROOT / "universal_toolbook" / "engine" / "video_renderer.js").read_text(encoding="utf-8")
+    assert "function pruneClippedSignpostLabels" in renderer
+    assert "viewport.width < BASE_W" in renderer
+    regression = (ROOT / "tests" / "regression" / "run_all_tests.js").read_text(encoding="utf-8")
+    assert "pruneClippedSignpostLabels" in regression
+    assert "clipped_signpost_label_pruning_verified" in regression
+    prompt = (ROOT / "templates" / "MASTER_VIDEO_PRODUCTION_PROMPT.md").read_text(encoding="utf-8")
+    assert "KI-012" in prompt
+
+
+def test_produce_video_invalidates_stale_render_caches():
+    """A spec edit must not be silently ignored by --resume chunk/reuse state."""
+    text = (ROOT / "tools" / "produce_video.py").read_text(encoding="utf-8")
+    assert "def invalidate_stale_work_dirs" in text
+    assert ".work_cache_state" in text
+    assert "hashlib.sha256" in text
