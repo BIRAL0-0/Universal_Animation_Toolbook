@@ -21,6 +21,8 @@ Rules (deliberately narrow, to avoid flagging prose):
      New documentation must use canonical paths; tools/validate_structure.py enforces that.
   7. Runtime artifacts under runtime/ (and the legacy output/, work/, cache/, .work_* roots)
      are generated, not committed, so a reference to them is never a broken path.
+  8. Arena session branch names are Git refs, not paths. The session hex changes each time, so
+     they are matched by shape instead of a hardcoded allowlist entry.
 
 Usage:
     python3 tools/check_docs.py [--verbose]
@@ -126,9 +128,7 @@ STRUCTURAL_SHORTHAND = {
 
 IGNORE_EXACT = STRUCTURAL_SHORTHAND | {
     "focus_x/y", "y/n", "and/or", "24/7", "TCP/IP", "S01.wav", "S07.wav",
-    # Branch names, API endpoints and GitHub owner/repo identifiers are external, not paths:
-    "arena/c7c9d20d-universal-animation-toolbook",
-    "arena/d8a141d7-universal-animation-toolbook",
+    # API endpoints and GitHub owner/repo identifiers are external, not paths:
     "api.github.com/repos/remotion-dev/skills",
     "remotion-dev/remotion", "remotion-dev/skills",
     "007-Akira/Project-Rocky",  # Piper voice mirror used by fetch_piper_voices.py --github
@@ -150,6 +150,16 @@ KIT_CONTEXT_PREFIXES = (
 KIT_RELATIVE_PREFIXES = (
     "engine/", "tts/", "config/", "assets/", "process/", "templates/", "tools/",
 )
+
+# Arena working branches are Git refs of the form arena/<session-hex>-universal-animation-toolbook.
+# The hex id changes every session, so match the shape rather than hardcoding one branch: a new
+# session's delivery notes must not turn into a broken-path claim.
+ARENA_BRANCH_RE = re.compile(r"arena/[0-9a-f]{8}-universal-animation-toolbook")
+
+
+def is_git_ref(token: str) -> bool:
+    return bool(ARENA_BRANCH_RE.fullmatch(token.strip().strip("`").rstrip(".,;:")))
+
 
 CMD_RE = re.compile(r"(?:python3|node)\s+([^\s`'\"|&;)]+)")
 FENCE_RE = re.compile(r"```[a-zA-Z]*\n(.*?)```", re.S)
@@ -178,7 +188,7 @@ def tracked_docs() -> list[Path]:
 
 def is_claim(token: str) -> bool:
     t = token.strip().strip("`").rstrip(".,;:")
-    if not t or t in IGNORE_EXACT:
+    if not t or t in IGNORE_EXACT or is_git_ref(t):
         return False
     if t.startswith(("http://", "https://", "mailto:", "#", "@", "/")):
         return False  # URLs, anchors, packages and absolute machine paths
@@ -341,7 +351,7 @@ def main() -> int:
             target_path = target.split("#")[0]
             if not target_path:
                 continue
-            if target_path in ALLOW_MISSING or target_path in IGNORE_EXACT:
+            if target_path in ALLOW_MISSING or target_path in IGNORE_EXACT or is_git_ref(target_path):
                 continue
             claims += 1
             if not link_resolves(target_path, doc):

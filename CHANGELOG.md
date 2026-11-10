@@ -13,6 +13,8 @@ its documentation and its regression tests in the same task.
   clears them on change, with `test_produce_video_invalidates_stale_render_caches`.
 - `tools/check_docs.py` ignores evidence-taxonomy labels and ffprobe's `(und)` tag in copied
   production logs, with `test_docs_checker_ignores_evidence_taxonomy_and_ffprobe_language_tags`.
+- `tools/check_docs.py` recognizes Arena session branches by shape as Git refs rather than
+  hardcoding one branch name, with `test_docs_checker_treats_session_branch_names_as_git_refs`.
 - `templates/MASTER_VIDEO_PRODUCTION_PROMPT.md` documents `h>=250`, `y~74`, 42-pixel spacing,
   `portrait_w:460`, `portrait_x:0.5` and final-master board-frame inspection, guarded by
   `test_master_prompt_documents_multiline_board_geometry`.

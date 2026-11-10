@@ -183,6 +183,19 @@ def test_docs_checker_ignores_evidence_taxonomy_and_ffprobe_language_tags():
         assert token in text, token
 
 
+def test_docs_checker_treats_session_branch_names_as_git_refs():
+    """A new session's branch must not require another hardcoded IGNORE_EXACT entry."""
+    spec = importlib.util.spec_from_file_location("check_docs_for_test", ROOT / "tools" / "check_docs.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    # Any session hex is accepted, not just the branch that happened to ship this fix.
+    assert mod.is_git_ref("`arena/0000abcd-universal-animation-toolbook`") is True
+    assert mod.is_claim("`arena/deadbeef-universal-animation-toolbook`") is False
+    # A real path with the same slashes must still be a verifiable claim.
+    assert mod.is_claim("`tools/check_docs.py`") is True
+    assert mod.is_claim("`deliverables/video-003-first-plank/final.mp4`") is True
+
+
 def test_produce_video_invalidates_stale_render_caches():
     """A spec edit must not be silently ignored by --resume chunk/reuse state."""
     text = (ROOT / "tools" / "produce_video.py").read_text(encoding="utf-8")
