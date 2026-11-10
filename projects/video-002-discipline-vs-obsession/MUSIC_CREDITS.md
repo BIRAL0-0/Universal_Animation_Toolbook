@@ -1,9 +1,0 @@
-# Music credits
-
-Music: "Where Stars Fall" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Where_Stars_Fall.oga
-Music: "Softly" by Loyalty Freak Music (CC0 1.0 Public Domain) — https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_06_-_Softly.ogg
-Music: "The Distant Sun (Monomyth 1)" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Distant_Sun_(Monomyth_1).oga
-Music: "One Cool Minute" by Loyalty Freak Music (CC0 1.0 Public Domain) — https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_02_-_One_Cool_Minute.ogg
-Music: "The Restoration (Monomyth 12)" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Restoration_(Monomyth_12).oga
-
-CC BY 4.0: https://creativecommons.org/licenses/by/4.0/
