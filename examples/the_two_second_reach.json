@@ -7,10 +7,10 @@
   "cast": {
     "alex": {
       "style": "cel",
-      "color": "#f3f5fa",
-      "build": "average",
-      "hair": "none",
-      "scale": 1.56
+      "color": "#f5f7fb",
+      "build": "athletic",
+      "hair": "textured_sweep",
+      "scale": 1.90
     }
   },
   "chapters": [
@@ -26,8 +26,8 @@
       "mood": "focus",
       "props": [
         { "id": "table_side", "type": "table", "x": 0.48 },
-        { "id": "phone_main", "type": "phone", "x": 0.45, "elevation": 148, "notify_at": 0.35 },
-        { "id": "cup_main", "type": "cup", "x": 0.53, "elevation": 148 }
+        { "id": "phone_main", "type": "phone", "x": 0.44, "elevation": 148, "notify_at": 0.35 },
+        { "id": "cup_main", "type": "cup", "x": 0.505, "elevation": 148 }
       ],
       "sfx": [
         { "type": "phone_buzz", "at": 0.35, "pan": -0.05 }
@@ -70,7 +70,7 @@
       "mood": "tension",
       "props": [
         { "id": "table_side", "type": "table", "x": 0.48 },
-        { "id": "cup_main", "type": "cup", "x": 0.53, "elevation": 148 }
+        { "id": "cup_main", "type": "cup", "x": 0.505, "elevation": 148 }
       ],
       "dialogue": [
         {
@@ -144,8 +144,8 @@
       "environment": "minimal_void",
       "mood": "calm",
       "props": [
-        { "id": "desk_main", "type": "desk", "x": 0.52 },
-        { "id": "laptop_main", "type": "laptop", "x": 0.54, "facing": "left" }
+        { "id": "desk_main", "type": "desk", "x": 0.54, "scale": 1.62 },
+        { "id": "laptop_main", "type": "laptop", "x": 0.57, "scale": 1.55, "facing": "left" }
       ],
       "dialogue": [
         {
@@ -183,7 +183,7 @@
       "mood": "triumph",
       "fade_to_black": true,
       "props": [
-        { "id": "door_main", "type": "door", "x": 0.68 }
+        { "id": "door_main", "type": "door", "x": 0.68, "scale": 1.48 }
       ],
       "dialogue": [
         {

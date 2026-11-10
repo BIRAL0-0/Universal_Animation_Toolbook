@@ -113,26 +113,28 @@ const BONES = Object.freeze({
 });
 
 const CANONICAL_CHARACTER_SPEC = Object.freeze({
-  defaultBaseColor: '#f1f5f9',
-  outlineColor: '#05070c',
-  strokeWidthPx: 3.0,
-  thinStrokeWidthPx: 2.2,
-  defaultHairstyle: 'none',
+  defaultBaseColor: '#f5f7fb',
+  outlineColor: '#070a11',
+  strokeWidthPx: 2.35,
+  thinStrokeWidthPx: 1.80,
+  defaultHairstyle: 'textured_sweep',
+  defaultHairColor: '#2c1f19',
+  defaultShoeColor: '#0a0d13',
   singleColorBody: true,
   uniformLimbFill: true,
   bones: BONES,
   radii: Object.freeze({
-    torsoHip: 11.6,
-    torsoMid: 13.2,
-    torsoShoulder: 14.6,
-    neckBase: 6.4,
-    neckTop: 5.6,
-    upperArmTop: 7.4,
-    elbow: 6.4,
-    wrist: 5.3,
-    thighTop: 10.8,
-    knee: 8.2,
-    ankle: 6.4,
+    torsoHip: 13.4,
+    torsoMid: 15.6,
+    torsoShoulder: 18.2,
+    neckBase: 7.4,
+    neckTop: 6.4,
+    upperArmTop: 8.2,
+    elbow: 6.9,
+    wrist: 5.5,
+    thighTop: 12.2,
+    knee: 9.1,
+    ankle: 6.7,
   }),
 });
 
@@ -170,6 +172,7 @@ const SUPPORTED_ACCESSORIES = Object.freeze([
 
 const SUPPORTED_HAIRSTYLES = Object.freeze([
   'none',
+  'textured_sweep',
   'short',
   'parted',
   'messy',
@@ -653,19 +656,19 @@ function normalizeAccessoryList(acc) {
 function resolveDefaultHairstyle(opts = {}, accList = []) {
   if (opts.hair !== undefined && opts.hair !== null && opts.hair !== '') {
     const requested = String(opts.hair).toLowerCase();
+    if (requested === 'bald') return 'none';
     if (SUPPORTED_HAIRSTYLES.includes(requested)) {
       return requested;
     }
   }
-  // Canonical single-colour minimalist stickman: smooth round head unless hairstyle is explicitly specified.
   void accList;
   return CANONICAL_CHARACTER_SPEC.defaultHairstyle;
 }
 
-function resolveHairRgb(opts = {}, mainRgb = [241, 245, 249]) {
+function resolveHairRgb(opts = {}) {
   if (opts.hairColor) return hexToRgb(opts.hairColor);
-  // Rich dark charcoal-espresso shade tinted 18% with character palette so it harmonizes on every background
-  return mixRgb([22, 27, 40], mainRgb, 0.20);
+  // Warm dark espresso-chestnut default hair colour matching the 3/4 illustrated cinema protagonist
+  return hexToRgb(CANONICAL_CHARACTER_SPEC.defaultHairColor || '#2c1f19');
 }
 
 // ---------------- HAIR RENDERING (BACK & FRONT LAYERS) ----------------
@@ -675,9 +678,9 @@ function drawHairBack(g, hd, hr, ha, s, hairStyle, hairRgb, outlineCol) {
   g.save();
   g.translate(hd[0], hd[1]);
   g.rotate(clamp(ha * 0.28, -0.20, 0.24));
-  g.fillStyle = rgbCss(hairRgb);
+  g.fillStyle = rgbCss(mixRgb(hairRgb, [10, 8, 12], 0.22));
   g.strokeStyle = outlineCol;
-  g.lineWidth = 2.2 * s;
+  g.lineWidth = 2.0 * s;
   g.lineJoin = 'round';
 
   if (hairStyle === 'long') {
@@ -702,19 +705,30 @@ function drawHairBack(g, hd, hr, ha, s, hairStyle, hairRgb, outlineCol) {
     g.arc(-hr * 1.02, -hr * 0.34, hr * 0.42, 0, Math.PI * 2);
     g.fill();
     g.stroke();
+  } else if (hairStyle === 'textured_sweep' || hairStyle === 'parted' || hairStyle === 'short' || hairStyle === 'messy') {
+    // Full tapered back-of-head & nape coverage behind the ear so zero white cranium peeks out at the nape
+    g.beginPath();
+    g.moveTo(-hr * 1.01, -hr * 0.16);
+    g.quadraticCurveTo(-hr * 1.10, hr * 0.34, -hr * 0.82, hr * 0.80);
+    g.quadraticCurveTo(-hr * 0.52, hr * 0.78, -hr * 0.44, hr * 0.42);
+    g.lineTo(-hr * 0.54, -hr * 0.16);
+    g.closePath();
+    g.fill();
+    g.stroke();
   }
   g.restore();
 }
 
-function drawHairFront(g, hd, hr, ha, s, hairStyle, hairRgb, rimRgb, outlineCol) {
+function drawHairFront(g, hd, hr, ha, s, hairStyle, hairRgb, rimRgb, outlineCol, screenGlow = 0) {
   if (!hairStyle || hairStyle === 'none') return;
-  const hiRgb = mixRgb(hairRgb, rimRgb, 0.28);
+  const hiRgb = mixRgb(hairRgb, [138, 104, 86], 0.30);
+  const deepStrandRgb = mixRgb(hairRgb, [8, 6, 8], 0.55);
   g.save();
   g.translate(hd[0], hd[1]);
   g.rotate(clamp(ha * 0.30, -0.22, 0.25));
   g.fillStyle = rgbCss(hairRgb);
   g.strokeStyle = outlineCol;
-  g.lineWidth = 2.1 * s;
+  g.lineWidth = 2.0 * s;
   g.lineJoin = 'round';
   g.lineCap = 'round';
 
@@ -772,7 +786,6 @@ function drawHairFront(g, hd, hr, ha, s, hairStyle, hairRgb, rimRgb, outlineCol)
       g.fill();
     }
   } else if (hairStyle === 'long' || hairStyle === 'ponytail' || hairStyle === 'bun') {
-    // Sleek swept crown + soft side-swept fringe framing forehead
     g.beginPath();
     g.arc(0, -hr * 0.04, hr * 1.05, Math.PI * 0.88, Math.PI * 1.94);
     g.quadraticCurveTo(hr * 0.42, -hr * 0.40, -hr * 0.18, -hr * 0.52);
@@ -781,27 +794,62 @@ function drawHairFront(g, hd, hr, ha, s, hairStyle, hairRgb, rimRgb, outlineCol)
     g.fill();
     g.stroke();
   } else {
-    // 'short', 'parted', 'slick' — clean modern sculpted cinema cut with sideburn taper & soft brow sweep
-    const frontSweep = hairStyle === 'parted' ? 1.08 : (hairStyle === 'slick' ? 0.96 : 1.02);
+    // 'textured_sweep', 'parted', 'short', 'slick' — sculpted 3/4 layered sweep with feathered front locks & sideburn
+    const lift = hairStyle === 'slick' ? 0.94 : (hairStyle === 'short' ? 1.00 : 1.08);
     g.beginPath();
-    g.moveTo(-hr * 0.95, hr * 0.24);
-    g.quadraticCurveTo(-hr * 1.08, -hr * 0.52, -hr * 0.52, -hr * 0.96);
-    g.quadraticCurveTo(hr * 0.12, -hr * 1.20 * frontSweep, hr * 0.84, -hr * 0.78);
-    g.quadraticCurveTo(hr * 1.02, -hr * 0.56, hr * 0.68, -hr * 0.48);
-    g.quadraticCurveTo(hr * 0.16, -hr * 0.62, -hr * 0.46, -hr * 0.42);
-    g.quadraticCurveTo(-hr * 0.56, -hr * 0.04, -hr * 0.66, hr * 0.18);
-    g.lineTo(-hr * 0.95, hr * 0.24);
+    // Start low behind the ear at the nape, sweep up rounded back cranium with layered silhouette
+    g.moveTo(-hr * 0.72, hr * 0.52);
+    g.quadraticCurveTo(-hr * 1.06, hr * 0.28, -hr * 1.08, -hr * 0.20);
+    g.lineTo(-hr * 0.99, -hr * 0.26);
+    g.quadraticCurveTo(-hr * 1.10, -hr * 0.64, -hr * 0.76, -hr * 0.94 * lift);
+    g.lineTo(-hr * 0.66, -hr * 0.88 * lift);
+    // Crown volume sweeping forward into feathered upturned front locks
+    g.quadraticCurveTo(-hr * 0.26, -hr * 1.24 * lift, hr * 0.34, -hr * 1.16 * lift);
+    g.quadraticCurveTo(hr * 0.78, -hr * 1.12 * lift, hr * 1.05, -hr * 0.92 * lift);
+    g.quadraticCurveTo(hr * 0.88, -hr * 0.76 * lift, hr * 0.74, -hr * 0.74 * lift);
+    g.quadraticCurveTo(hr * 0.94, -hr * 0.66 * lift, hr * 1.01, -hr * 0.58 * lift);
+    g.quadraticCurveTo(hr * 0.74, -hr * 0.48, hr * 0.34, -hr * 0.54);
+    // Forehead hairline curving back to temple & sideburn in front of the ear
+    g.quadraticCurveTo(-hr * 0.12, -hr * 0.64, -hr * 0.38, -hr * 0.40);
+    g.quadraticCurveTo(-hr * 0.33, -hr * 0.08, -hr * 0.37, hr * 0.18);
+    g.quadraticCurveTo(-hr * 0.46, hr * 0.16, -hr * 0.47, -hr * 0.04);
+    // Arch cleanly around the top & back of the C-ear to join the nape
+    g.quadraticCurveTo(-hr * 0.64, -hr * 0.16, -hr * 0.75, hr * 0.08);
+    g.quadraticCurveTo(-hr * 0.80, hr * 0.30, -hr * 0.72, hr * 0.52);
     g.closePath();
     g.fill();
     g.stroke();
 
-    // Subtle hair crown rim highlight
-    g.strokeStyle = `rgba(${hiRgb[0]},${hiRgb[1]},${hiRgb[2]},0.55)`;
-    g.lineWidth = 2.0 * s;
+    // Warm midtone crown sheen
+    g.strokeStyle = `rgba(${hiRgb[0]},${hiRgb[1]},${hiRgb[2]},0.44)`;
+    g.lineWidth = 2.2 * s;
     g.beginPath();
-    g.moveTo(-hr * 0.65, -hr * 0.62);
-    g.quadraticCurveTo(-hr * 0.20, -hr * 0.96, hr * 0.48, -hr * 0.76);
+    g.moveTo(-hr * 0.62, -hr * 0.72 * lift);
+    g.quadraticCurveTo(-hr * 0.06, -hr * 1.02 * lift, hr * 0.62, -hr * 0.84 * lift);
     g.stroke();
+
+    // Internal sculpted hair lock strand lines
+    g.strokeStyle = `rgba(${deepStrandRgb[0]},${deepStrandRgb[1]},${deepStrandRgb[2]},0.82)`;
+    g.lineWidth = 1.45 * s;
+    g.beginPath();
+    g.moveTo(-hr * 0.76, -hr * 0.42);
+    g.quadraticCurveTo(-hr * 0.26, -hr * 0.86 * lift, hr * 0.48, -hr * 0.78 * lift);
+    g.moveTo(-hr * 0.52, -hr * 0.22);
+    g.quadraticCurveTo(-hr * 0.04, -hr * 0.68 * lift, hr * 0.68, -hr * 0.62 * lift);
+    g.stroke();
+
+    // Subtle soft cyan bounce sheen on front hair tips when illuminated by phone/screen
+    if (screenGlow > 0.02) {
+      const glowA = clamp(screenGlow * 0.28, 0, 0.32);
+      g.strokeStyle = `rgba(148, 218, 252, ${glowA.toFixed(3)})`;
+      g.lineWidth = 1.2 * s;
+      g.beginPath();
+      g.moveTo(hr * 0.42, -hr * 0.53);
+      g.quadraticCurveTo(hr * 0.74, -hr * 0.51, hr * 0.96, -hr * 0.59 * lift);
+      g.stroke();
+    }
+    g.restore();
+    return;
   }
   g.restore();
 }
@@ -1085,7 +1133,79 @@ function drawTorsoCoat(g, r, build, coatColor = '#1e293b') {
   g.restore();
 }
 
-// ---------------- MICRO-DETAIL FACE, EAR & NOSE ----------------
+// ---------------- 3/4 SCULPTED HEAD, EAR & EXPRESSIVE FACE ----------------
+
+function traceHead3QPath(g, hr) {
+  g.beginPath();
+  // Top crown -> smooth back cranium -> nape -> jawline -> softly rounded 3/4 chin -> cheek -> forehead
+  g.moveTo(0, -hr * 1.01);
+  g.bezierCurveTo(-hr * 0.66, -hr * 1.01, -hr * 1.02, -hr * 0.56, -hr * 0.99, hr * 0.04);
+  g.bezierCurveTo(-hr * 0.96, hr * 0.52, -hr * 0.66, hr * 0.88, -hr * 0.16, hr * 1.00);
+  g.bezierCurveTo(hr * 0.22, hr * 1.08, hr * 0.62, hr * 0.98, hr * 0.84, hr * 0.66);
+  g.bezierCurveTo(hr * 1.01, hr * 0.38, hr * 1.02, -hr * 0.14, hr * 0.93, -hr * 0.52);
+  g.bezierCurveTo(hr * 0.80, -hr * 0.86, hr * 0.44, -hr * 1.01, 0, -hr * 1.01);
+  g.closePath();
+}
+
+function drawSculpted3QHead(g, hd, hr, ha, s, colors) {
+  const { outlineCol, sw, fillCol, screenGlow = 0 } = colors;
+  const headRot = clamp(Number(ha || 0) * 0.30, -0.22, 0.25);
+
+  g.save();
+  g.translate(hd[0], hd[1]);
+  if (Math.abs(headRot) > 0.002) g.rotate(headRot);
+
+  // Outer ink outline + pure interior fill
+  traceHead3QPath(g, hr);
+  g.lineJoin = 'round';
+  g.lineCap = 'round';
+  g.strokeStyle = outlineCol;
+  g.lineWidth = sw * 2;
+  g.stroke();
+  g.fillStyle = fillCol;
+  g.fill();
+
+  // Subtle 2.5D cool-slate back-edge shadow + interactive cyan screen bounce light on cheek & chin
+  g.save();
+  traceHead3QPath(g, hr);
+  g.clip();
+  const shGrad = g.createLinearGradient(-hr * 1.05, -hr * 0.3, hr * 0.45, hr * 0.2);
+  shGrad.addColorStop(0, 'rgba(134, 158, 194, 0.28)');
+  shGrad.addColorStop(0.55, 'rgba(134, 158, 194, 0.06)');
+  shGrad.addColorStop(1, 'rgba(134, 158, 194, 0.00)');
+  g.fillStyle = shGrad;
+  g.fillRect(-hr * 1.2, -hr * 1.2, hr * 2.4, hr * 2.4);
+
+  if (screenGlow > 0.02) {
+    const glowA = clamp(screenGlow * 0.36, 0, 0.42);
+    const faceGlow = g.createRadialGradient(hr * 0.68, hr * 0.42, hr * 0.05, hr * 0.52, hr * 0.30, hr * 1.05);
+    faceGlow.addColorStop(0, `rgba(125, 211, 252, ${glowA.toFixed(3)})`);
+    faceGlow.addColorStop(0.55, `rgba(186, 230, 253, ${(glowA * 0.38).toFixed(3)})`);
+    faceGlow.addColorStop(1, 'rgba(186, 230, 253, 0.000)');
+    g.fillStyle = faceGlow;
+    g.fillRect(-hr * 1.2, -hr * 1.2, hr * 2.4, hr * 2.4);
+  }
+  g.restore();
+
+  // Sculpted C-shaped ear on the 3/4 side of the head with inner tragus arc
+  const earX = -hr * 0.56;
+  const earY = hr * 0.08;
+  g.fillStyle = fillCol;
+  g.strokeStyle = outlineCol;
+  g.lineWidth = Math.max(1.5 * s, sw * 0.78);
+  g.beginPath();
+  g.arc(earX, earY, hr * 0.20, Math.PI * 0.48, Math.PI * 1.56);
+  g.fill();
+  g.stroke();
+
+  g.strokeStyle = 'rgba(13, 18, 28, 0.52)';
+  g.lineWidth = 1.25 * s;
+  g.beginPath();
+  g.arc(earX + hr * 0.02, earY + hr * 0.01, hr * 0.095, Math.PI * 0.62, Math.PI * 1.48);
+  g.stroke();
+
+  g.restore();
+}
 
 function drawFaceExpression(g, hd, hr, s, rawExpression = 'neutral', anim = {}) {
   const EXPR_ALIASES = { exhausted: 'tired', worried: 'sad', anxious: 'tense', calm: 'neutral' };
@@ -1098,21 +1218,14 @@ function drawFaceExpression(g, hd, hr, s, rawExpression = 'neutral', anim = {}) 
   const gT = Number(anim.globalT || 0);
   const seed = Number(anim.blinkSeed || 0);
 
-  // Ear C-shell on side of head (subtle anatomical anchor)
-  const earX = hd[0] - hr * 0.56;
-  const earY = hd[1] + hr * 0.08;
   g.save();
   if (Math.abs(headRot) > 0.002) {
     g.translate(hd[0], hd[1]);
     g.rotate(headRot);
     g.translate(-hd[0], -hd[1]);
   }
-  g.strokeStyle = 'rgba(13, 16, 23, 0.45)';
-  g.lineWidth = 1.8 * s;
   g.lineCap = 'round';
-  g.beginPath();
-  g.arc(earX, earY, hr * 0.19, Math.PI * 0.55, Math.PI * 1.55);
-  g.stroke();
+  g.lineJoin = 'round';
 
   // Deterministic, desynchronized natural eye blink (~0.13s every ~3.8s)
   const blinkPeriod = 3.55 + (Math.abs(Math.sin(seed * 19.7)) * 1.15);
@@ -1122,100 +1235,107 @@ function drawFaceExpression(g, hd, hr, s, rawExpression = 'neutral', anim = {}) 
 
   const ex1 = hd[0] + hr * 0.14 + lookX;
   const ex2 = hd[0] + hr * 0.56 + lookX;
-  const ey = hd[1] - hr * 0.03 + lookY;
-  const er = 3.05 * s;
+  const ey = hd[1] - hr * 0.01 + lookY;
+  const er = 2.95 * s;
 
   g.fillStyle = '#0d1017';
   g.strokeStyle = '#0d1017';
 
   if (expression === 'slumped' || blinkClose > 0.72) {
-    g.lineWidth = 2.2 * s;
+    g.lineWidth = 2.1 * s;
     g.beginPath();
     g.moveTo(ex1 - 3.3 * s, ey + 0.8 * s); g.lineTo(ex1 + 3.3 * s, ey + 0.8 * s);
     g.moveTo(ex2 - 2.9 * s, ey + 0.8 * s); g.lineTo(ex2 + 2.9 * s, ey + 0.8 * s);
     g.stroke();
   } else {
-    const baseScaleY = expression === 'shocked' ? 1.32 : (expression === 'sad' || expression === 'tired' ? 0.84 : 1.02);
+    const baseScaleY = expression === 'shocked' ? 1.30 : (expression === 'sad' || expression === 'tired' ? 0.84 : 1.00);
     const scaleY = Math.max(0.22, baseScaleY * (1 - blinkClose * 0.85));
-    // Crisp dark pupil/iris
+    // Subtle upper eyelid contour arcs
+    g.strokeStyle = 'rgba(13, 16, 23, 0.55)';
+    g.lineWidth = 1.2 * s;
     g.beginPath();
-    g.ellipse(ex1, ey, er, er * scaleY, 0, 0, Math.PI * 2);
-    g.ellipse(ex2, ey, er * 0.88, er * 0.88 * scaleY, 0, 0, Math.PI * 2);
+    g.arc(ex1, ey - 0.3 * s, er * 1.24, Math.PI * 1.12, Math.PI * 1.88);
+    g.stroke();
+    g.beginPath();
+    g.arc(ex2, ey - 0.3 * s, er * 1.10, Math.PI * 1.12, Math.PI * 1.88);
+    g.stroke();
+
+    // Crisp dark pupil/iris
+    g.fillStyle = '#0d1017';
+    g.beginPath();
+    g.ellipse(ex1, ey, er * 0.92, er * scaleY, 0, 0, Math.PI * 2);
+    g.ellipse(ex2, ey, er * 0.82, er * 0.88 * scaleY, 0, 0, Math.PI * 2);
     g.fill();
 
-    // Lively specular eye catchlight dot (dimmer when tired/sad, bright when hopeful/alert)
+    // Subtle specular eye catchlight dot
     if (scaleY > 0.45) {
-      const catchAlpha = (expression === 'tired' || expression === 'sad') ? 0.45 : 0.92;
+      const catchAlpha = (expression === 'tired' || expression === 'sad') ? 0.42 : 0.85;
       g.fillStyle = `rgba(255,255,255,${catchAlpha})`;
       g.beginPath();
-      g.arc(ex1 - 0.85 * s, ey - 0.95 * s * scaleY, 0.95 * s, 0, Math.PI * 2);
-      g.arc(ex2 - 0.75 * s, ey - 0.85 * s * scaleY, 0.82 * s, 0, Math.PI * 2);
+      g.arc(ex1 - 0.75 * s, ey - 0.85 * s * scaleY, 0.82 * s, 0, Math.PI * 2);
+      g.arc(ex2 - 0.65 * s, ey - 0.75 * s * scaleY, 0.72 * s, 0, Math.PI * 2);
       g.fill();
       g.fillStyle = '#0d1017';
     }
   }
 
-  // Subtle nose bridge & tip contour between and slightly below the eyes
-  const nx = hd[0] + hr * 0.41 + lookX * 0.55;
-  const ny = ey + 2.6 * s;
-  g.strokeStyle = 'rgba(13, 16, 23, 0.56)';
-  g.lineWidth = 1.55 * s;
+  // Subtle 3/4 nose bridge & rounded tip between and below the eyes
+  const nx = hd[0] + hr * 0.42 + lookX * 0.52;
+  const ny = ey + 2.8 * s;
+  g.strokeStyle = 'rgba(13, 16, 23, 0.62)';
+  g.lineWidth = 1.5 * s;
   g.beginPath();
-  g.moveTo(nx - 0.5 * s, ny - 2.2 * s);
-  g.quadraticCurveTo(nx + 2.8 * s, ny + 1.4 * s, nx - 0.2 * s, ny + 2.6 * s);
+  g.moveTo(nx - 0.4 * s, ny - 2.4 * s);
+  g.quadraticCurveTo(nx + 2.9 * s, ny + 1.5 * s, nx - 0.3 * s, ny + 2.7 * s);
   g.stroke();
 
-  // Subtle under-eye fatigue creases
-  g.strokeStyle = '#0d1017';
-  if (expression === 'tired' || expression === 'tense' || expression === 'sad') {
-    g.strokeStyle = 'rgba(13, 16, 23, 0.65)';
-    g.lineWidth = 1.35 * s;
-    g.beginPath();
-    g.arc(ex1, ey + 1.5 * s, er * 1.35, 0.18 * Math.PI, 0.82 * Math.PI);
-    g.stroke();
-    g.beginPath();
-    g.arc(ex2, ey + 1.3 * s, er * 1.20, 0.18 * Math.PI, 0.82 * Math.PI);
-    g.stroke();
-    g.strokeStyle = '#0d1017';
-  }
+  // Gentle lower-lid / late-night under-eye contour (prominent when tired/tense/sad, delicate otherwise)
+  const underEyeAlpha = (expression === 'tired' || expression === 'tense' || expression === 'sad') ? 0.62 : 0.24;
+  g.strokeStyle = `rgba(13, 16, 23, ${underEyeAlpha})`;
+  g.lineWidth = 1.25 * s;
+  g.beginPath();
+  g.arc(ex1, ey + 1.4 * s, er * 1.32, 0.20 * Math.PI, 0.80 * Math.PI);
+  g.stroke();
+  g.beginPath();
+  g.arc(ex2, ey + 1.2 * s, er * 1.16, 0.20 * Math.PI, 0.80 * Math.PI);
+  g.stroke();
 
-  // Curved expressive eyebrows (smooth quadratic arcs with subtle speech micro-lift)
-  g.lineWidth = 2.2 * s;
+  // Sculpted dark-espresso eyebrows
+  g.strokeStyle = '#1f1614';
+  g.lineWidth = 2.35 * s;
   const talkLift = talkAmt * 1.25 * s;
-  const by = ey - 6.6 * s - talkLift;
+  const by = ey - 6.8 * s - talkLift;
   g.beginPath();
   if (expression === 'sad' || expression === 'tired' || expression === 'slumped') {
-    g.moveTo(ex1 - 4.4 * s, by + 1.9 * s);
-    g.quadraticCurveTo(ex1 - 0.6 * s, by + 0.6 * s, ex1 + 3.2 * s, by - 1.5 * s);
-    g.moveTo(ex2 - 2.6 * s, by - 1.5 * s);
-    g.quadraticCurveTo(ex2 + 0.6 * s, by + 0.5 * s, ex2 + 3.8 * s, by + 1.9 * s);
+    g.moveTo(ex1 - 4.5 * s, by + 1.8 * s);
+    g.quadraticCurveTo(ex1 - 0.6 * s, by + 0.5 * s, ex1 + 3.2 * s, by - 1.4 * s);
+    g.moveTo(ex2 - 2.6 * s, by - 1.4 * s);
+    g.quadraticCurveTo(ex2 + 0.6 * s, by + 0.4 * s, ex2 + 3.8 * s, by + 1.8 * s);
   } else if (expression === 'determined' || expression === 'focused' || expression === 'tense') {
-    g.moveTo(ex1 - 4.2 * s, by - 1.8 * s);
-    g.quadraticCurveTo(ex1 - 0.2 * s, by - 0.3 * s, ex1 + 3.4 * s, by + 1.5 * s);
-    g.moveTo(ex2 - 2.8 * s, by + 1.5 * s);
-    g.quadraticCurveTo(ex2 + 0.4 * s, by - 0.3 * s, ex2 + 3.8 * s, by - 1.8 * s);
+    g.moveTo(ex1 - 4.3 * s, by - 1.4 * s);
+    g.quadraticCurveTo(ex1 - 0.2 * s, by - 0.2 * s, ex1 + 3.4 * s, by + 1.2 * s);
+    g.moveTo(ex2 - 2.8 * s, by + 1.2 * s);
+    g.quadraticCurveTo(ex2 + 0.4 * s, by - 0.2 * s, ex2 + 3.8 * s, by - 1.4 * s);
   } else if (expression === 'excited' || expression === 'hopeful' || expression === 'shocked' || expression === 'curious') {
-    const lift = expression === 'shocked' ? 3.3 * s : 1.8 * s;
-    g.moveTo(ex1 - 3.8 * s, by - lift + 1.2 * s);
-    g.quadraticCurveTo(ex1 - 0.3 * s, by - lift - 1.8 * s, ex1 + 3.2 * s, by - lift + 0.4 * s);
-    g.moveTo(ex2 - 2.6 * s, by - lift + 0.4 * s);
-    g.quadraticCurveTo(ex2 + 0.4 * s, by - lift - 1.8 * s, ex2 + 3.4 * s, by - lift + 1.2 * s);
+    const lift = expression === 'shocked' ? 3.2 * s : 1.7 * s;
+    g.moveTo(ex1 - 3.9 * s, by - lift + 1.1 * s);
+    g.quadraticCurveTo(ex1 - 0.3 * s, by - lift - 1.7 * s, ex1 + 3.2 * s, by - lift + 0.3 * s);
+    g.moveTo(ex2 - 2.6 * s, by - lift + 0.3 * s);
+    g.quadraticCurveTo(ex2 + 0.4 * s, by - lift - 1.7 * s, ex2 + 3.4 * s, by - lift + 1.1 * s);
   } else {
-    g.moveTo(ex1 - 3.7 * s, by + 0.4 * s);
-    g.quadraticCurveTo(ex1 - 0.3 * s, by - 1.1 * s, ex1 + 3.1 * s, by + 0.1 * s);
+    g.moveTo(ex1 - 3.9 * s, by + 0.3 * s);
+    g.quadraticCurveTo(ex1 - 0.3 * s, by - 1.2 * s, ex1 + 3.2 * s, by + 0.1 * s);
     g.moveTo(ex2 - 2.6 * s, by + 0.1 * s);
-    g.quadraticCurveTo(ex2 + 0.3 * s, by - 1.1 * s, ex2 + 3.3 * s, by + 0.4 * s);
+    g.quadraticCurveTo(ex2 + 0.3 * s, by - 1.2 * s, ex2 + 3.4 * s, by + 0.3 * s);
   }
   g.stroke();
 
   // Acoustic-envelope 4-viseme lip-sync mouth when character is speaking; naturally closed when silent/listening
-  const mx = hd[0] + hr * 0.33 + lookX * 0.45;
-  const my = ey + 8.2 * s - lookY * 0.25;
-  g.lineWidth = 1.9 * s;
+  const mx = hd[0] + hr * 0.34 + lookX * 0.45;
+  const my = ey + 8.6 * s - lookY * 0.25;
+  g.strokeStyle = '#0d1017';
+  g.lineWidth = 1.75 * s;
   if (talkAmt > 0.04 && viseme === 'closed') {
-    // Bilabial closure (`M/B/P`) remains a sealed mouth even during the acoustic speech envelope.
-    g.strokeStyle = '#0d1017';
-    g.lineWidth = 1.8 * s;
     g.beginPath();
     g.moveTo(mx - 3.8 * s, my + 0.9 * s);
     g.quadraticCurveTo(mx, my + 1.3 * s, mx + 3.8 * s, my + 0.9 * s);
@@ -1239,7 +1359,6 @@ function drawFaceExpression(g, hd, hr, s, rawExpression = 'neutral', anim = {}) 
     if (viseme === 'round') {
       g.ellipse(mx, cy, openW, openH, 0, 0, Math.PI * 2);
     } else {
-      // Natural articulated D-mouth: flatter upper lip, curved lower jaw
       g.moveTo(mx - openW, cy - openH * 0.42);
       g.quadraticCurveTo(mx, cy - openH * 0.68, mx + openW, cy - openH * 0.42);
       g.quadraticCurveTo(mx + openW * 0.92, cy + openH * 1.08, mx, cy + openH * 1.08);
@@ -1248,14 +1367,12 @@ function drawFaceExpression(g, hd, hr, s, rawExpression = 'neutral', anim = {}) 
     }
     g.fill();
 
-    // Crisp subtle upper-teeth hint on wide/open vowels
     if (viseme !== 'round' && openH > 1.55 * s) {
       g.fillStyle = 'rgba(241, 245, 249, 0.88)';
       g.beginPath();
       g.roundRect(mx - openW * 0.68, cy - openH * 0.48, openW * 1.36, Math.min(1.5 * s, openH * 0.42), 0.7 * s);
       g.fill();
     }
-    // Warm tongue cue on fuller jaw openings
     if (openH > 2.25 * s) {
       g.fillStyle = '#be4b5c';
       g.beginPath();
@@ -1284,10 +1401,10 @@ function drawFaceExpression(g, hd, hr, s, rawExpression = 'neutral', anim = {}) 
       g.ellipse(mx, my + 0.6 * s, 2.1 * s, 2.4 * s, 0, 0, Math.PI * 2);
     } else if (expression === 'sad' || expression === 'tired' || expression === 'tense') {
       g.moveTo(mx - 4.2 * s, my + 1.8 * s);
-      g.quadraticCurveTo(mx, my + 0.3 * s, mx + 3.6 * s, my + 2.1 * s);
+      g.quadraticCurveTo(mx, my + 0.4 * s, mx + 3.6 * s, my + 2.0 * s);
     } else {
-      g.moveTo(mx - 3.6 * s, my + 0.8 * s);
-      g.quadraticCurveTo(mx, my + 1.2 * s, mx + 3.5 * s, my + 0.6 * s);
+      g.moveTo(mx - 3.7 * s, my + 0.9 * s);
+      g.quadraticCurveTo(mx, my + 1.35 * s, mx + 3.6 * s, my + 0.7 * s);
     }
     g.stroke();
   }
@@ -1332,45 +1449,65 @@ function fillTangentCapsule(g, pA, rA, pB, rB, colorCss) {
 function traceHandSilhouette(g, handPose, s) {
   g.beginPath();
   if (handPose === 'point') {
-    g.moveTo(-2.5 * s, -4.4 * s);
-    g.lineTo(6.5 * s, -4.6 * s);
-    g.lineTo(15.5 * s, -3.5 * s);
-    g.quadraticCurveTo(17.5 * s, -1.7 * s, 15.2 * s, -0.2 * s);
-    g.lineTo(8.5 * s, 0.3 * s);
-    g.quadraticCurveTo(9.4 * s, 4.4 * s, 4.5 * s, 4.8 * s);
-    g.lineTo(-2.5 * s, 4.0 * s);
-    g.closePath();
-  } else if (handPose === 'open' || handPose === 'wave' || handPose === 'clasp') {
-    g.moveTo(-2.5 * s, -4.2 * s);
-    g.lineTo(3.2 * s, -8.5 * s);
-    g.quadraticCurveTo(5.9 * s, -8.8 * s, 5.8 * s, -5.2 * s);
-    g.lineTo(13.0 * s, -4.2 * s);
-    g.quadraticCurveTo(15.5 * s, 0, 12.4 * s, 4.4 * s);
-    g.lineTo(3.5 * s, 5.0 * s);
-    g.lineTo(-2.5 * s, 4.0 * s);
+    g.moveTo(-2.6 * s, -4.4 * s);
+    g.lineTo(5.8 * s, -5.8 * s);
+    g.quadraticCurveTo(8.0 * s, -5.4 * s, 7.2 * s, -3.4 * s);
+    g.lineTo(16.8 * s, -2.8 * s);
+    g.quadraticCurveTo(18.6 * s, -1.3 * s, 16.4 * s, 0.2 * s);
+    g.lineTo(9.2 * s, 0.6 * s);
+    g.quadraticCurveTo(10.0 * s, 4.6 * s, 4.8 * s, 5.0 * s);
+    g.lineTo(-2.6 * s, 4.0 * s);
     g.closePath();
   } else if (handPose === 'fist' || handPose === 'grip') {
-    g.roundRect(-2.5 * s, -4.9 * s, 11.2 * s, 9.6 * s, 3.8 * s);
+    g.roundRect(-2.5 * s, -4.8 * s, 11.2 * s, 9.6 * s, 3.8 * s);
   } else {
-    g.moveTo(-2.5 * s, -4.2 * s);
-    g.lineTo(4.0 * s, -6.5 * s);
-    g.quadraticCurveTo(6.6 * s, -6.1 * s, 6.0 * s, -3.7 * s);
-    g.lineTo(11.4 * s, -2.9 * s);
-    g.quadraticCurveTo(13.6 * s, 1.0 * s, 9.6 * s, 4.5 * s);
-    g.lineTo(-2.5 * s, 3.8 * s);
+    // Articulated 4-finger + inner thumb silhouette ('relaxed', 'open', 'wave', 'clasp')
+    const spread = (handPose === 'open' || handPose === 'wave') ? 1.18 : 1.0;
+    // Wrist inner (-Y is forward/thumb side when arm hangs down at +PI/2)
+    g.moveTo(-2.6 * s, -4.3 * s);
+    // Thumb branching forward-down
+    g.quadraticCurveTo(2.4 * s, -6.2 * s * spread, 7.6 * s, -6.8 * s * spread);
+    g.quadraticCurveTo(9.4 * s, -6.3 * s * spread, 8.6 * s, -4.4 * s * spread);
+    g.lineTo(5.4 * s, -3.3 * s);
+    // Index finger
+    g.lineTo(14.2 * s, -3.1 * s * spread);
+    g.quadraticCurveTo(16.0 * s, -2.1 * s, 14.4 * s, -1.1 * s);
+    // Middle finger (longest)
+    g.lineTo(15.6 * s, -0.7 * s);
+    g.quadraticCurveTo(17.2 * s, 0.4 * s, 15.4 * s, 1.5 * s);
+    // Ring finger
+    g.lineTo(14.3 * s, 1.9 * s);
+    g.quadraticCurveTo(15.7 * s, 2.9 * s, 13.8 * s, 3.8 * s);
+    // Little finger + outer palm heel
+    g.lineTo(11.6 * s, 4.2 * s * spread);
+    g.quadraticCurveTo(12.4 * s, 5.3 * s * spread, 9.8 * s, 5.5 * s * spread);
+    g.quadraticCurveTo(4.2 * s, 5.2 * s, -2.6 * s, 4.1 * s);
     g.closePath();
   }
 }
 
+function drawHandFingerSeparators(g, handPose, s, outlineCol) {
+  if (handPose === 'fist' || handPose === 'grip' || handPose === 'point') return;
+  g.strokeStyle = outlineCol;
+  g.lineWidth = 1.25 * s;
+  g.lineCap = 'round';
+  g.beginPath();
+  // Subtle inter-finger separation creases for index / middle / ring / pinky
+  g.moveTo(7.4 * s, -1.1 * s);
+  g.lineTo(14.1 * s, -1.1 * s);
+  g.moveTo(7.6 * s, 1.45 * s);
+  g.lineTo(14.0 * s, 1.55 * s);
+  g.moveTo(7.2 * s, 3.65 * s);
+  g.lineTo(11.6 * s, 3.85 * s);
+  g.stroke();
+}
+
 /**
- * Renders a complete seamless arm (`shoulder -> elbow -> wrist -> hand`) using a strict
- * two-pass silhouette-outline + unified-fill pass:
- *  - Zero black/discoloured circles on bent elbows at any angle.
- *  - Zero wrist seam between forearm and palm.
- *  - Identical `fillCol` and `sw` outline thickness along the entire limb.
+ * Renders a complete seamless arm (`shoulder -> elbow -> wrist -> articulated hand`) with
+ * subtle 2.5D cylindrical edge shading and optional cyan screen bounce rim-light.
  */
 function drawSeamlessArm(g, points, radii, handPose, s, colors) {
-  const { outlineCol, sw, fillCol } = colors;
+  const { outlineCol, sw, fillCol, screenGlow = 0, shadeSide = -1 } = colors;
   const [p0, p1, p2] = points;
   const [r0, r1, r2] = radii;
   const forearmAngle = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]);
@@ -1404,86 +1541,175 @@ function drawSeamlessArm(g, points, radii, handPose, s, colors) {
   traceHandSilhouette(g, handPose, s);
   g.fillStyle = fillCol;
   g.fill();
+  drawHandFingerSeparators(g, handPose, s, outlineCol);
   g.restore();
+
+  // Subtle 2.5D cool-slate shadow along back edge of upper arm & forearm
+  if (shadeSide !== 0) {
+    g.save();
+    traceTangentCapsule(g, p0, r0, p1, r1);
+    g.clip();
+    const gArm = g.createLinearGradient(p0[0] - r0 * 1.2, p0[1], p0[0] + r0 * 0.9, p0[1]);
+    gArm.addColorStop(0, 'rgba(134, 158, 194, 0.26)');
+    gArm.addColorStop(0.65, 'rgba(134, 158, 194, 0.04)');
+    gArm.addColorStop(1, 'rgba(134, 158, 194, 0.00)');
+    g.fillStyle = gArm;
+    g.fillRect(Math.min(p0[0], p1[0]) - r0 * 2, Math.min(p0[1], p1[1]) - r0 * 2, Math.abs(p1[0] - p0[0]) + r0 * 4, Math.abs(p1[1] - p0[1]) + r0 * 4);
+    g.restore();
+  }
+
+  // Interactive cyan screen bounce light along the active forearm when holding a lit phone
+  if (screenGlow > 0.02) {
+    g.save();
+    traceTangentCapsule(g, p1, r1, p2, r2);
+    g.clip();
+    const glowA = clamp(screenGlow * 0.40, 0, 0.45);
+    const fGlow = g.createLinearGradient(p2[0], p2[1] - r1 * 1.4, p1[0], p1[1] + r1 * 1.2);
+    fGlow.addColorStop(0, `rgba(125, 211, 252, ${glowA.toFixed(3)})`);
+    fGlow.addColorStop(0.65, `rgba(186, 230, 253, ${(glowA * 0.35).toFixed(3)})`);
+    fGlow.addColorStop(1, 'rgba(186, 230, 253, 0.000)');
+    g.fillStyle = fGlow;
+    g.fillRect(Math.min(p1[0], p2[0]) - r1 * 2, Math.min(p1[1], p2[1]) - r1 * 2, Math.abs(p2[0] - p1[0]) + r1 * 4, Math.abs(p2[1] - p1[1]) + r1 * 4);
+    g.restore();
+  }
+
+  // Subtle inner elbow crease when arm is noticeably bent
+  const uAng = Math.atan2(p0[1] - p1[1], p0[0] - p1[0]);
+  const bendDiff = Math.abs(Math.atan2(Math.sin(forearmAngle - uAng), Math.cos(forearmAngle - uAng)));
+  if (bendDiff < Math.PI * 0.80) {
+    const bis = Math.atan2(
+      Math.sin(uAng) + Math.sin(forearmAngle),
+      Math.cos(uAng) + Math.cos(forearmAngle)
+    );
+    g.strokeStyle = 'rgba(13, 18, 28, 0.45)';
+    g.lineWidth = 1.35 * s;
+    g.beginPath();
+    g.moveTo(p1[0] + Math.cos(bis) * r1 * 0.25, p1[1] + Math.sin(bis) * r1 * 0.25);
+    g.lineTo(p1[0] + Math.cos(bis) * r1 * 0.88, p1[1] + Math.sin(bis) * r1 * 0.88);
+    g.stroke();
+  }
 
   g.restore();
 }
 
-function traceFootSilhouette(g, s) {
-  const heelX = -6.4 * s;
-  const toeX = 20.2 * s;
-  const soleY = 3.2 * s;
-  const cuffY = -6.2 * s;
+function traceSlipOnShoeUpper(g, s) {
+  const heelX = -8.2 * s;
+  const toeX = 22.8 * s;
+  const soleBotY = 3.8 * s;
   g.beginPath();
-  g.moveTo(heelX + 0.4 * s, cuffY + 1.2 * s);
-  g.lineTo(5.0 * s, cuffY);
-  g.quadraticCurveTo(13.0 * s, -4.4 * s, toeX - 1.2 * s, -2.4 * s);
-  g.quadraticCurveTo(toeX + 2.6 * s, 0.2 * s, toeX, soleY);
-  g.lineTo(heelX + 0.6 * s, soleY);
-  g.quadraticCurveTo(heelX - 0.6 * s, 0.4 * s, heelX + 0.4 * s, cuffY + 1.2 * s);
+  // Low-cut heel counter -> dipped ankle collar notch (revealing white ankle!) -> sleek loafer vamp -> rounded toe -> flat sole
+  g.moveTo(heelX + 0.6 * s, -4.4 * s);
+  g.quadraticCurveTo(-2.4 * s, -1.6 * s, 4.6 * s, -5.2 * s);
+  g.quadraticCurveTo(13.4 * s, -4.6 * s, toeX - 1.2 * s, -1.8 * s);
+  g.quadraticCurveTo(toeX + 2.6 * s, 0.6 * s, toeX + 0.4 * s, soleBotY);
+  g.lineTo(heelX + 0.4 * s, soleBotY);
+  g.quadraticCurveTo(heelX - 1.2 * s, -0.2 * s, heelX + 0.6 * s, -4.4 * s);
   g.closePath();
 }
 
 /**
- * Renders a complete seamless leg (`hip -> knee -> ankle -> grounded foot`) using
- * two-pass silhouette-outline + unified-fill rendering:
- *  - Zero black/dark circles or notches on bent knees (seated 90°, running, crouching).
- *  - Zero ankle seam when using canonical single-colour body fill.
- *  - Strict floor guard so pitched feet never sink below the floor plane.
+ * Renders a complete seamless leg (`hip -> knee -> ankle -> sleek slip-on shoe with crisp white sole`):
+ *  - Zero horizontal joint lines across thigh/knee/shin.
+ *  - Subtle 2.5D cool-slate shadow along back of leg.
+ *  - Grounded matte-black slip-on loafer with crisp white sole trim and visible white ankle opening.
  */
 function drawSeamlessLeg(g, points, radii, fy, s, footAngle, colors) {
-  const { outlineCol, sw, fillCol, footFillCol } = colors;
+  const { outlineCol, sw, fillCol, footFillCol, barefoot = false } = colors;
   const [p0, p1, p2] = points;
   const [r0, r1, r2] = radii;
-  const maxToeLen = 21.5 * s;
+  const maxToeLen = 23.2 * s;
   const rawPitch = clamp(footAngle || 0, -0.55, 0.65);
   const sinkEstimate = Math.max(0, Math.sin(rawPitch) * maxToeLen);
-  const liftGuard = (p2[1] + 2.5 * s + sinkEstimate > fy + 3.0 * s)
-    ? (p2[1] + 2.5 * s + sinkEstimate) - (fy + 3.0 * s)
+  const liftGuard = (p2[1] + 2.8 * s + sinkEstimate > fy + 3.2 * s)
+    ? (p2[1] + 2.8 * s + sinkEstimate) - (fy + 3.2 * s)
     : 0;
   const footCenter = [p2[0], p2[1] - liftGuard];
-  const unifiedFoot = !footFillCol || footFillCol === fillCol;
+  // Tuck the lower shin capsule center inside the shoe collar so the ankle circle never pokes below the sole!
+  const ankleTuck = barefoot ? p2 : [footCenter[0], footCenter[1] - 3.4 * s];
+  const rAnkle = barefoot ? r2 : r2 * 0.88;
 
   g.save();
   g.lineJoin = 'round';
   g.lineCap = 'round';
 
-  // Pass 1: Outer silhouette outline (`sw` border)
+  // Pass 1: Outer silhouette outline (`sw` border) for thigh + shin + ankle
   fillTangentCapsule(g, p0, r0 + sw, p1, r1 + sw, outlineCol);
-  fillTangentCapsule(g, p1, r1 + sw, p2, r2 + sw, outlineCol);
-  if (unifiedFoot) {
-    g.save();
-    g.translate(footCenter[0], footCenter[1]);
-    g.rotate(rawPitch);
-    traceFootSilhouette(g, s);
-    g.fillStyle = outlineCol;
-    g.fill();
-    if (sw > 0.05) {
-      g.strokeStyle = outlineCol;
-      g.lineWidth = sw * 2;
-      g.stroke();
-    }
-    g.restore();
-  }
+  fillTangentCapsule(g, p1, r1 + sw, ankleTuck, rAnkle + sw, outlineCol);
 
-  // Pass 2: Unified single-colour interior fill across thigh, knee, shin, and foot
+  // Pass 2: Unified white interior fill across thigh, knee, shin, and ankle opening
   fillTangentCapsule(g, p0, r0, p1, r1, fillCol);
-  fillTangentCapsule(g, p1, r1, p2, r2, fillCol);
+  fillTangentCapsule(g, p1, r1, ankleTuck, rAnkle, fillCol);
+
+  // Subtle 2.5D cool-slate cylindrical shadow along left/back edge of leg (split cleanly at p1[1] so zero knee overlap circle forms!)
+  const legLeftX = Math.min(p0[0], p1[0], ankleTuck[0]) - r0 * 1.1;
+  const legRightX = Math.max(p0[0], p1[0], ankleTuck[0]) + r0 * 0.75;
+  const legSh = g.createLinearGradient(legLeftX, p0[1], legRightX, p0[1]);
+  legSh.addColorStop(0, 'rgba(134, 158, 194, 0.24)');
+  legSh.addColorStop(0.62, 'rgba(134, 158, 194, 0.04)');
+  legSh.addColorStop(1, 'rgba(134, 158, 194, 0.00)');
+
+  g.save();
+  g.beginPath();
+  g.rect(legLeftX - r0 * 2, Math.min(p0[1], p1[1]) - r0 * 2, (legRightX - legLeftX) + r0 * 4, (p1[1] - Math.min(p0[1], p1[1])) + r0 * 2);
+  g.clip();
+  traceTangentCapsule(g, p0, r0, p1, r1);
+  g.clip();
+  g.fillStyle = legSh;
+  g.fillRect(legLeftX - r0 * 2, p0[1] - r0 * 2, (legRightX - legLeftX) + r0 * 4, Math.abs(p1[1] - p0[1]) + r0 * 4);
+  g.restore();
+
+  g.save();
+  g.beginPath();
+  g.rect(legLeftX - r0 * 2, p1[1], (legRightX - legLeftX) + r0 * 4, Math.max(2, ankleTuck[1] - p1[1]) + r1 * 2);
+  g.clip();
+  traceTangentCapsule(g, p1, r1, ankleTuck, rAnkle);
+  g.clip();
+  g.fillStyle = legSh;
+  g.fillRect(legLeftX - r0 * 2, p1[1] - r1, (legRightX - legLeftX) + r0 * 4, Math.abs(ankleTuck[1] - p1[1]) + r1 * 3);
+  g.restore();
+
+  // Pass 3: Grounded sleek slip-on shoe with crisp white sole trim (or unified foot when barefoot)
   g.save();
   g.translate(footCenter[0], footCenter[1]);
   g.rotate(rawPitch);
-  traceFootSilhouette(g, s);
-  if (!unifiedFoot) {
-    if (sw > 0.05) {
-      g.strokeStyle = outlineCol;
-      g.lineWidth = sw * 2;
-      g.stroke();
-    }
-    g.fillStyle = footFillCol;
-    g.fill();
-  } else {
-    g.fillStyle = fillCol;
-    g.fill();
+
+  // Delicate ankle malleolus contour tick right above the shoe collar
+  g.strokeStyle = 'rgba(13, 18, 28, 0.38)';
+  g.lineWidth = 1.2 * s;
+  g.beginPath();
+  g.arc(-1.2 * s, -4.4 * s, 2.2 * s, Math.PI * 0.15, Math.PI * 0.85);
+  g.stroke();
+
+  traceSlipOnShoeUpper(g, s);
+  if (sw > 0.05) {
+    g.strokeStyle = outlineCol;
+    g.lineWidth = sw * 1.85;
+    g.stroke();
+  }
+  g.fillStyle = barefoot ? fillCol : (footFillCol || CANONICAL_CHARACTER_SPEC.defaultShoeColor);
+  g.fill();
+
+  if (!barefoot) {
+    // Crisp white vulcanized sole trim along the bottom of the black slip-on loafer
+    g.save();
+    traceSlipOnShoeUpper(g, s);
+    g.clip();
+    g.fillStyle = '#f4f7fb';
+    g.fillRect(-10 * s, 1.35 * s, 35 * s, 2.8 * s);
+    g.strokeStyle = outlineCol;
+    g.lineWidth = 1.15 * s;
+    g.beginPath();
+    g.moveTo(-9 * s, 1.35 * s);
+    g.lineTo(24 * s, 1.35 * s);
+    g.stroke();
+    // Subtle dark-slate sheen arc across the shoe vamp so black shoe reads cleanly on dark floors
+    g.strokeStyle = 'rgba(148, 163, 184, 0.24)';
+    g.lineWidth = 1.2 * s;
+    g.beginPath();
+    g.moveTo(5.2 * s, -3.6 * s);
+    g.quadraticCurveTo(13.2 * s, -3.1 * s, 19.8 * s, -0.8 * s);
+    g.stroke();
+    g.restore();
   }
   g.restore();
 
@@ -1499,13 +1725,54 @@ function computeTorsoRadii(s, build) {
   };
 }
 
-function drawSeamlessTorsoAndNeck(g, r, build, includeNeck, colors) {
-  const { outlineCol, sw, fillCol } = colors;
+function trace3QTorsoPath(g, geom) {
+  const {
+    sh, mid, shNear, shFar, hipL, hipR, legR0, armR0, neckBaseR, s,
+  } = geom;
+  const topShoulderY = sh[1] - 5.2 * s;
+  const nearOuterX = shNear[0] - armR0 * 0.85;
+  const farOuterX = shFar[0] + armR0 * 0.42;
+  const waistY = lerp(sh[1], 0.5 * (hipL[1] + hipR[1]), 0.64);
+  const waistNearX = lerp(nearOuterX + armR0 * 0.45, hipL[0] - legR0 * 0.96, 0.68) + (mid[0] - sh[0]) * 0.45;
+  const waistFarX = lerp(farOuterX, hipR[0] + legR0 * 0.96, 0.68) + (mid[0] - sh[0]) * 0.45;
+  const hipOuterLX = hipL[0] - legR0 * 0.98;
+  const hipOuterRX = hipR[0] + legR0 * 0.98;
+  const crotchX = 0.5 * (hipL[0] + hipR[0]) + 0.8 * s;
+  const crotchY = Math.max(hipL[1], hipR[1]) + legR0 * 0.42;
+
+  g.beginPath();
+  // Start at left neck base -> slope smoothly across left trapezius right onto outer near deltoid cap
+  g.moveTo(sh[0] - neckBaseR * 0.95, topShoulderY - 1.0 * s);
+  g.quadraticCurveTo(lerp(sh[0], nearOuterX, 0.58), shNear[1] - armR0 * 0.98, nearOuterX, shNear[1] + 2.0 * s);
+  // Left/near lat & tapered waist -> smooth flare to outer left hip socket
+  g.bezierCurveTo(
+    nearOuterX + armR0 * 0.35, lerp(shNear[1], waistY, 0.52),
+    waistNearX, waistY - 8 * s,
+    waistNearX, waistY
+  );
+  g.quadraticCurveTo(waistNearX - 0.4 * s, lerp(waistY, hipL[1], 0.55), hipOuterLX, hipL[1] + 4.0 * s);
+  // Bridge across left thigh root -> single clean inverted-U pelvic crotch arch -> right thigh root
+  g.lineTo(hipL[0] + legR0 * 0.88, hipL[1] + legR0 * 0.68);
+  g.quadraticCurveTo(crotchX, crotchY - 3.0 * s, hipR[0] - legR0 * 0.88, hipR[1] + legR0 * 0.68);
+  g.lineTo(hipOuterRX, hipR[1] + 3.8 * s);
+  // Right/far hip -> right waist -> broad 3/4 chest contour -> far shoulder -> right trapezius -> right neck base
+  g.quadraticCurveTo(waistFarX + 0.6 * s, lerp(waistY, hipR[1], 0.55), waistFarX, waistY);
+  g.bezierCurveTo(
+    waistFarX + 1.8 * s, lerp(shFar[1], waistY, 0.52),
+    farOuterX + 2.2 * s, shFar[1] + 12 * s,
+    farOuterX, shFar[1] + 1.8 * s
+  );
+  g.quadraticCurveTo(lerp(sh[0], farOuterX, 0.62), topShoulderY - 0.8 * s, sh[0] + neckBaseR * 0.95, topShoulderY - 1.0 * s);
+  g.closePath();
+
+  return { crotchX, crotchY, waistNearX, waistFarX, nearOuterX, farOuterX, hipOuterLX, hipOuterRX };
+}
+
+function drawSculpted3QTorsoAndPelvis(g, r, rig3Q, build, includeNeck, colors) {
+  const { outlineCol, sw, fillCol, screenGlow = 0, legR0, armR0, weldLegs = true } = colors;
   const s = r.scale;
-  const hip = r.hip;
   const sh = r.shoulder;
-  const mid = r.spineMid || [lerp(hip[0], sh[0], 0.54), lerp(hip[1], sh[1], 0.54)];
-  const { hipR, midR, shR } = computeTorsoRadii(s, build);
+  const mid = r.spineMid || [lerp(r.hip[0], sh[0], 0.54), lerp(r.hip[1], sh[1], 0.54)];
   const neckBaseR = CANONICAL_CHARACTER_SPEC.radii.neckBase * s * build.headW;
   const neckTopR = CANONICAL_CHARACTER_SPEC.radii.neckTop * s * build.headW;
   const neckEnd = [
@@ -1513,51 +1780,227 @@ function drawSeamlessTorsoAndNeck(g, r, build, includeNeck, colors) {
     r.head[1] + Math.cos(r.headAngle) * r.radius * build.headW * 0.42,
   ];
 
-  // Pass 1: Silhouette outline
-  fillTangentCapsule(g, hip, hipR + sw, mid, midR + sw, outlineCol);
-  fillTangentCapsule(g, mid, midR + sw, sh, shR + sw, outlineCol);
-  if (includeNeck) {
-    fillTangentCapsule(g, sh, neckBaseR + sw, neckEnd, neckTopR + sw, outlineCol);
-  }
-
-  // Pass 2: Single-colour interior fill (torso + neck weld seamlessly with zero collar ring)
-  fillTangentCapsule(g, hip, hipR, mid, midR, fillCol);
-  fillTangentCapsule(g, mid, midR, sh, shR, fillCol);
-  if (includeNeck) {
-    fillTangentCapsule(g, sh, neckBaseR, neckEnd, neckTopR, fillCol);
-  }
-}
-
-/**
- * Welds a limb socket (`hip` or `shoulder`) seamlessly into the torso interior without erasing
- * either the outer torso border or the limb's cross-body separation contour.
- */
-function weldLimbSocketIntoTorso(g, r, build, jointCenter, limbNextPt, jointRadius, sw, fillCol) {
-  const s = r.scale;
-  const hip = r.hip;
-  const sh = r.shoulder;
-  const mid = r.spineMid || [lerp(hip[0], sh[0], 0.54), lerp(hip[1], sh[1], 0.54)];
-  const { hipR, midR, shR } = computeTorsoRadii(s, build);
-
-  const limbDir = Math.atan2(limbNextPt[1] - jointCenter[1], limbNextPt[0] - jointCenter[0]);
+  const geom = {
+    sh,
+    mid,
+    shNear: rig3Q.shNear,
+    shFar: rig3Q.shFar,
+    hipL: rig3Q.visLL[0],
+    hipR: rig3Q.visLR[0],
+    legR0,
+    armR0,
+    neckBaseR,
+    s,
+  };
 
   g.save();
-  for (const [cA, rA, cB, rB] of [
-    [hip, Math.max(1, hipR), mid, Math.max(1, midR)],
-    [mid, Math.max(1, midR), sh, Math.max(1, shR)],
-  ]) {
+  g.lineJoin = 'round';
+  g.lineCap = 'round';
+
+  // Pass 1: Outer silhouette ink outline for 3/4 torso + neck
+  if (includeNeck) {
+    fillTangentCapsule(g, [sh[0], sh[1] + 2 * s], neckBaseR + sw, neckEnd, neckTopR + sw, outlineCol);
+  }
+  trace3QTorsoPath(g, geom);
+  g.strokeStyle = outlineCol;
+  g.lineWidth = sw * 2;
+  g.stroke();
+  g.fillStyle = outlineCol;
+  g.fill();
+
+  // Pass 2: Seamless single-colour interior fill bridging smoothly into neck & both thigh sockets
+  const landmarks = trace3QTorsoPath(g, geom);
+  g.fillStyle = fillCol;
+  g.fill();
+  if (includeNeck) {
+    fillTangentCapsule(g, [sh[0], sh[1] + 3 * s], neckBaseR, neckEnd, neckTopR, fillCol);
+    // Subtle shaded cast shadow directly beneath the chin/jawline on the front of the neck
     g.save();
-    traceTangentCapsule(g, cA, rA, cB, rB);
+    traceTangentCapsule(g, [sh[0], sh[1] + 3 * s], neckBaseR, neckEnd, neckTopR);
     g.clip();
-    g.fillStyle = fillCol;
+    g.fillStyle = 'rgba(100, 122, 154, 0.28)';
     g.beginPath();
-    g.moveTo(jointCenter[0], jointCenter[1]);
-    g.arc(jointCenter[0], jointCenter[1], jointRadius + sw + 1.5 * s, limbDir + Math.PI * 0.46, limbDir - Math.PI * 0.46, false);
-    g.closePath();
+    g.ellipse(neckEnd[0] + 1.5 * s, neckEnd[1] + 4.5 * s, neckTopR * 1.25, 4.8 * s, 0.12, 0, Math.PI * 2);
     g.fill();
     g.restore();
   }
+
+  // Seamlessly erase any internal hip-capsule arc inside the pelvis so torso & legs form one continuous suit!
+  if (weldLegs) {
+    const [l0, l1] = rig3Q.visLL;
+    const [r0, r1] = rig3Q.visLR;
+    const lMid = [lerp(l0[0], l1[0], 0.44), lerp(l0[1], l1[1], 0.44)];
+    const rMid = [lerp(r0[0], r1[0], 0.44), lerp(r0[1], r1[1], 0.44)];
+    fillTangentCapsule(g, l0, legR0 - 0.1 * s, lMid, lerp(legR0, colors.legR1 || legR0, 0.44) - 0.1 * s, fillCol);
+    fillTangentCapsule(g, r0, legR0 - 0.1 * s, rMid, lerp(legR0, colors.legR1 || legR0, 0.44) - 0.1 * s, fillCol);
+  }
+
+  // Clipped 2.5D cylindrical left-back shadow + interactive cyan screen bounce light on 3/4 chest
+  g.save();
+  trace3QTorsoPath(g, geom);
+  g.clip();
+  const bodySh = g.createLinearGradient(landmarks.nearOuterX, sh[1], landmarks.farOuterX, sh[1]);
+  bodySh.addColorStop(0, 'rgba(134, 158, 194, 0.30)');
+  bodySh.addColorStop(0.38, 'rgba(134, 158, 194, 0.08)');
+  bodySh.addColorStop(1, 'rgba(134, 158, 194, 0.00)');
+  g.fillStyle = bodySh;
+  g.fillRect(landmarks.nearOuterX - 20 * s, sh[1] - 20 * s, (landmarks.farOuterX - landmarks.nearOuterX) + 40 * s, (landmarks.crotchY - sh[1]) + 45 * s);
+
+  if (screenGlow > 0.02) {
+    const glowA = clamp(screenGlow * 0.38, 0, 0.44);
+    const chestGlow = g.createRadialGradient(
+      landmarks.farOuterX - 4 * s,
+      lerp(sh[1], landmarks.crotchY, 0.36),
+      4 * s,
+      landmarks.farOuterX - 10 * s,
+      lerp(sh[1], landmarks.crotchY, 0.40),
+      54 * s
+    );
+    chestGlow.addColorStop(0, `rgba(125, 211, 252, ${glowA.toFixed(3)})`);
+    chestGlow.addColorStop(0.55, `rgba(186, 230, 253, ${(glowA * 0.38).toFixed(3)})`);
+    chestGlow.addColorStop(1, 'rgba(186, 230, 253, 0.000)');
+    g.fillStyle = chestGlow;
+    g.fillRect(landmarks.nearOuterX - 10 * s, sh[1] - 10 * s, (landmarks.farOuterX - landmarks.nearOuterX) + 30 * s, (landmarks.crotchY - sh[1]) + 30 * s);
+  }
   g.restore();
+
+  g.restore();
+}
+
+function translateLimbChain(chain, dx, dy) {
+  return [
+    [chain[0][0] + dx, chain[0][1] + dy],
+    [chain[1][0] + dx, chain[1][1] + dy],
+    [chain[2][0] + dx, chain[2][1] + dy],
+  ];
+}
+
+function compute3QVisualRig(r, x, fy, s, build, flip, turnScaleX) {
+  const sh = r.shoulder;
+  const hip = r.hip;
+  const shW = build.shoulderW || build.torsoW || 1.0;
+  const torsoW = build.torsoW || 1.0;
+
+  // Broad 3/4 shoulder sockets: near (-X camera-side) & far (+X facing-side)
+  const shNear = [sh[0] - 21.0 * s * shW, sh[1] + 3.2 * s];
+  const shFar = [sh[0] + 19.5 * s * shW, sh[1] + 2.6 * s];
+
+  const visAL = translateLimbChain(r.al, shNear[0] - r.al[0][0], shNear[1] - r.al[0][1]);
+  const visAR = translateLimbChain(r.ar, shFar[0] - r.ar[0][0], shFar[1] - r.ar[0][1]);
+
+  // 3/4 natural two-leg standing stance:
+  // When `strideSpread <= 32*s` and both feet are near the ground (`standing`), place `visLL` cleanly
+  // on the left (`-15.5*s`) and `visLR` cleanly on the right (`+18.5*s`) with tall upright knees so
+  // both sculpted legs & shoes read clearly with a dark room gap between the inner thighs!
+  // During wide walking/running strides (`strideSpread > 32*s`) or aerial/seated poses, smoothly blend
+  // to the exact underlying `r.ll` / `r.lr` kinematic chains so foot-plant contacts remain 0.000px exact!
+  const strideSpread = Math.abs(r.ll[2][0] - r.lr[2][0]);
+  const isSeatedOrCrouched = hip[1] > fy - 102 * s;
+  const feetLifted = Math.max(Math.abs(fy - r.ll[2][1]), Math.abs(fy - r.lr[2][1])) > 6 * s;
+  const stanceK = (isSeatedOrCrouched || feetLifted)
+    ? 0
+    : (1 - clamp((strideSpread - 28 * s) / (24 * s)));
+
+  const standHipL = [hip[0] - 13.2 * s * torsoW, hip[1] + 1.2 * s];
+  const standAnkL = [x - 15.8 * s * torsoW, r.ll[2][1]];
+  const standKneeL = [lerp(standHipL[0], standAnkL[0], 0.50) + 1.2 * s, lerp(standHipL[1], standAnkL[1], 0.51)];
+
+  const standHipR = [hip[0] + 13.2 * s * torsoW, hip[1] + 0.6 * s];
+  const standAnkR = [x + 19.2 * s * torsoW, r.lr[2][1]];
+  const standKneeR = [lerp(standHipR[0], standAnkR[0], 0.50) + 1.8 * s, lerp(standHipR[1], standAnkR[1], 0.51)];
+
+  const seatedShift = isSeatedOrCrouched ? 5.5 * s * torsoW : 0;
+  const visLL = [
+    [lerp(r.ll[0][0] - seatedShift, standHipL[0], stanceK), lerp(r.ll[0][1], standHipL[1], stanceK)],
+    [lerp(r.ll[1][0] - seatedShift, standKneeL[0], stanceK), lerp(r.ll[1][1], standKneeL[1], stanceK)],
+    [lerp(r.ll[2][0] - seatedShift, standAnkL[0], stanceK), lerp(r.ll[2][1], standAnkL[1], stanceK)],
+  ];
+  const visLR = [
+    [lerp(r.lr[0][0] + seatedShift, standHipR[0], stanceK), lerp(r.lr[0][1], standHipR[1], stanceK)],
+    [lerp(r.lr[1][0] + seatedShift, standKneeR[0], stanceK), lerp(r.lr[1][1], standKneeR[1], stanceK)],
+    [lerp(r.lr[2][0] + seatedShift, standAnkR[0], stanceK), lerp(r.lr[2][1], standAnkR[1], stanceK)],
+  ];
+
+  const fL = Math.atan2(visAL[2][1] - visAL[1][1], visAL[2][0] - visAL[1][0]);
+  const fR = Math.atan2(visAR[2][1] - visAR[1][1], visAR[2][0] - visAR[1][0]);
+  const visGripL = [visAL[2][0] + Math.cos(fL) * 6.5 * s, visAL[2][1] + Math.sin(fL) * 6.5 * s];
+  const visGripR = [visAR[2][0] + Math.cos(fR) * 6.5 * s, visAR[2][1] + Math.sin(fR) * 6.5 * s];
+
+  const signX = (flip ? -1 : 1) * turnScaleX;
+  const toWorld = (pt) => [x + (pt[0] - x) * signX, pt[1]];
+
+  return {
+    shNear,
+    shFar,
+    stanceK: isSeatedOrCrouched ? 0.35 : stanceK,
+    visAL,
+    visAR,
+    visLL,
+    visLR,
+    visGripL,
+    visGripR,
+    world: {
+      hl: toWorld(visAL[2]),
+      hr: toWorld(visAR[2]),
+      fl: toWorld(visLL[2]),
+      fr: toWorld(visLR[2]),
+      gripL: toWorld(visGripL),
+      gripR: toWorld(visGripR),
+      head: toWorld(r.head),
+      sh: toWorld(r.shoulder),
+      hip: toWorld(r.hip),
+    },
+  };
+}
+
+/**
+ * Welds the near shoulder deltoid smoothly into the 3/4 chest while preserving the crisp
+ * vertical inner-arm contour line where the hanging arm overlaps the ribcage.
+ */
+function weldNearShoulderIntoTorso(g, r, rig3Q, build, legR0, armR0, fillCol) {
+  const s = r.scale;
+  const sh = r.shoulder;
+  const mid = r.spineMid || [lerp(r.hip[0], sh[0], 0.54), lerp(r.hip[1], sh[1], 0.54)];
+  const neckBaseR = CANONICAL_CHARACTER_SPEC.radii.neckBase * s * build.headW;
+  const geom = {
+    sh,
+    mid,
+    shNear: rig3Q.shNear,
+    shFar: rig3Q.shFar,
+    hipL: rig3Q.visLL[0],
+    hipR: rig3Q.visLR[0],
+    legR0,
+    armR0,
+    neckBaseR,
+    s,
+  };
+  const shNear = rig3Q.shNear;
+  const elbowPt = rig3Q.visAL[1];
+  const limbDir = Math.atan2(elbowPt[1] - shNear[1], elbowPt[0] - shNear[0]);
+
+  g.save();
+  // Clip strictly inside the 3/4 torso interior so outer shoulder ink outline is 100% preserved!
+  trace3QTorsoPath(g, geom);
+  g.clip();
+  g.fillStyle = fillCol;
+  g.beginPath();
+  g.moveTo(shNear[0], shNear[1]);
+  g.arc(shNear[0], shNear[1], armR0 * 1.35, limbDir - Math.PI * 0.98, limbDir - Math.PI * 0.22, false);
+  g.closePath();
+  g.fill();
+  // Restore subtle left-edge 2.5D shading across the welded deltoid seam
+  const shGrad = g.createLinearGradient(shNear[0] - armR0, sh[1], shNear[0] + armR0 * 1.4, sh[1]);
+  shGrad.addColorStop(0, 'rgba(134, 158, 194, 0.24)');
+  shGrad.addColorStop(1, 'rgba(134, 158, 194, 0.00)');
+  g.fillStyle = shGrad;
+  g.beginPath();
+  g.arc(shNear[0], shNear[1], armR0 * 1.35, limbDir - Math.PI * 0.98, limbDir - Math.PI * 0.22, false);
+  g.fill();
+  g.restore();
+}
+
+function sScale(r0) {
+  return Math.max(0.5, r0 / 8.2);
 }
 
 function drawFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
@@ -1571,9 +2014,13 @@ function drawFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
     : CANONICAL_CHARACTER_SPEC.strokeWidthPx) * s;
   const mainRgb = hexToRgb(opts.color || CANONICAL_CHARACTER_SPEC.defaultBaseColor);
   const bodyFill = rgbCss(mainRgb);
-  const footFill = opts.shoeColor ? rgbCss(hexToRgb(opts.shoeColor)) : bodyFill;
+  const footFill = opts.shoeColor
+    ? rgbCss(hexToRgb(opts.shoeColor))
+    : CANONICAL_CHARACTER_SPEC.defaultShoeColor;
+  const barefoot = Boolean(opts.barefoot);
   const outlineCol = opts.outlineColor || CANONICAL_CHARACTER_SPEC.outlineColor;
   const rimRgb = mainRgb;
+  const screenGlow = clamp(Number(opts.screenGlow || 0), 0, 1.2);
   const accList = normalizeAccessoryList(opts.accessories || opts.accessory);
   const hairStyle = resolveDefaultHairstyle(opts, accList);
   const hairRgb = resolveHairRgb(opts, mainRgb);
@@ -1591,6 +2038,7 @@ function drawFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
   ];
 
   const turnScaleX = Number.isFinite(opts.turnScaleX) ? clamp(opts.turnScaleX, 0.25, 1.0) : 1.0;
+  const rig3Q = compute3QVisualRig(r, x, fy, s, build, flip, turnScaleX);
 
   g.save();
   if (flip || turnScaleX !== 1.0) {
@@ -1604,45 +2052,56 @@ function drawFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
   const drawHeadLayer = drawMode === 'full' || drawMode === 'body_no_front_arm' || drawMode === 'upper_front';
   const drawFrontArmLayer = drawMode === 'full' || drawMode === 'front_arm_only' || drawMode === 'upper_front';
 
-  // 1. Grounded height-attenuated contact shadow
+  // 1. Grounded soft elliptical floor contact shadow + subtle individual shoe contact shadows
   if (drawMode === 'full' || drawMode === 'body_no_front_arm' || drawMode === 'lower_and_torso') {
-    const shadowFootX = 0.5 * (r.ll[2][0] + r.lr[2][0]);
-    const lowestFootY = Math.max(r.ll[2][1], r.lr[2][1]);
+    const shadowFootX = 0.5 * (rig3Q.visLL[2][0] + rig3Q.visLR[2][0]) + 4 * s;
+    const lowestFootY = Math.max(rig3Q.visLL[2][1], rig3Q.visLR[2][1]);
     const airHeight = Math.max(0, fy - lowestFootY);
     const airFactor = clamp(1 - airHeight / (135 * s), 0.22, 1.0);
     g.save();
-    g.fillStyle = `rgba(0,0,0,${(0.42 * airFactor).toFixed(3)})`;
+    const shGrad = g.createRadialGradient(shadowFootX, fy + 3 * s, 4 * s, shadowFootX, fy + 3 * s, 54 * s * build.torsoW * airFactor);
+    shGrad.addColorStop(0, `rgba(0, 0, 0, ${(0.56 * airFactor).toFixed(3)})`);
+    shGrad.addColorStop(0.65, `rgba(0, 0, 0, ${(0.28 * airFactor).toFixed(3)})`);
+    shGrad.addColorStop(1, 'rgba(0, 0, 0, 0.000)');
+    g.fillStyle = shGrad;
     g.beginPath();
-    g.ellipse(shadowFootX, fy + 2.5, 42 * s * build.torsoW * airFactor, 6.8 * s * airFactor, 0, 0, Math.PI * 2);
+    g.ellipse(shadowFootX, fy + 3 * s, 54 * s * build.torsoW * airFactor, 9.5 * s * airFactor, 0, 0, Math.PI * 2);
     g.fill();
     g.restore();
   }
 
-  // 2. Back arm + back hand (identical single character colour, cleanly behind torso)
+  // 2. Far/facing-side arm (`visAR` from `shFar`) + optional held prop overlay (e.g. one-handed 3/4 smartphone!)
   if (drawShadowAndBack) {
-    drawSeamlessArm(g, r.ar, armRadii, posed.handR || 'relaxed', s, {
+    drawSeamlessArm(g, rig3Q.visAR, armRadii, posed.handR || 'relaxed', s, {
       outlineCol,
       sw,
       fillCol: bodyFill,
+      screenGlow: typeof opts.farHandOverlay === 'function' ? screenGlow : screenGlow * 0.35,
+      shadeSide: 0,
     });
+    if (typeof opts.farHandOverlay === 'function') {
+      const farForearmAngle = Math.atan2(rig3Q.visAR[2][1] - rig3Q.visAR[1][1], rig3Q.visAR[2][0] - rig3Q.visAR[1][0]);
+      opts.farHandOverlay(g, {
+        elbow: rig3Q.visAR[1],
+        wrist: rig3Q.visAR[2],
+        grip: rig3Q.visGripR,
+        forearmAngle: farForearmAngle,
+        scale: s,
+        bodyFill,
+        outlineCol,
+        sw,
+        thumbScroll: posed.thumbScroll || 0,
+        thumbTap: posed.thumbTap || 0,
+      });
+    }
   }
 
   if (drawMode === 'back_arm_only') {
     g.restore();
-    return {
-      hl: r.world.al[2],
-      hr: r.world.ar[2],
-      fl: r.world.ll[2],
-      fr: r.world.lr[2],
-      gripL: r.world.gripL,
-      gripR: r.world.gripR,
-      head: r.world.head,
-      sh: r.world.shoulder,
-      hip: r.world.hip,
-    };
+    return rig3Q.world;
   }
 
-  // 3. Back accessories, back leg, seamless torso + neck, front leg + hip socket weld
+  // 3. Back accessories, far leg, sculpted 3/4 torso + pelvis + crotch arch, and near leg
   if (drawLegsAndTorso) {
     if (accList.includes('cape')) {
       drawBackCape(g, r, mainRgb);
@@ -1651,56 +2110,62 @@ function drawFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
       drawBackBackpack(g, r, opts.bagColor || '#eab308');
     }
 
-    drawSeamlessLeg(g, r.lr, legRadii, fy, s, posed.footAngleR || 0, {
+    drawSeamlessLeg(g, rig3Q.visLR, legRadii, fy, s, posed.footAngleR || 0, {
       outlineCol,
       sw,
       fillCol: bodyFill,
       footFillCol: footFill,
+      barefoot,
     });
 
-    drawSeamlessTorsoAndNeck(g, r, build, drawHeadLayer, {
+    drawSeamlessLeg(g, rig3Q.visLL, legRadii, fy, s, posed.footAngleL || 0, {
       outlineCol,
       sw,
       fillCol: bodyFill,
+      footFillCol: footFill,
+      barefoot,
     });
+
+    drawSculpted3QTorsoAndPelvis(g, r, rig3Q, build, drawHeadLayer, {
+      outlineCol,
+      sw,
+      fillCol: bodyFill,
+      screenGlow,
+      legR0: legRadii[0],
+      legR1: legRadii[1],
+      armR0: armRadii[0],
+      weldLegs: !accList.includes('coat'),
+    });
+
     if (accList.includes('coat')) {
       drawTorsoCoat(g, r, build, opts.coatColor || '#1e293b');
     }
-
-    drawSeamlessLeg(g, r.ll, legRadii, fy, s, posed.footAngleL || 0, {
-      outlineCol,
-      sw,
-      fillCol: bodyFill,
-      footFillCol: footFill,
-    });
-
-    if (!accList.includes('coat')) {
-      weldLimbSocketIntoTorso(g, r, build, r.ll[0], r.ll[1], legRadii[0], sw, bodyFill);
-    }
   } else if (drawHeadLayer) {
-    drawSeamlessTorsoAndNeck(g, r, build, true, {
-      outlineCol,
-      sw,
-      fillCol: bodyFill,
-    });
+    // In `upper_front` split-furniture mode, `lower_and_torso` already drew the torso behind the desk front;
+    // draw only the neck bridge here so the lower pelvis never paints in front of the desk apron!
+    const sh = r.shoulder;
+    const neckBaseR = CANONICAL_CHARACTER_SPEC.radii.neckBase * s * build.headW;
+    const neckTopR = CANONICAL_CHARACTER_SPEC.radii.neckTop * s * build.headW;
+    const neckEnd = [
+      r.head[0] - Math.sin(r.headAngle) * r.radius * build.headW * 0.42,
+      r.head[1] + Math.cos(r.headAngle) * r.radius * build.headW * 0.42,
+    ];
+    fillTangentCapsule(g, [sh[0], sh[1] + 2 * s], neckBaseR + sw, neckEnd, neckTopR + sw, outlineCol);
+    fillTangentCapsule(g, [sh[0], sh[1] + 4 * s], neckBaseR, neckEnd, neckTopR, bodyFill);
   }
 
-  // 4. Head + Face + Optional Hair & Head/Torso Accessories
+  // 4. Sculpted 3/4 Head + Ear + Expressive Face + Layered Hair & Head Accessories
   const hd = r.head;
   const hr = r.radius * build.headW;
   if (drawHeadLayer) {
     drawHairBack(g, hd, hr, r.headAngle, s, hairStyle, hairRgb, outlineCol);
 
-    // Head cranium: uniform `sw` outer outline + pure `bodyFill` interior
-    g.beginPath();
-    g.arc(hd[0], hd[1], hr + sw, 0, Math.PI * 2);
-    g.fillStyle = outlineCol;
-    g.fill();
-
-    g.beginPath();
-    g.arc(hd[0], hd[1], hr, 0, Math.PI * 2);
-    g.fillStyle = bodyFill;
-    g.fill();
+    drawSculpted3QHead(g, hd, hr, r.headAngle, s, {
+      outlineCol,
+      sw,
+      fillCol: bodyFill,
+      screenGlow,
+    });
 
     if (!opts.hideFace) {
       drawFaceExpression(g, hd, hr, s, opts.expression || 'neutral', {
@@ -1710,7 +2175,7 @@ function drawFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
     }
 
     if (!accList.includes('helmet') && !accList.includes('hat') && !accList.includes('cap')) {
-      drawHairFront(g, hd, hr, r.headAngle, s, hairStyle, hairRgb, rimRgb, outlineCol);
+      drawHairFront(g, hd, hr, r.headAngle, s, hairStyle, hairRgb, rimRgb, outlineCol, screenGlow);
     }
 
     for (const acc of accList) {
@@ -1720,25 +2185,27 @@ function drawFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
     }
   }
 
-  // 5. Front arm + shoulder socket weld + optional split-layer hand grip overlay
+  // 5. Near/camera-side arm (`visAL` from `shNear`) + shoulder deltoid weld + optional front hand overlay
   if (drawFrontArmLayer) {
-    drawSeamlessArm(g, r.al, armRadii, posed.handL || 'relaxed', s, {
+    drawSeamlessArm(g, rig3Q.visAL, armRadii, posed.handL || 'relaxed', s, {
       outlineCol,
       sw,
       fillCol: bodyFill,
+      screenGlow: typeof opts.frontHandOverlay === 'function' ? screenGlow : 0,
+      shadeSide: -1,
     });
     if ((drawLegsAndTorso || drawHeadLayer) && !accList.includes('coat')) {
-      weldLimbSocketIntoTorso(g, r, build, r.al[0], r.al[1], armRadii[0], sw, bodyFill);
+      weldNearShoulderIntoTorso(g, r, rig3Q, build, legRadii[0], armRadii[0], bodyFill);
     }
     if (accList.includes('watch')) {
-      drawSingleAccessory(g, r, 'watch', mainRgb, rimRgb, opts);
+      drawSingleAccessory(g, { ...r, al: rig3Q.visAL }, 'watch', mainRgb, rimRgb, opts);
     }
     if (typeof opts.frontHandOverlay === 'function') {
-      const forearmAngle = Math.atan2(r.al[2][1] - r.al[1][1], r.al[2][0] - r.al[1][0]);
+      const forearmAngle = Math.atan2(rig3Q.visAL[2][1] - rig3Q.visAL[1][1], rig3Q.visAL[2][0] - rig3Q.visAL[1][0]);
       opts.frontHandOverlay(g, {
-        elbow: r.al[1],
-        wrist: r.al[2],
-        grip: r.gripL,
+        elbow: rig3Q.visAL[1],
+        wrist: rig3Q.visAL[2],
+        grip: rig3Q.visGripL,
         forearmAngle,
         scale: s,
         bodyFill,
@@ -1753,10 +2220,10 @@ function drawFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
   g.restore();
 
   if (opts.nameTag && (drawMode === 'full' || drawMode === 'upper_front' || drawMode === 'body_no_front_arm')) {
-    const wh = r.world.head;
+    const wh = rig3Q.world.head;
     const extraLift = accList.includes('crown') || accList.includes('hat') || accList.includes('halo') ? 18 * s : 6 * s;
     let tagY = wh[1] - hr - 24 * s - extraLift;
-    for (const wHand of [r.world.al[2], r.world.ar[2]]) {
+    for (const wHand of [rig3Q.world.hl, rig3Q.world.hr]) {
       if (wHand && Math.abs(wHand[0] - wh[0]) < 62 * s && wHand[1] < wh[1]) {
         tagY = Math.min(tagY, wHand[1] - 44 * s);
       }
@@ -1780,17 +2247,7 @@ function drawFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
     g.restore();
   }
 
-  return {
-    hl: r.world.al[2],
-    hr: r.world.ar[2],
-    fl: r.world.ll[2],
-    fr: r.world.lr[2],
-    gripL: r.world.gripL,
-    gripR: r.world.gripR,
-    head: r.world.head,
-    sh: r.world.shoulder,
-    hip: r.world.hip,
-  };
+  return rig3Q.world;
 }
 
 module.exports = {

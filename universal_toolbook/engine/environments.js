@@ -9,14 +9,16 @@ const FLOOR_Y = 855;
 const FALLBACK_VISUAL_IDENTITY = Object.freeze({
   mode: 'near_black_minimal',
   lock_identity: true,
-  sky_top: '#040507',
-  sky_mid: '#080a0f',
-  sky_bottom: '#0c1017',
-  floor_top: '#07090e',
-  floor_bottom: '#030407',
-  horizon_line: '#94a3b8',
-  horizon_alpha: 0.16,
-  center_lift_alpha: 0.032,
+  sky_top: '#070a10',
+  sky_mid: '#0d1624',
+  sky_bottom: '#111c2d',
+  ambient_glow: '#223f5e',
+  ambient_glow_alpha: 0.46,
+  floor_top: '#090c12',
+  floor_bottom: '#04060a',
+  horizon_line: '#64748b',
+  horizon_alpha: 0.22,
+  center_lift_alpha: 0.045,
 });
 
 function loadVisualIdentityConfig() {
@@ -53,51 +55,217 @@ const ENVIRONMENT_THEMES = Object.freeze({
 
 const SUPPORTED_ENVIRONMENTS = Object.freeze(Object.keys(ENVIRONMENT_THEMES));
 
+const INDOOR_SILHOUETTE_ENVIRONMENTS = new Set([
+  'studio_dark',
+  'bedroom_late',
+  'library_study',
+  'modern_office',
+  'tech_lab',
+  'lecture_stage',
+]);
+
+function drawRecessedBookshelf(g, bx, bw, topY, floorY) {
+  const bh = floorY - topY;
+  const framePad = 8;
+  g.save();
+  g.globalAlpha = 0.72;
+  g.fillStyle = '#0e1622';
+  g.strokeStyle = '#060910';
+  g.lineWidth = 2.0;
+  g.beginPath();
+  g.roundRect(bx, topY, bw, bh, 3);
+  g.fill();
+  g.stroke();
+
+  // Recessed shelf cubbies (3 open upper shelves + 2 lower cabinet doors)
+  const cabTopY = floorY - bh * 0.28;
+  const shelfCount = 3;
+  const openH = cabTopY - (topY + framePad);
+  const rowH = openH / shelfCount;
+  for (let i = 0; i < shelfCount; i++) {
+    const sy = topY + framePad + i * rowH;
+    g.fillStyle = '#090e17';
+    g.fillRect(bx + framePad, sy + 3, bw - framePad * 2, rowH - 8);
+    g.strokeRect(bx + framePad, sy + 3, bw - framePad * 2, rowH - 8);
+  }
+
+  // Shelf 0 (top): left upright books + small ceramic vase on right
+  const s0Bot = topY + framePad + rowH - 5;
+  g.fillStyle = '#152030';
+  g.fillRect(bx + 18, s0Bot - 44, 11, 44);
+  g.fillRect(bx + 31, s0Bot - 50, 13, 50);
+  g.fillStyle = '#1a273a';
+  g.beginPath();
+  g.ellipse(bx + bw - 38, s0Bot - 16, 13, 16, 0, 0, Math.PI * 2);
+  g.fill();
+  g.fillRect(bx + bw - 44, s0Bot - 36, 12, 9);
+
+  // Shelf 1 (mid): framed art square on left + leaning book stack on right
+  const s1Bot = topY + framePad + rowH * 2 - 5;
+  g.fillStyle = '#172334';
+  g.strokeStyle = '#070b12';
+  g.fillRect(bx + 20, s1Bot - 48, 42, 48);
+  g.strokeRect(bx + 20, s1Bot - 48, 42, 48);
+  g.fillStyle = '#111b29';
+  g.fillRect(bx + 27, s1Bot - 41, 28, 34);
+  g.fillStyle = '#182538';
+  g.fillRect(bx + bw - 62, s1Bot - 46, 11, 46);
+  g.fillRect(bx + bw - 49, s1Bot - 52, 12, 52);
+  g.save();
+  g.translate(bx + bw - 34, s1Bot);
+  g.rotate(-0.18);
+  g.fillRect(0, -46, 11, 46);
+  g.restore();
+
+  // Shelf 2 (lower): row of dark books + flat stack
+  const s2Bot = topY + framePad + rowH * 3 - 5;
+  for (let bi = 0; bi < 4; bi++) {
+    const bbh = 42 + (bi % 2) * 8;
+    g.fillStyle = bi % 2 === 0 ? '#152030' : '#1b293d';
+    g.fillRect(bx + 18 + bi * 14, s2Bot - bbh, 12, bbh);
+  }
+  g.fillStyle = '#172436';
+  g.fillRect(bx + bw - 74, s2Bot - 11, 52, 11);
+  g.fillRect(bx + bw - 70, s2Bot - 21, 44, 10);
+
+  // Lower double cabinet doors + subtle vertical handles
+  const doorW = (bw - framePad * 2 - 4) * 0.5;
+  const doorH = floorY - cabTopY - 12;
+  g.fillStyle = '#111a28';
+  g.strokeStyle = '#060910';
+  g.fillRect(bx + framePad, cabTopY + 4, doorW, doorH);
+  g.strokeRect(bx + framePad, cabTopY + 4, doorW, doorH);
+  g.fillRect(bx + framePad + doorW + 4, cabTopY + 4, doorW, doorH);
+  g.strokeRect(bx + framePad + doorW + 4, cabTopY + 4, doorW, doorH);
+  g.strokeStyle = '#24344c';
+  g.lineWidth = 2.2;
+  g.beginPath();
+  g.moveTo(bx + framePad + doorW - 8, cabTopY + 18);
+  g.lineTo(bx + framePad + doorW - 8, cabTopY + 40);
+  g.moveTo(bx + framePad + doorW + 12, cabTopY + 18);
+  g.lineTo(bx + framePad + doorW + 12, cabTopY + 40);
+  g.stroke();
+  g.restore();
+}
+
+function drawRecessedWardrobe(g, wx, ww, topY, floorY) {
+  const wh = floorY - topY;
+  g.save();
+  g.globalAlpha = 0.68;
+  // Outer wardrobe frame catching the soft cool slate-blue ambient room glow
+  const wGrad = g.createLinearGradient(wx, topY, wx + ww, floorY);
+  wGrad.addColorStop(0, '#1b3048');
+  wGrad.addColorStop(0.55, '#152538');
+  wGrad.addColorStop(1, '#0f1a28');
+  g.fillStyle = wGrad;
+  g.strokeStyle = '#070b12';
+  g.lineWidth = 2.2;
+  g.beginPath();
+  g.roundRect(wx, topY, ww, wh, 3);
+  g.fill();
+  g.stroke();
+
+  // Inner double-door trim & center split seam
+  const pad = 12;
+  const innerW = ww - pad * 2;
+  const innerH = wh - pad * 2;
+  g.strokeStyle = 'rgba(7, 11, 18, 0.78)';
+  g.lineWidth = 1.8;
+  g.strokeRect(wx + pad, topY + pad, innerW, innerH);
+  const midX = wx + ww * 0.5;
+  g.beginPath();
+  g.moveTo(midX, topY + pad);
+  g.lineTo(midX, topY + pad + innerH);
+  g.stroke();
+
+  // Subtle recessed panel moulding on each closet door
+  g.strokeStyle = 'rgba(148, 178, 214, 0.10)';
+  g.lineWidth = 1.3;
+  g.strokeRect(wx + pad + 10, topY + pad + 14, innerW * 0.5 - 20, innerH - 28);
+  g.strokeRect(midX + 10, topY + pad + 14, innerW * 0.5 - 20, innerH - 28);
+
+  // Two vertical closet handles flanking the center seam
+  const handleY = topY + wh * 0.50;
+  g.strokeStyle = '#090e16';
+  g.lineWidth = 3.0;
+  g.lineCap = 'round';
+  g.beginPath();
+  g.moveTo(midX - 11, handleY - 22);
+  g.lineTo(midX - 11, handleY + 22);
+  g.moveTo(midX + 11, handleY - 22);
+  g.lineTo(midX + 11, handleY + 22);
+  g.stroke();
+  g.restore();
+}
+
+function drawRecessedInteriorSilhouettes(g, W, floorY, panX = 0) {
+  const farShift = -panX * 0.18;
+  g.save();
+  g.translate(farShift, 0);
+  // Central 9:16 & 16:9 focal architecture: left recessed bookshelf + right-center double-door wardrobe
+  drawRecessedBookshelf(g, W * 0.255, 196, floorY - 472, floorY - 12);
+  drawRecessedWardrobe(g, W * 0.445, 258, floorY - 518, floorY - 12);
+  // Subtle outer widescreen flanking architectural balance (visible in 16:9 master shots)
+  drawRecessedWardrobe(g, W * 0.755, 236, floorY - 500, floorY - 12);
+  g.restore();
+}
+
 /**
- * Canonical Near-Black Minimal Stage Renderer.
- * Applies a uniform, restrained near-black vertical gradient, subtle central studio depth lift,
- * and grounded dark floor plane across all scenes so individual scene presets cannot accidentally
- * inject colourful or noisy decorative backgrounds.
+ * Canonical Atmospheric Dark-Room Stage Renderer.
+ * Applies a moody midnight slate-blue ambient gradient, grounded architectural baseboard,
+ * dark floor plane, and optional low-contrast recessed room silhouettes.
  */
-function renderNearBlackBackground(g, W = 1920, H = 1080, floorY = FLOOR_Y, cfg = DEFAULT_VISUAL_IDENTITY) {
+function renderNearBlackBackground(g, W = 1920, H = 1080, floorY = FLOOR_Y, cfg = DEFAULT_VISUAL_IDENTITY, opts = {}) {
   const id = { ...DEFAULT_VISUAL_IDENTITY, ...(cfg || {}) };
   g.save();
 
-  // Generous overscan so camera pan/zoom or full-bleed 9:16 portrait vector framing never exposes edges
   const padX = 1200;
   const padTop = 1200;
   const padBot = 1200;
 
-  const skyGrad = g.createLinearGradient(0, -480, 0, floorY);
+  const skyGrad = g.createLinearGradient(0, -320, W * 0.85, floorY);
   skyGrad.addColorStop(0, id.sky_top);
-  skyGrad.addColorStop(0.56, id.sky_mid);
+  skyGrad.addColorStop(0.54, id.sky_mid);
   skyGrad.addColorStop(1, id.sky_bottom);
   g.fillStyle = skyGrad;
   g.fillRect(-padX, -padTop, W + padX * 2, floorY + padTop + 4);
 
-  // Subtle neutral studio depth falloff behind central staging area (zero colour tint)
-  const liftAlpha = clamp(Number(id.center_lift_alpha ?? 0.032), 0, 0.08);
-  if (liftAlpha > 0.002) {
-    const cx = W * 0.5;
-    const cy = floorY * 0.64;
-    const rad = g.createRadialGradient(cx, cy, 40, cx, cy, Math.max(W, H) * 0.56);
-    rad.addColorStop(0, `rgba(226, 232, 240, ${ca(liftAlpha)})`);
-    rad.addColorStop(0.58, `rgba(203, 213, 225, ${ca(liftAlpha * 0.35)})`);
-    rad.addColorStop(1, 'rgba(15, 23, 42, 0.000)');
-    g.fillStyle = rad;
+  // Soft diagonal cool slate-blue moonlight/ambient glow from upper-right of the room
+  const ambRgb = hexToRgb(id.ambient_glow || '#223f5e');
+  const ambAlpha = clamp(Number(id.ambient_glow_alpha ?? 0.46), 0, 0.70);
+  if (ambAlpha > 0.01) {
+    const gx = W * 0.72;
+    const gy = floorY * 0.22;
+    const gRad = Math.max(W, H) * 0.72;
+    const amb = g.createRadialGradient(gx, gy, 30, gx, gy, gRad);
+    amb.addColorStop(0, `rgba(${ambRgb[0]}, ${ambRgb[1]}, ${ambRgb[2]}, ${ca(ambAlpha)})`);
+    amb.addColorStop(0.48, `rgba(${ambRgb[0]}, ${ambRgb[1]}, ${ambRgb[2]}, ${ca(ambAlpha * 0.42)})`);
+    amb.addColorStop(1, 'rgba(8, 11, 18, 0.000)');
+    g.fillStyle = amb;
     g.fillRect(-padX, -padTop, W + padX * 2, floorY + padTop + 4);
   }
 
-  // Restrained near-black ground plane
+  // Optional recessed low-contrast interior room silhouettes (bookshelf + wardrobe) in world-space indoor scenes
+  if (opts.envKey && INDOOR_SILHOUETTE_ENVIRONMENTS.has(opts.envKey)) {
+    drawRecessedInteriorSilhouettes(g, W, floorY, opts.panX || 0);
+  }
+
+  // Subtle architectural wall baseboard strip just above floorY
+  g.fillStyle = '#0c121c';
+  g.fillRect(-padX, floorY - 13, W + padX * 2, 13);
+  g.fillStyle = 'rgba(5, 8, 14, 0.85)';
+  g.fillRect(-padX, floorY - 14, W + padX * 2, 1.8);
+
+  // Grounded dark interior floor plane
   const floorGrad = g.createLinearGradient(0, floorY, 0, H + 540);
   floorGrad.addColorStop(0, id.floor_top);
   floorGrad.addColorStop(1, id.floor_bottom);
   g.fillStyle = floorGrad;
   g.fillRect(-padX, floorY, W + padX * 2, H - floorY + padBot);
 
-  // Crisp, low-contrast ground contact horizon line for unambiguous foot grounding
-  const [hr, hg, hb] = hexToRgb(id.horizon_line || '#94a3b8');
-  const hAlpha = clamp(Number(id.horizon_alpha ?? 0.16), 0.04, 0.30);
+  // Low-contrast floor-wall seam line for crisp foot & furniture grounding
+  const [hr, hg, hb] = hexToRgb(id.horizon_line || '#64748b');
+  const hAlpha = clamp(Number(id.horizon_alpha ?? 0.22), 0.04, 0.35);
   const lineGrad = g.createLinearGradient(0, 0, W, 0);
   lineGrad.addColorStop(0, `rgba(${hr},${hg},${hb},${ca(hAlpha * 0.35)})`);
   lineGrad.addColorStop(0.15, `rgba(${hr},${hg},${hb},${ca(hAlpha)})`);
@@ -210,7 +378,10 @@ function renderEnvironment(g, envName, W, H, floorY, t, opts = {}) {
   const key = ENVIRONMENT_THEMES[envName] ? envName : 'studio_dark';
   const theme = ENVIRONMENT_THEMES[key];
   if (DEFAULT_VISUAL_IDENTITY.lock_identity && !opts.override_visual_identity) {
-    return renderNearBlackBackground(g, W, H, floorY, opts.visualIdentity);
+    return renderNearBlackBackground(g, W, H, floorY, opts.visualIdentity, {
+      envKey: key,
+      panX: opts.panX || 0,
+    });
   }
   const lightColor = opts.lightColor || theme.lightColor;
   const panX = opts.panX || 0;

@@ -28,13 +28,13 @@ const CANONICAL_LAYOUT_16_9 = Object.freeze({
   subtitleSafeRegion: Object.freeze({ left: 240, top: 882, right: 1680, bottom: 1038, defaultCenterY: 954 }),
   subtitleFallbackCentersY: Object.freeze([954, 976, 926, 168, 214]),
   subtitleStyle: Object.freeze({
-    fontSize: 28,
-    lineHeight: 40,
-    maxLineWidth: 1240,
+    fontSize: 30,
+    lineHeight: 42,
+    maxLineWidth: 1200,
     maxLines: 3,
-    padX: 28,
-    padY: 14,
-    radius: 14,
+    padX: 18,
+    padY: 10,
+    radius: 12,
   }),
 });
 
@@ -45,18 +45,18 @@ const CANONICAL_LAYOUT_9_16 = Object.freeze({
   canonicalHeight: 1920,
   margins: Object.freeze({ left: 56, right: 56, top: 96, bottom: 128 }),
   headerSafeRegion: Object.freeze({ left: 56, top: 96, right: 1024, bottom: 188 }),
-  animationSafeRegion: Object.freeze({ left: 68, top: 240, right: 1012, bottom: 1465 }),
-  objectVisibilityRegion: Object.freeze({ left: 84, top: 300, right: 996, bottom: 1455 }),
-  subtitleSafeRegion: Object.freeze({ left: 64, top: 1490, right: 1016, bottom: 1786, defaultCenterY: 1618 }),
-  subtitleFallbackCentersY: Object.freeze([1618, 1668, 1564, 264, 326]),
+  animationSafeRegion: Object.freeze({ left: 68, top: 210, right: 1012, bottom: 1475 }),
+  objectVisibilityRegion: Object.freeze({ left: 84, top: 270, right: 996, bottom: 1465 }),
+  subtitleSafeRegion: Object.freeze({ left: 64, top: 1495, right: 1016, bottom: 1786, defaultCenterY: 1622 }),
+  subtitleFallbackCentersY: Object.freeze([1622, 1668, 1568, 264, 326]),
   subtitleStyle: Object.freeze({
-    fontSize: 38,
-    lineHeight: 52,
-    maxLineWidth: 880,
+    fontSize: 42,
+    lineHeight: 56,
+    maxLineWidth: 560,
     maxLines: 3,
-    padX: 30,
-    padY: 16,
-    radius: 16,
+    padX: 20,
+    padY: 12,
+    radius: 14,
   }),
 });
 
@@ -247,12 +247,12 @@ function measureAndPlaceSubtitle(ctx, tokens, layout, obstacles = [], preferredC
   if (!Array.isArray(tokens) || tokens.length === 0) return null;
   const style = layout.subtitleStyle;
   ctx.save();
-  ctx.font = `bold ${style.fontSize}px PopB`;
-  const spaceW = ctx.measureText(' ').width * 1.32;
+  ctx.font = `500 ${style.fontSize}px PopR`;
+  const spaceW = ctx.measureText(' ').width * 1.18;
 
   const measured = tokens.map((tk) => ({
     ...tk,
-    width: ctx.measureText(String(tk.word || '')).width + (tk.highlight && !tk.isSpeakerLabel ? 6 * layout.scale : 0),
+    width: ctx.measureText(String(tk.word || '')).width,
   }));
 
   // Greedy wrap within `style.maxLineWidth`, then rebalance 2-line splits to eliminate 1-word orphans

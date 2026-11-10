@@ -848,10 +848,17 @@ function renderCharacterPass(ctx, entry, drawMode, parchmentMode, activeLight, s
     });
   }
 
-  const hasFrontHandProp = Boolean((state.heldPhone && state.heldPhone.inHand !== false) || state.heldCup);
+  const phoneInHand = Boolean(state.heldPhone && state.heldPhone.inHand !== false);
+  const phoneOnFarHand = phoneInHand && state.heldPhone.hand === 'far';
+  const farHandOverlay = phoneOnFarHand
+    ? (gHand, handInfo) => {
+        drawHeldPhoneInHand(gHand, handInfo, state.heldPhone, globalT);
+      }
+    : null;
+  const hasFrontHandProp = Boolean((phoneInHand && !phoneOnFarHand) || state.heldCup);
   const frontHandOverlay = hasFrontHandProp
     ? (gHand, handInfo) => {
-        if (state.heldPhone && state.heldPhone.inHand !== false) {
+        if (phoneInHand && !phoneOnFarHand) {
           drawHeldPhoneInHand(gHand, handInfo, state.heldPhone, globalT);
         }
         if (state.heldCup) {
@@ -859,6 +866,9 @@ function renderCharacterPass(ctx, entry, drawMode, parchmentMode, activeLight, s
         }
       }
     : null;
+  const screenGlow = (phoneInHand && state.heldPhone.lit !== false)
+    ? 1.0
+    : (state.typingTapL !== undefined ? 0.52 : 0);
 
   return drawFigure(ctx, state.x, state.fy, state.s, state.pose, state.flip, {
     id: actor.id,
@@ -868,6 +878,7 @@ function renderCharacterPass(ctx, entry, drawMode, parchmentMode, activeLight, s
     hair: actor.hair,
     hairColor: actor.hairColor,
     shoeColor: actor.shoeColor,
+    barefoot: actor.barefoot,
     accessory: actor.accessory,
     accessories: actor.accessories,
     eyes: actor.eyes,
@@ -878,9 +889,11 @@ function renderCharacterPass(ctx, entry, drawMode, parchmentMode, activeLight, s
     scarfColor: actor.scarfColor,
     bagColor: actor.bagColor,
     lightColor: activeLight,
+    screenGlow,
     nameTag: actor.showNameTag ? actor.name : null,
     turnScaleX: state.turnScaleX ?? 1.0,
     drawMode,
+    farHandOverlay,
     frontHandOverlay,
     faceAnim: {
       talkAmount: actorIsSpeaking ? speechState.talkAmount : 0,
@@ -1603,22 +1616,32 @@ function drawNativeScreenSubtitle(g, outW, outH, pending, obstacles = []) {
   const s = layout.scale;
   const baseAccentRgb = hexToRgb(accentColor || '#cbd5e1');
   const brightAccentCss = rgbCss(mixRgb(baseAccentRgb, [255, 255, 255], 0.32));
-  const goldRgb = [251, 191, 36];
 
   g.save();
   g.setTransform(1, 0, 0, 1, 0, 0);
   g.globalAlpha = alpha;
-  g.font = `bold ${placement.fontSize}px PopB`;
+  g.font = `500 ${placement.fontSize}px PopR`;
   g.textBaseline = 'middle';
 
-  // Restrained frosted near-black subtitle pill inside safe margins
-  g.fillStyle = 'rgba(7, 10, 18, 0.90)';
-  g.strokeStyle = 'rgba(148, 163, 184, 0.26)';
-  g.lineWidth = Math.max(1, 1.5 * s);
-  g.beginPath();
-  g.roundRect(placement.boxX, placement.boxY, placement.boxW, placement.boxH, placement.radius);
-  g.fill();
-  g.stroke();
+  // Soft diffused ambient dark vignette behind borderless cinema text (zero visible box or pill border!)
+  const softReadability = g.createRadialGradient(
+    placement.centerX,
+    placement.centerY,
+    8 * s,
+    placement.centerX,
+    placement.centerY,
+    Math.max(placement.boxW * 0.65, 180 * s)
+  );
+  softReadability.addColorStop(0, 'rgba(4, 6, 11, 0.42)');
+  softReadability.addColorStop(0.65, 'rgba(4, 6, 11, 0.16)');
+  softReadability.addColorStop(1, 'rgba(4, 6, 11, 0.00)');
+  g.fillStyle = softReadability;
+  g.fillRect(
+    placement.boxX - 40 * s,
+    placement.boxY - 24 * s,
+    placement.boxW + 80 * s,
+    placement.boxH + 48 * s
+  );
 
   let globalActiveLine = -1;
   let globalActiveIdx = -1;
@@ -1647,71 +1670,33 @@ function drawNativeScreenSubtitle(g, outW, outH, pending, obstacles = []) {
     const y = placement.centerY - ((placement.lines.length - 1) * placement.lineHeight) * 0.5 + lIdx * placement.lineHeight + 1 * s;
 
     line.items.forEach((it, idx) => {
-      const hasTiming = it.tStart !== undefined && it.tEnd !== undefined;
       const isSpokenNow = lIdx === globalActiveLine && idx === globalActiveIdx && globalStrength > 0.04;
-      const alreadySpoken = !hasTiming || it.isSpeakerLabel || ts > it.tEnd;
 
       if (it.isSpeakerLabel) {
         g.save();
-        g.fillStyle = `rgba(${baseAccentRgb[0]}, ${baseAccentRgb[1]}, ${baseAccentRgb[2]}, 0.16)`;
-        g.strokeStyle = `rgba(${baseAccentRgb[0]}, ${baseAccentRgb[1]}, ${baseAccentRgb[2]}, 0.58)`;
-        g.lineWidth = Math.max(1, 1.3 * s);
-        g.beginPath();
-        g.roundRect(x - 5 * s, y - 16 * s, it.width, 32 * s, 7 * s);
-        g.fill();
-        g.stroke();
+        g.fillStyle = 'rgba(0, 0, 0, 0.85)';
+        g.fillText(it.raw, x + 1.2 * s, y + 1.8 * s);
         g.fillStyle = brightAccentCss;
         g.fillText(it.raw, x, y);
         g.restore();
-      } else if (isSpokenNow) {
-        const midX = x + it.width * 0.5;
-        const liftY = -1.4 * s * globalStrength;
-        const textOffX = it.highlight ? 3 * s : 0;
-        g.save();
-        if (it.highlight) {
-          drawSoftGlow(g, midX, y + liftY, Math.max(38 * s, it.width * 0.72), '#fbbf24', 0.28 * globalStrength);
-          g.fillStyle = `rgba(${goldRgb[0]}, ${goldRgb[1]}, ${goldRgb[2]}, ${ca(0.22 * globalStrength)})`;
-          g.strokeStyle = `rgba(${goldRgb[0]}, ${goldRgb[1]}, ${goldRgb[2]}, ${ca(0.88 * globalStrength)})`;
-          g.lineWidth = Math.max(1, 1.5 * s);
-          g.beginPath();
-          g.roundRect(x - 2 * s, y - 18 * s + liftY, it.width + 4 * s, 36 * s, 8 * s);
-          g.fill();
-          g.stroke();
-          g.fillStyle = 'rgba(0, 0, 0, 0.72)';
-          g.fillText(it.raw, x + textOffX + 1 * s, y + liftY + 1.5 * s);
-          g.fillStyle = '#fef08a';
-          g.fillText(it.raw, x + textOffX, y + liftY);
-        } else {
-          drawSoftGlow(g, midX, y + liftY, Math.max(32 * s, it.width * 0.60), '#f8fafc', 0.12 * globalStrength);
-          g.fillStyle = 'rgba(0, 0, 0, 0.72)';
-          g.fillText(it.raw, x + 1 * s, y + liftY + 1.5 * s);
-          g.fillStyle = '#ffffff';
-          g.fillText(it.raw, x, y + liftY);
-        }
-        g.restore();
-      } else if (alreadySpoken) {
-        const textOffX = it.highlight ? 3 * s : 0;
-        g.save();
-        g.fillStyle = 'rgba(0, 0, 0, 0.60)';
-        g.fillText(it.raw, x + textOffX + 1 * s, y + 1.5 * s);
-        if (it.highlight) {
-          g.fillStyle = '#fde047';
-          g.fillText(it.raw, x + textOffX, y);
-          g.fillStyle = 'rgba(251, 191, 36, 0.76)';
-          g.beginPath();
-          g.roundRect(x + textOffX, y + 16 * s, it.width - 6 * s, Math.max(1.5, 2.5 * s), 1.2 * s);
-          g.fill();
-        } else {
-          g.fillStyle = '#f8fafc';
-          g.fillText(it.raw, x, y);
-        }
-        g.restore();
       } else {
-        const textOffX = it.highlight ? 3 * s : 0;
-        g.fillStyle = it.highlight
-          ? 'rgba(253, 224, 71, 0.76)'
-          : 'rgba(203, 213, 225, 0.64)';
-        g.fillText(it.raw, x + textOffX, y);
+        // Minimalist borderless cinema subtitles: crisp white normal words + warm sand-gold accent words (#dfba78)
+        const liftY = isSpokenNow ? (-0.8 * s * globalStrength) : 0;
+        const wordColor = it.highlight
+          ? (isSpokenNow ? '#ebd098' : '#dfba78')
+          : (isSpokenNow ? '#ffffff' : '#f4f7fb');
+        g.save();
+        if (it.highlight && isSpokenNow) {
+          drawSoftGlow(g, x + it.width * 0.5, y + liftY, Math.max(28 * s, it.width * 0.62), '#dfba78', 0.16 * globalStrength);
+        }
+        // Crisp 2-layer dark cinema drop-shadow for effortless borderless legibility
+        g.fillStyle = 'rgba(0, 0, 0, 0.88)';
+        g.fillText(it.raw, x + 1.4 * s, y + liftY + 2.0 * s);
+        g.fillStyle = 'rgba(0, 0, 0, 0.46)';
+        g.fillText(it.raw, x, y + liftY + 0.8 * s);
+        g.fillStyle = wordColor;
+        g.fillText(it.raw, x, y + liftY);
+        g.restore();
       }
 
       x += it.width + (idx < line.items.length - 1 ? placement.spaceW : 0);
@@ -1791,12 +1776,12 @@ function renderEpisodeFrame(ctx, outW, outH, episode, frameIdx) {
       ctx.drawImage(getParchmentBackdrop(width, height), 0, 0);
       ctx.restore();
     } else {
-      renderNearBlackBackground(ctx, width, height, Math.round(height * 0.725));
+      renderNearBlackBackground(ctx, width, height, Math.round(height * 0.742));
     }
 
     // Native full-bleed vector projection onto 9:16 canvas (zero bitmap crop, zero blur bars)
     const stageScale = width / Math.max(1, viewport.width);
-    const targetFloorScreenY = Math.round(height * 0.725);
+    const targetFloorScreenY = Math.round(height * 0.742);
     const stageOffsetX = -stageScale * viewport.left;
     const stageOffsetY = targetFloorScreenY - stageScale * FLOOR_Y;
 

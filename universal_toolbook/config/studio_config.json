@@ -24,13 +24,15 @@
   "visual_identity": {
     "mode": "near_black_minimal",
     "lock_identity": true,
-    "sky_top": "#040507",
-    "sky_mid": "#080a0f",
-    "sky_bottom": "#0c1017",
-    "floor_top": "#07090e",
-    "floor_bottom": "#030407",
-    "horizon_line": "#94a3b8",
-    "horizon_alpha": 0.16,
-    "center_lift_alpha": 0.032
+    "sky_top": "#070a10",
+    "sky_mid": "#0d1624",
+    "sky_bottom": "#111c2d",
+    "ambient_glow": "#223f5e",
+    "ambient_glow_alpha": 0.46,
+    "floor_top": "#090c12",
+    "floor_bottom": "#04060a",
+    "horizon_line": "#64748b",
+    "horizon_alpha": 0.22,
+    "center_lift_alpha": 0.045
   }
 }

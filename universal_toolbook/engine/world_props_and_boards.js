@@ -341,11 +341,11 @@ function computePropAnchors(prop, W = 1920, floorY = 855) {
  */
 function drawHeldPhoneInHand(g, handInfo, phoneOpts = {}) {
   const { wrist, forearmAngle, scale: s, bodyFill, outlineCol, sw, thumbScroll = 0, thumbTap = 0 } = handInfo;
-  const pw = 15.2 * s;
-  const ph = 30.5 * s;
-  const palmX = wrist[0] + Math.cos(forearmAngle) * 6.2 * s;
-  const palmY = wrist[1] + Math.sin(forearmAngle) * 6.2 * s;
-  const phoneTilt = phoneOpts.tilt ?? -0.34; // gently angled toward the viewer's eyes
+  const pw = 13.5 * s;
+  const ph = 33.5 * s;
+  const palmX = wrist[0] + Math.cos(forearmAngle) * 7.8 * s;
+  const palmY = wrist[1] + Math.sin(forearmAngle) * 7.8 * s;
+  const phoneTilt = phoneOpts.tilt ?? -0.58; // Sleek ~33° 3/4 tilt angled back toward the character's eyes
   const isLit = phoneOpts.lit !== false;
   const scrollPhase = Number(phoneOpts.scrollPhase || 0);
 
@@ -353,80 +353,115 @@ function drawHeldPhoneInHand(g, handInfo, phoneOpts = {}) {
   g.translate(palmX, palmY);
   g.rotate(phoneTilt);
 
-  // Subtle restrained screen light cast toward face when active
+  const px0 = -pw * 0.42;
+  const py0 = -ph * 0.78;
+
+  // 1. Volumetric upward cyan-blue screen light cone radiating toward face & upper chest
   if (isLit) {
-    const rad = g.createRadialGradient(-4 * s, -ph * 0.35, 1, -10 * s, -ph * 0.45, 36 * s);
-    rad.addColorStop(0, 'rgba(186, 230, 253, 0.14)');
-    rad.addColorStop(1, 'rgba(186, 230, 253, 0.00)');
-    g.fillStyle = rad;
+    g.save();
+    // Soft atmospheric screen bloom in the air between phone & face
+    const bloom = g.createRadialGradient(px0 - 10 * s, py0 - 12 * s, 2 * s, px0 - 26 * s, py0 - 36 * s, 68 * s);
+    bloom.addColorStop(0, 'rgba(125, 211, 252, 0.36)');
+    bloom.addColorStop(0.45, 'rgba(56, 189, 248, 0.15)');
+    bloom.addColorStop(1, 'rgba(56, 189, 248, 0.00)');
+    g.fillStyle = bloom;
     g.beginPath();
-    g.arc(-8 * s, -ph * 0.4, 36 * s, 0, Math.PI * 2);
+    g.arc(px0 - 24 * s, py0 - 32 * s, 68 * s, 0, Math.PI * 2);
     g.fill();
+
+    // Upward-angled volumetric light cone from lit glass toward face (contained in front of torso, never leaking behind spine!)
+    const beamGrad = g.createLinearGradient(px0 + 1 * s, py0 + ph * 0.45, px0 - 54 * s, py0 - 78 * s);
+    beamGrad.addColorStop(0, 'rgba(186, 230, 253, 0.44)');
+    beamGrad.addColorStop(0.32, 'rgba(56, 189, 248, 0.22)');
+    beamGrad.addColorStop(0.72, 'rgba(56, 189, 248, 0.06)');
+    beamGrad.addColorStop(1, 'rgba(56, 189, 248, 0.00)');
+    g.fillStyle = beamGrad;
+    g.beginPath();
+    g.moveTo(px0 + 1.5 * s, py0 + 2.5 * s);
+    g.lineTo(px0 - 34 * s, py0 - 86 * s);
+    g.lineTo(px0 - 68 * s, py0 - 18 * s);
+    g.lineTo(px0 + 1.5 * s, py0 + ph - 2.5 * s);
+    g.closePath();
+    g.fill();
+    g.restore();
   }
 
-  // Phone chassis + canonical bezel
-  const px0 = -pw * 0.35;
-  const py0 = -ph * 0.78;
-  g.fillStyle = '#0f172a';
+  // 2. 3/4 Smartphone metallic side rail + dark glass chassis
+  g.fillStyle = '#0d1422';
   g.strokeStyle = outlineCol;
-  g.lineWidth = Math.max(1.8 * s, sw * 0.82);
+  g.lineWidth = Math.max(1.7 * s, sw * 0.80);
   g.beginPath();
-  g.roundRect(px0, py0, pw, ph, 3.6 * s);
+  g.roundRect(px0, py0, pw, ph, 3.4 * s);
   g.fill();
   g.stroke();
 
-  // Metallic inner rim
-  g.strokeStyle = '#94a3b8';
-  g.lineWidth = 1.2 * s;
+  // Brushed slate-blue metallic side edge + subtle rear camera module pill
+  g.fillStyle = '#334155';
   g.beginPath();
-  g.roundRect(px0 + 0.9 * s, py0 + 0.9 * s, pw - 1.8 * s, ph - 1.8 * s, 3.0 * s);
+  g.roundRect(px0 + pw - 3.6 * s, py0 + 1.2 * s, 2.8 * s, ph - 2.4 * s, 1.4 * s);
+  g.fill();
+  g.fillStyle = '#1e293b';
+  g.strokeStyle = '#64748b';
+  g.lineWidth = 0.9 * s;
+  g.beginPath();
+  g.roundRect(px0 + pw * 0.36, py0 + 3.0 * s, 3.6 * s, 7.2 * s, 1.4 * s);
+  g.fill();
   g.stroke();
 
-  // Screen viewport with live scrolling feed or typing bubbles
-  const sx0 = px0 + 2.1 * s;
-  const sy0 = py0 + 2.8 * s;
-  const sw2 = pw - 4.2 * s;
-  const sh2 = ph - 5.6 * s;
+  // Glowing cyan screen face visible along the angled front (-X) edge
+  const sx0 = px0 + 1.1 * s;
+  const sy0 = py0 + 2.2 * s;
+  const sw2 = pw * 0.42;
+  const sh2 = ph - 4.4 * s;
   g.save();
   g.beginPath();
-  g.roundRect(sx0, sy0, sw2, sh2, 1.8 * s);
-  g.fillStyle = isLit ? '#17253b' : '#0f172a';
+  g.roundRect(sx0, sy0, sw2, sh2, 1.5 * s);
+  g.fillStyle = isLit ? '#38bdf8' : '#1e293b';
   g.fill();
   g.clip();
   if (isLit) {
-    const feedShift = ((scrollPhase * 9.0 * s) % (8.5 * s) + 8.5 * s) % (8.5 * s);
-    for (let row = -1; row < 4; row++) {
-      const cy = sy0 + 2.5 * s + row * 8.5 * s - feedShift;
-      g.fillStyle = row % 2 === 0 ? 'rgba(226, 232, 240, 0.72)' : 'rgba(125, 211, 252, 0.58)';
-      g.beginPath();
-      g.roundRect(sx0 + 1.4 * s, cy, sw2 - 2.8 * s, 5.2 * s, 1.1 * s);
-      g.fill();
+    const feedShift = ((scrollPhase * 9.0 * s) % (7.8 * s) + 7.8 * s) % (7.8 * s);
+    for (let row = -1; row < 5; row++) {
+      const cy = sy0 + 2.0 * s + row * 7.8 * s - feedShift;
+      g.fillStyle = row % 2 === 0 ? 'rgba(240, 249, 255, 0.92)' : 'rgba(125, 211, 252, 0.78)';
+      g.fillRect(sx0 + 0.6 * s, cy, sw2 - 1.2 * s, 4.4 * s);
     }
   }
   g.restore();
 
-  // 3 small wrapping fingertips hugging the far (+X) bezel edge of the phone
-  const fingerR = 2.0 * s;
-  const fingerSw = sw * 0.72;
-  for (const fyOff of [-0.52, -0.34, -0.16]) {
-    const fxA = [px0 + pw - 0.8 * s, py0 + ph * (0.78 + fyOff)];
-    const fxB = [px0 + pw + 1.1 * s, py0 + ph * (0.78 + fyOff)];
+  // Bright specular cyan edge line right along the lit glass border
+  if (isLit) {
+    g.strokeStyle = '#e0f2fe';
+    g.lineWidth = 1.35 * s;
+    g.beginPath();
+    g.moveTo(px0 + 1.2 * s, py0 + 3.2 * s);
+    g.lineTo(px0 + 1.2 * s, py0 + ph - 3.2 * s);
+    g.stroke();
+  }
+
+  // 3. Four sculpted wrapping fingers curling cleanly around the far (+X) edge of the phone
+  const fingerR = 2.05 * s;
+  const fingerSw = sw * 0.74;
+  for (const fyFrac of [0.30, 0.44, 0.58, 0.72]) {
+    const fyPos = py0 + ph * fyFrac;
+    const fxA = [px0 + pw - 2.2 * s, fyPos + 0.6 * s];
+    const fxB = [px0 + pw + 1.9 * s, fyPos - 0.5 * s];
     g.fillStyle = outlineCol;
-    traceTangentCapsule(g, fxA, fingerR + fingerSw, fxB, fingerR + fingerSw);
+    traceTangentCapsule(g, fxA, fingerR + fingerSw, fxB, fingerR * 0.92 + fingerSw);
     g.fill();
     g.fillStyle = bodyFill;
-    traceTangentCapsule(g, fxA, fingerR, fxB, fingerR);
+    traceTangentCapsule(g, fxA, fingerR, fxB, fingerR * 0.92);
     g.fill();
   }
 
-  // Articulated single-colour thumb extending from palm onto the lower/mid screen!
-  const thumbBase = [px0 - 1.2 * s, py0 + ph * 0.76];
-  const scrollDy = -clamp(thumbScroll, -1, 1) * 6.2 * s;
-  const tapDx = clamp(thumbTap, -1, 1) * 2.4 * s;
-  const thumbTip = [px0 + pw * 0.48 + tapDx, py0 + ph * 0.54 + scrollDy];
-  const thR0 = 3.0 * s;
-  const thR1 = 2.3 * s;
-  const thSw = sw * 0.80;
+  // 4. Articulated thumb cradling & swiping the near bezel
+  const thumbBase = [px0 - 1.6 * s, py0 + ph * 0.80];
+  const scrollDy = -clamp(thumbScroll, -1, 1) * 5.8 * s;
+  const tapDx = clamp(thumbTap, -1, 1) * 2.0 * s;
+  const thumbTip = [px0 + pw * 0.36 + tapDx, py0 + ph * 0.54 + scrollDy];
+  const thR0 = 2.9 * s;
+  const thR1 = 2.2 * s;
+  const thSw = sw * 0.78;
 
   g.fillStyle = outlineCol;
   traceTangentCapsule(g, thumbBase, thR0 + thSw, thumbTip, thR1 + thSw);
@@ -538,17 +573,127 @@ function drawWorldProp(g, prop, W, floorY, t, sceneAccent = '#38bdf8', sceneT = 
     const tw = 260 * s;
     const th = 148 * s;
     const topY = floorY - th;
-    g.fillStyle = '#1e293b';
-    g.strokeStyle = '#05070c';
-    g.lineWidth = 2.8 * s;
-    g.fillRect(px - tw * 0.42, topY + 12 * s, 13 * s, th - 12 * s);
-    g.fillRect(px + tw * 0.42 - 13 * s, topY + 12 * s, 13 * s, th - 12 * s);
-    g.fillRect(px - tw * 0.40, topY + 14 * s, tw * 0.80, 16 * s);
-    g.fillStyle = '#475569';
+    const bodyW = tw * 0.88;
+    const bodyX = px - bodyW * 0.5;
+    const legW = 12 * s;
+
+    // Grounded soft floor shadow under the nightstand/side-table
+    g.save();
+    const tSh = g.createRadialGradient(px, floorY + 2 * s, 8 * s, px, floorY + 2 * s, tw * 0.56);
+    tSh.addColorStop(0, 'rgba(0, 0, 0, 0.52)');
+    tSh.addColorStop(0.7, 'rgba(0, 0, 0, 0.22)');
+    tSh.addColorStop(1, 'rgba(0, 0, 0, 0.00)');
+    g.fillStyle = tSh;
     g.beginPath();
-    g.roundRect(px - tw * 0.5, topY, tw, 15 * s, 5 * s);
+    g.ellipse(px, floorY + 2 * s, tw * 0.54, 8 * s, 0, 0, Math.PI * 2);
+    g.fill();
+    g.restore();
+
+    g.lineJoin = 'round';
+    g.lineCap = 'round';
+    g.strokeStyle = '#070a10';
+    g.lineWidth = 2.3 * s;
+
+    // Recessed dark lower shelf cubby interior
+    const shelfTopY = topY + 52 * s;
+    const shelfBotY = floorY - 22 * s;
+    g.fillStyle = '#0e141e';
+    g.beginPath();
+    g.rect(bodyX + legW * 0.6, shelfTopY, bodyW - legW * 1.2, shelfBotY - shelfTopY);
     g.fill();
     g.stroke();
+
+    // Lower-shelf illustrated book silhouettes (3 leaning/upright books on left + 2 flat stacked books on right)
+    const bLeft = bodyX + legW + 8 * s;
+    g.fillStyle = '#182232';
+    g.fillRect(bLeft, shelfBotY - 46 * s, 11 * s, 46 * s);
+    g.strokeRect(bLeft, shelfBotY - 46 * s, 11 * s, 46 * s);
+    g.fillStyle = '#1e2b3e';
+    g.fillRect(bLeft + 12 * s, shelfBotY - 50 * s, 12 * s, 50 * s);
+    g.strokeRect(bLeft + 12 * s, shelfBotY - 50 * s, 12 * s, 50 * s);
+    g.save();
+    g.translate(bLeft + 27 * s, shelfBotY);
+    g.rotate(-0.18);
+    g.fillStyle = '#162030';
+    g.fillRect(0, -45 * s, 11 * s, 45 * s);
+    g.strokeRect(0, -45 * s, 11 * s, 45 * s);
+    g.restore();
+
+    const sRight = bodyX + bodyW - legW - 62 * s;
+    g.fillStyle = '#1a2536';
+    g.beginPath();
+    g.roundRect(sRight, shelfBotY - 11 * s, 54 * s, 11 * s, 2 * s);
+    g.fill();
+    g.stroke();
+    g.fillStyle = '#223046';
+    g.beginPath();
+    g.roundRect(sRight + 4 * s, shelfBotY - 21 * s, 46 * s, 10 * s, 2 * s);
+    g.fill();
+    g.stroke();
+
+    // Left & right side legs + bottom shelf rail
+    g.fillStyle = '#182230';
+    g.fillRect(bodyX, topY + 12 * s, legW, th - 12 * s);
+    g.strokeRect(bodyX, topY + 12 * s, legW, th - 12 * s);
+    g.fillRect(bodyX + bodyW - legW, topY + 12 * s, legW, th - 12 * s);
+    g.strokeRect(bodyX + bodyW - legW, topY + 12 * s, legW, th - 12 * s);
+    g.fillStyle = '#1c2838';
+    g.fillRect(bodyX + legW, shelfBotY, bodyW - legW * 2, 10 * s);
+    g.strokeRect(bodyX + legW, shelfBotY, bodyW - legW * 2, 10 * s);
+
+    // Upper drawer casing + inset drawer face + round center knob
+    g.fillStyle = '#1b2636';
+    g.fillRect(bodyX + legW, topY + 13 * s, bodyW - legW * 2, 39 * s);
+    g.strokeRect(bodyX + legW, topY + 13 * s, bodyW - legW * 2, 39 * s);
+    g.fillStyle = '#1f2c3f';
+    g.beginPath();
+    g.roundRect(bodyX + legW + 6 * s, topY + 18 * s, bodyW - legW * 2 - 12 * s, 29 * s, 2.5 * s);
+    g.fill();
+    g.stroke();
+    g.fillStyle = '#33445c';
+    g.beginPath();
+    g.arc(px, topY + 32.5 * s, 4.2 * s, 0, Math.PI * 2);
+    g.fill();
+    g.stroke();
+
+    // Beveled overhanging tabletop with subtle cool-slate top rim sheen
+    g.fillStyle = '#253347';
+    g.beginPath();
+    g.roundRect(px - tw * 0.5, topY, tw, 13.5 * s, 3.5 * s);
+    g.fill();
+    g.stroke();
+    g.strokeStyle = 'rgba(148, 163, 184, 0.28)';
+    g.lineWidth = 1.3 * s;
+    g.beginPath();
+    g.moveTo(px - tw * 0.48, topY + 2.2 * s);
+    g.lineTo(px + tw * 0.48, topY + 2.2 * s);
+    g.stroke();
+
+    // Subtle everyday bedside/study details (resting folded eyeglasses + draped charging cable)
+    if (prop.minimal !== true) {
+      // Folded eyeglasses resting on left side of tabletop
+      const gx = px - tw * 0.28;
+      const gy = topY - 1.5 * s;
+      g.strokeStyle = '#64748b';
+      g.lineWidth = 1.6 * s;
+      g.beginPath();
+      g.ellipse(gx - 7 * s, gy - 2 * s, 6.5 * s, 3.2 * s, -0.08, 0, Math.PI * 2);
+      g.ellipse(gx + 7 * s, gy - 2 * s, 6.5 * s, 3.2 * s, 0.08, 0, Math.PI * 2);
+      g.moveTo(gx - 0.8 * s, gy - 2.6 * s);
+      g.lineTo(gx + 0.8 * s, gy - 2.6 * s);
+      g.moveTo(gx - 13 * s, gy - 3 * s);
+      g.lineTo(gx - 3 * s, gy - 6.5 * s);
+      g.stroke();
+
+      // Thin dark charging cord curving gracefully from right tabletop down past the drawer
+      const cx0 = px + tw * 0.12;
+      g.strokeStyle = '#090d14';
+      g.lineWidth = 2.0 * s;
+      g.beginPath();
+      g.moveTo(cx0 - 6 * s, topY + 0.5 * s);
+      g.bezierCurveTo(cx0 + 4 * s, topY + 18 * s, cx0 - 8 * s, topY + 46 * s, cx0 + 18 * s, topY + 64 * s);
+      g.stroke();
+    }
   } else if (prop.type === 'phone') {
     if (propPass === 'back_only') {
       g.restore();

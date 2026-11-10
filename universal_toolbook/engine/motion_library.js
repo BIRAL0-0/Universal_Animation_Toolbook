@@ -1564,20 +1564,24 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
         }
       : plantedStandingLegs();
 
-    // Default ergonomic world-space hand anchors (overridden with exact prop anchors in `resolveScenePropInteractions`)
+    // Default ergonomic world-space hand anchors for 3/4 rig:
+    // Note: `visAR` (far/facing-side arm) sits at `shFar` (+14.8*s forward of spine), so skeleton target `hr`
+    // is offset by `-facing * 14.8 * s` so the rendered 3/4 hand lands at the exact world target!
+    const shFarOffX = facing * 14.8 * s;
     const shApproxY = (baseLegs.hipY ?? (gY - 115 * s)) - BONES.TORSO * s;
-    const restHand = [x + facing * 14 * s, shApproxY + 86 * s];
-    const surfaceContact = [
-      beat.target_x !== undefined ? beat.target_x * W : x + facing * 52 * s,
+    const restHand = [x + facing * 6 * s, shApproxY + 86 * s];
+    const rawSurfaceContact = [
+      beat.target_x !== undefined ? beat.target_x * W : x + facing * 58 * s,
       gY - (beat.surface_height ?? 108) * s,
     ];
+    const surfaceContact = [rawSurfaceContact[0] - shFarOffX, rawSurfaceContact[1] - 2.2 * s];
+    // Natural mid-rib/chest open-space phone viewing anchor (`visAR` wrist lands at `x + facing * 61 * s`, `shApproxY + 58 * s`)
     const viewHand = [
-      x + facing * (isSeated ? 36 : 34) * s,
-      shApproxY + (isSeated ? 38 : 36) * s,
+      x + facing * (isSeated ? 44 : 46) * s,
+      shApproxY + (isSeated ? 50 : 56) * s,
     ];
 
     if (action === 'reach_phone') {
-      // [0..0.22] Eyes lead head notice -> [0.22..0.38] Anticipation coil -> [0.38..0.88] Curved arc reach -> [0.88..1.0] Contact poise
       const noticeU = ease(clamp(u / 0.28));
       const antiCoil = u >= 0.16 && u < 0.38 ? Math.sin(((u - 0.16) / 0.22) * Math.PI) : 0;
       const reachU = u < 0.34 ? 0 : ease(clamp((u - 0.34) / 0.56));
@@ -1609,16 +1613,16 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
         },
         pose: P({
           ...baseLegs,
-          lean: (isSeated ? 0.08 : 0.03) + 0.10 * reachU - 0.02 * antiCoil,
+          lean: (isSeated ? 0.08 : 0.03) + 0.09 * reachU - 0.02 * antiCoil,
           head: 0.20 * ease(clamp((u - 0.08) / 0.34)),
-          spineCurve: (2.0 - 2.5 * reachU) * s,
-          ikwL: clamp((u - 0.16) / 0.22),
-          hl: curTarget,
-          armBendL: -1,
-          al: [0.16 - 0.08 * antiCoil, 0.38 + 0.12 * antiCoil],
-          ar: isSeated ? [0.26, 1.18] : [-0.08, 0.18],
-          handL: reachU > 0.78 ? 'grip' : (reachU > 0.15 ? 'open' : 'relaxed'),
-          handR: 'relaxed',
+          spineCurve: (2.0 - 2.2 * reachU) * s,
+          ikwR: clamp((u - 0.16) / 0.22),
+          hr: curTarget,
+          armBendR: -1,
+          al: isSeated ? [0.24, 1.12] : [-0.05, 0.18],
+          ar: [0.16 - 0.08 * antiCoil, 0.38 + 0.12 * antiCoil],
+          handL: 'relaxed',
+          handR: reachU > 0.78 ? 'grip' : (reachU > 0.15 ? 'open' : 'relaxed'),
         }),
       };
     }
@@ -1638,23 +1642,23 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
         phase = u < reachFrac * 0.45 ? 'anticipation' : 'contact';
         const ru = fromReach ? 1 : ease(u / reachFrac);
         handTarget = fromReach ? surfaceContact : arcPoint(restHand, surfaceContact, ru, -18 * s);
-        lean += 0.10 * ru;
-        head = lerp(0.08, 0.22, ru);
+        lean += 0.09 * ru;
+        head = lerp(0.08, 0.20, ru);
         handShape = ru > 0.8 ? 'grip' : 'open';
       } else if (u < gripEnd) {
         phase = 'grip';
         handTarget = surfaceContact;
         attached = true;
-        lean += 0.10;
-        head = 0.22;
+        lean += 0.09;
+        head = 0.20;
         handShape = 'grip';
       } else {
         phase = u < 0.88 ? 'manipulation' : 'recovery';
         const liftU = springEase(clamp((u - gripEnd) / (1 - gripEnd)), { bounce: 0.08 });
         handTarget = arcPoint(surfaceContact, viewHand, liftU, -14 * s);
         attached = true;
-        lean = lerp((isSeated ? 0.18 : 0.13), (isSeated ? 0.09 : 0.07), liftU);
-        head = lerp(0.22, 0.26, liftU);
+        lean = lerp((isSeated ? 0.16 : 0.11), (isSeated ? 0.08 : 0.05), liftU);
+        head = lerp(0.20, 0.22, liftU);
         handShape = 'grip';
       }
 
@@ -1662,14 +1666,14 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
         ...baseLegs,
         lean,
         head,
-        spineCurve: -1.5 * s,
-        ikwL: 1.0,
-        hl: handTarget,
-        armBendL: -1,
-        al: [0.46, 1.88],
-        ar: isSeated ? [0.28, 1.22] : [-0.06, 0.20],
-        handL: handShape,
-        handR: 'relaxed',
+        spineCurve: -1.2 * s,
+        ikwR: 1.0,
+        hr: handTarget,
+        armBendR: -1,
+        al: isSeated ? [0.24, 1.14] : [-0.05, 0.18],
+        ar: [0.16, 1.48],
+        handL: 'relaxed',
+        handR: handShape,
       });
       const sk = skeleton(x, gY, s, pose, flip);
       return {
@@ -1697,10 +1701,11 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
         heldPhone: attached
           ? {
               inHand: true,
+              hand: 'far',
               lit: u > gripEnd + 0.08,
               scrollPhase: 0,
-              x: sk.world.gripL[0],
-              y: sk.world.gripL[1],
+              x: sk.world.gripR[0] + shFarOffX,
+              y: sk.world.gripR[1] + 2.2 * s,
               facing,
             }
           : null,
@@ -1710,7 +1715,6 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
     if (action === 'hold_phone' || action === 'phone_scroll' || action === 'phone_type') {
       const isScroll = action === 'phone_scroll';
       const isType = action === 'phone_type';
-      // Natural asymmetric upward swipe cycle (smooth upward thumb drag, quick lifted reset)
       const swipeCyc = ((bt * 0.92 + phaseSeed * 0.3) % 1 + 1) % 1;
       const thumbScroll = isScroll
         ? (swipeCyc < 0.64 ? lerp(-0.85, 0.90, ease(swipeCyc / 0.64)) : lerp(0.90, -0.85, ease((swipeCyc - 0.64) / 0.36)))
@@ -1718,22 +1722,24 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
       const thumbTap = isType ? Math.sin(globalT * 14.0) * 0.85 : 0;
       const wristMicro = isScroll ? Math.sin(swipeCyc * Math.PI * 2) * 1.4 * s : (isType ? Math.sin(globalT * 11.0) * 1.0 * s : 0);
       const targetPt = [viewHand[0], viewHand[1] + breath * 1.1 * s + wristMicro * 0.35];
+      // For two-handed typing, near arm (`visAL` at `shNear = -17.8*s`) reaches to meet `visAR`
+      const nearTypeTarget = [targetPt[0] + shFarOffX + facing * 12.0 * s, targetPt[1] + 4.5 * s];
 
       const pose = P({
         ...baseLegs,
-        lean: (isSeated ? 0.09 : 0.08) + 0.008 * breath,
-        head: 0.27 + (isScroll ? 0.018 * Math.sin(swipeCyc * Math.PI * 2) : 0),
-        spineCurve: -2.0 * s,
-        ikwL: 1.0,
-        hl: targetPt,
-        armBendL: -1,
-        ikwR: isType ? 0.92 : 0,
-        hr: isType ? [targetPt[0] - facing * 4 * s, targetPt[1] + 4 * s] : undefined,
+        lean: (isSeated ? 0.08 : 0.05) + 0.008 * breath,
+        head: 0.22 + (isScroll ? 0.016 * Math.sin(swipeCyc * Math.PI * 2) : 0),
+        spineCurve: -1.4 * s,
+        ikwR: 1.0,
+        hr: targetPt,
         armBendR: -1,
-        al: [0.48, 1.92],
-        ar: isType ? [0.42, 1.78] : (isSeated ? [0.26, 1.20] : [-0.06, 0.22]),
-        handL: 'grip',
-        handR: isType ? 'grip' : 'relaxed',
+        ikwL: isType ? 0.92 : 0,
+        hl: isType ? nearTypeTarget : undefined,
+        armBendL: -1,
+        al: isType ? [0.44, 1.62] : (isSeated ? [0.24, 1.14] : [-0.05, 0.18]),
+        ar: [0.16, 1.48],
+        handL: isType ? 'grip' : 'relaxed',
+        handR: 'grip',
         thumbScroll,
         thumbTap,
       });
@@ -1747,8 +1753,8 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
         seatedOnChair: isSeated,
         targetPropId: beat.target_prop || null,
         phoneAction: action,
-        lookX: 0.45,
-        lookY: 0.32,
+        lookX: 0.48,
+        lookY: 0.30,
         interactionState: {
           phase: 'manipulation',
           targetPropType: 'phone',
@@ -1759,43 +1765,44 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
         pose,
         heldPhone: {
           inHand: true,
+          hand: 'far',
+          twoHand: isType,
           lit: true,
           scrollPhase: isScroll ? bt * 1.25 : (isType ? bt * 0.3 : 0),
-          x: sk.world.gripL[0],
-          y: sk.world.gripL[1],
+          x: sk.world.gripR[0] + shFarOffX,
+          y: sk.world.gripR[1] + 2.2 * s,
           facing,
         },
       };
     }
 
     if (action === 'put_down_phone') {
-      // [0..0.15] Finish & anticipation -> [0.15..0.64] Curved lower to surface -> [0.64..0.76] Release -> [0.76..1.0] Arm recovery
       const releaseAt = 0.66;
       let phase = 'anticipation';
       let handTarget = viewHand;
       let attached = true;
       let ikWeight = 1.0;
-      let lean = isSeated ? 0.09 : 0.08;
-      let head = 0.26;
+      let lean = isSeated ? 0.08 : 0.05;
+      let head = 0.22;
       let handShape = 'grip';
 
       if (u < 0.15) {
         phase = 'anticipation';
         const au = ease(u / 0.15);
         handTarget = [viewHand[0], viewHand[1] - 3 * s * Math.sin(au * Math.PI)];
-        head = lerp(0.26, 0.22, au);
+        head = lerp(0.22, 0.20, au);
       } else if (u < releaseAt) {
         phase = 'manipulation';
         const du = ease((u - 0.15) / (releaseAt - 0.15));
         handTarget = arcPoint(viewHand, surfaceContact, du, -14 * s);
-        lean = lerp((isSeated ? 0.09 : 0.08), (isSeated ? 0.17 : 0.13), du);
-        head = lerp(0.22, 0.24, du);
+        lean = lerp((isSeated ? 0.08 : 0.05), (isSeated ? 0.16 : 0.11), du);
+        head = lerp(0.20, 0.22, du);
       } else if (u < 0.78) {
         phase = 'release';
         attached = false;
         handTarget = surfaceContact;
-        lean = isSeated ? 0.16 : 0.12;
-        head = 0.20;
+        lean = isSeated ? 0.15 : 0.10;
+        head = 0.18;
         handShape = 'open';
       } else {
         phase = 'recovery';
@@ -1803,8 +1810,8 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
         const ru = ease((u - 0.78) / 0.22);
         handTarget = arcPoint(surfaceContact, restHand, ru, -12 * s);
         ikWeight = 1 - ru;
-        lean = lerp((isSeated ? 0.16 : 0.12), (isSeated ? 0.05 : 0.02), ru);
-        head = lerp(0.20, 0.02, ru);
+        lean = lerp((isSeated ? 0.15 : 0.10), (isSeated ? 0.05 : 0.02), ru);
+        head = lerp(0.18, 0.02, ru);
         handShape = ru > 0.5 ? 'relaxed' : 'open';
       }
 
@@ -1812,14 +1819,14 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
         ...baseLegs,
         lean,
         head,
-        spineCurve: lerp(-1.5, 2.2, clamp((u - 0.66) / 0.34)) * s,
-        ikwL: ikWeight,
-        hl: handTarget,
-        armBendL: -1,
-        al: isSeated ? [0.32, 1.28] : [0.10, 0.24],
-        ar: isSeated ? [0.26, 1.18] : [-0.08, 0.16],
-        handL: handShape,
-        handR: 'relaxed',
+        spineCurve: lerp(-1.2, 2.0, clamp((u - 0.66) / 0.34)) * s,
+        ikwR: ikWeight,
+        hr: handTarget,
+        armBendR: -1,
+        al: isSeated ? [0.24, 1.14] : [-0.05, 0.18],
+        ar: isSeated ? [0.26, 1.18] : [0.06, 0.20],
+        handL: 'relaxed',
+        handR: handShape,
       });
       const sk = skeleton(x, gY, s, pose, flip);
       return {
@@ -1835,7 +1842,7 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
         phoneProgress: u,
         releaseXNorm: beat.release_x,
         lookX: attached ? 0.45 : lerp(0.45, 0.10, clamp((u - 0.66) / 0.34)),
-        lookY: attached ? 0.32 : lerp(0.32, 0.02, clamp((u - 0.66) / 0.34)),
+        lookY: attached ? 0.30 : lerp(0.30, 0.02, clamp((u - 0.66) / 0.34)),
         interactionState: {
           phase,
           targetPropType: 'phone',
@@ -1847,10 +1854,11 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
         heldPhone: attached
           ? {
               inHand: true,
+              hand: 'far',
               lit: u < 0.48,
               scrollPhase: 0,
-              x: sk.world.gripL[0],
-              y: sk.world.gripL[1],
+              x: sk.world.gripR[0] + shFarOffX,
+              y: sk.world.gripR[1] + 2.2 * s,
               facing,
             }
           : null,
@@ -2627,47 +2635,49 @@ function resolveScenePropInteractions(rawProps, entries, actors, ts, sceneDur, W
         if (st.phoneAction === 'put_down_phone' && Math.abs(contactPt[0] - st.x) > 78 * s) {
           contactPt = [st.x + facing * 74 * s, contactPt[1]];
         }
+        const shFarOffX = facing * 19.5 * s;
         const shY = (st.pose.hipY ?? (st.fy - 115 * s)) - BONES.TORSO * s;
-        const restHand = [st.x + facing * 14 * s, shY + 86 * s];
-        const viewHand = [st.x + facing * 34 * s, shY + 36 * s];
+        const restHand = [st.x + facing * 6 * s, shY + 86 * s];
+        const viewHand = [st.x + facing * 62 * s, shY + 46 * s];
+        const adjContactPt = [contactPt[0] - shFarOffX, contactPt[1] - 2.6 * s];
 
         if (st.phoneAction === 'reach_phone') {
           const ru = clamp(st.phoneProgress ?? 1);
-          st.pose.hl = arcPoint(restHand, contactPt, ru, -20 * s);
+          st.pose.hr = arcPoint(restHand, adjContactPt, ru, -20 * s);
         } else if (st.phoneAction === 'pick_up_phone') {
           const u = clamp(st.phoneProgress ?? 1);
           const rf = st.phoneReachFrac ?? 0.36;
           const ge = st.phoneGripEnd ?? 0.48;
           if (u < rf) {
-            st.pose.hl = rf <= 0.10 ? contactPt : arcPoint(restHand, contactPt, ease(u / rf), -18 * s);
+            st.pose.hr = rf <= 0.10 ? adjContactPt : arcPoint(restHand, adjContactPt, ease(u / rf), -18 * s);
           } else if (u < ge) {
-            st.pose.hl = contactPt;
+            st.pose.hr = adjContactPt;
           } else {
             const liftU = springEase(clamp((u - ge) / (1 - ge)), { bounce: 0.08 });
-            st.pose.hl = arcPoint(contactPt, viewHand, liftU, -14 * s);
+            st.pose.hr = arcPoint(adjContactPt, viewHand, liftU, -14 * s);
           }
         } else if (st.phoneAction === 'hold_phone' || st.phoneAction === 'phone_scroll' || st.phoneAction === 'phone_type') {
-          st.pose.hl = viewHand;
+          st.pose.hr = viewHand;
           if (st.phoneAction === 'phone_type') {
-            st.pose.hr = [viewHand[0] - facing * 4 * s, viewHand[1] + 4 * s];
+            st.pose.hl = [viewHand[0] + shFarOffX + facing * 12.0 * s, viewHand[1] + 4.5 * s];
           }
         } else if (st.phoneAction === 'put_down_phone') {
           const u = clamp(st.phoneProgress ?? 1);
           const relAt = st.phoneReleaseAt ?? 0.66;
           if (u < 0.15) {
-            st.pose.hl = viewHand;
+            st.pose.hr = viewHand;
           } else if (u < relAt) {
-            st.pose.hl = arcPoint(viewHand, contactPt, ease((u - 0.15) / (relAt - 0.15)), -14 * s);
+            st.pose.hr = arcPoint(viewHand, adjContactPt, ease((u - 0.15) / (relAt - 0.15)), -14 * s);
           } else if (u < 0.78) {
-            st.pose.hl = contactPt;
+            st.pose.hr = adjContactPt;
           } else {
-            st.pose.hl = arcPoint(contactPt, restHand, ease((u - 0.78) / 0.22), -12 * s);
+            st.pose.hr = arcPoint(adjContactPt, restHand, ease((u - 0.78) / 0.22), -12 * s);
           }
         }
         if (st.heldPhone) {
           const sk = skeleton(st.x, st.fy, s, st.pose, st.flip);
-          st.heldPhone.x = sk.world.gripL[0];
-          st.heldPhone.y = sk.world.gripL[1];
+          st.heldPhone.x = sk.world.gripR[0] + shFarOffX;
+          st.heldPhone.y = sk.world.gripR[1] + 2.2 * s;
         }
       }
     }

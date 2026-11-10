@@ -590,7 +590,7 @@ function compileEpisode(spec, options = {}) {
         showNameTag:
           ch.show_name !== undefined
             ? Boolean(ch.show_name)
-            : isFirstAppearance && Boolean(castProfile.name),
+            : Boolean(castProfile.show_name),
       };
 
       const ACTION_ALIASES = {
