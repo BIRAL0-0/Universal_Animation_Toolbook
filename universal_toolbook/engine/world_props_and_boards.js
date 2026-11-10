@@ -878,18 +878,44 @@ function drawWorldProp(g, prop, W, floorY, t, sceneAccent = '#38bdf8', sceneT = 
       g.fill();
       g.stroke();
 
-      // Monitor / Laptop on desk
+      // Monitor / Laptop on desk (or warm midnight notebook & lamp when `hide_laptop` / `notebook` is set)
       const mx = px + (faceLeft ? -34 * s : 34 * s);
-      const screenCol = prop.screen_color || accent;
-      drawSoftGlow(g, mx, topY - 52 * s, 125 * s, screenCol, 0.24);
-      g.strokeStyle = '#cbd5e1';
-      g.lineWidth = 6 * s;
-      g.lineCap = 'round';
-      g.beginPath();
-      g.moveTo(mx - (faceLeft ? -30 * s : 30 * s), topY - 16 * s);
-      g.lineTo(mx, topY - 16 * s);
-      g.lineTo(mx + (faceLeft ? -18 * s : 18 * s), topY - 76 * s);
-      g.stroke();
+      if (!prop.hide_laptop) {
+        const screenCol = prop.screen_color || accent;
+        drawSoftGlow(g, mx, topY - 52 * s, 125 * s, screenCol, 0.24);
+        g.strokeStyle = '#cbd5e1';
+        g.lineWidth = 6 * s;
+        g.lineCap = 'round';
+        g.beginPath();
+        g.moveTo(mx - (faceLeft ? -30 * s : 30 * s), topY - 16 * s);
+        g.lineTo(mx, topY - 16 * s);
+        g.lineTo(mx + (faceLeft ? -18 * s : 18 * s), topY - 76 * s);
+        g.stroke();
+      } else if (prop.notebook) {
+        // Warm low-glare study lamp + open notebook sheet on tabletop
+        const lampX = px + (faceLeft ? -78 * s : 78 * s);
+        drawSoftGlow(g, lampX - (faceLeft ? -18 * s : 18 * s), topY - 46 * s, 118 * s, '#f6c87a', 0.22);
+        g.strokeStyle = '#1e293b';
+        g.lineWidth = 3.2 * s;
+        g.lineCap = 'round';
+        g.beginPath();
+        g.moveTo(lampX, topY - 15 * s);
+        g.quadraticCurveTo(lampX + (faceLeft ? -8 * s : 8 * s), topY - 56 * s, lampX - (faceLeft ? -18 * s : 18 * s), topY - 62 * s);
+        g.stroke();
+        g.fillStyle = '#334155';
+        g.beginPath();
+        g.ellipse(lampX - (faceLeft ? -20 * s : 20 * s), topY - 60 * s, 12 * s, 5.5 * s, faceLeft ? 0.35 : -0.35, 0, Math.PI * 2);
+        g.fill();
+        // Crisp notebook sheet resting flat on tabletop
+        const sheetX = px + (faceLeft ? 8 * s : -28 * s);
+        g.fillStyle = '#e2e8f0';
+        g.strokeStyle = '#090d16';
+        g.lineWidth = 1.8 * s;
+        g.beginPath();
+        g.roundRect(sheetX, topY - 18.5 * s, 44 * s, 4.5 * s, 1.5 * s);
+        g.fill();
+        g.stroke();
+      }
     }
   } else if (prop.type === 'podium') {
     if (propPass === 'back_only') {

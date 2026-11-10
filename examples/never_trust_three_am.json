@@ -1,0 +1,229 @@
+{
+  "title": "Never Check the Time at 3 AM",
+  "thesis": "At 3 AM your rational brain is half asleep while your threat detector is wide awake — park the worry on paper and let morning handle it.",
+  "channel_name": "",
+  "bgm": "suspense_tension",
+  "subtitles_mode": "cinema",
+  "cast": {
+    "julian": {
+      "style": "cel",
+      "color": "#f5f7fb",
+      "build": "athletic",
+      "hair": "textured_sweep",
+      "scale": 1.90
+    }
+  },
+  "chapters": [
+    { "scene": "S01", "number": "01", "title": "The 3 AM Trap" },
+    { "scene": "S04", "number": "02", "title": "Park It on Paper" }
+  ],
+  "scenes": [
+    {
+      "id": "S01",
+      "duration": 9.0,
+      "location_id": "midnight_room",
+      "environment": "studio_dark",
+      "mood": "tension",
+      "props": [
+        { "id": "table_night", "type": "table", "x": 0.52 },
+        { "id": "phone_night", "type": "phone", "x": 0.48, "elevation": 148 },
+        { "id": "cup_night", "type": "cup", "x": 0.545, "elevation": 148 }
+      ],
+      "sfx": [
+        { "type": "clock_tick", "at": 0.14, "pan": 0.15 },
+        { "type": "clock_tick", "at": 1.14, "pan": 0.15 },
+        { "type": "clock_tick", "at": 2.14, "pan": 0.15 },
+        { "type": "phone_vibrate", "at": 3.10, "pan": 0.08 }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "If you wake up at three AM, never check the clock.",
+          "pause_after": 0.30
+        },
+        {
+          "speaker": "narrator",
+          "text": "The second your eyes read the hour, your brain invents an emergency.",
+          "pause_after": 0.38
+        }
+      ],
+      "accent_words": ["three AM", "never check", "invents an emergency"],
+      "camera": {
+        "zoom_from": 1.10,
+        "zoom_to": 1.03,
+        "focus_x": 0.42,
+        "focus_y": 0.54
+      },
+      "characters": [
+        {
+          "id": "julian",
+          "beats": [
+            { "start": 0.0, "end": 2.1, "action": "react_surprise", "x": 0.34, "facing": 1 },
+            { "start": 2.1, "end": 4.9, "cue_on": "never check", "action": "check_watch", "x": 0.34, "facing": 1 },
+            { "start": 4.9, "end": 9.0, "cue_on": "invents", "action": "walk", "from_x": 0.34, "to_x": 0.41 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "duration": 9.5,
+      "location_id": "midnight_room",
+      "environment": "studio_dark",
+      "mood": "tension",
+      "props": [
+        { "id": "phone_night", "type": "phone", "x": 0.48, "elevation": 148, "notify_at": 0.28 }
+      ],
+      "sfx": [
+        { "type": "phone_buzz", "at": 0.28, "pan": 0.05 }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "In the dark, your rational brain is still half asleep.",
+          "pause_after": 0.32
+        },
+        {
+          "speaker": "narrator",
+          "text": "Only your threat detector is wide awake, hunting for danger in the glow.",
+          "pause_after": 0.40
+        }
+      ],
+      "accent_words": ["half asleep", "threat detector", "danger"],
+      "camera": {
+        "zoom_from": 1.03,
+        "zoom_to": 1.11,
+        "focus_x": 0.43,
+        "focus_y": 0.55
+      },
+      "characters": [
+        {
+          "id": "julian",
+          "beats": [
+            { "start": 0.0, "end": 2.3, "action": "walk", "from_x": 0.27, "to_x": 0.39 },
+            { "start": 2.3, "end": 5.3, "cue_on": "Only your", "action": "pick_up_phone", "x": 0.39, "facing": 1, "target_prop": "phone_night" },
+            { "start": 5.3, "end": 9.5, "cue_on": "hunting for", "action": "phone_scroll", "x": 0.39, "facing": 1, "target_prop": "phone_night" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "duration": 9.2,
+      "location_id": "midnight_room",
+      "environment": "studio_dark",
+      "mood": "tension",
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "One small tomorrow problem suddenly feels like your whole life is falling apart.",
+          "pause_after": 0.34
+        },
+        {
+          "speaker": "narrator",
+          "text": "Never trust a verdict written by an exhausted mind.",
+          "pause_after": 0.40
+        }
+      ],
+      "accent_words": ["falling apart", "Never trust", "exhausted mind"],
+      "camera": {
+        "zoom_from": 1.10,
+        "zoom_to": 1.03,
+        "focus_x": 0.42,
+        "focus_y": 0.55
+      },
+      "characters": [
+        {
+          "id": "julian",
+          "beats": [
+            { "start": 0.0, "end": 3.3, "action": "put_down_phone", "x": 0.39, "facing": 1, "target_prop": "phone_night", "release_x": 0.51 },
+            { "start": 3.3, "end": 6.2, "cue_on": "falling apart", "action": "wipe_eyes", "x": 0.39, "facing": 1 },
+            { "start": 6.2, "end": 9.2, "cue_on": "Never trust", "action": "chest_hand_sincere", "x": 0.39, "facing": 1, "posture": 0.25 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "duration": 9.5,
+      "location_id": "study_corner",
+      "environment": "studio_dark",
+      "mood": "focus",
+      "props": [
+        { "id": "desk_study", "type": "desk", "x": 0.55, "scale": 1.62, "hide_laptop": true, "notebook": true }
+      ],
+      "sfx": [
+        { "type": "paper_rustle", "at": 3.80, "pan": 0.12 }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Stand up, step to a desk, and write the worry in one plain sentence.",
+          "pause_after": 0.34
+        },
+        {
+          "speaker": "narrator",
+          "text": "Once it lives on paper, your guard dog finally stands down.",
+          "pause_after": 0.40
+        }
+      ],
+      "accent_words": ["one plain sentence", "lives on paper", "stands down"],
+      "camera": {
+        "zoom_from": 1.02,
+        "zoom_to": 1.08,
+        "focus_x": 0.50,
+        "focus_y": 0.56
+      },
+      "characters": [
+        {
+          "id": "julian",
+          "beats": [
+            { "start": 0.0, "end": 1.8, "action": "walk", "from_x": 0.31, "to_x": 0.464 },
+            { "start": 1.8, "end": 3.9, "action": "sit_down", "x": 0.464, "facing": 1, "target_prop": "desk_study" },
+            { "start": 3.9, "end": 9.5, "action": "sketch_desk", "x": 0.464, "facing": 1, "target_prop": "desk_study" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "duration": 9.0,
+      "location_id": "study_corner",
+      "environment": "studio_dark",
+      "mood": "calm",
+      "sfx": [
+        { "type": "final_piano_note", "at": 5.80, "pan": 0.0 }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Nothing real gets solved between three AM and sunrise.",
+          "pause_after": 0.34
+        },
+        {
+          "speaker": "narrator",
+          "text": "Park the thought, close your eyes, and let morning carry the weight.",
+          "pause_after": 0.45
+        }
+      ],
+      "accent_words": ["three AM", "sunrise", "morning carry"],
+      "camera": {
+        "zoom_from": 1.06,
+        "zoom_to": 1.00,
+        "focus_x": 0.43,
+        "focus_y": 0.55
+      },
+      "characters": [
+        {
+          "id": "julian",
+          "beats": [
+            { "start": 0.0, "end": 2.6, "action": "stand_from_desk", "x": 0.464, "facing": 1, "target_prop": "desk_study" },
+            { "start": 2.6, "end": 5.4, "cue_on": "Park the thought", "action": "walk", "from_x": 0.464, "to_x": 0.33 },
+            { "start": 5.4, "end": 9.0, "cue_on": "let morning", "action": "look_horizon", "x": 0.33, "facing": -1, "posture": 0.35 }
+          ]
+        }
+      ]
+    }
+  ],
+  "outro": false
+}

@@ -270,12 +270,22 @@ function lerpPose(a0, b0, k) {
   const a = P(a0);
   const b = P(b0);
   const out = {};
+
+  // Pre-resolve explicit per-limb IK weights so IK <-> FK transitions blend smoothly across [0..1]
+  // instead of snapping at t = 0.5 when a target point (`hl`/`hr`/`fl`/`fr`) turns `undefined`!
+  const aIkwL = a.hl ? (a.ikwL ?? a.ikw ?? 0) : 0;
+  const bIkwL = b.hl ? (b.ikwL ?? b.ikw ?? 0) : 0;
+  const aIkwR = a.hr ? (a.ikwR ?? a.ikw ?? 0) : 0;
+  const bIkwR = b.hr ? (b.ikwR ?? b.ikw ?? 0) : 0;
+  const aLegIkw = (a.fl || a.fr) ? (a.legIkw ?? 1) : 0;
+  const bLegIkw = (b.fl || b.fr) ? (b.legIkw ?? 1) : 0;
+
   for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {
     const x = a[key];
     const y = b[key];
     if (POINT_KEYS.has(key)) {
       if (x && y) out[key] = [lerp(x[0], y[0], t), lerp(x[1], y[1], t)];
-      else out[key] = t < 0.5 ? x : y;
+      else out[key] = x || y;
     } else if (DISCRETE_KEYS.has(key)) {
       out[key] = t < 0.5 ? x : y;
     } else if (key === 'hipY') {
@@ -289,6 +299,11 @@ function lerpPose(a0, b0, k) {
       out[key] = t < 0.5 ? x : y;
     }
   }
+
+  if (a.hl || b.hl) out.ikwL = lerp(aIkwL, bIkwL, t);
+  if (a.hr || b.hr) out.ikwR = lerp(aIkwR, bIkwR, t);
+  if (a.fl || b.fl || a.fr || b.fr) out.legIkw = lerp(aLegIkw, bLegIkw, t);
+
   return out;
 }
 
@@ -447,18 +462,18 @@ function walkMotion({ t, duration = 4, x0 = 300, x1 = 600, floor = 900, scale = 
     const p = phase - k;
     const anchor = x0 + (k - offset) * stride + stride * 0.25;
     if (p < 0.5) {
-      // Grounded stance: 0.0px horizontal or vertical slip; subtle heel-settle at very start & heel-rise right at push-off
+      // Grounded stance: 0.0px horizontal or vertical slip; subtle heel-rise right at push-off
       const sp = p * 2; // 0..1 across stance
-      const pushOffPitch = sp > 0.78 ? ((sp - 0.78) / 0.22) * 0.22 : 0;
+      const pushOffPitch = sp > 0.78 ? ((sp - 0.78) / 0.22) * 0.18 : 0;
       return { point: [anchor, floor], stance: true, footAngle: pushOffPitch * env };
     }
     const sp = (p - 0.5) * 2; // 0..1 across swing
-    // Swing foot pitches toe-down after push-off (+0.26) -> swings through -> pitches toe-up (-0.24) right before heel strike!
-    const swingPitch = lerp(0.26, -0.24, ease(sp)) * env;
+    // Sleek, natural shoe clearance (~9.5*s) while stance leg rises tall at mid-passing!
+    const swingPitch = lerp(0.18, -0.16, ease(sp)) * env;
     return {
       point: [
         anchor + stride * ease(sp),
-        floor - 24 * scale * liftMul * Math.sin(sp * Math.PI),
+        floor - 9.5 * scale * liftMul * Math.sin(sp * Math.PI) * (0.35 + 0.65 * env),
       ],
       stance: false,
       footAngle: swingPitch,
@@ -467,20 +482,21 @@ function walkMotion({ t, duration = 4, x0 = 300, x1 = 600, floor = 900, scale = 
 
   const l = foot(0);
   const r = foot(0.5);
-  const swingAmp = style === 'trudging' ? 0.22 : style === 'brisk' ? 0.44 : 0.34;
+  const swingAmp = style === 'trudging' ? 0.14 : style === 'brisk' ? 0.26 : 0.17;
   const swing = Math.sin(g * 2 * Math.PI) * swingAmp * env;
-  // Double-bounce vertical hip wave: lowest just after heel contact, highest at mid-stance passing!
-  const stepBounce = -Math.cos(g * 4 * Math.PI) * (style === 'trudging' ? 2.2 : 4.2) * scale * env;
-  const baseHipH = style === 'trudging' ? 110.5 * scale : 114.5 * scale;
-  const leanBase = style === 'trudging' ? 0.15 : (style === 'brisk' ? 0.09 : 0.045);
-  const headBase = style === 'trudging' ? 0.24 : 0.01;
+  // Canvas +Y is downward: at double-support contact (`g = 0, 0.5`, `cos = +1`) hip dips slightly (`+1.8*s`);
+  // at mid-stance passing (`g = 0.25, 0.75`, `cos = -1`) stance leg stands tall (`-1.8*s`)!
+  const stepBounce = Math.cos(g * 4 * Math.PI) * (style === 'trudging' ? 1.4 : 1.8) * scale * env;
+  const baseHipH = style === 'trudging' ? 113.8 * scale : 116.8 * scale;
+  const leanBase = style === 'trudging' ? 0.14 : (style === 'brisk' ? 0.075 : 0.026);
+  const headBase = style === 'trudging' ? 0.22 : 0.01;
 
-  // Natural forearm bend in local forward (+x) space (`flip` mirrors horizontally when `direction < 0`)
-  const elbowRest = 0.32;
+  // Natural 3/4 forearm bend: gentle counter-swing near the body with soft human elbow flex
+  const elbowRest = 0.24;
   const alUpper = -swing;
-  const arUpper = swing;
-  const alLower = -swing * 1.12 + elbowRest + Math.max(0, -swing) * 0.26;
-  const arLower = swing * 1.12 + elbowRest + Math.max(0, swing) * 0.26;
+  const arUpper = swing * 0.85;
+  const alLower = Math.max(alUpper + 0.10, -swing * 0.65 + elbowRest + Math.max(0, -swing) * 0.18);
+  const arLower = Math.max(arUpper + 0.10, swing * 0.65 + elbowRest + Math.max(0, swing) * 0.18);
 
   return {
     x,
@@ -1888,18 +1904,16 @@ function compute3QVisualRig(r, x, fy, s, build, flip, turnScaleX) {
   const visAL = translateLimbChain(r.al, shNear[0] - r.al[0][0], shNear[1] - r.al[0][1]);
   const visAR = translateLimbChain(r.ar, shFar[0] - r.ar[0][0], shFar[1] - r.ar[0][1]);
 
-  // 3/4 natural two-leg standing stance:
-  // When `strideSpread <= 32*s` and both feet are near the ground (`standing`), place `visLL` cleanly
-  // on the left (`-15.5*s`) and `visLR` cleanly on the right (`+18.5*s`) with tall upright knees so
-  // both sculpted legs & shoes read clearly with a dark room gap between the inner thighs!
-  // During wide walking/running strides (`strideSpread > 32*s`) or aerial/seated poses, smoothly blend
-  // to the exact underlying `r.ll` / `r.lr` kinematic chains so foot-plant contacts remain 0.000px exact!
+  // 3/4 natural two-leg standing stance (C1-smooth continuous blend — ZERO binary frame snaps!):
+  // Smoothly relaxes `stanceK` to `0` across wide walking/running strides (`strideSpread > 25*s..47*s`),
+  // lifted swing/aerial feet (`liftPx > 1.5*s..10.5*s`), and seated/crouched hip heights (`hip[1] > fy - 109*s..91*s`),
+  // so foot-plant contacts stay 0.000px exact during gait while standing/transitioning legs never jitter!
   const strideSpread = Math.abs(r.ll[2][0] - r.lr[2][0]);
-  const isSeatedOrCrouched = hip[1] > fy - 102 * s;
-  const feetLifted = Math.max(Math.abs(fy - r.ll[2][1]), Math.abs(fy - r.lr[2][1])) > 6 * s;
-  const stanceK = (isSeatedOrCrouched || feetLifted)
-    ? 0
-    : (1 - clamp((strideSpread - 28 * s) / (24 * s)));
+  const crouchT = ease(clamp((hip[1] - (fy - 98 * s)) / (18 * s)));
+  const liftPx = Math.max(Math.abs(fy - r.ll[2][1]), Math.abs(fy - r.lr[2][1]));
+  const liftT = ease(clamp((liftPx - 1.5 * s) / (9.0 * s)));
+  const spreadT = ease(clamp((strideSpread - 25 * s) / (22 * s)));
+  const stanceK = (1 - crouchT) * (1 - liftT) * (1 - spreadT);
 
   const standHipL = [hip[0] - 13.2 * s * torsoW, hip[1] + 1.2 * s];
   const standAnkL = [x - 15.8 * s * torsoW, r.ll[2][1]];
@@ -1909,7 +1923,7 @@ function compute3QVisualRig(r, x, fy, s, build, flip, turnScaleX) {
   const standAnkR = [x + 19.2 * s * torsoW, r.lr[2][1]];
   const standKneeR = [lerp(standHipR[0], standAnkR[0], 0.50) + 1.8 * s, lerp(standHipR[1], standAnkR[1], 0.51)];
 
-  const seatedShift = isSeatedOrCrouched ? 5.5 * s * torsoW : 0;
+  const seatedShift = crouchT * 5.5 * s * torsoW;
   const visLL = [
     [lerp(r.ll[0][0] - seatedShift, standHipL[0], stanceK), lerp(r.ll[0][1], standHipL[1], stanceK)],
     [lerp(r.ll[1][0] - seatedShift, standKneeL[0], stanceK), lerp(r.ll[1][1], standKneeL[1], stanceK)],
@@ -1932,7 +1946,7 @@ function compute3QVisualRig(r, x, fy, s, build, flip, turnScaleX) {
   return {
     shNear,
     shFar,
-    stanceK: isSeatedOrCrouched ? 0.35 : stanceK,
+    stanceK: lerp(stanceK, 0.35, crouchT),
     visAL,
     visAR,
     visLL,
