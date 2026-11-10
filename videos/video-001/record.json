@@ -1,0 +1,14 @@
+{
+  "id": "video-001",
+  "title": "What If Every Notification Cost You 23 Minutes?",
+  "topic": "Impact of notifications on productivity and time loss",
+  "format": "9:16",
+  "duration_sec": 158.957,
+  "status": "completed",
+  "created_at": "2026-11-10",
+  "final_video": "final.mp4",
+  "script_summary": "An exploration of the cumulative time cost of notifications, analyzing psychological impacts and productivity loss over a 23-minute disruption cycle.",
+  "content_fingerprint": "stable-content-hash-001",
+  "tags": ["productivity", "notifications", "psychology", "time-management", "stickman"],
+  "production_version": "3.0.0"
+}

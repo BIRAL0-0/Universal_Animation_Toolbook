@@ -1,0 +1,14 @@
+{
+  "id": "video-003",
+  "title": "The First Plank",
+  "topic": "Beginning a journey with the first foundational step",
+  "format": "9:16",
+  "duration_sec": 126.038,
+  "status": "completed",
+  "created_at": "2026-11-10",
+  "final_video": "final.mp4",
+  "script_summary": "The story of initiating a complex project or journey by laying the first foundational plank, exploring the psychological and practical implications.",
+  "content_fingerprint": "stable-content-hash-003",
+  "tags": ["foundation", "beginning", "journey", "stickman", "short-form"],
+  "production_version": "3.0.0"
+}

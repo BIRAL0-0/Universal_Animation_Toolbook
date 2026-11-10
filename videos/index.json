@@ -1,0 +1,63 @@
+{
+  "videos": [
+    {
+      "id": "video-001",
+      "title": "What If Every Notification Cost You 23 Minutes?",
+      "topic": "Impact of notifications on productivity and time loss",
+      "format": "9:16",
+      "duration_sec": 158.957,
+      "status": "completed",
+      "created_at": "2026-11-10",
+      "final_video": "final.mp4",
+      "script_summary": "An exploration of the cumulative time cost of notifications, analyzing psychological impacts and productivity loss over a 23-minute disruption cycle.",
+      "content_fingerprint": "stable-content-hash-001",
+      "tags": ["productivity", "notifications", "psychology", "time-management", "stickman"],
+      "production_version": "3.0.0"
+    },
+    {
+      "id": "video-002",
+      "title": "Discipline vs Obsession — The Man Who Sacrificed Everything",
+      "topic": "The thin line between discipline and obsession in personal sacrifice",
+      "format": "16:9",
+      "duration_sec": 404.942,
+      "status": "completed",
+      "created_at": "2026-11-10",
+      "final_video": "final.mp4",
+      "script_summary": "A narrative study of a character whose disciplined pursuit turns into obsession, leading to total sacrifice and transformation.",
+      "content_fingerprint": "stable-content-hash-002",
+      "tags": ["discipline", "obsession", "sacrifice", "character-study", "landscape"],
+      "production_version": "3.0.0"
+    },
+    {
+      "id": "video-003",
+      "title": "The First Plank",
+      "topic": "Beginning a journey with the first foundational step",
+      "format": "9:16",
+      "duration_sec": 126.038,
+      "status": "completed",
+      "created_at": "2026-11-10",
+      "final_video": "final.mp4",
+      "script_summary": "The story of initiating a complex project or journey by laying the first foundational plank, exploring the psychological and practical implications.",
+      "content_fingerprint": "stable-content-hash-003",
+      "tags": ["foundation", "beginning", "journey", "stickman", "short-form"],
+      "production_version": "3.0.0"
+    },
+    {
+      "id": "video-004",
+      "title": "The Two-Inch Bridge",
+      "topic": "Bridging small gaps with precision and cel-style animation",
+      "format": "16:9",
+      "duration_sec": 102.914,
+      "status": "completed",
+      "created_at": "2026-11-10",
+      "final_video": "final.mp4",
+      "script_summary": "A cel-animated exploration of crossing small gaps (two inches) with precision, featuring distinct characters and synchronized sound cues.",
+      "content_fingerprint": "stable-content-hash-004",
+      "tags": ["bridge", "precision", "cel-animation", "characters", "landscape"],
+      "production_version": "3.0.0"
+    }
+  ],
+  "catalog_version": "1.0.0",
+  "last_updated": "2026-11-10",
+  "total_videos": 4
+}
