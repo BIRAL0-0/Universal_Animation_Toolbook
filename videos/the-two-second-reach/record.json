@@ -100,15 +100,32 @@
     "title_candidates": [
       {
         "text": "Phone Distraction: The 2-Second Reach That Ends Focus",
-        "selected": true
+        "selected": true,
+        "approach": "curiosity_gap"
       },
       {
         "text": "You Lose Hours Two Seconds At A Time",
-        "selected": false
+        "selected": false,
+        "approach": "contradiction"
       },
       {
         "text": "The Reach That Ends A Morning",
-        "selected": false
+        "selected": false,
+        "approach": "identity"
+      },
+      {
+        "text": "You Are Not Weak. Your Room Is Designed Against You.",
+        "selected": false,
+        "approach": "reversal",
+        "drafted_in_review": true,
+        "why_not_chosen": "Drafted during the packaging audit, not before production; the shipped title was already fixed."
+      },
+      {
+        "text": "What Does The Reach Actually Cost You By Noon?",
+        "selected": false,
+        "approach": "stakes_loss",
+        "drafted_in_review": true,
+        "why_not_chosen": "Drafted during the packaging audit, not before production; the shipped title was already fixed."
       }
     ],
     "thumbnail_concepts": [
@@ -160,5 +177,22 @@
       "weakest": "story_progression",
       "revision": "Added a middle beat showing a second reach, so the progression is not one example stretched over the runtime."
     }
-  }
+  },
+  "secondary_keywords": [
+    "environment design",
+    "attention span",
+    "how to focus"
+  ],
+  "title_alternates": [
+    "You Lose Hours Two Seconds At A Time",
+    "The Reach That Ends A Morning",
+    "You Are Not Weak. Your Room Is Designed Against You."
+  ],
+  "hashtags": [
+    "#focus",
+    "#deepwork",
+    "#habits",
+    "#digitalminimalism"
+  ],
+  "category": "Education"
 }

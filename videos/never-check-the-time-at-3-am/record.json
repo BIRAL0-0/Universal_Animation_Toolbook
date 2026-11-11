@@ -100,15 +100,32 @@
     "title_candidates": [
       {
         "text": "3 AM Anxiety: Why Checking the Clock Makes It Worse",
-        "selected": true
+        "selected": true,
+        "approach": "question"
       },
       {
         "text": "Never Look At The Clock At 3 AM",
-        "selected": false
+        "selected": false,
+        "approach": "contradiction"
       },
       {
         "text": "The 3 AM Habit That Turns One Bad Night Into Five",
-        "selected": false
+        "selected": false,
+        "approach": "stakes_loss"
+      },
+      {
+        "text": "It Is Not The 3 AM Thought. It Is The Clock.",
+        "selected": false,
+        "approach": "curiosity_gap",
+        "drafted_in_review": true,
+        "why_not_chosen": "Drafted during the packaging audit, not before production; the shipped title was already fixed."
+      },
+      {
+        "text": "Why The Same Problem Looks Impossible At Night",
+        "selected": false,
+        "approach": "reversal",
+        "drafted_in_review": true,
+        "why_not_chosen": "Drafted during the packaging audit, not before production; the shipped title was already fixed."
       }
     ],
     "thumbnail_concepts": [
@@ -160,5 +177,22 @@
       "weakest": "accuracy",
       "revision": "Softened two absolute claims about cortisol to descriptions of the felt experience, since no study was cited."
     }
-  }
+  },
+  "secondary_keywords": [
+    "why you wake up at 3am",
+    "night anxiety",
+    "overthinking at night"
+  ],
+  "title_alternates": [
+    "Never Look At The Clock At 3 AM",
+    "The 3 AM Habit That Turns One Bad Night Into Five",
+    "It Is Not The 3 AM Thought. It Is The Clock."
+  ],
+  "hashtags": [
+    "#sleep",
+    "#anxiety",
+    "#overthinking",
+    "#mentalhealth"
+  ],
+  "category": "Education"
 }

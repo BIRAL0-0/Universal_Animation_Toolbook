@@ -228,7 +228,9 @@ duration, format, produced date, directory, content fingerprint).
   ```bash
   python3 tools/creative_gate.py
   python3 tools/thumbnail_copy.py
+  python3 tools/thumbnail_legibility.py --all --sheet runtime/work/covers.png
   python3 tools/thumbnail_style.py check videos/{{SLUG}}/{{SLUG}}.mp4 videos/{{SLUG}}/thumbnail.jpg --package videos/{{SLUG}}
+  python3 tools/creative_review.py --check {{SLUG}} --frames runtime/work/review
   python3 tools/seo_audit.py --min 85
   python3 tools/validate_publishing.py
   ```

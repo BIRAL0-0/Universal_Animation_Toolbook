@@ -100,15 +100,32 @@
     "title_candidates": [
       {
         "text": "Discipline vs Obsession: The 9 PM vs 2 AM Problem",
-        "selected": true
+        "selected": true,
+        "approach": "contradiction"
       },
       {
         "text": "Two Men. Same Goal. One Didn't Last.",
-        "selected": false
+        "selected": false,
+        "approach": "identity"
       },
       {
         "text": "The Five Hours That Made The Difference",
-        "selected": false
+        "selected": false,
+        "approach": "curiosity_gap"
+      },
+      {
+        "text": "What Five Hours of Extra Work Actually Buys",
+        "selected": false,
+        "approach": "identity",
+        "drafted_in_review": true,
+        "why_not_chosen": "Drafted during the packaging audit, not before production; the shipped title was already fixed."
+      },
+      {
+        "text": "The Ambition That Ate The Person Who Had It",
+        "selected": false,
+        "approach": "reversal",
+        "drafted_in_review": true,
+        "why_not_chosen": "Drafted during the packaging audit, not before production; the shipped title was already fixed."
       }
     ],
     "thumbnail_concepts": [
@@ -160,5 +177,22 @@
       "weakest": "accuracy",
       "revision": "Removed a specific sleep-debt figure that was not sourced; the film now argues from behaviour, not measurement."
     }
-  }
+  },
+  "secondary_keywords": [
+    "burnout signs",
+    "work life balance",
+    "hustle culture"
+  ],
+  "title_alternates": [
+    "Two Men. Same Goal. One Didn't Last.",
+    "The Five Hours That Made The Difference",
+    "What Five Hours of Extra Work Actually Buys"
+  ],
+  "hashtags": [
+    "#discipline",
+    "#burnout",
+    "#ambition",
+    "#worklifebalance"
+  ],
+  "category": "Education"
 }

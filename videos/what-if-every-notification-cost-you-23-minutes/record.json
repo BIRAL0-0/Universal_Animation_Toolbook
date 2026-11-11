@@ -102,15 +102,32 @@
     "title_candidates": [
       {
         "text": "Notifications Cost You 23 Minutes (Every Single Time)",
-        "selected": true
+        "selected": true,
+        "approach": "outcome_number"
       },
       {
         "text": "Your Day Is Not Busy. It Is Being Deleted.",
-        "selected": false
+        "selected": false,
+        "approach": "identity"
       },
       {
         "text": "The 240-Minute Trick: How Notifications Eat Your Day",
-        "selected": false
+        "selected": false,
+        "approach": "reversal"
+      },
+      {
+        "text": "Why Being Busy And Getting Nothing Done Are The Same Day",
+        "selected": false,
+        "approach": "contradiction",
+        "drafted_in_review": true,
+        "why_not_chosen": "Drafted during the packaging audit, not before production; the shipped title was already fixed."
+      },
+      {
+        "text": "Do You Actually Know What Your Notifications Cost?",
+        "selected": false,
+        "approach": "question",
+        "drafted_in_review": true,
+        "why_not_chosen": "Drafted during the packaging audit, not before production; the shipped title was already fixed."
       }
     ],
     "thumbnail_concepts": [
@@ -167,5 +184,22 @@
       "weakest": "emotional_impact",
       "revision": "Added a concrete personal cost in the middle act so the arithmetic lands emotionally, not just numerically."
     }
-  }
+  },
+  "secondary_keywords": [
+    "notification distraction",
+    "context switching cost",
+    "deep work"
+  ],
+  "title_alternates": [
+    "Your Day Is Not Busy. It Is Being Deleted.",
+    "The 240-Minute Trick: How Notifications Eat Your Day",
+    "Why Being Busy And Getting Nothing Done Are The Same Day"
+  ],
+  "hashtags": [
+    "#productivity",
+    "#deepwork",
+    "#focus",
+    "#attention"
+  ],
+  "category": "Education"
 }

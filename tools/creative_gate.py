@@ -39,6 +39,27 @@ VIDEOS = ROOT / "videos"
 
 MIN_HOOK_CANDIDATES = 3
 MIN_TITLE_CANDIDATES = 3
+
+# The brief requires the title to be chosen from genuinely different strategies,
+# not three rewordings of one idea. Seven approaches are accepted; at least four
+# distinct ones must be represented so the comparison is real.
+TITLE_APPROACHES = (
+    "curiosity_gap",   # withhold the answer the film gives
+    "question",        # ask what the viewer is already asking
+    "outcome_number",  # a concrete quantity or result
+    "contradiction",   # two ideas that should not coexist
+    "stakes_loss",     # what it costs to get this wrong
+    "identity",        # who this is for / who they are
+    "reversal",        # the expected ending, inverted
+)
+MIN_TITLE_APPROACHES = 4
+REQUIRED_SEO_FIELDS = (
+    "primary_keyword",      # the phrase the video is trying to win
+    "secondary_keywords",   # 1-3 supporting search phrases
+    "title_alternates",     # 2-3 usable alternates kept for A/B or reuse
+    "hashtags",             # 3-5, as published
+    "category",             # YouTube category
+)
 MIN_THUMBNAIL_CONCEPTS = 3
 # A viewer must be inside the promise almost immediately; YouTube measures this per-second.
 MAX_HOOK_SECONDS = 8.0
@@ -150,6 +171,52 @@ def audit(record: dict, slug: str) -> dict:
     chosen_title = next((t for t in titles if isinstance(t, dict) and t.get("selected")), {})
     if chosen_title and str(chosen_title.get("text", "")) != final_title:
         problems.append("the selected title candidate does not match record.json `title`")
+
+    # The brief asks for seven strategies, not three wordings. Approaching the same
+    # idea four different ways is a real comparison; doing it once and varying the
+    # adjectives is not.
+    labelled = {
+        str(c.get("approach", "")).strip()
+        for c in titles
+        if isinstance(c, dict) and str(c.get("approach", "")).strip()
+    }
+    unknown = labelled - set(TITLE_APPROACHES)
+    if unknown:
+        problems.append(
+            f"title candidate(s) use unknown approach label(s) {sorted(unknown)}; "
+            f"use one of {list(TITLE_APPROACHES)}"
+        )
+    if titles and len(labelled) < MIN_TITLE_APPROACHES:
+        problems.append(
+            f"title candidates cover {len(labelled)} distinct approach/approaches; at least "
+            f"{MIN_TITLE_APPROACHES} are required so the choice is a strategy, not a rewording "
+            f"(see TITLE_APPROACHES in tools/creative_gate.py)"
+        )
+
+    # ---------------------------------------------------------- 3b. the SEO package
+    # These are the fields a viewer never sees and a search engine always reads.
+    for field in REQUIRED_SEO_FIELDS:
+        value = record.get(field)
+        if value is None or (isinstance(value, (str, list, dict)) and len(value) == 0):
+            problems.append(
+                f"`{field}` is missing from record.json — the publishing package needs it "
+                "before the video can be found"
+            )
+    alternates = record.get("title_alternates") or []
+    if alternates and len(alternates) < 2:
+        problems.append("`title_alternates` needs at least 2 usable alternates")
+    if alternates and final_title in alternates:
+        problems.append("`title_alternates` repeats the title in use — an alternate must be different")
+    secondary = record.get("secondary_keywords") or []
+    if secondary and not 1 <= len(secondary) <= 3:
+        problems.append(f"`secondary_keywords` has {len(secondary)} entries; keep it to 1–3 to stay focused")
+    hashtags = record.get("hashtags") or []
+    if hashtags:
+        bad = [h for h in hashtags if not str(h).startswith("#")]
+        if bad:
+            problems.append(f"hashtags must include the leading '#': {bad[:3]}")
+        if not 3 <= len(hashtags) <= 5:
+            problems.append(f"{len(hashtags)} hashtags; YouTube shows the first 3, so publish 3–5")
 
     # ---------------------------------------------------------------- 4. thumbnail concepts
     concepts = creative.get("thumbnail_concepts") or []

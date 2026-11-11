@@ -49,6 +49,11 @@ def _record(**overrides) -> dict:
         "slug": "the-seed-that-looked-like-nothing",
         "duration": DURATION,
         "scenes": [{"dialogue": _dialogue()}],
+        "primary_keyword": "bamboo seed",
+        "secondary_keywords": ["bamboo parable", "slow progress"],
+        "title_alternates": ["Why The Fastest Garden Lost", "Five Years of Watering Nothing"],
+        "hashtags": ["#perseverance", "#patience", "#motivation"],
+        "category": "Education",
         "creative": {
             "hook_candidates": [
                 {
@@ -75,9 +80,10 @@ def _record(**overrides) -> dict:
                 {"at_sec": 85.0, "kind": "payoff", "purpose": "bamboo arrives all at once"},
             ],
             "title_candidates": [
-                {"text": "The Seed That Looked Like Nothing", "selected": True},
-                {"text": "Why The Fastest Garden Lost", "selected": False},
-                {"text": "Five Years of Watering Nothing", "selected": False},
+                {"text": "The Seed That Looked Like Nothing", "approach": "curiosity_gap", "selected": True},
+                {"text": "Why The Fastest Garden Lost", "approach": "contradiction", "selected": False},
+                {"text": "Five Years of Watering Nothing", "approach": "outcome_number", "selected": False},
+                {"text": "Would You Keep Watering If Nothing Grew?", "approach": "question", "selected": False},
             ],
             "thumbnail_concepts": [
                 {"focal_subject": "a bare patch of soil, one watering can", "emotion": "doubt", "selected": True},
@@ -258,3 +264,51 @@ def test_shipped_packages_can_be_audited_individually(slug):
     )
     assert proc.returncode == 0, proc.stdout + proc.stderr
     assert slug in proc.stdout
+
+
+def test_titles_from_too_few_strategies_fail():
+    """Four wordings of one idea is not a strategy comparison."""
+    record = _record()
+    titles = record["creative"]["title_candidates"]
+    for candidate in titles:
+        candidate["approach"] = "curiosity_gap"
+    result = _audit(record)
+    assert any("distinct approach" in p for p in result["problems"]), result["problems"]
+
+
+def test_unknown_approach_label_fails():
+    record = _record()
+    record["creative"]["title_candidates"][1]["approach"] = "vibes"
+    result = _audit(record)
+    assert any("unknown approach" in p for p in result["problems"]), result["problems"]
+
+
+@pytest.mark.parametrize("field", [
+    "primary_keyword", "secondary_keywords", "title_alternates", "hashtags", "category",
+])
+def test_missing_seo_field_fails(field):
+    record = _record()
+    del record[field]
+    result = _audit(record)
+    assert any(field in p for p in result["problems"]), result["problems"]
+
+
+def test_hashtags_without_hash_fail():
+    record = _record()
+    record["hashtags"] = ["perseverance", "#patience", "#motivation"]
+    result = _audit(record)
+    assert any("leading '#'" in p for p in result["problems"]), result["problems"]
+
+
+def test_alternate_titles_must_differ_from_the_title_in_use():
+    record = _record()
+    record["title_alternates"] = [record["title"], "Something Else"]
+    result = _audit(record)
+    assert any("repeats the title" in p for p in result["problems"]), result["problems"]
+
+
+def test_too_many_secondary_keywords_fail():
+    record = _record()
+    record["secondary_keywords"] = ["a", "b", "c", "d"]
+    result = _audit(record)
+    assert any("secondary_keywords" in p for p in result["problems"]), result["problems"]

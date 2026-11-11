@@ -145,7 +145,7 @@ The pipeline is 23 stages grouped into six phases. Status labels are exact and m
 | 20 | Master render | IMPLEMENTED | `run_studio.py render --full` | `<slug>.mp4` |
 | 21 | Technical QC (audio, subtitles, format) | IMPLEMENTED + PARTIAL | `mix_probe.py`, `subtitle_check.py`, `validate_publishing.py`, and human frame inspection | QC report |
 | **F. Publish** | | | | |
-| 22 | Creative post-render review (alignment gate) | GATED | agent, checked by `creative_gate.py` + `thumbnail_copy.py` + `thumbnail_style.py` | passed gates |
+| 22 | Creative post-render review (alignment gate) | GATED | `creative_gate.py` (decisions) + `creative_review.py` (artifact) + `thumbnail_copy.py` + `thumbnail_legibility.py` + `thumbnail_style.py` | passed gates + saved frames |
 | 23 | Package and publish | IMPLEMENTED | `tools/package_video.py`, `tools/make_thumbnail.py`, `videos/index.json` | complete package |
 
 ```mermaid
@@ -247,6 +247,8 @@ Three behaviours worth knowing because they are not obvious from flag names:
 | `validate_publishing.py` | Every completed video is a complete package (10 rules) | `[--json]` |
 | `creative_gate.py` | **Packaging decisions exist, are distinct, aligned and honestly labelled** | `[--verbose] [--check SLUG]` |
 | `thumbnail_copy.py` | Cover text complements rather than repeats the title | `[--verbose]` |
+| `thumbnail_legibility.py` | Renders every cover at the real phone sizes (168 px search, 216 px feed) and fails only when two covers are the same picture | `[--all] [--sheet PATH] [--measure] [--duplicates] [--strict] [--json]` |
+| `creative_review.py` | Reviews the rendered film against its own record: hook window, still runs, promised beats, format honesty | `[--all] [--check SLUG] [--frames DIR] [--json]` |
 | `thumbnail_style.py` | Cover palette belongs to the film | `{profile,check}` |
 | `seo_audit.py` | Score search-facing metadata 0–100 (CI floor is **78**) | `[--min N] [--verbose] [--json]` |
 | `package_video.py` | File a finished master into `videos/<slug>/` as a publishing package | see `--help`; requires `--thumbnail --title --description-file --pinned-comment-file --topic --summary --key-angle` |
@@ -640,7 +642,9 @@ A package is publishable only when **all** of these pass, in this order:
 ```bash
 python3 tools/creative_gate.py
 python3 tools/thumbnail_copy.py
+python3 tools/thumbnail_legibility.py --all --sheet runtime/work/covers.png
 python3 tools/thumbnail_style.py check videos/<slug>/<slug>.mp4 videos/<slug>/thumbnail.jpg --package videos/<slug>
+python3 tools/creative_review.py --check <slug> --frames runtime/work/review
 python3 tools/seo_audit.py --min 85
 python3 tools/validate_publishing.py
 ```
@@ -922,11 +926,11 @@ When you fix something, do all three or the fix is wasted:
 
 ### 11.5 CI — what it enforces, and what to extend
 
-`.github/workflows/verify.yml` — **5 jobs, 41 steps**:
+`.github/workflows/verify.yml` — **5 jobs, 43 steps**:
 
 | Job | Enforces |
 |---|---|
-| `structure, docs and workflow contracts` | `validate_structure`, `check_docs`, `validate_publishing`, `thumbnail_style`, `thumbnail_copy`, **`creative_gate`**, `seo_audit --min 78`, `check_workflows`, `pytest tests/unit` |
+| `structure, docs and workflow contracts` | `validate_structure`, `check_docs`, `validate_publishing`, `thumbnail_style`, `thumbnail_copy`, **`creative_gate`**, **`thumbnail_legibility`**, **`creative_review`**, `seo_audit --min 78`, `check_workflows`, `pytest tests/unit` |
 | `specs validate` | `run_studio.py check`, `validate_specs` |
 | `engine and production tests` | JS regression suite, `tests/integration`, `pytest tests/production` |
 | `render smoke (silent draft)` | stills render, draft encode, self-validation, and a **negative test**: a render with no voice backend must fail loudly |
@@ -936,8 +940,9 @@ To extend safely:
 
 - **CI must not depend on paid or inaccessible services.** No HuggingFace at test time (it is
   blocked); Piper comes from the GitHub mirror.
-- `python3 tools/creative_gate.py` **is** wired into the `structure` job (added by this
-  overhaul); it needs nothing beyond the standard library.
+- `creative_gate.py` **is** wired into the `structure` job and needs nothing beyond the standard
+  library. `thumbnail_legibility.py` and `creative_review.py` are wired there too and need Pillow,
+  numpy and imageio-ffmpeg, which that job installs.
 - `tools/check_docs.py` runs over every markdown file; a new file with a broken link fails CI.
   That is why a new document must be linked from somewhere.
 
