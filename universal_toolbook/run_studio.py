@@ -777,7 +777,9 @@ def cmd_render(args: argparse.Namespace) -> int:
     val_path.write_text(
         json.dumps(
             {
-                "valid": len(compiled.get("errors", [])) == 0 and dimensions_match_aspect,
+                "valid": (len(compiled.get("errors", [])) == 0
+                          and dimensions_match_aspect and artifact_ok),
+                "encoded": encoded,
                 "dimensions_match_aspect": dimensions_match_aspect,
                 "duration": compiled["totalDuration"],
                 "frames": compiled["totalFrames"],
@@ -797,8 +799,14 @@ def cmd_render(args: argparse.Namespace) -> int:
         encoding="utf-8",
     )
 
+    if not artifact_ok:
+        report_status = "INCOMPLETE_ENCODE"
+    elif silent_render and not args.allow_silent:
+        report_status = "COMPLETE_SILENT"
+    else:
+        report_status = "COMPLETE"
     report = {
-        "status": "COMPLETE_SILENT" if (silent_render and not args.allow_silent) else "COMPLETE",
+        "status": report_status,
         "title": compiled["title"],
         "output_mp4": str(out_mp4),
         "size_mb": round(out_mp4.stat().st_size / (1024 * 1024), 3),
@@ -816,17 +824,74 @@ def cmd_render(args: argparse.Namespace) -> int:
         "voiced": vo_backend != "text-led",
         "voice_mode": args.voice,
         "voice_diagnosis": voice_diagnosis,
-        "warnings": warnings,
+        "warnings": aspect_warnings,
+        "encoded": encoded,
         "audio": audio_stats,
         "chapters_file": str(chapters_path),
         "elapsed_sec": round(time.time() - t0, 2),
     }
     report_path = out_mp4.with_name(f"{out_mp4.stem}_report.json")
     report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+
+    if not artifact_ok:
+        return 3
     print(json.dumps(report, indent=2))
     if silent_render and not args.allow_silent:
         return 3
     return 0
+
+
+def _probe_output_streams(path: Path) -> dict:
+    """Describe what was actually encoded, not what was planned.
+
+    KI-017: a render once finished with `status: COMPLETE`, `warnings: []` and a
+    validation report claiming `frames: 3919` while the MP4 contained **only an
+    audio stream** — the video encoder had failed on an intermittent worker race.
+    The report was computed from the compiled plan, so it described the intent
+    rather than the artifact. Anything that reads a render must look at the file.
+    """
+    import json as _json
+    import shutil as _shutil
+    import subprocess as _subprocess
+
+    info = {"video_streams": 0, "audio_streams": 0, "width": None, "height": None,
+            "duration": None, "probe_error": None}
+    if not path.exists():
+        info["probe_error"] = "output file missing"
+        return info
+    ffprobe = _shutil.which("ffprobe")
+    if ffprobe:
+        try:
+            out = _subprocess.run(
+                [ffprobe, "-v", "error", "-show_entries",
+                 "stream=codec_type,width,height:format=duration",
+                 "-of", "json", str(path)],
+                capture_output=True, text=True, check=True).stdout
+            data = _json.loads(out)
+            for s in data.get("streams", []):
+                if s.get("codec_type") == "video":
+                    info["video_streams"] += 1
+                    info["width"] = int(s["width"]) if s.get("width") else None
+                    info["height"] = int(s["height"]) if s.get("height") else None
+                elif s.get("codec_type") == "audio":
+                    info["audio_streams"] += 1
+            dur = (data.get("format") or {}).get("duration")
+            info["duration"] = float(dur) if dur else None
+        except Exception as exc:                       # noqa: BLE001
+            info["probe_error"] = f"ffprobe failed: {exc}"
+        return info
+    try:
+        import imageio_ffmpeg as _iio
+        meta = next(_iio.read_frames(str(path)))
+        info["video_streams"] = 1
+        info["width"], info["height"] = int(meta["size"][0]), int(meta["size"][1])
+        info["duration"] = float(meta["duration"])
+    except Exception as exc:                           # noqa: BLE001
+        # imageio-ffmpeg dumps the whole ffmpeg banner on failure; keep the first line.
+        first = str(exc).strip().splitlines()[0] if str(exc).strip() else type(exc).__name__
+        info["probe_error"] = f"no video stream readable ({first})"
+    info["audio_streams"] = None   # imageio-ffmpeg reports video only
+    return info
 
 
 def cmd_player(args: argparse.Namespace) -> int:

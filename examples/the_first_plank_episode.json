@@ -1,0 +1,1076 @@
+{
+  "title": "Procrastination: Why 1 Plank Beats a Whole Bridge",
+  "channel_name": "",
+  "thesis": "Before you ask for a bigger bridge, what is the nearest plank you can step on?",
+  "bgm": "dynamic",
+  "subtitles_mode": "cinema",
+  "outro": {
+    "text": "Name the near edge. Step on it.",
+    "duration": 2.0
+  },
+  "voices": {
+    "narrator": "am_michael"
+  },
+  "cast": {
+    "mira": {
+      "name": "MIRA",
+      "style": "cel",
+      "color": "#f8fafc",
+      "build": "lean",
+      "hair": "long",
+      "hair_color": "#2b1d16",
+      "shoe_color": "#1d4ed8",
+      "eyes": true,
+      "expression": "thoughtful",
+      "posture": 0.16,
+      "accessories": [
+        "watch"
+      ],
+      "scale": 1.12
+    }
+  },
+  "chapters": [
+    {
+      "scene": "S01",
+      "number": "01",
+      "title": "The Missing Plank"
+    },
+    {
+      "scene": "S02",
+      "number": "02",
+      "title": "The Perfect Far End"
+    },
+    {
+      "scene": "S03",
+      "number": "03",
+      "title": "Three Louder Answers"
+    },
+    {
+      "scene": "S04",
+      "number": "04",
+      "title": "Naming the Near Edge"
+    },
+    {
+      "scene": "S05",
+      "number": "05",
+      "title": "A Plain First Plank"
+    },
+    {
+      "scene": "S06",
+      "number": "06",
+      "title": "Crossing the Canyon"
+    },
+    {
+      "scene": "S07",
+      "number": "07",
+      "title": "The Other Side"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "S01",
+      "chapter": "Chapter One | The Missing Plank",
+      "mood": "reflective",
+      "bgm": "reflective_piano",
+      "bgm_gain": 0.85,
+      "accent_color": "#38bdf8",
+      "environment": "canyon_bridge",
+      "location_id": "canyon_near_edge",
+      "duration": 19.0,
+      "min_duration": 17.0,
+      "lead_in": 0.7,
+      "tail_out": 0.65,
+      "props": [
+        {
+          "type": "signpost",
+          "x": 0.22,
+          "z": -8
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.02,
+          "zoom_to": 1.1,
+          "focus_x": 0.46,
+          "focus_y": 0.6,
+          "cut": true
+        },
+        {
+          "cue_on": "only the first plank missing",
+          "zoom_from": 1.1,
+          "zoom_to": 1.16,
+          "focus_x": 0.4,
+          "focus_y": 0.66,
+          "move_dur": 2.4,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "mira",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 5.5,
+              "action": "hold_blueprint",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 5.5,
+              "end": 10.0,
+              "action": "point_emphasis",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 10.0,
+              "end": 14.0,
+              "action": "look_horizon",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "hopeful"
+            },
+            {
+              "start": 14.0,
+              "end": 19.0,
+              "action": "idle_stand",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "thoughtful"
+            }
+          ]
+        }
+      ],
+      "board": {
+        "type": "notebook_page",
+        "x": 0.58,
+        "y": 0.055,
+        "w": 440,
+        "h": 252,
+        "bold_first": true,
+        "lines": [
+          "THE FIRST PLANK:",
+          "The far end, drawn in perfect detail.",
+          "The first plank: blank.",
+          "Not the least. Not the middle."
+        ],
+        "cue_on": "only the first plank missing",
+        "reveal": "typed"
+      },
+      "accent_words": [
+        "first plank missing",
+        "blank",
+        "perfect detail",
+        "somewhere to put her foot"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Mira stood at the near edge of a bridge with only the first plank missing.",
+          "pause_after": 0.34
+        },
+        {
+          "speaker": "narrator",
+          "text": "The far end was drawn in perfect detail; the first plank stayed blank.",
+          "pause_after": 0.34
+        },
+        {
+          "speaker": "narrator",
+          "text": "She did not need a bigger plan.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "She needed somewhere to put her foot.",
+          "pause_after": 0.36
+        },
+        {
+          "speaker": "narrator",
+          "text": "Behind her, a clean desk held an untouched page.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "Not the least one, not the middle one.",
+          "pause_after": 0.4
+        }
+      ],
+      "setting": {
+        "backdrop": "mountains",
+        "sky": [
+          "#070d1a",
+          "#152238",
+          "#6b4423"
+        ],
+        "stars": true,
+        "light_color": "#cbd5e1",
+        "floor_color": "#06080d",
+        "override_visual_identity": true
+      }
+    },
+    {
+      "id": "S02",
+      "chapter": "Chapter Two | The Perfect Far End",
+      "mood": "focus",
+      "bgm": "electronic_drive",
+      "bgm_gain": 0.85,
+      "accent_color": "#38bdf8",
+      "environment": "library_study",
+      "location_id": "study_desk",
+      "duration": 18.0,
+      "min_duration": 16.0,
+      "lead_in": 0.7,
+      "tail_out": 0.65,
+      "props": [
+        {
+          "type": "desk",
+          "x": 0.46
+        },
+        {
+          "type": "chair",
+          "x": 0.46,
+          "z": -2
+        },
+        {
+          "type": "cup",
+          "x": 0.6,
+          "elevation": 148
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.04,
+          "zoom_to": 1.12,
+          "focus_x": 0.48,
+          "focus_y": 0.58,
+          "cut": true
+        },
+        {
+          "cue_on": "The page did not move",
+          "zoom_from": 1.12,
+          "zoom_to": 1.04,
+          "focus_x": 0.52,
+          "focus_y": 0.62,
+          "move_dur": 2.8
+        }
+      ],
+      "characters": [
+        {
+          "id": "mira",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 9.0,
+              "action": "sit_desk_type",
+              "x": 0.46,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 9.0,
+              "end": 14.0,
+              "action": "sketch_desk",
+              "x": 0.46,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 14.0,
+              "end": 18.0,
+              "action": "sit_desk_slump",
+              "x": 0.46,
+              "facing": 1,
+              "expression": "tired"
+            }
+          ]
+        }
+      ],
+      "board": {
+        "type": "notebook_page",
+        "x": 0.58,
+        "y": 0.055,
+        "w": 440,
+        "h": 252,
+        "bold_first": true,
+        "lines": [
+          "PLANNING, ALL AFTERNOON:",
+          "Every far plank numbered.",
+          "Every distant beam inked.",
+          "The first plank: still blank."
+        ],
+        "cue_on": "perfect detail",
+        "reveal": "typed"
+      },
+      "accent_words": [
+        "planning felt like movement",
+        "perfect detail",
+        "stayed blank",
+        "did not move"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "She called this planning, because planning felt like movement.",
+          "pause_after": 0.32
+        },
+        {
+          "speaker": "narrator",
+          "text": "By noon, she had drawn the far end in perfect detail.",
+          "pause_after": 0.32
+        },
+        {
+          "speaker": "narrator",
+          "text": "Every far plank numbered, every distant beam inked.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "The first plank stayed blank.",
+          "pause_after": 0.36
+        },
+        {
+          "speaker": "narrator",
+          "text": "The page did not move.",
+          "pause_after": 0.34
+        },
+        {
+          "speaker": "narrator",
+          "text": "A clean desk can hold a very long delay.",
+          "pause_after": 0.4
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "chapter": "Chapter Three | Three Louder Answers",
+      "mood": "tension",
+      "bgm": "suspense_tension",
+      "bgm_gain": 0.85,
+      "accent_color": "#fca5a5",
+      "environment": "storm_road",
+      "location_id": "canyon_road_storm",
+      "duration": 18.0,
+      "min_duration": 16.0,
+      "lead_in": 0.7,
+      "tail_out": 0.65,
+      "props": [
+        {
+          "type": "signpost",
+          "x": 0.2,
+          "z": -8
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.05,
+          "zoom_to": 1.13,
+          "focus_x": 0.44,
+          "focus_y": 0.58,
+          "cut": true
+        },
+        {
+          "cue_on": "Jump harder",
+          "zoom_from": 1.16,
+          "zoom_to": 1.06,
+          "focus_x": 0.5,
+          "focus_y": 0.64,
+          "move_dur": 2.2,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "mira",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 5.0,
+              "action": "pace_think",
+              "x": 0.42,
+              "facing": 1,
+              "expression": "worried"
+            },
+            {
+              "start": 5.0,
+              "end": 9.0,
+              "action": "jump",
+              "x": 0.42,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 9.0,
+              "end": 13.0,
+              "action": "trip_stumble",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "frustrated"
+            },
+            {
+              "start": 13.0,
+              "end": 18.0,
+              "action": "head_in_hands",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "defeated"
+            }
+          ]
+        }
+      ],
+      "board": {
+        "type": "notebook_page",
+        "x": 0.58,
+        "y": 0.055,
+        "w": 440,
+        "h": 294,
+        "bold_first": true,
+        "lines": [
+          "THREE LOUDER ANSWERS:",
+          "Jump harder.",
+          "Wait longer.",
+          "Draw more planks.",
+          "None of them moved her."
+        ],
+        "cue_on": "three louder answers",
+        "reveal": "typed"
+      },
+      "accent_words": [
+        "three louder answers",
+        "Jump harder",
+        "Wait longer",
+        "Draw more planks",
+        "tore the checklist"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "A checklist offered three louder answers.",
+          "pause_after": 0.32
+        },
+        {
+          "speaker": "narrator",
+          "text": "At the canyon, she tried the obvious thing.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "Jump harder. Wait longer. Draw more planks.",
+          "pause_after": 0.36
+        },
+        {
+          "speaker": "narrator",
+          "text": "The rain kept time with every failed try.",
+          "pause_after": 0.32
+        },
+        {
+          "speaker": "narrator",
+          "text": "She tore the checklist into the wind.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "Draw more planks.",
+          "pause_after": 0.42
+        }
+      ],
+      "setting": {
+        "backdrop": "horizon",
+        "sky": [
+          "#03050a",
+          "#0b1220",
+          "#1b2b3a"
+        ],
+        "rain": true,
+        "rain_intensity": 1.0,
+        "light_color": "#94a3b8",
+        "floor_color": "#04060a",
+        "override_visual_identity": true
+      }
+    },
+    {
+      "id": "S04",
+      "chapter": "Chapter Four | Naming the Near Edge",
+      "mood": "calm",
+      "bgm": "chill_focus",
+      "bgm_gain": 0.85,
+      "accent_color": "#86efac",
+      "environment": "canyon_bridge",
+      "location_id": "canyon_near_edge",
+      "duration": 18.0,
+      "min_duration": 16.0,
+      "lead_in": 0.7,
+      "tail_out": 0.65,
+      "props": [
+        {
+          "type": "signpost",
+          "x": 0.24,
+          "z": -8
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.03,
+          "zoom_to": 1.1,
+          "focus_x": 0.42,
+          "focus_y": 0.62,
+          "cut": true
+        },
+        {
+          "cue_on": "NAME THE NEAR EDGE",
+          "zoom_from": 1.12,
+          "zoom_to": 1.18,
+          "focus_x": 0.5,
+          "focus_y": 0.58,
+          "move_dur": 2.6,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "mira",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 5.0,
+              "action": "look_horizon",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "wistful"
+            },
+            {
+              "start": 5.0,
+              "end": 10.0,
+              "action": "kneel_lookup",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "calm"
+            },
+            {
+              "start": 10.0,
+              "end": 14.5,
+              "action": "sketch_desk",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 14.5,
+              "end": 18.0,
+              "action": "stand_up_resolve",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "determined"
+            }
+          ]
+        }
+      ],
+      "board": {
+        "type": "notebook_page",
+        "x": 0.58,
+        "y": 0.055,
+        "w": 440,
+        "h": 252,
+        "bold_first": true,
+        "lines": [
+          "ONE LINE ON A SCRAP:",
+          "JUMP HARDER -- crossed out.",
+          "NAME THE NEAR EDGE",
+          "Small enough to finish."
+        ],
+        "cue_on": "NAME THE NEAR EDGE",
+        "reveal": "typed"
+      },
+      "accent_words": [
+        "too far away",
+        "near edge",
+        "small enough to finish",
+        "NAME THE NEAR EDGE",
+        "near plank could not"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "The beginning feels too far away.",
+          "pause_after": 0.32
+        },
+        {
+          "speaker": "narrator",
+          "text": "She looked at the place where her foot already stood.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "She wrote one line on a scrap of paper.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "Name the near edge, small enough to finish.",
+          "pause_after": 0.36
+        },
+        {
+          "speaker": "narrator",
+          "text": "JUMP HARDER was crossed out; NAME THE NEAR EDGE took its place.",
+          "pause_after": 0.34
+        },
+        {
+          "speaker": "narrator",
+          "text": "The far lantern could wait; the near plank could not.",
+          "pause_after": 0.4
+        }
+      ],
+      "setting": {
+        "backdrop": "mountains",
+        "sky": [
+          "#060c18",
+          "#1a2b40",
+          "#8a5a33"
+        ],
+        "stars": true,
+        "light_color": "#cbd5e1",
+        "floor_color": "#06080d",
+        "override_visual_identity": true
+      }
+    },
+    {
+      "id": "S05",
+      "chapter": "Chapter Five | A Plain First Plank",
+      "mood": "calm",
+      "bgm": "chill_focus",
+      "bgm_gain": 0.85,
+      "accent_color": "#fcd34d",
+      "environment": "library_study",
+      "location_id": "study_desk",
+      "duration": 19.0,
+      "min_duration": 17.0,
+      "lead_in": 0.7,
+      "tail_out": 0.65,
+      "props": [
+        {
+          "type": "desk",
+          "x": 0.46
+        },
+        {
+          "type": "chair",
+          "x": 0.46,
+          "z": -2
+        },
+        {
+          "type": "cup",
+          "x": 0.62,
+          "elevation": 148
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.02,
+          "zoom_to": 1.09,
+          "focus_x": 0.46,
+          "focus_y": 0.6,
+          "cut": true
+        },
+        {
+          "cue_on": "It held her whole weight",
+          "zoom_from": 1.1,
+          "zoom_to": 1.2,
+          "focus_x": 0.48,
+          "focus_y": 0.64,
+          "move_dur": 2.6,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "mira",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.0,
+              "action": "sit_desk_type",
+              "x": 0.46,
+              "facing": 1,
+              "expression": "calm"
+            },
+            {
+              "start": 6.0,
+              "end": 11.0,
+              "action": "stand_from_desk",
+              "x": 0.46,
+              "facing": 1,
+              "expression": "hopeful"
+            },
+            {
+              "start": 11.0,
+              "end": 15.0,
+              "action": "walk",
+              "from_x": 0.46,
+              "to_x": 0.38,
+              "expression": "determined"
+            },
+            {
+              "start": 15.0,
+              "end": 19.0,
+              "action": "idle_stand",
+              "x": 0.38,
+              "facing": 1,
+              "expression": "relieved"
+            }
+          ]
+        }
+      ],
+      "board": {
+        "type": "notebook_page",
+        "x": 0.58,
+        "y": 0.055,
+        "w": 440,
+        "h": 252,
+        "bold_first": true,
+        "lines": [
+          "THE SMALL REASON:",
+          "One short piece of wood.",
+          "One small reason to return.",
+          "It held her whole weight."
+        ],
+        "cue_on": "small reason",
+        "reveal": "typed"
+      },
+      "accent_words": [
+        "small reason",
+        "one short piece",
+        "stepped",
+        "whole weight",
+        "no longer a drawing"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Then she wrote herself a small reason to come back.",
+          "pause_after": 0.32
+        },
+        {
+          "speaker": "narrator",
+          "text": "One short piece of wood, and one small reason to return.",
+          "pause_after": 0.32
+        },
+        {
+          "speaker": "narrator",
+          "text": "She set it at the near edge and stepped.",
+          "pause_after": 0.34
+        },
+        {
+          "speaker": "narrator",
+          "text": "It held her whole weight.",
+          "pause_after": 0.38
+        },
+        {
+          "speaker": "narrator",
+          "text": "The desk lamp made a small circle of light.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "The first plank was no longer a drawing.",
+          "pause_after": 0.4
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "chapter": "Chapter Six | Crossing the Canyon",
+      "mood": "triumph",
+      "bgm": "triumph_horizon",
+      "bgm_gain": 0.85,
+      "accent_color": "#fcd34d",
+      "environment": "sunrise_summit",
+      "location_id": "sunrise_ridge",
+      "duration": 18.0,
+      "min_duration": 16.0,
+      "lead_in": 0.8,
+      "tail_out": 0.65,
+      "props": [
+        {
+          "type": "signpost",
+          "x": 0.86,
+          "z": -9
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.02,
+          "zoom_to": 1.12,
+          "focus_x": 0.46,
+          "focus_y": 0.56,
+          "cut": true
+        },
+        {
+          "cue_on": "Then she crossed",
+          "zoom_from": 1.12,
+          "zoom_to": 1.04,
+          "focus_x": 0.52,
+          "focus_y": 0.54,
+          "move_dur": 3.0,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "mira",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 5.0,
+              "action": "look_horizon",
+              "x": 0.4,
+              "facing": 1,
+              "expression": "hopeful"
+            },
+            {
+              "start": 5.0,
+              "end": 10.0,
+              "action": "walk",
+              "from_x": 0.4,
+              "to_x": 0.58,
+              "expression": "determined"
+            },
+            {
+              "start": 10.0,
+              "end": 14.0,
+              "action": "stand_up_resolve",
+              "x": 0.58,
+              "facing": 1,
+              "expression": "resolved"
+            },
+            {
+              "start": 14.0,
+              "end": 18.0,
+              "action": "celebrate_arms_up",
+              "x": 0.6,
+              "facing": 1,
+              "expression": "joyful"
+            }
+          ]
+        }
+      ],
+      "board": {
+        "type": "notebook_page",
+        "x": 0.58,
+        "y": 0.055,
+        "w": 440,
+        "h": 252,
+        "bold_first": true,
+        "lines": [
+          "NOT THE WHOLE CANYON:",
+          "Only the nearest plank.",
+          "Then the next.",
+          "Then she crossed."
+        ],
+        "cue_on": "Only the nearest plank",
+        "reveal": "typed"
+      },
+      "accent_words": [
+        "untouched page",
+        "become a beginning",
+        "nearest plank",
+        "8:15",
+        "crossed"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "On the desk, the untouched page had become a beginning.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "The far lantern grew into a room with windows.",
+          "pause_after": 0.32
+        },
+        {
+          "speaker": "narrator",
+          "text": "So she stepped on the nearest plank.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "Not the whole canyon. Only the nearest plank.",
+          "pause_after": 0.36
+        },
+        {
+          "speaker": "narrator",
+          "text": "By the time the clock read eight fifteen, she had only solved the nearest plank.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "Then she crossed.",
+          "pause_after": 0.42
+        }
+      ],
+      "setting": {
+        "backdrop": "hills",
+        "sky": [
+          "#1a1024",
+          "#7c3f2e",
+          "#f0b07a"
+        ],
+        "stars": false,
+        "light_color": "#fde8c8",
+        "floor_color": "#120c10",
+        "override_visual_identity": true
+      }
+    },
+    {
+      "id": "S07",
+      "chapter": "Chapter Seven | The Other Side",
+      "mood": "reflective",
+      "bgm": "reflective_piano",
+      "bgm_gain": 0.85,
+      "accent_color": "#fcd34d",
+      "environment": "sunrise_summit",
+      "location_id": "sunrise_far_side",
+      "duration": 16.0,
+      "min_duration": 14.0,
+      "lead_in": 0.7,
+      "tail_out": 1.0,
+      "props": [
+        {
+          "type": "signpost",
+          "x": 0.82,
+          "z": -9
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.05,
+          "zoom_to": 1.0,
+          "focus_x": 0.5,
+          "focus_y": 0.56,
+          "cut": true
+        },
+        {
+          "cue_on": "nearest plank you can step on",
+          "zoom_from": 1.0,
+          "zoom_to": 1.06,
+          "focus_x": 0.5,
+          "focus_y": 0.52,
+          "move_dur": 2.4
+        }
+      ],
+      "characters": [
+        {
+          "id": "mira",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 5.0,
+              "action": "idle_stand",
+              "x": 0.48,
+              "facing": -1,
+              "expression": "calm"
+            },
+            {
+              "start": 5.0,
+              "end": 10.0,
+              "action": "look_horizon",
+              "x": 0.48,
+              "facing": -1,
+              "expression": "hopeful"
+            },
+            {
+              "start": 10.0,
+              "end": 16.0,
+              "action": "chest_hand_sincere",
+              "x": 0.48,
+              "facing": 1,
+              "expression": "sincere"
+            }
+          ]
+        }
+      ],
+      "board": {
+        "type": "notebook_page",
+        "x": 0.58,
+        "y": 0.055,
+        "w": 440,
+        "h": 252,
+        "bold_first": true,
+        "lines": [
+          "THE OTHER SIDE:",
+          "Not shorter than before.",
+          "Close enough to touch.",
+          "What is your nearest plank?"
+        ],
+        "cue_on": "nearest plank you can step on",
+        "reveal": "typed"
+      },
+      "accent_words": [
+        "other side",
+        "not shorter",
+        "close enough to touch",
+        "small, plain first plank",
+        "nearest plank you can step on"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "By sunrise, Mira was standing on the other side.",
+          "pause_after": 0.32
+        },
+        {
+          "speaker": "narrator",
+          "text": "The bridge was not shorter than before.",
+          "pause_after": 0.32
+        },
+        {
+          "speaker": "narrator",
+          "text": "It had simply begun close enough to touch.",
+          "pause_after": 0.34
+        },
+        {
+          "speaker": "narrator",
+          "text": "She looked back at the small, plain first plank.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "Then she looked at you.",
+          "pause_after": 0.36
+        },
+        {
+          "speaker": "narrator",
+          "text": "Before you ask for a bigger bridge, what is the nearest plank you can step on?",
+          "pause_after": 0.6
+        }
+      ],
+      "setting": {
+        "backdrop": "horizon",
+        "sky": [
+          "#243a52",
+          "#8a7a86",
+          "#f3d9a4"
+        ],
+        "stars": false,
+        "light_color": "#fde8c8",
+        "floor_color": "#120f14",
+        "override_visual_identity": true
+      }
+    }
+  ]
+}

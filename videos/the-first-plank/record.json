@@ -10,7 +10,7 @@
   "format": "portrait",
   "aspect_ratio": "9:16",
   "resolution": "1080x1920",
-  "duration_seconds": 126.038,
+  "duration_seconds": 130.62,
   "created_at": "2026-11-10T00:00:00Z",
   "topic": "Procrastination as over-planning, and the power of the nearest first step",
   "summary": "Mira has drawn the far end of a bridge in perfect detail while the first plank stays blank. Planning feels like movement until she names the nearest edge and steps on it.",
@@ -27,7 +27,7 @@
     "planning vs doing",
     "stickman animation"
   ],
-  "production_version": "3.0.0",
+  "production_version": "3.1.0",
   "status": "completed",
   "directory": "videos/the-first-plank",
   "video_path": "videos/the-first-plank/the-first-plank.mp4",
@@ -39,16 +39,16 @@
       "NEAR",
       "EDGE"
     ],
-    "design": "AI-generated cel-shaded base art in the film's own drawing language, composed by tools/compose_thumbnail.py with a reserved text band; checked at 168px wide",
+    "design": "Hero art rendered from the film's own rig and setting (S06 sunrise, 1.45x camera zoom, chapter label and name tag suppressed) rather than AI-generated, so the character is the film's Mira by construction \u2014 same blue shoes, hair and white body. Typography set by tools/compose_thumbnail.py in a dedicated band beneath the art: 'NEAR' white, 'EDGE' teal, 168 px legible.",
     "copy_principle": "complements the title; does not repeat it",
-    "art_fraction": 0.78
+    "art_fraction": 0.72
   },
-  "content_fingerprint": "sha256:72059c05444d8934e254cf33689ee201",
-  "duration_sec": 126.038,
+  "content_fingerprint": "sha256:cad3243896b1e8f7783764e6897f6f9f",
+  "duration_sec": 130.62,
   "final_video": "the-first-plank.mp4",
   "script_summary": "Mira has drawn the far end of a bridge in perfect detail while the first plank stays blank. Planning feels like movement until she names the nearest edge and steps on it.",
-  "duration_label": "2:06",
-  "format_policy_exception": "126.04s under the auto policy would imply 16:9; the approved master is portrait 9:16 and was delivered as a Shorts-style story.",
+  "duration_label": "2:10",
+  "format_policy_exception": "Portrait 9:16 at 130.6s, above the 60s auto-policy boundary that would imply 16:9. Approved: the film was authored, storyboarded and published as a YouTube Shorts-format vertical piece in 3.0.0, and the 3.1.0 re-cut changes the opening line only. Re-composing to landscape would be a different video, not a fix to this one.",
   "previous_title": "The First Plank",
   "primary_keyword": "procrastination",
   "thumbnail_text": "NEAR EDGE",
@@ -57,44 +57,59 @@
     "backfilled": true,
     "hook_candidates": [
       {
-        "text": "Behind her, a clean desk held an untouched page.",
+        "text": "Mira stood at the near edge of a bridge with only the first plank missing.",
+        "approach": "contradiction",
+        "why": "Chosen in 3.1.0. A bridge that is finished everywhere except where a foot would land is a contradiction a viewer resolves in one second, and it names the exact object instead of the feeling about it.",
         "selected": true,
-        "why": "Retrospective audit: this is the weakest opening of the eight. It is atmospheric and correct, but it opens on a desk, not on a problem. The third line is the real hook and arrives late.",
         "seconds_into_video": 0.0
       },
       {
-        "text": "Mira stood at the near edge of a bridge with only the first plank missing.",
+        "text": "Behind her, a clean desk held an untouched page.",
+        "approach": "stakes_loss",
+        "why": "The original opening (3.0.0). Rejected: it describes the consequence of the delay before the viewer knows there is a delay. Now spoken fifth in S01, where it lands as the cost.",
         "selected": false,
-        "why": "",
         "seconds_into_video": 0.0
       },
       {
         "text": "She had drawn the other side in perfect detail. The first plank stayed blank.",
+        "approach": "reversal",
+        "why": "Rejected: stronger as S02's payoff line than as the cold open, because it needs the bridge established first. It stays in the film in that position.",
         "selected": false,
-        "why": "",
+        "seconds_into_video": 0.0
+      },
+      {
+        "text": "What is the nearest plank you can step on?",
+        "approach": "question",
+        "why": "Rejected as an opener: it is the film's closing question. Opening with it would spend the payoff in line one.",
+        "selected": false,
         "seconds_into_video": 0.0
       }
     ],
     "retention_map": [
       {
-        "at_sec": 0,
+        "at_sec": 0.0,
         "kind": "hook",
-        "purpose": "state the promise in the first spoken line"
+        "purpose": "open on the plank that was never drawn, not on the desk that resulted from it"
       },
       {
-        "at_sec": 44.1,
+        "at_sec": 38.0,
         "kind": "escalation",
-        "purpose": "raise the cost so the premise stops being abstract"
+        "purpose": "three louder answers fail in the rain, so effort is not the variable"
       },
       {
-        "at_sec": 90.7,
+        "at_sec": 55.0,
         "kind": "reveal",
-        "purpose": "name the mechanism the hook withheld"
+        "purpose": "name the near edge \u2014 the mechanism the hook withheld"
       },
       {
-        "at_sec": 126.038,
+        "at_sec": 90.0,
         "kind": "payoff",
-        "purpose": "deliver the moral the opening promised"
+        "purpose": "only the nearest plank, then the crossing"
+      },
+      {
+        "at_sec": 114.0,
+        "kind": "close",
+        "purpose": "turn the question back on the viewer"
       }
     ],
     "title_candidates": [
@@ -157,7 +172,7 @@
     "claims": [],
     "script_critique": {
       "scores": {
-        "opening_hook": 2,
+        "opening_hook": 4,
         "clarity": 4,
         "originality": 4,
         "story_progression": 4,
@@ -168,8 +183,8 @@
         "accuracy": 4,
         "pacing": 3
       },
-      "weakest": "opening_hook",
-      "revision": "Flagged for future re-edit: open on the blank plank or on the quote, not on the desk. Not re-rendered in this pass because the master is already published."
+      "weakest": "retention_potential",
+      "revision": "3.1.0: re-authored and re-rendered. S01 now opens on the blank first plank; the desk line moved inside S01 to fifth position. opening_hook moves 2 -> 4. The weakest criterion is now retention_potential at 3: the middle act still leans on metaphor ('the page did not move') where a concrete consequence would hold attention harder."
     }
   },
   "secondary_keywords": [
@@ -188,5 +203,36 @@
     "#overthinking",
     "#perfectionism"
   ],
-  "category": "Education"
+  "category": "Education",
+  "duration": 130.62,
+  "chapters": [
+    {
+      "at_sec": 0,
+      "title": "Chapter One | The Missing Plank"
+    },
+    {
+      "at_sec": 20,
+      "title": "Chapter Two | The Perfect Far End"
+    },
+    {
+      "at_sec": 38,
+      "title": "Chapter Three | Three Louder Answers"
+    },
+    {
+      "at_sec": 55,
+      "title": "Chapter Four | Naming the Near Edge"
+    },
+    {
+      "at_sec": 73,
+      "title": "Chapter Five | A Plain First Plank"
+    },
+    {
+      "at_sec": 90,
+      "title": "Chapter Six | Crossing the Canyon"
+    },
+    {
+      "at_sec": 109,
+      "title": "Chapter Seven | The Other Side"
+    }
+  ]
 }

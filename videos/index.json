@@ -1,6 +1,6 @@
 {
   "catalog_version": "2.0.0",
-  "last_updated": "2026-11-11",
+  "last_updated": "2026-11-12",
   "total_videos": 8,
   "schema": {
     "directory": "videos/<slug>/",
@@ -99,15 +99,15 @@
       "topic": "Procrastination as over-planning, and the power of the nearest first step",
       "summary": "Mira has drawn the far end of a bridge in perfect detail while the first plank stays blank. Planning feels like movement until she names the nearest edge and steps on it.",
       "key_angle": "The far end of the bridge is shown fully finished from the first frame \u2014 the obstacle is never the destination, only the blank plank at her feet.",
-      "duration": 126.038,
-      "duration_label": "2:06",
+      "duration": 130.62,
+      "duration_label": "2:10",
       "format": "portrait",
       "aspect_ratio": "9:16",
       "resolution": "1080x1920",
       "produced_at": "2026-11-10",
       "directory": "videos/the-first-plank",
-      "content_fingerprint": "sha256:72059c05444d8934e254cf33689ee201",
-      "duration_sec": 126.038,
+      "content_fingerprint": "sha256:cad3243896b1e8f7783764e6897f6f9f",
+      "duration_sec": 130.62,
       "status": "completed",
       "created_at": "2026-11-10",
       "final_video": "the-first-plank.mp4",
@@ -124,9 +124,10 @@
         "planning vs doing",
         "stickman animation"
       ],
-      "production_version": "3.0.0",
+      "production_version": "3.1.0",
       "previous_title": "The First Plank",
-      "primary_keyword": "procrastination"
+      "primary_keyword": "procrastination",
+      "previous_version": "3.0.0"
     },
     {
       "id": "video-004",

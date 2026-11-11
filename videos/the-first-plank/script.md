@@ -6,9 +6,9 @@
 | Slug | `the-first-plank` |
 | Format | Shorts (portrait) — 9:16 |
 | Resolution | 1080x1920 |
-| Runtime | 2 min 06 s (126.04 s) |
+| Runtime | 2 min 10 s (130.62 s) |
 | Published | 2026-11-10 |
-| Production version | 3.0.0 |
+| Production version | 3.1.0 |
 | Voice engine | Kokoro-82M int8 ONNX (local, offline) |
 
 ## Logline
@@ -24,8 +24,6 @@ Mira has drawn the far end of the bridge in perfect detail and left the first pl
 
 _`00:00` · environment: `canyon_bridge` · mood: *reflective*_
 
-**NARRATOR:** Behind her, a clean desk held an untouched page.
-
 **NARRATOR:** Mira stood at the near edge of a bridge with only the first plank missing.
 
 **NARRATOR:** The far end was drawn in perfect detail; the first plank stayed blank.
@@ -33,6 +31,8 @@ _`00:00` · environment: `canyon_bridge` · mood: *reflective*_
 **NARRATOR:** She did not need a bigger plan.
 
 **NARRATOR:** She needed somewhere to put her foot.
+
+**NARRATOR:** Behind her, a clean desk held an untouched page.
 
 **NARRATOR:** Not the least one, not the middle one.
 
@@ -140,3 +140,24 @@ _`01:48` · environment: `sunrise_summit` · mood: *quiet*_
 - **Music (dynamic):** "Where Stars Fall", "Softly", "The Distant Sun (Monomyth 1)",
   "The Restoration (Monomyth 12)" — see the video description for attribution.
 - 42 narration lines across seven chapters; the final line turns to the viewer.
+
+## Re-cut note (3.1.0, 2026-11-11)
+
+The judged weakness was the opening: the film began on a desk, which is the
+*consequence* of the delay rather than the problem. S01 now opens on the plank that was
+never drawn —
+
+> Mira stood at the near edge of a bridge with only the first plank missing.
+
+— and the desk line moves to fifth position, where it lands as the cost instead of the
+premise.
+
+**No word of the narration changed.** Every line is the line it always was; one line moved
+inside S01. The film was re-authored from this script because the original episode spec was
+never committed to `examples/`, which is why this is the second of the two 2/5 hooks to be
+fixed rather than the first.
+
+Scene environments were re-composed for the portrait frame: the outdoor acts use explicit
+`setting` blocks (mountain and horizon backdrops with dawn/rain gradients) because the
+`canyon_bridge` preset is a colour theme with no geometry and renders as a bare room. The
+previous master is preserved at `deliverables/superseded/the-first-plank.v3.0.0.mp4`.

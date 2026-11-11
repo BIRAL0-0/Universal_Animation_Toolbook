@@ -147,7 +147,48 @@ technical rather than editorial: its episode spec was never committed to `exampl
 surviving record of its visuals is the rendered master. Re-cutting it means re-authoring eight
 scenes of choreography, not re-ordering two.
 
-### 4.1 The first re-cut: `the-two-inch-bridge` 3.0.0 → 3.1.0
+### 4.1 The two re-cuts
+
+Both flagged films have now been fixed.
+
+| Film | 3.0.0 opening | 3.1.0 opening | hook |
+|---|---|---|---|
+| `the-two-inch-bridge` | the chasm (scale, no stakes) | "Two inches off every joint." | 2 → 4 |
+| `the-first-plank` | a clean desk with an untouched page | "a bridge with only the first plank missing" | 2 → 4 |
+
+`the-first-plank` had to be **re-authored, not re-ordered**: its episode spec was never
+committed, so the only record of its visuals was the published master. The spec now exists
+(`examples/the_first_plank_episode.json`), and re-authoring surfaced three things worth
+keeping:
+
+- **Preset environments draw geometry; `canyon_bridge` does not.** It is a colour theme, so an
+  outdoor scene using it renders as a bare room. The four outdoor acts use explicit `setting`
+  blocks instead (`backdrop: mountains | horizon | hills`, `sky` gradients, `rain`, `stars`).
+- **`setting` overrides are gated by `DEFAULT_VISUAL_IDENTITY.lock_identity`.** A custom
+  setting collapses to the near-black default unless the scene sets
+  `override_visual_identity: true`. That is the documented default background working as
+  intended, with a sanctioned escape hatch — not a bug.
+- **Character scale and board geometry interact.** Mira at `1.30` put her head inside the
+  board band; `1.12` with a 440×`84+42n` board clears it. Board `y` ≤ 1.5 is a fraction of
+  frame height, above that it is pixels.
+
+### 4.1a The cover must be the film's character
+
+`the-first-plank`'s cover was AI-generated art and had invented a different Mira: red shoes,
+a ponytail, skin tone. The film's Mira has blue shoes, long hair and a white body. That is
+exactly the "the character doesn't look like the video" complaint, and no colour-histogram
+gate could see it.
+
+The replacement is **rendered from the film's own rig** — S06's sunrise setting at 1.45×
+camera zoom with the chapter label and name tag suppressed — so character identity is
+guaranteed by construction rather than by a prompt. Typography is set by
+`tools/compose_thumbnail.py` in a dedicated band under the art (`NEAR` / `EDGE`), which is
+why the score rose from 0.615 to 0.735.
+
+**Rule:** when a cover shows the protagonist, render it from the episode spec. Generative
+art may supply backgrounds, objects or texture, but not the character the film already owns.
+
+### 4.1b The first re-cut: `the-two-inch-bridge` 3.0.0 → 3.1.0
 
 The judged weakness was that S01 established *scale* — "eight hundred metres of nothing" — with
 nothing at stake for a person. The fix swaps S01 and S02 so the film opens on the shortcut being
