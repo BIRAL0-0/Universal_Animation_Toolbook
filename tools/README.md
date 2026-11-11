@@ -14,7 +14,9 @@ live under `universal_toolbook/tools/`.
 | [`produce_video.py`](produce_video.py) | end-to-end project producer (stages A–J, ending with the publishing package); see [`docs/production/COMPLETE_WORKFLOW.md`](../docs/production/COMPLETE_WORKFLOW.md) |
 | [`validate_publishing.py`](validate_publishing.py) | publishing gate: `videos/<slug>/` ships `<slug>.mp4` + `script.md` + `thumbnail.jpg` + `record.json`, platform-sized thumbnail, complete metadata, current index fingerprint, no temp files |
 | [`package_video.py`](package_video.py) | assembles `videos/<slug>/` from a verified master plus approved script, designed thumbnail, description and pinned comment; applies the format policy, runs duplicate detection, then the publishing gate |
-| [`make_thumbnail.py`](make_thumbnail.py) | crops/resizes generated base art to 1280×720 or 1080×1920 and typesets the minimal text overlay; inspection stays a manual step |
+| [`make_thumbnail.py`](make_thumbnail.py) | crops/resizes generated base art to 1280×720 or 1080×1920 and typesets the minimal text overlay; `--plate` draws the film's own rounded caption card behind the type and `--no-stroke` matches films that use clean unoutlined type; inspection stays a manual step |
+| [`thumbnail_style.py`](thumbnail_style.py) | measures whether a thumbnail actually belongs to its film — samples 8 stills from the master and scores hue signature, saturation and brightness; `check` exits non-zero below 0.62 |
+| [`seo_audit.py`](seo_audit.py) | scores the search-facing metadata of every package 0–100 (title, description, tags, pinned comment, slug) and prints the specific points lost; `--min 78` is the gate |
 | [`make_scene_plan.py`](make_scene_plan.py) | derives a scene plan from a script |
 | [`serve_downloads.py`](serve_downloads.py) | local HTTP server with Range support for a delivery folder |
 | [`audio_report.py`](audio_report.py) | measured WAV loudness/peak report |

@@ -43,6 +43,19 @@ jobs:
         run: |
           pip install --quiet imageio-ffmpeg pillow
           python tools/validate_publishing.py
+      - name: Every thumbnail matches its film's visual style
+        run: |
+          pip install --quiet imageio-ffmpeg pillow
+          for dir in videos/*/; do
+            slug=$(basename "$dir")
+            [ -f "$dir/$slug.mp4" ] || continue
+            echo "--- $slug"
+            python tools/thumbnail_style.py check "$dir/$slug.mp4" "$dir/thumbnail.jpg" --package "$dir"
+          done
+      - name: Thumbnail text complements the title instead of repeating it
+        run: python tools/thumbnail_copy.py
+      - name: Every video clears the SEO floor
+        run: python tools/seo_audit.py --min 78
       - name: Workflow files must parse as YAML
         run: python tools/check_workflows.py
       - name: Structure unit tests

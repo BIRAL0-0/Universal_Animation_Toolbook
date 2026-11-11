@@ -1,12 +1,12 @@
 {
   "id": "video-002",
   "slug": "discipline-vs-obsession",
-  "title": "Discipline vs Obsession — The Man Who Sacrificed Everything",
+  "title": "Discipline vs Obsession: The 9 PM vs 2 AM Problem",
   "filename": "discipline-vs-obsession.mp4",
   "script": "script.md",
   "thumbnail": "thumbnail.jpg",
-  "youtube_description": "Two men wanted exactly the same thing: to build a life that mattered.\n\nBoth worked hard. Both gave up comfort for it. Ten years later, one of them could look back with pride — and the other looked around and realised he had sacrificed almost everything to get somewhere he could no longer enjoy.\n\nThe difference was not talent, intelligence, or hours. It was something much harder to spot from the inside: one man had discipline, the other had obsession.\n\nThis is a six-minute story about Daniel, who learns to take responsibility only for the minutes that matter, and Marcus, who turns every achievement into a new starting line and every hour of rest into proof that he is falling behind. They argue about it. Marcus loses the argument and keeps going anyway. Then one evening he calls his mother, and the conversation is not about work at all.\n\nIf you have ever finished a project and felt nothing, or felt guilty for closing the laptop on time, Marcus is going to be uncomfortably familiar.\n\n#discipline #obsession #burnout #ambition #worklifebalance #psychology #stickman\n\nSubscribe if you want more stories that take an uncomfortable idea seriously instead of turning it into a quote.\n\nMusic: \"Where Stars Fall\" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Where_Stars_Fall.oga\nMusic: \"Softly\" by Loyalty Freak Music (CC0 1.0 Public Domain) — https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_06_-_Softly.ogg\nMusic: \"The Distant Sun (Monomyth 1)\" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Distant_Sun_(Monomyth_1).oga\nMusic: \"One Cool Minute\" by Loyalty Freak Music (CC0 1.0 Public Domain) — https://commons.wikimedia.org/wiki/File:Loyalty_Freak_Music_-_02_-_One_Cool_Minute.ogg\nMusic: \"The Restoration (Monomyth 12)\" by Scott Buckley (CC BY 4.0) — https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Restoration_(Monomyth_12).oga",
-  "pinned_comment": "The line that does the most work in this story: \"You don't know when your work is enough.\" Marcus never had a stopping rule — he only ever had a starting one.\n\nWhat is your actual stopping rule? Not the aspirational one — the one you genuinely use on a normal weeknight. Do you have one written down anywhere?",
+  "youtube_description": "Discipline vs obsession is usually framed as intensity, and that framing is the reason people burn out while believing they are being disciplined. This short film puts the two side by side in the same room, one hour apart.\n\nDaniel and Marcus are the same person with different habits. At 9:00 PM Daniel is at the desk with the lamp on, upright, working a defined block, and then he stops \u2014 the room stays warm when the work does. At 2:00 AM Marcus is at the same desk in the same room, hunched over the same laptop, and the only light left is the red glow of a clock he keeps checking. The work is identical. What differs is who is allowed to end it.\n\nThe test the film leaves you with is not how hard the work is, but who decides when it stops. Discipline has an edge \u2014 you choose it, and you can put it down. Obsession has no edge; it has a debt. One is a practice you keep, the other is a thing that keeps you, and from the inside they feel almost exactly the same for the first year.\n\nWatching a figure slowly lose his posture over the course of the film is the whole argument. Nobody decides to become Marcus. They just stop being allowed to go to bed.\n\nIf this landed, subscribe \u2014 short films about the quiet mechanics of ambition, drawn in ink.\n\nWhere is your line between a hard week and a habit that has started running you? I would genuinely like to know how people draw it.\n\n#discipline #burnout #ambition #worklifebalance\n\nMusic: \"Where Stars Fall\" by Scott Buckley (CC BY 4.0), \"Softly\" by Loyalty Freak Music (CC0 1.0 Public Domain), \"The Distant Sun (Monomyth 1)\" by Scott Buckley (CC BY 4.0), \"One Cool Minute\" by Loyalty Freak Music (CC0 1.0), \"The Restoration (Monomyth 12)\" by Scott Buckley (CC BY 4.0). Full attribution links in the source repository.",
+  "pinned_comment": "The frame that does the work here is the clock. At 9:00 PM it is a small teal display sitting quietly on the desk, and at 2:00 AM it is the loudest thing in the room, glowing red, with Marcus checking it like it owes him something.\n\nSo: where is your own line between a hard week and a habit that has started running you instead of the other way around? Genuinely curious how other people draw it, because I do not think many of us decide in advance.",
   "format": "landscape",
   "aspect_ratio": "16:9",
   "resolution": "1920x1080",
@@ -14,15 +14,18 @@
   "created_at": "2026-11-10T00:00:00Z",
   "topic": "Where discipline ends and self-destructive obsession begins",
   "summary": "Daniel and Marcus want the same thing and work equally hard. Ten years later one has a life he can sustain and the other has a scoreboard he can never finish.",
-  "key_angle": "Two parallel ten-year timelines built on the same ambition — the story withholds the verdict until a single phone call to Marcus's mother reframes what he was working for.",
+  "key_angle": "Two parallel ten-year timelines built on the same ambition \u2014 the story withholds the verdict until a single phone call to Marcus's mother reframes what he was working for.",
   "tags": [
-    "discipline",
-    "obsession",
-    "burnout",
+    "discipline vs obsession",
+    "burnout signs",
     "ambition",
-    "stickman",
-    "psychology",
-    "work-life-balance"
+    "work life balance",
+    "hustle culture",
+    "grind mindset",
+    "how to stay disciplined",
+    "signs you are burning out",
+    "psychology of obsession",
+    "stickman animation"
   ],
   "production_version": "3.0.0",
   "status": "completed",
@@ -33,15 +36,20 @@
     "height": 720,
     "aspect_ratio": "16:9",
     "text_on_image": [
-      "DISCIPLINE",
-      "OBSESSION"
+      "FIVE HOURS",
+      "DIFFERENCE"
     ],
-    "design": "AI-generated cel-stickman base art + Poppins-Bold text overlay, inspected at 1080x1920 / 1280x720 and at mobile preview size"
+    "design": "AI-generated cel-shaded base art in the film's own drawing language, composed by tools/compose_thumbnail.py with a reserved text band; checked at 168px wide",
+    "copy_principle": "complements the title; does not repeat it",
+    "art_fraction": 0.72
   },
-  "content_fingerprint": "sha256:1b253fa0f6b4283fb77787d43101e732",
+  "content_fingerprint": "sha256:591de5f0388dd552e8e1bbc0408835ee",
   "duration_sec": 404.942,
   "final_video": "discipline-vs-obsession.mp4",
   "script_summary": "Daniel and Marcus want the same thing and work equally hard. Ten years later one has a life he can sustain and the other has a scoreboard he can never finish.",
   "duration_label": "6:44",
-  "format_policy_exception": null
+  "format_policy_exception": null,
+  "previous_title": "Discipline vs Obsession \u2014 The Man Who Sacrificed Everything",
+  "primary_keyword": "discipline vs obsession",
+  "thumbnail_text": "FIVE HOURS DIFFERENCE"
 }

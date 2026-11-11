@@ -1,4 +1,4 @@
-# The Two-Second Reach
+# Phone Distraction: The 2-Second Reach That Ends Focus
 
 | Field | Value |
 |---|---|

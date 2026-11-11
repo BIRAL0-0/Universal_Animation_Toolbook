@@ -38,6 +38,170 @@ current, and that no temporary file is sitting in the package.
 **Format policy.** `<60.0s` → 9:16 `1080x1920` Shorts. `>=60.0s` → 16:9 `1920x1080` long-form.
 Approved exceptions are recorded in `record.json` and reported as `note` lines by the validator.
 
+**Thumbnail style rule (NORMATIVE).** A thumbnail must look like it was cut out of the film it
+advertises. Base art may be generated separately — that is usually better than a raw frame, which
+is often too empty to carry a cover — but it must be generated **against the film's own frames as
+style references**, and the result must be measured, not just felt:
+
+```bash
+python3 tools/thumbnail_style.py check videos/<slug>/<slug>.mp4 videos/<slug>/thumbnail.jpg
+```
+
+The checker samples eight stills spread through the master and scores the cover against them on
+three axes. Below `0.62` the cover does not share the film's visual world and must be regenerated.
+
+| Axis | Tests | Note |
+| --- | --- | --- |
+| line | edge density vs the film's — is this the same drawing language | ink line art against a painted or photographic cover fails |
+| polarity | share of the frame that is drawn material rather than empty ground | **invariant under inversion**: white line art on black scores the same as black line art on cream |
+| palette | hue-histogram overlap, counted only over pixels that carry real chroma | skipped for an achromatic film, where "matching the colour" only means "be beige" |
+
+Two corrections are recorded here because the first version of this checker was actively harmful:
+
+- **It scored mean brightness.** A cream-paper film against a flat beige cover scored `0.98`; the
+  same film against a black cover carrying the same character in white line art scored `0.33` and
+  was rejected. The gate was rewarding the cover nobody clicks. Contrast is the entire point of a
+  thumbnail, so what is compared now is the dark/light *balance*, which inversion leaves untouched.
+- **It counted the paper as a colour.** A cream page is 100% of the "hue signature", so the checker
+  insisted every wall cover be beige. Hue is now read only from pixels above a chroma floor, and an
+  achromatic film is not scored on hue at all.
+
+**A high score is necessary and not sufficient.** This is the single most important sentence in this
+section. The checker cannot see focal point, scale, expression, gesture or typographic punch. A
+faithful reproduction of an empty wide shot scores highly and is still a bad thumbnail. The wall
+film's first cover passed at `0.98` and had none of the instinct a thumbnail needs; the cover that
+replaced it is the film's character at a third of the frame width, mid-push, on black, with the
+title at 15% of frame width in the film's own red. Both pass the gate. Only one of them is worth
+uploading.
+
+Write the cover for the grid: it must read at **210 px wide**. Check it at that size before shipping.
+
+Three consequences worth stating plainly, because they were all learned the hard way:
+
+- **A generic illustration can never match.** A dark navy film with label pills and cyan accents
+  must not get an orange sunset poster, however good the poster is.
+- **Line quality is part of the style.** A flat ink-line film drawn with a uniform 4px pen looks
+  nothing like a hatched pencil illustration, even at the same cream background colour. Match the
+  drawing technique, not just the palette — the checker cannot see stroke weight, so this part is
+  still your eyes.
+- **The character must be the same character.** Not a figure in the same palette, not a shaded or
+  three-dimensional cousin: the same head shape, the same eyes, the same silhouette. Viewers
+  recognise the protagonist before they read a word, and a cover whose character is a redesign
+  reads as a different film. Where the film is dark, the cover may render him as white line art on
+  black — that is the same character under inversion, not a new one.
+- **Borrow the film's own type device.** If the film captions itself on a white rounded card, the
+  cover should use a card too (`make_thumbnail.py --plate`). If it uses clean unoutlined type,
+  pass `--no-stroke`. A thumbnail that invents a new typographic voice reads as a different channel.
+
+**Search rule (NORMATIVE).** Every `record.json` must declare `primary_keyword` — the one phrase a
+real viewer would type. Metadata is scored 0–100 and may not fall below the floor:
+
+```bash
+python3 tools/seo_audit.py            # scorecard for every package
+python3 tools/seo_audit.py --verbose  # with the specific points lost
+```
+
+| Block | Max | What it tests |
+| --- | --- | --- |
+| title | 30 | 40–70 chars, keyword in the first 40, a question or number, no all-caps shouting |
+| description | 30 | keyword inside the first 125 visible characters, 900–3200 chars, 2–4 natural mentions, 3–5 hashtags, an explicit call to action |
+| tags | 20 | 8–15 tags under 480 chars, at least 2 long-tail phrases, the keyword present |
+| pinned comment | 10 | ≥180 chars, asks a real question, points at a specific detail in the film |
+| slug | 10 | ≥3 hyphenated words carrying the keyword |
+
+`validate_publishing.py` fails a package below `78`, so SEO is a gate rather than an aspiration.
+The score is a floor too: `--min 85` is the target, and the current set averages 90.9.
+
+---
+
+## 13.0.1 The title and the thumbnail are one unit (NORMATIVE)
+
+A thumbnail is not a decoration on a title, and a title is not a caption for a
+thumbnail. Together they form the only thing a viewer sees before deciding
+whether to click, and on most surfaces they appear side by side. So they must
+divide the work: **the thumbnail provokes, the title explains.**
+
+The thumbnail opens a curiosity gap that the title, and the video, closes. If the
+cover already states the title, one of the two most valuable surfaces on the
+platform is dead weight.
+
+### The evidence
+
+A study of **16,152 million-view videos** classified 217 thumbnails that carried
+text (`overseeros.com`, 2026):
+
+| Relationship to title | Share |
+| --- | --- |
+| Reproduces the title exactly | 4.1% |
+| Mostly repeats the title | 25.3% |
+| Mixed | 28.6% |
+| **Completely complementary** | **46.1%** |
+
+**74.7% of text-bearing covers did not mostly repeat their title**, and 76.0%
+contained a meaningful term that was not in the title. Word count matters just as
+much (`thumbnailcreator.com`): 1-2 words measured **+10-20% CTR**, 3-4 words
+**+5-15%**, 5-7 words **-5-10%**, 8+ words **-20-30%**. Design at **168 px** — the
+width a phone shows in search — and check that the emotion survives at that size.
+
+### The rule
+
+Every `record.json` declares `thumbnail_text`: **one to three content words**, at
+least one of which does not appear in the `title`. `tools/thumbnail_copy.py`
+enforces it, and CI fails without it.
+
+```bash
+python3 tools/thumbnail_copy.py            # audit every package
+python3 tools/thumbnail_copy.py --verbose  # explain each verdict
+```
+
+Copy that breaks the rule, for the record — this is exactly what the seven covers
+said before the rule existed:
+
+| Title | Rejected cover text | Why |
+| --- | --- | --- |
+| Discipline vs Obsession: The 9 PM vs 2 AM Problem | DISCIPLINE / OBSESSION | restates the title |
+| 3 AM Anxiety: Why Checking the Clock Makes It Worse | NEVER CHECK / AT 3 AM | restates the title |
+| Procrastination: Why 1 Plank Beats a Whole Bridge | THE FIRST / PLANK | restates the title |
+| Cutting Corners: What a 2-Inch Shortcut Really Costs | 2 INCHES / IS NOTHING | restates the title |
+| Phone Distraction: The 2-Second Reach That Ends Focus | JUST / 2 SECONDS | restates the title |
+| Limiting Beliefs: Did You Agree to That Wall? | THE WALL YOU / AGREED WITH | restates the title |
+| Notifications Cost You 23 Minutes (Every Single Time) | EVERY BUZZ COSTS / 23 MINUTES | restates the title |
+
+Their replacements, all in one to three words and all honest to the script:
+
+| Title | Approved cover text |
+| --- | --- |
+| The Two-Inch Bridge: What a 2-Inch Shortcut Really Costs | NOBODY NOTICED |
+| Limiting Beliefs: Did You Agree to That Wall? | IT WAS NEVER REAL |
+| Discipline vs Obsession: The 9 PM vs 2 AM Problem | FIVE HOURS DIFFERENCE |
+| 3 AM Anxiety: Why Checking the Clock Makes It Worse | DON'T LOOK |
+| Phone Distraction: The 2-Second Reach That Ends Focus | TWO STEPS |
+| Notifications Cost You 23 Minutes (Every Single Time) | ELEVEN BEFORE NOON |
+| Procrastination: Why 1 Plank Beats a Whole Bridge | NEAR EDGE |
+
+The cover text must also be **true to the script**. An early replacement used
+"FIVE HOURS ONE PLANK", a figure that appears nowhere in the film; it was
+rejected and replaced with the script's own phrase. A cover that lies is worse
+than one that repeats: it costs retention, and the algorithm reads retention.
+
+### Composing the cover
+
+`tools/compose_thumbnail.py` builds the finished image. It reserves a band for
+the type so the artwork is never covered, fits each line to a target width so
+short and long words share one optical size, and can bleed the band colour out of
+the art's own bottom edge.
+
+```bash
+python3 tools/compose_thumbnail.py art.jpg out.jpg --size 1080x1920 \
+    --line "#FFFFFF|DON'T" --line "#FF4B3E|LOOK"
+```
+
+Portrait (`1080x1920`) keeps its artwork in the upper 78%, `art_fraction 0.78`.
+Landscape (`1280x720`) uses `art_fraction 0.72` with `--band-fill --band-darken`.
+`record.json` carries that `art_fraction`, and `thumbnail_style.py --package`
+uses it to crop the type band away before measuring style — without it the
+checker measures the lettering instead of the art.
+
 ---
 
 ## 13.1 What the pipeline already produces (IMPLEMENTED)
