@@ -23,6 +23,9 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 TOOL = ROOT / "tools" / "creative_review.py"
 
+# The CI `fresh checkout` job installs only the kit's runtime requirements, which
+# do not include Pillow. These tests must skip there rather than fail collection.
+pytest.importorskip("PIL", reason="review needs Pillow")
 imageio_ffmpeg = pytest.importorskip("imageio_ffmpeg", reason="needs a video encoder")
 np = pytest.importorskip("numpy", reason="needs numpy")
 
