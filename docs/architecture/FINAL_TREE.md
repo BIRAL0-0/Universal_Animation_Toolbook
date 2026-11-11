@@ -288,6 +288,7 @@ media are included.
 │   ├── engine
 │   │   ├── __init__.py
 │   │   ├── audio_mixer.py
+bamboo_grove.js
 │   │   ├── beacon_harbor.js
 │   │   ├── bgm_library.py
 │   │   ├── canvas_backend.js

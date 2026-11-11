@@ -99,7 +99,7 @@ the first N scenes while iterating.
 - **New prop, board type, or set that does not exist:** the libraries are fixed. A bespoke
   object is drawn in `universal_toolbook/engine/world_props_and_boards.js` and registered in
   `SUPPORTED_PROPS`; a bespoke set extension follows the pattern of
-  `universal_toolbook/engine/impossible_wall.js` or `universal_toolbook/engine/beacon_harbor.js`
+  `universal_toolbook/engine/impossible_wall.js`, `universal_toolbook/engine/beacon_harbor.js` or `universal_toolbook/engine/bamboo_grove.js`
   (project-specific set modules dispatched from the style module). That is engine work —
   it belongs in its own PR with tests and docs, not inline in a film's session.
 - **New action:** same story in `universal_toolbook/engine/motion_library.js`; the JS test

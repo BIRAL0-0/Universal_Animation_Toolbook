@@ -80,7 +80,7 @@ deterministic rendering of the episode spec.
 | `environments.js` | 12 preset rooms + parametric settings |
 | `world_props_and_boards.js` | Props, vehicles, every board type (`SUPPORTED_PROPS` registry) |
 | `parchment_ink_style.js` | The ink-on-paper style (dispatches project set extensions) |
-| `beacon_harbor.js`, `impossible_wall.js` | Project-specific set extensions (pattern examples for new sets) |
+| `beacon_harbor.js`, `impossible_wall.js`, `bamboo_grove.js` | Project-specific set extensions (pattern examples for new sets). `bamboo_grove.js` also shows a parametric backdrop staying inside the 9:16 crop. |
 | `portrait_framing.js` | 9:16 subject-aware crop, safe-area board placement, group zoom |
 | `render_layout.js` | Shared output geometry / viewport / text-fit helpers |
 | `canvas_backend.js` | node-canvas ↔ @napi-rs/canvas shim |

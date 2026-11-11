@@ -980,8 +980,13 @@ function renderBaseEpisodeFrame(
   }
 
   // 1. Render custom parametric setting OR built-in environment (ZERO grain!)
+  //    The setting carries the scene clock and the current viewport so parametric backdrops
+  //    (e.g. the bamboo cutaway) can stay inside a portrait crop. Copied, never mutated.
+  const settingForEnv = parchmentMode
+    ? { ...(sc.setting || {}), _sceneDuration: sc.duration, _frame: frame }
+    : sc.setting;
   const envInfo = parchmentMode
-    ? drawParchmentEnvironment(ctx, sc.setting, globalT, ts, panX, FLOOR_Y, BASE_W, BASE_H)
+    ? drawParchmentEnvironment(ctx, settingForEnv, globalT, ts, panX, FLOOR_Y, BASE_W, BASE_H)
     : drawEnvironment(ctx, sc.setting || sc.environment, globalT, panX, sc.accentColor);
   const activeLight = sc.accentColor || envInfo.lightColor;
 
@@ -1200,7 +1205,8 @@ function renderBaseEpisodeFrame(
       }
       ctx.restore();
     } else if (item.kind === 'prop') {
-      drawWorldProp(ctx, item.prop, BASE_W, FLOOR_Y, globalT, activeLight, ts, 'full');
+      drawWorldProp(ctx, item.prop, BASE_W, FLOOR_Y, globalT, activeLight, ts, 'full',
+        { sceneDuration: sc.duration, frame });
       if (obstacles && item.prop && !item.prop._attachedToActor && KEY_PROP_OBSTACLE_TYPES.has(item.prop.type)) {
         const anc = computePropAnchors(item.prop, BASE_W, FLOOR_Y);
         if (anc && anc.bounds) {
@@ -1926,12 +1932,22 @@ function renderSceneStills({ episode, outDir, width = 1920, height = 1080, scene
   }
 
   const paths = [];
+  // A still must be produced by the SAME code path as a real frame, otherwise it is not a
+  // preview of anything. This used to reuse one full-size canvas and call the frame renderer
+  // directly, which skipped the portrait viewport projection entirely — so a 540x960 still
+  // showed the raw 1920-wide stage and never revealed how the crop would actually frame the
+  // scene. Allocate a canvas per aspect and rasterise the real frame through a scratch canvas.
+  const scratch = createCanvas(width, height);
+  const scratchCtx = scratch.getContext('2d');
   for (const sc of picked) {
     const midFrame = sc.startFrame + Math.floor((sc.endFrame - sc.startFrame) * 0.58);
-    setFrame(width, height);
-    renderEpisodeFrame(ctx, width, height, episode, midFrame);
+    const target = createCanvas(width, height);
+    const targetCtx = target.getContext('2d');
+    targetCtx.quality = 'best';
+    targetCtx.patternQuality = 'best';
+    renderEpisodeFrame(targetCtx, width, height, episode, midFrame);
     const outPath = path.join(outDir, `${sc.id}_${sc.environment}.png`);
-    fs.writeFileSync(outPath, canvas.toBuffer('image/png'));
+    fs.writeFileSync(outPath, target.toBuffer('image/png'));
     paths.push({ sceneId: sc.id, environment: sc.environment, frame: midFrame, path: outPath });
   }
   return paths;
