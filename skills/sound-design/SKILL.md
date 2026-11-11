@@ -11,6 +11,10 @@ Craft clean, emotionally supportive stereo soundtracks in `universal_toolbook/en
 
 ## Trigger Conditions
 
+## Inputs
+
+The voiceover manifest, the chosen BGM track, and the foley cue list. Mixing without the manifest means guessing at speech timing.
+
 Activate whenever:
 - choosing `bgm` modes/tracks or authoring `scenes[].sfx[]` in `episode.json`,
 - adding or tuning synthesized foley in `universal_toolbook/engine/audio_mixer.py` or auto-cues in `universal_toolbook/engine/episode.js`,
@@ -52,6 +56,12 @@ Activate whenever:
 - Sonnenschein, D. (2001), *Sound Design: The Expressive Power of Music, Voice, and Sound Effects in Cinema* — foreground/midground/background auditory hierarchy and tactile sync points.
 - ITU-R BS.1770 / EBU R128 loudness principles — speech-anchored program loudness and true-peak headroom.
 - Official Remotion Agent Skills (`https://github.com/remotion-dev/skills`) — declarative SFX/voiceover/audio timing concepts adapted to Python `audio_mixer.py` (`docs/decisions/ADR-0001-remotion-evaluation.md`).
+
+## Examples
+
+### A notification cue buried under the music
+
+No ducking on that cue. Put the cue in the speech-ducked bus, or move it a beat later.
 
 ## Concrete Engine Recipes
 

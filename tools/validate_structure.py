@@ -96,6 +96,23 @@ SKILLS = (
     "animation-quality-assurance", "animation-production", "voiceover-audio",
     "production-quality", "youtube-packaging",
 )
+# Every skill must answer the same nine questions, so an agent can rely on the
+# same shape wherever it lands. Matched case-insensitively against section
+# headings; synonyms are accepted because the older skills already use them and
+# renaming a working heading buys nothing.
+SKILL_SECTIONS = (
+    ("purpose", ("purpose", "why this skill exists")),
+    ("when to use", ("when to activate", "when to use", "trigger conditions")),
+    ("inputs", ("inputs", "you need")),
+    ("workflow", ("workflow", "procedure", "practical workflow", "gates, in order")),
+    ("rules", ("rule",)),
+    ("common mistakes", ("common failure", "common mistake", "failure mode")),
+    ("quality checklist", ("checklist",)),
+    ("implementation references", ("implementation reference", "concrete engine recipe",
+                                   "external reference", "references")),
+    ("examples", ("example",)),
+)
+
 # Historical projects predate the template's directory names; accept equivalent evidence.
 PROJECT_REQUIRED_GROUPS = (
     ("PROMPT.md",), ("SCRIPT_ORIGINAL.md",), ("SCRIPT_POLISHED.md",),
@@ -210,6 +227,12 @@ def problems() -> list[str]:
             p.append(f"decorative/empty skill: skills/{name}/SKILL.md")
         if f"skills/{name}/SKILL.md" not in agents:
             p.append(f"AGENTS.md activation map does not reference skills/{name}/SKILL.md")
+
+        headings = [ln.lstrip("# ").strip().lower() for ln in body.splitlines() if ln.startswith("#")]
+        joined = " | ".join(headings)
+        for label, synonyms in SKILL_SECTIONS:
+            if not any(word in joined for word in synonyms):
+                p.append(f"skill is missing a `{label}` section: skills/{name}/SKILL.md")
 
     # Durable completed videos are publishing packages:
     #   videos/<slug>/<slug>.mp4 + script.md + thumbnail.jpg + record.json

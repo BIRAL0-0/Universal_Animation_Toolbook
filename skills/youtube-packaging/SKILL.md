@@ -5,6 +5,8 @@ description: "Choose the hook, title and thumbnail as one promise: generate real
 
 # Skill: youtube-packaging
 
+## When to use
+
 **Activate when:** any video is being created, retitled, re-thumbnailed, or when a shipped video's
 packaging is being reviewed or fixed. Always activate **before** the script is finalised, because
 the hook is part of the script, not an afterthought applied to it.
@@ -19,7 +21,7 @@ Script craft is [`scriptwriting`](../scriptwriting/SKILL.md) and
 
 ---
 
-## Why this skill exists
+## Purpose
 
 The repository could already prove a video *rendered* — resolution, sync, loudness, palette match,
 description word count. It could not prove anyone would ever click. All eight shipped films were
@@ -43,6 +45,10 @@ If the thumbnail already says the title, one surface is wasted. If the hook does
 title's promise, the viewer feels baited even when the video is good.
 
 ## Procedure
+
+## Inputs
+
+The finished script, the film's visual identity, and the promise in one sentence. Packaging is decided from the script, so the script must exist first.
 
 ### 1. Decide the promise in one sentence, before writing
 
@@ -198,6 +204,14 @@ CTR. If no data was collected, say so — that is a `limitation`, not a loss.
 - [ ] `python3 tools/creative_gate.py` passes
 - [ ] `python3 tools/creative_review.py --check <slug>` passes and its saved frames were looked at
 
+## Also see
+
+| Need | Where |
+| --- | --- |
+| Writing the script this packages | [`scriptwriting`](../scriptwriting/SKILL.md) |
+| Hooks and retention arcs | [`youtube-storytelling-and-hooks`](../youtube-storytelling-and-hooks/SKILL.md) |
+| Post-render QA | [`production-quality`](../production-quality/SKILL.md) |
+
 ## Common mistakes
 
 | Mistake | Why it fails |
@@ -227,3 +241,10 @@ CTR. If no data was collected, say so — that is a `limitation`, not a loss.
 | Verified numbers | [`docs/production/YOUTUBE_PUBLISHING.md`](../../docs/production/YOUTUBE_PUBLISHING.md) |
 | Evidence write-up | [`docs/production/CREATIVE_PACKAGING.md`](../../docs/production/CREATIVE_PACKAGING.md) |
 | Record schema | [`docs/production/CREATIVE_PACKAGING.md`](../../docs/production/CREATIVE_PACKAGING.md) §3 |
+
+## Examples
+
+### A cover that repeats the title
+
+The cover says 'FIVE HOURS DIFFERENCE' and the title contains the same phrase. Give the cover the consequence and the title the question.
+

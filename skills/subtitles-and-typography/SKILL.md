@@ -11,6 +11,10 @@ Ensure burned-in subtitles and on-screen typography in `universal_toolbook/engin
 
 ## Trigger Conditions
 
+## Inputs
+
+The compiled word timings, the frame size, and frames from the scenes with the densest speech. Subtitle problems only appear where the words are fastest.
+
 Activate whenever:
 - authoring `dialogue[]`, `narration`, `accent_words[]`, `chapter`, or `boards[]` in `episode.json`,
 - editing subtitle chunking/timing in `universal_toolbook/engine/episode.js` or placement/rendering in `universal_toolbook/engine/render_layout.js` and `universal_toolbook/engine/video_renderer.js`,
@@ -53,6 +57,12 @@ Activate whenever:
 - BBC Subtitle Guidelines (v1.2.3, `https://www.bbc.co.uk/accessibility/forproducts/guides/subtitles/`) — balanced two-line grammatical chunking, speech-locked out-times, and speaker-safe repositioning principles (adapted in original code).
 - Netflix Timed Text Style Guide (`https://partnerhelp.netflixstudios.com`) — reading speed, line-balance rules, and safe-margin discipline.
 - Official Remotion Agent Skills (`https://github.com/remotion-dev/skills`) — pre-render text measurement (`measuring-text`) and word-highlighted caption concepts (`docs/decisions/ADR-0001-remotion-evaluation.md`).
+
+## Examples
+
+### Subtitles that outlive the speech
+
+The line is removed on a fixed timer instead of the compiled speech end. Bind removal to the real speech end.
 
 ## Concrete Engine Recipes
 

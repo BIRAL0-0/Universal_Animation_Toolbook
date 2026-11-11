@@ -11,6 +11,10 @@ Write scripts specifically engineered for minimalist character animation — whe
 
 ## Trigger Conditions
 
+## Inputs
+
+The approved narration or the beat outline it has to become, plus the target duration and format. A script with no target duration cannot be paced.
+
 Activate whenever:
 - turning a topic, premise, or outline into an animated video script,
 - rewriting prose or essay text into scene-by-scene visual beats + concise voiceover,
@@ -21,8 +25,15 @@ Activate whenever:
 
 1. **Determine video format from planned narration duration FIRST.**
    - Estimate spoken duration (`word_count / 2.55` seconds + deliberate punctuation pauses).
-   - `< 60.0s` (`<= ~135` words, `00:59` or less) -> plan native vertical **Portrait `9:16` (`1080x1920`)** staging (tighter single/pair framing, brisk 4–7s scenes).
-   - `>= 60.0s` (`>= ~150` words, `01:00` or longer) -> plan **Landscape `16:9` (`1920x1080`)** staging (wider spatial geography, multi-prop room blocking).
+   - `< 60.0s` -> plan native vertical **Portrait `9:16` (`1080x1920`)** staging (tighter single/pair framing, brisk 4–7s scenes).
+   - `>= 60.0s` -> plan **Landscape `16:9` (`1920x1080`)** staging (wider spatial geography, multi-prop room blocking).
+   - **Word budgets at the 2.55 words/s planning rate, pauses excluded:** 60 s is ~153 words.
+     Portrait is safe up to **~140 words** (54.9 s, ~5 s of pause headroom); landscape starts at
+     **~160 words** (62.7 s). The 140–160 band is not a target — it is where sentence pauses decide
+     the format, so stay out of it unless you are deliberately testing the boundary.
+     (`tests/production/test_skill_contracts.py` recomputes these figures and fails if they no
+     longer straddle 60 s. An earlier revision of this page published 135/150, which is 52.9 s and
+     58.8 s — both portrait. Following it planned landscape staging for a portrait render.)
    - Store `selected_video_format` in the episode plan before writing `characters[].beats[]` or `camera`.
 2. **Show the action; never narrate what the viewer already sees.** If the character reaches for a buzzing phone, scrolls, hesitates, and sets it face-down, *do not* say "He reaches out and picks up his phone from the table." Let the physical animation show the habit while narration delivers the insight, stakes, or inner conflict.
 3. **Every scene needs a physical verb.** Anchor each scene around concrete actions from `SUPPORTED_ACTIONS` (`walk`, `sit_down`, `pick_up_phone`, `phone_scroll`, `put_down_phone`, `sit_desk_type`, `interact_table`, `open_door`, `react_surprise`). Avoid generic abstract metaphors that cannot be staged cleanly with 1–2 characters and canonical props.
@@ -57,6 +68,12 @@ Activate whenever:
 - Mamet, D. (1991), *On Directing Film* — telling the story through uninflected physical shots/actions rather than explanatory dialogue.
 - McKee, R. (1997), *Story* — scene turns driven by action/reaction and value shifts.
 - Internal studio authority: `docs/production/prompts/VOICEOVER_POLISH_PROMPT.md` and `skills/scriptwriting/SKILL.md`.
+
+## Examples
+
+### A sentence that cannot be said in one breath
+
+The narration line runs 31 words with three subordinate clauses. Split it into three short lines and let `pause_after` carry the beat.
 
 ## Concrete Engine Recipes
 

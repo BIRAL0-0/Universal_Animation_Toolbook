@@ -11,6 +11,10 @@ Prevent visual, anatomical, interaction, continuity, composition, subtitle, form
 
 ## Trigger Conditions
 
+## Inputs
+
+A rendered master or still set, the `episode.json` that produced it, and the record of which scenarios the change could affect. The regression suite itself is the fixture.
+
 Activate whenever:
 - verifying any engine, rig, prop, environment, layout, subtitle, format-policy, or audio change,
 - running pre-delivery QA on a demonstration or production video (`9:16` or `16:9`),
@@ -70,6 +74,12 @@ Activate whenever:
 - Meszaros, G. (2007), *xUnit Test Patterns* — deterministic fixture isolation and invariant-driven regression suites.
 - Official Remotion Agent Skills (`https://github.com/remotion-dev/skills`) — frame extraction, decode verification, and dimension/duration probing concepts adapted to FFmpeg + Node canvas (`docs/decisions/ADR-0001-remotion-evaluation.md`).
 - Internal studio authority: `skills/production-quality/SKILL.md` and `scripts/verify_fresh_checkout.py`.
+
+## Examples
+
+### A portrait film that looks fine until you see the crop
+
+Every gate passes, then the stills show a board clipped at the right edge because the composition was measured at 16:9. Fix the layout, not the stills grid.
 
 ## Concrete Engine Recipes
 

@@ -10,6 +10,12 @@ with the Universal Animation Toolbook. `AGENTS.md` decides when a skill must be 
 file explains *how* to do the work once activated. Detailed technical references live in
 [`references/`](references/) and in [`docs/architecture/`](../../docs/architecture/).
 
+## Purpose
+
+Produce a complete, publishable animated video — film, voice, subtitles, music, cover, title,
+description and record — using the existing renderer, without rediscovering the repository and
+without leaving anything half-finished or falsely claimed.
+
 ## When to activate
 
 Activate for **any** request that creates, continues, repairs, renders or reviews a video:
@@ -36,6 +42,15 @@ Consult the specialist skills alongside this one:
 [`production-quality`](../production-quality/SKILL.md). The authoritative activation table is in
 [`AGENTS.md`](../../AGENTS.md).
 
+## Inputs
+
+Any one of: a topic, a title, an idea, a reference video, a draft script, a complete script, or a
+request to continue or repair an existing `videos/<slug>/` package. Nothing else is required — the
+format, voice, palette and gates are decided by policy, not by the user restating them.
+
+What you must *produce* as inputs before authoring: the one-sentence promise (see
+[`youtube-packaging`](../youtube-packaging/SKILL.md)) and a validated `episode.json`.
+
 ## Non-negotiable invariants
 
 1. `run_studio.py validate` must print `warnings: []` before any render.
@@ -45,10 +60,23 @@ Consult the specialist skills alongside this one:
 5. `"status": "COMPLETE"` alone is not proof: read `"voiced"`, `"warnings"` and the validation report. `COMPLETE_SILENT` / exit code 3 means no narration was synthesized.
 6. Default narrator is Kokoro `am_michael`; `af_bella` is the preferred secondary voice. Never change this default silently.
 7. Polish scripts with [`docs/production/prompts/VOICEOVER_POLISH_PROMPT.md`](../../docs/production/prompts/VOICEOVER_POLISH_PROMPT.md) **byte-for-byte**. Never edit, weaken or replace that file.
-8. Completed final videos live cleanly in `videos/video-XXX/final.mp4` + `record.json` (with `videos/index.json`); temporary scratch workspaces stay in git-ignored `runtime/` (or per-run `projects/<slug>/` during active authoring). Never delete an existing completed video without verified replacement.
+8. A completed video is a **publishing package**, not an MP4: `videos/<slug>/<slug>.mp4` + `script.md` + `thumbnail.jpg` + `record.json`, with an entry in `videos/index.json`. Generic names (`final.mp4`, `output.mp4`) are a hard failure in `tools/validate_publishing.py`. Temporary scratch stays in git-ignored `runtime/` (or a per-run `projects/<slug>/` during authoring). Never delete an existing completed video without verified replacement.
 9. Report only numbers that came out of a file the run produced. Never claim a visual or audio check that was not performed.
 10. Fixes go into the shared engine, skills, templates, tests and docs — not into one video's spec.
 11. No channel name, watermark or branding; English narration unless explicitly requested otherwise.
+
+## Implementation references
+
+| Need | File |
+| --- | --- |
+| The operating manual | [`master_prompt.md`](../../master_prompt.md) |
+| Engine modules | [`docs/architecture/ENGINE_MODULES.md`](../../docs/architecture/ENGINE_MODULES.md) |
+| Rendering pipeline | [`docs/architecture/RENDERING_PIPELINE.md`](../../docs/architecture/RENDERING_PIPELINE.md) |
+| Minimum viable spec | [`universal_toolbook/templates/episode_minimal.json`](../../universal_toolbook/templates/episode_minimal.json) |
+| 14 working specs | [`examples/`](../../examples/) |
+| The orchestrator CLI | [`universal_toolbook/run_studio.py`](../../universal_toolbook/run_studio.py) |
+| Packaging gates | [`youtube-packaging`](../youtube-packaging/SKILL.md) |
+| QA gates | [`production-quality`](../production-quality/SKILL.md) |
 
 ## 1. Inspect the repository architecture first
 
@@ -221,6 +249,58 @@ authoritative location: this skill for procedure, `AGENTS.md` for rules,
 `CHANGELOG.md` for the change record. Do not create a second copy of a rule inside a project.
 Record the change in `PIPELINE_CHANGELOG.md` and add a test under `tests/production/` or
 `tests/unit/`.
+
+## Rules
+
+- Never invent a CLI flag, module responsibility or path. Verify with `--help` and `ls`.
+- Never describe planned functionality as available.
+- Never claim a gate passed without running it, or a frame was inspected without looking at it.
+- Never delete the only copy of a video, script or asset.
+- Never crop a landscape composition into portrait; re-stage the shot.
+- The polish standard is applied as it exists, never paraphrased.
+- One run, one voice: `am_michael` unless explicitly overridden.
+- Report measured, observed and predicted separately.
+
+## Common mistakes
+
+| Mistake | Why it fails |
+| --- | --- |
+| Rendering before `validate` prints `warnings: []` | A spec error costs a full render to discover |
+| Skipping stills because "the draft will show it" | Stills cost seconds; the draft costs minutes |
+| Trusting `status: COMPLETE` | It says nothing about `voiced` or the validation report |
+| Filing an MP4 as `final.mp4` | `validate_publishing.py` fails it; the package needs a slug-named master |
+| Guessing at a duration instead of reading it from the render | The format boundary is 60.0 s exactly and is not negotiable by feel |
+| Patching one video's spec to fix a shared bug | The next video has the same bug |
+| Writing the packaging after the render | The hook and title shape the script, not the reverse |
+
+## Quality checklist
+
+- [ ] Promise written and packaging recorded in `record.json` before the script was final
+- [ ] `run_studio.py validate` prints `warnings: []`
+- [ ] Stills rendered in every delivered aspect and actually inspected
+- [ ] Draft inspected at each board cue and camera cut
+- [ ] Master reports `voiced: true`, correct aspect, 30 fps, expected frame count
+- [ ] Format obeys the 60.0 s policy or carries a recorded exception
+- [ ] Subtitles inside safe regions, removed at real speech end
+- [ ] Audio within the measured band, narration above music
+- [ ] Package complete: `<slug>.mp4`, `script.md`, `thumbnail.jpg`, `record.json`, index entry
+- [ ] All creative and publishing gates pass
+- [ ] A human has looked at the film and the cover together
+
+## Examples
+
+### "Create a new video." — the bare request
+
+No topic, no script, no format. This authorises the full workflow: classify the intake, research a
+topic, evaluate candidates, propose ideas, and stop at the user-selection gate. It does not authorise
+skipping the gate and picking a topic unilaterally.
+
+### A portrait film that ran long
+
+Script planned at 52 s (portrait), the speech-locked render came out at 61.4 s. The format policy is
+re-evaluated after synthesis: either cut ~2 s of narration to stay portrait, or accept landscape
+deliberately and record why. What must not happen is shipping portrait at 61 s with no record of the
+decision — that is what the approved-exception list in `master_prompt.md` §5 exists to prevent.
 
 ## Remotion knowledge — evaluated, not adopted
 

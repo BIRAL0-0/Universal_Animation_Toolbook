@@ -11,6 +11,10 @@ Protect visual coherence across every scene and camera cut by enforcing the lock
 
 ## Trigger Conditions
 
+## Inputs
+
+The location ID, the props in play across the cuts being checked, and the canonical asset definitions. Continuity needs at least two shots to be meaningful.
+
 Activate whenever:
 - choosing scene `environment` or `setting` values in `episode.json`,
 - placing or styling furniture and props (`phone`, `laptop`, `computer`, `desk`, `chair`, `bed`, `sofa`, `table`, `door`, `window`, `books`, `cup`),
@@ -53,6 +57,12 @@ Activate whenever:
 - Block, B. (2020), *The Visual Story* — tonal control, limited palette hierarchy, and background subordination to figure silhouettes.
 - Katz, S. D. (1991), *Film Directing Shot by Shot* — spatial continuity, master-scene prop geography, and match-on-action cuts.
 - Official Remotion Agent Skills (`https://github.com/remotion-dev/skills`) — centralized asset/composition configuration concepts (`docs/decisions/ADR-0001-remotion-evaluation.md`).
+
+## Examples
+
+### A cup that refills between cuts
+
+The prop registry keyed on the scene instead of the location. Key it on `location_id` so state survives the cut.
 
 ## Concrete Engine Recipes
 

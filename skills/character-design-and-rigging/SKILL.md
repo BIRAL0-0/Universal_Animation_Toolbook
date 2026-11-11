@@ -11,6 +11,10 @@ Guarantee geometric, anatomical, and colour integrity for every character render
 
 ## Trigger Conditions
 
+## Inputs
+
+The canonical `cast` entry for the character and a frame showing the rig problem. A new character starts from an existing canonical definition, never from scratch.
+
 Activate whenever:
 - creating or modifying character cast entries in `episode.json`,
 - editing `universal_toolbook/engine/character_rig.js` or character rendering in `universal_toolbook/engine/video_renderer.js`,
@@ -56,6 +60,12 @@ Activate whenever:
 - Thomas, F. & Johnston, O. (1981), *The Illusion of Life: Disney Animation* — solid drawing, appeal, and clear silhouette readability (principles summarized in original prose).
 - Williams, R. (2001), *The Animator's Survival Kit* — joint arcs, weight over planted feet, and pelvis-led posture (concepts adapted to 2D procedural FK/IK).
 - Official Remotion Agent Skills (`https://github.com/remotion-dev/skills`) — pure frame-indexed determinism (`f(frame)`); see `docs/decisions/ADR-0001-remotion-evaluation.md` (zero upstream text copied).
+
+## Examples
+
+### A shoulder that separates on a big reach
+
+The capsule weld breaks above ~140° of arm elevation. Fix the weld radius in the rig, not the pose that revealed it.
 
 ## Concrete Engine Recipes
 
