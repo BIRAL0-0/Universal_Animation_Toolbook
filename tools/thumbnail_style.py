@@ -18,16 +18,29 @@ non-zero when the pair is too far apart to ship.
 
 Scoring rubric (art region only — the type band is excluded):
 
-    palette    0.55  mean nearest-neighbour distance between the thumbnail's
-                     dominant colours and the film's dominant colours
-    saturation 0.20  closeness of mean HSV saturation
-    value      0.25  closeness of mean brightness, and only asymmetric: a
-                     thumbnail may be *lifted* for stop-the-scroll contrast (that
-                     is a deliberate craft choice) but it may not be dramatically
-                     darker or flatter than the film
+    palette    0.35  hue-histogram overlap with the film's own colour, counted
+                     only over pixels that actually carry chroma. Skipped entirely
+                     for an achromatic film, where "matching the colour" really
+                     means "be beige", and is redistributed to line language.
+    line       0.40  edge density: how much ink line work the cover carries
+                     compared with the film. This is what keeps a cover in the
+                     film's drawing language rather than just its tint. For an
+                     achromatic film it carries the palette's weight too.
+    saturation 0.00  folded into the chroma test above (reported, not scored)
+    value      0.25  ink polarity. A thumbnail is *deliberately* pushed to high
+                     contrast — white line art on black for a dark film, or the
+                     reverse — because that is what reads in a grid. Scoring mean
+                     brightness punished exactly that, so what is compared is the
+                     film's dark/light balance against the cover's, which is
+                     invariant under inversion. Reproducing the film's overall
+                     brightness buys nothing; contradicting its balance still fails.
 
 Matching is intentionally a floor, not a target: an art-directed thumbnail that
 scores just above threshold is still the designer's call to approve or reject.
+
+A high score is necessary and not sufficient. This tool cannot see focal point,
+scale, expression, gesture or typographic punch — the things that actually decide
+whether anyone clicks. See docs/production/YOUTUBE_PUBLISHING.md 13.0.
 """
 
 from __future__ import annotations
@@ -69,6 +82,65 @@ def art_region(image):
     return image.crop((0, top, image.width, image.height))
 
 
+def ink_polarity(image) -> float:
+    """Share of the frame occupied by the *minority* tone — the drawn material.
+
+    The mistake worth recording: this used to be "share of dark pixels", which is
+    not invariant under inversion. A cream film with thin black ink scored 0.10;
+    a black cover with white line art scored 0.76; subtracting them declared a
+    mismatch between two images of the same drawing.
+
+    The property that actually survives inversion is how much of the frame is
+    drawn material rather than empty ground, whichever tone that material is.
+    A cream page with black line work and a black page with white line work both
+    sit near 0.2; a washed-out single-tone cover sits near 0 and fails, which is
+    what we want.
+    """
+    small = art_region(image.convert("RGB")).resize((96, 96), LANCZOS)
+    pixels = list(small.getdata())
+    luminance = [(r + g + b) / 765 for r, g, b in pixels]
+    dark = sum(1 for v in luminance if v < 0.32) / len(pixels)
+    light = sum(1 for v in luminance if v > 0.68) / len(pixels)
+    return round(min(dark, light), 3)
+
+
+CHROMA_FLOOR = 0.25        # saturation above which a pixel counts as "colour"
+ACHROMATIC_SHARE = 0.22     # below this share of chroma the film has no colour world
+
+
+def chroma_share(image) -> float:
+    """Share of the art region that carries real saturation.
+
+    A cream-paper film scores near zero here: its "colour" is paper, not palette.
+    Treating those near-neutral pixels as hue evidence is what made the checker
+    demand that every cover be beige.
+    """
+    small = art_region(image.convert("RGB")).resize((96, 96), LANCZOS)
+    pixels = list(small.getdata())
+    coloured = 0
+    for r, g, b in pixels:
+        hue, saturation, value = _rgb_to_hsv((r, g, b))
+        if saturation >= CHROMA_FLOOR and value >= 0.15:
+            coloured += 1
+    return round(coloured / len(pixels), 3)
+
+
+def edge_density(image) -> float:
+    """Fraction of pixels sitting on a strong edge — a proxy for ink line work.
+
+    Flat paper scores near zero, a drawn figure scores high. Two images in the
+    same drawing language land close together; a photographic or painterly cover
+    against flat line art does not.
+    """
+    from PIL import ImageFilter, ImageStat
+
+    small = art_region(image.convert("L")).resize((256, 256), LANCZOS)
+    edges = small.filter(ImageFilter.FIND_EDGES)
+    # count pixels well above the image's own noise floor
+    floor = ImageStat.Stat(edges).mean[0] + 12
+    return round(sum(1 for px in edges.getdata() if px > floor) / (256 * 256), 4)
+
+
 def hue_histogram(image) -> list[float]:
     """12-bin hue histogram, weighted by saturation so neutral ink and paper
     barely register while coloured light and accents dominate.
@@ -81,7 +153,9 @@ def hue_histogram(image) -> list[float]:
     for pixel in small.getdata():
         hue, saturation, value = _rgb_to_hsv(pixel)
         # weight by chroma, with a floor so near-neutral art still votes a little
-        weight = max(0.02, saturation) * max(0.05, value)
+        if saturation < CHROMA_FLOOR:
+            continue  # paper and ink are not a palette
+        weight = saturation * max(0.05, value)
         bins[min(11, int(hue * 12))] += weight
     total = sum(bins) or 1.0
     return [value / total for value in bins]
@@ -101,6 +175,9 @@ def profile(image) -> dict:
         "saturation": round(sum(h[1] for h in hsv) / count, 3),
         "value": round(sum(h[2] for h in hsv) / count, 3),
         "hues": hue_histogram(image),
+        "polarity": ink_polarity(image),
+        "chroma": chroma_share(image),
+        "edges": edge_density(image),
     }
 
 
@@ -120,23 +197,69 @@ def hue_similarity(left: dict, right: dict) -> float:
     return round(max(direct, tolerant * 0.92), 3)
 
 
+def line_similarity(video_profile: dict, thumb_profile: dict) -> float:
+    """Closeness of edge density, on a log scale.
+
+    Ink line art and flat poster art sit in the same band; a photographic or
+    heavily painted cover sits an order of magnitude away. Deliberately generous
+    at the top so authorial variation is not punished.
+    """
+    import math
+
+    a = max(1e-4, video_profile["edges"])
+    b = max(1e-4, thumb_profile["edges"])
+    ratio = abs(math.log10(b / a))
+    return round(max(0.0, 1.0 - ratio / 1.1), 3)
+
+
 def compare(video_profile: dict, thumb_profile: dict) -> dict:
-    palette = hue_similarity(video_profile, thumb_profile)
+    """Score how far a cover has drifted from its film.
+
+    Three properties, and only three, because these are the ones a machine can
+    judge honestly:
+
+      line      does the cover carry the film's drawing language (ink weight,
+                density, flatness) rather than a photographic one
+      polarity  does it keep the film's dark/light balance, which is invariant
+                under inversion, so white-on-black for a cream film is fine
+      palette   where the film actually has colour, does the cover share it
+
+    Focal point, scale, expression, gesture and typographic punch are not
+    measured here and no score can compensate for them.
+    """
+    line = line_similarity(video_profile, thumb_profile)
+
+    video_ink = video_profile.get("polarity", video_profile["value"])
+    thumb_ink = thumb_profile.get("polarity", thumb_profile["value"])
+    polarity = 1.0 - min(1.0, abs(video_ink - thumb_ink) / 0.30)
+
+    film_chroma = video_profile.get("chroma", 1.0)
+    cover_chroma = thumb_profile.get("chroma", 1.0)
+    if film_chroma < ACHROMATIC_SHARE:
+        # No colour world to match. Judging hue here only rewards beige.
+        palette = line
+    else:
+        palette = hue_similarity(video_profile, thumb_profile)
+
     saturation = 1.0 - min(1.0, abs(video_profile["saturation"] - thumb_profile["saturation"]) / 0.5)
 
-    # Asymmetric on purpose: lifting exposure is craft, crushing it is a mismatch.
-    lift = thumb_profile["value"] - video_profile["value"]
-    if lift >= 0:
-        value = 1.0 - min(1.0, lift / 0.55)
+    if film_chroma < ACHROMATIC_SHARE:
+        weights = {"line": 0.60, "polarity": 0.40, "palette": 0.0}
     else:
-        value = 1.0 - min(1.0, abs(lift) / 0.30)
+        weights = {"line": 0.35, "polarity": 0.28, "palette": 0.37}
 
-    score = 0.55 * palette + 0.20 * saturation + 0.25 * value
+    score = (
+        weights["line"] * line
+        + weights["polarity"] * polarity
+        + weights["palette"] * palette
+    )
     return {
         "score": round(score, 3),
+        "line": round(line, 3),
+        "polarity": round(polarity, 3),
         "palette": round(palette, 3),
         "saturation": round(saturation, 3),
-        "value": round(value, 3),
+        "achromatic_film": film_chroma < ACHROMATIC_SHARE,
         "passes": score >= THRESHOLD,
     }
 
@@ -183,6 +306,9 @@ def video_profile(video: Path) -> dict:
         "saturation": round(sum(p["saturation"] for p in profiles) / len(profiles), 3),
         "value": round(sum(p["value"] for p in profiles) / len(profiles), 3),
         "hues": [round(value, 4) for value in hues],
+        "polarity": round(sum(p["polarity"] for p in profiles) / len(profiles), 3),
+        "chroma": round(sum(p["chroma"] for p in profiles) / len(profiles), 3),
+        "edges": round(sum(p["edges"] for p in profiles) / len(profiles), 4),
     }
 
 
@@ -191,7 +317,8 @@ def report(video: Path, thumbnail: Path) -> dict:
 
     film = video_profile(video)
     result = compare(film, profile(Image.open(thumbnail)))
-    result["video_value"] = film["value"]
+    result["video_edges"] = film["edges"]
+    result["video_chroma"] = film["chroma"]
     return result
 
 
@@ -230,10 +357,11 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     result = report(args.video, args.thumbnail)
-    print(f"style similarity {result['score']:.3f}  (threshold {args.threshold})")
-    print(f"  hue        {result['palette']:.3f}  weight 0.55")
-    print(f"  saturation {result['saturation']:.3f}  weight 0.20")
-    print(f"  value      {result['value']:.3f}  weight 0.25")
+    kind = "achromatic film — colour not scored" if result["achromatic_film"] else "film has a colour world"
+    print(f"style similarity {result['score']:.3f}  (threshold {args.threshold})  [{kind}]")
+    print(f"  line       {result['line']:.3f}  edge density {result['video_edges']}")
+    print(f"  polarity   {result['polarity']:.3f}  ink balance matched")
+    print(f"  palette    {result['palette']:.3f}  (informational: saturation {result['saturation']:.3f})")
     if result["score"] >= args.threshold:
         print("MATCH — thumbnail shares the film's visual world")
         return 0

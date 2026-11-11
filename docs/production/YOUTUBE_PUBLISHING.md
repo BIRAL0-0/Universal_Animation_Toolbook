@@ -47,11 +47,34 @@ style references**, and the result must be measured, not just felt:
 python3 tools/thumbnail_style.py check videos/<slug>/<slug>.mp4 videos/<slug>/thumbnail.jpg
 ```
 
-The checker samples eight stills spread through the master and scores the cover against them:
-hue signature weighted 0.55, saturation 0.20, brightness 0.25 (asymmetric — lifting exposure for
-contrast is craft, crushing it is a mismatch). Below `0.62` the cover does not share the film's
-visual world and must be regenerated. Matching a film is a *floor*, not a target: the designer
-still approves or rejects the result by eye.
+The checker samples eight stills spread through the master and scores the cover against them on
+three axes. Below `0.62` the cover does not share the film's visual world and must be regenerated.
+
+| Axis | Tests | Note |
+| --- | --- | --- |
+| line | edge density vs the film's — is this the same drawing language | ink line art against a painted or photographic cover fails |
+| polarity | share of the frame that is drawn material rather than empty ground | **invariant under inversion**: white line art on black scores the same as black line art on cream |
+| palette | hue-histogram overlap, counted only over pixels that carry real chroma | skipped for an achromatic film, where "matching the colour" only means "be beige" |
+
+Two corrections are recorded here because the first version of this checker was actively harmful:
+
+- **It scored mean brightness.** A cream-paper film against a flat beige cover scored `0.98`; the
+  same film against a black cover carrying the same character in white line art scored `0.33` and
+  was rejected. The gate was rewarding the cover nobody clicks. Contrast is the entire point of a
+  thumbnail, so what is compared now is the dark/light *balance*, which inversion leaves untouched.
+- **It counted the paper as a colour.** A cream page is 100% of the "hue signature", so the checker
+  insisted every wall cover be beige. Hue is now read only from pixels above a chroma floor, and an
+  achromatic film is not scored on hue at all.
+
+**A high score is necessary and not sufficient.** This is the single most important sentence in this
+section. The checker cannot see focal point, scale, expression, gesture or typographic punch. A
+faithful reproduction of an empty wide shot scores highly and is still a bad thumbnail. The wall
+film's first cover passed at `0.98` and had none of the instinct a thumbnail needs; the cover that
+replaced it is the film's character at a third of the frame width, mid-push, on black, with the
+title at 15% of frame width in the film's own red. Both pass the gate. Only one of them is worth
+uploading.
+
+Write the cover for the grid: it must read at **210 px wide**. Check it at that size before shipping.
 
 Three consequences worth stating plainly, because they were all learned the hard way:
 
@@ -61,6 +84,11 @@ Three consequences worth stating plainly, because they were all learned the hard
   nothing like a hatched pencil illustration, even at the same cream background colour. Match the
   drawing technique, not just the palette — the checker cannot see stroke weight, so this part is
   still your eyes.
+- **The character must be the same character.** Not a figure in the same palette, not a shaded or
+  three-dimensional cousin: the same head shape, the same eyes, the same silhouette. Viewers
+  recognise the protagonist before they read a word, and a cover whose character is a redesign
+  reads as a different film. Where the film is dark, the cover may render him as white line art on
+  black — that is the same character under inversion, not a new one.
 - **Borrow the film's own type device.** If the film captions itself on a white rounded card, the
   cover should use a card too (`make_thumbnail.py --plate`). If it uses clean unoutlined type,
   pass `--no-stroke`. A thumbnail that invents a new typographic voice reads as a different channel.

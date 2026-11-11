@@ -74,23 +74,56 @@ def test_missing_keyword_caps_the_score(seo):
 
 
 # ------------------------------------------------------- thumbnail style
-def test_style_score_is_bounded(style):
-    navy_film = {"saturation": 0.7, "value": 0.2, "hues": [0, 0, 0, 0, 0, 0, 0, 0.1, 0.6, 0.3, 0, 0]}
+def _film(saturation, value, hues, edges=0.075, polarity=0.2, chroma=0.9):
+    return {"saturation": saturation, "value": value, "hues": hues,
+            "edges": edges, "polarity": polarity, "chroma": chroma}
+
+
+def test_a_cover_compared_with_itself_is_perfect(style):
+    navy_film = _film(0.7, 0.2, [0, 0, 0, 0, 0, 0, 0, 0.1, 0.6, 0.3, 0, 0])
     assert style.compare(navy_film, navy_film)["score"] == pytest.approx(1.0)
 
+
+def test_style_score_is_bounded(style):
+    navy_film = _film(0.7, 0.2, [0, 0, 0, 0, 0, 0, 0, 0.1, 0.6, 0.3, 0, 0])
     # the real-world failure this checker exists to catch: a navy film, a warm poster
-    sunset_poster = {"saturation": 0.35, "value": 0.3,
-                     "hues": [0.05, 0.55, 0.35, 0, 0, 0, 0, 0, 0.05, 0, 0, 0]}
+    sunset_poster = _film(0.35, 0.3, [0.05, 0.55, 0.35, 0, 0, 0, 0, 0, 0.05, 0, 0, 0],
+                          polarity=0.9, edges=0.26)
     result = style.compare(navy_film, sunset_poster)
     assert result["score"] < style.THRESHOLD
     assert result["palette"] < 0.35
 
 
-def test_lifting_exposure_is_not_penalised_like_crushing_it(style):
-    film = {"saturation": 0.4, "value": 0.30, "hues": [1 / 12] * 12}
-    lifted = {"saturation": 0.4, "value": 0.55, "hues": [1 / 12] * 12}
-    crushed = {"saturation": 0.4, "value": 0.05, "hues": [1 / 12] * 12}
-    assert style.compare(film, lifted)["value"] > style.compare(film, crushed)["value"]
+def test_inverting_a_cover_is_not_a_mismatch(style):
+    """White line art on black is the house look and must not read as drift.
+
+    This was a real bug: `value` compared mean brightness, so the black-and-white
+    cover of a cream film scored 0.00 on that axis and failed the gate outright,
+    while a flat beige cover of the same film scored 0.99. Contrast is the point
+    of a thumbnail; the score must be invariant under inversion.
+    """
+    cream_film = _film(0.05, 0.90, [0] * 12, polarity=0.16, chroma=0.02)
+    beige_cover = _film(0.05, 0.90, [0] * 12, polarity=0.16, chroma=0.02)
+    inverted_cover = _film(0.05, 0.08, [0] * 12, polarity=0.16, chroma=0.02)
+
+    beige = style.compare(cream_film, beige_cover)["polarity"]
+    inverted = style.compare(cream_film, inverted_cover)["polarity"]
+    assert beige == pytest.approx(inverted, abs=0.05)
+    assert inverted > 0.9
+
+
+def test_a_washed_out_cover_still_fails(style):
+    """The relaxation above must not let a single flat tone through."""
+    cream_film = _film(0.05, 0.90, [0] * 12, polarity=0.16, chroma=0.02)
+    flat_fill = _film(0.05, 0.92, [0] * 12, polarity=0.01, chroma=0.02)
+    assert style.compare(cream_film, flat_fill)["polarity"] < 0.6
+
+
+def test_a_film_without_colour_is_not_scored_on_hue(style):
+    """A cream-paper film has no palette to match; hue must not be consulted."""
+    achromatic = _film(0.05, 0.90, [0] * 12, polarity=0.16, chroma=0.02)
+    colourful_cover = _film(0.60, 0.50, [0.9, 0.1] + [0] * 10, polarity=0.16, chroma=0.70)
+    assert style.compare(achromatic, colourful_cover)["achromatic_film"] is True
 
 
 def test_published_thumbnails_match_their_films(style):
