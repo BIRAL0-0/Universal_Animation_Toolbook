@@ -139,13 +139,19 @@ def test_saves_frames_for_human_inspection(tmp_path, monkeypatch):
         assert (ROOT / path).exists() or Path(path).exists()
 
 
-def test_cli_passes_on_the_shipped_films():
-    """The real catalog must satisfy its own records."""
+def test_cli_passes_on_a_real_shipped_film():
+    """One real film must satisfy its own record.
+
+    Deliberately one, not `--all`: the whole catalog is reviewed by its own CI
+    step (`creative_review.py --all`), and decoding eight masters again inside the
+    unit job took that job from 1m37s to 9m38s for no extra coverage.
+    """
     proc = subprocess.run(
-        [sys.executable, str(TOOL), "--all", "--json"],
-        cwd=ROOT, capture_output=True, text=True, timeout=1800,
+        [sys.executable, str(TOOL), "--check", "never-check-the-time-at-3-am", "--json"],
+        cwd=ROOT, capture_output=True, text=True, timeout=600,
     )
     assert proc.returncode == 0, proc.stdout[-3000:] + proc.stderr[-2000:]
     payload = json.loads(proc.stdout)
     assert payload["failed"] == 0
-    assert len(payload["reports"]) >= 8
+    assert payload["reports"][0]["slug"] == "never-check-the-time-at-3-am"
+    assert payload["reports"][0]["promise_checks"]
