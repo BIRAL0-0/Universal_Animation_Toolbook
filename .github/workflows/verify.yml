@@ -54,6 +54,8 @@ jobs:
           done
       - name: Thumbnail text complements the title instead of repeating it
         run: python tools/thumbnail_copy.py
+      - name: Every video shows its hook, title and thumbnail were chosen, not defaulted
+        run: python tools/creative_gate.py
       - name: Every video clears the SEO floor
         run: python tools/seo_audit.py --min 78
       - name: Workflow files must parse as YAML

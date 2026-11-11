@@ -1,9 +1,11 @@
 # AGENTS.md — mandatory instructions for autonomous agents
 
-**This is the single authoritative rule set for this repository.** It replaces the former
-operating-rules document, start page and kit-level session-prompt copies. Those remnants, where
-present, are short redirects only. Permanent procedures live in
-[`skills/`](skills/README.md); technical documentation lives in
+**This is the binding rule set for autonomous agents.** Start with
+[`master_prompt.md`](master_prompt.md) — the operating manual: verified commands, architecture map,
+the 23-stage production architecture, format/voice policy and the acceptance gates. This file
+states the rules an agent must follow; the manual explains how the system actually works.
+
+Permanent procedures live in [`skills/`](skills/README.md); technical documentation lives in
 [`docs/`](docs/architecture/SYSTEM_OVERVIEW.md).
 
 Every session that touches this repository — including one whose only message is *"Create a new
@@ -50,6 +52,7 @@ A bare video request activates the **full workflow**, without the user restating
 | Any video creation, animation, render or pipeline repair | **animation-production** (primary) + all relevant specialists | [`skills/animation-production/SKILL.md`](skills/animation-production/SKILL.md) |
 | Discover a YouTube topic, research, fact-check | youtube-research | [`skills/youtube-research/SKILL.md`](skills/youtube-research/SKILL.md) |
 | Design opening hooks, retention pacing, Shorts vs long-form narrative arcs | youtube-storytelling-and-hooks | [`skills/youtube-storytelling-and-hooks/SKILL.md`](skills/youtube-storytelling-and-hooks/SKILL.md) |
+| Choose the hook, title and thumbnail as one aligned promise; build the retention map and script critique | youtube-packaging | [`skills/youtube-packaging/SKILL.md`](skills/youtube-packaging/SKILL.md) |
 | Create or improve a script, polish narration | scriptwriting | [`skills/scriptwriting/SKILL.md`](skills/scriptwriting/SKILL.md) |
 | Author visually staged animated scripts (`dialogue[]`, `pause_after`, `accent_words`, scene choreography) | animation-scriptwriting | [`skills/animation-scriptwriting/SKILL.md`](skills/animation-scriptwriting/SKILL.md) |
 | Canonical single-colour character silhouette, capsule rig anatomy, seamless joints | character-design-and-rigging | [`skills/character-design-and-rigging/SKILL.md`](skills/character-design-and-rigging/SKILL.md) |
@@ -229,6 +232,8 @@ and never claim resolution without verification. Maintain
 
 ## 10. Git discipline
 
-Work only on the assigned branch `arena/c7c9d20d-universal-animation-toolbook`. Commit meaningful
-milestones, push only to that branch, open a PR from it when the workflow supports one, and merge
-only after required checks pass and changes are verified. Never overwrite uncommitted user work.
+Work only on the branch the current session assigns. Branch names change every session, so **never
+hard-code one into a document, a script or a commit message** — read it from `git branch --show-current`
+and use that. Commit meaningful milestones, push only to that branch, open a PR from it when the
+workflow supports one, and merge only after required checks pass and changes are verified. Never
+overwrite uncommitted user work. See [`master_prompt.md`](master_prompt.md) §18 for the full rule set.

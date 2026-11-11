@@ -50,5 +50,108 @@
     "design": "AI-generated cel-shaded base art in the film's own drawing language, composed by tools/compose_thumbnail.py with a reserved text band; checked at 168px wide",
     "copy_principle": "complements the title; does not repeat it",
     "art_fraction": 0.78
+  },
+  "creative": {
+    "_note": "Backfilled 2026-11-11 from the shipped script, thumbnail and record. Honest: weaknesses are recorded rather than scored away. New videos fill this before production.",
+    "backfilled": true,
+    "hook_candidates": [
+      {
+        "text": "He hit a wall. So he assumed it was permanent.",
+        "selected": true,
+        "why": "The film's opening is two consecutive narration lines, not one: a four-word statement and its wrong conclusion, delivered without a breath between them. Recorded together because a 4-word line alone cannot carry a promise.",
+        "seconds_into_video": 0.0
+      },
+      {
+        "text": "So he assumed it was permanent.",
+        "selected": false,
+        "why": "",
+        "seconds_into_video": 0.0
+      },
+      {
+        "text": "Walls do not usually stop you. Agreements do.",
+        "selected": false,
+        "why": "",
+        "seconds_into_video": 0.0
+      }
+    ],
+    "retention_map": [
+      {
+        "at_sec": 0,
+        "kind": "hook",
+        "purpose": "state the promise in the first spoken line"
+      },
+      {
+        "at_sec": 16.1,
+        "kind": "escalation",
+        "purpose": "raise the cost so the premise stops being abstract"
+      },
+      {
+        "at_sec": 33.1,
+        "kind": "reveal",
+        "purpose": "name the mechanism the hook withheld"
+      },
+      {
+        "at_sec": 46.0,
+        "kind": "payoff",
+        "purpose": "deliver the moral the opening promised"
+      }
+    ],
+    "title_candidates": [
+      {
+        "text": "Limiting Beliefs: Did You Agree to That Wall?",
+        "selected": true
+      },
+      {
+        "text": "The Wall Was Never There",
+        "selected": false
+      },
+      {
+        "text": "Why You Stopped At A Wall That Wasn't Real",
+        "selected": false
+      }
+    ],
+    "thumbnail_concepts": [
+      {
+        "focal_subject": "A lone figure pressed flat against a huge blank wall",
+        "emotion": "strain",
+        "text": "IT WAS NEVER REAL",
+        "selected": true
+      },
+      {
+        "focal_subject": "A figure walking through where the wall used to be",
+        "emotion": "revelation",
+        "text": "",
+        "selected": false
+      },
+      {
+        "focal_subject": "Chalk outline of a wall with a figure stepping out of it",
+        "emotion": "escape",
+        "text": "",
+        "selected": false
+      }
+    ],
+    "alignment": {
+      "title_promise": "A question that implicates the viewer: you may have agreed to a limit.",
+      "thumbnail_promise": "IT WAS NEVER REAL \u2014 the answer to the title's question, stated without the reasoning.",
+      "hook_promise": "An assumption is named and immediately questioned.",
+      "verdict": "aligned"
+    },
+    "claims": [],
+    "script_critique": {
+      "scores": {
+        "opening_hook": 5,
+        "clarity": 5,
+        "originality": 5,
+        "story_progression": 4,
+        "retention_potential": 4,
+        "emotional_impact": 4,
+        "visual_potential": 5,
+        "payoff": 5,
+        "accuracy": 3,
+        "pacing": 4
+      },
+      "weakest": "accuracy",
+      "revision": "Removed an implied claim about how beliefs form neurologically; the film stays a fable and says so."
+    }
   }
 }

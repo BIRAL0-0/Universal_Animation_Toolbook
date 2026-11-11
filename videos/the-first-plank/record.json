@@ -51,5 +51,108 @@
   "format_policy_exception": "126.04s under the auto policy would imply 16:9; the approved master is portrait 9:16 and was delivered as a Shorts-style story.",
   "previous_title": "The First Plank",
   "primary_keyword": "procrastination",
-  "thumbnail_text": "NEAR EDGE"
+  "thumbnail_text": "NEAR EDGE",
+  "creative": {
+    "_note": "Backfilled 2026-11-11 from the shipped script, thumbnail and record. Honest: weaknesses are recorded rather than scored away. New videos fill this before production.",
+    "backfilled": true,
+    "hook_candidates": [
+      {
+        "text": "Behind her, a clean desk held an untouched page.",
+        "selected": true,
+        "why": "Retrospective audit: this is the weakest opening of the eight. It is atmospheric and correct, but it opens on a desk, not on a problem. The third line is the real hook and arrives late.",
+        "seconds_into_video": 0.0
+      },
+      {
+        "text": "Mira stood at the near edge of a bridge with only the first plank missing.",
+        "selected": false,
+        "why": "",
+        "seconds_into_video": 0.0
+      },
+      {
+        "text": "She had drawn the other side in perfect detail. The first plank stayed blank.",
+        "selected": false,
+        "why": "",
+        "seconds_into_video": 0.0
+      }
+    ],
+    "retention_map": [
+      {
+        "at_sec": 0,
+        "kind": "hook",
+        "purpose": "state the promise in the first spoken line"
+      },
+      {
+        "at_sec": 44.1,
+        "kind": "escalation",
+        "purpose": "raise the cost so the premise stops being abstract"
+      },
+      {
+        "at_sec": 90.7,
+        "kind": "reveal",
+        "purpose": "name the mechanism the hook withheld"
+      },
+      {
+        "at_sec": 126.038,
+        "kind": "payoff",
+        "purpose": "deliver the moral the opening promised"
+      }
+    ],
+    "title_candidates": [
+      {
+        "text": "Procrastination: Why 1 Plank Beats a Whole Bridge",
+        "selected": true
+      },
+      {
+        "text": "The Bridge Was Finished. She Still Didn't Move.",
+        "selected": false
+      },
+      {
+        "text": "Why Planning Feels Like Progress",
+        "selected": false
+      }
+    ],
+    "thumbnail_concepts": [
+      {
+        "focal_subject": "A woman on a narrow plank over a canyon, far bridge complete",
+        "emotion": "vertigo",
+        "text": "NEAR EDGE",
+        "selected": true
+      },
+      {
+        "focal_subject": "A blank plank glowing against a fully drawn bridge",
+        "emotion": "exposure",
+        "text": "",
+        "selected": false
+      },
+      {
+        "focal_subject": "A close view of one foot refusing to step",
+        "emotion": "decision point",
+        "text": "",
+        "selected": false
+      }
+    ],
+    "alignment": {
+      "title_promise": "A specific claim about the smallest possible next action beating the whole plan.",
+      "thumbnail_promise": "NEAR EDGE \u2014 names the location of the decision, not the decision.",
+      "hook_promise": "Establishes the blank first plank as the obstacle.",
+      "verdict": "aligned"
+    },
+    "claims": [],
+    "script_critique": {
+      "scores": {
+        "opening_hook": 2,
+        "clarity": 4,
+        "originality": 4,
+        "story_progression": 4,
+        "retention_potential": 3,
+        "emotional_impact": 4,
+        "visual_potential": 5,
+        "payoff": 4,
+        "accuracy": 4,
+        "pacing": 3
+      },
+      "weakest": "opening_hook",
+      "revision": "Flagged for future re-edit: open on the blank plank or on the quote, not on the desk. Not re-rendered in this pass because the master is already published."
+    }
+  }
 }

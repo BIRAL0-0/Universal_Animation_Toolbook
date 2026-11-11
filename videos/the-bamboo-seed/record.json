@@ -51,5 +51,108 @@
   "primary_keyword": "bamboo seed",
   "thumbnail_text": "STILL ZERO",
   "engine_set": "parchment ink + bamboo ground cutaway (engine/bamboo_grove.js)",
-  "content_fingerprint": "sha256:e3411a9eb3fe5f3c1ba3705e2ead5a14"
+  "content_fingerprint": "sha256:e3411a9eb3fe5f3c1ba3705e2ead5a14",
+  "creative": {
+    "_note": "Backfilled 2026-11-11 from the shipped script, thumbnail and record. Honest: weaknesses are recorded rather than scored away. New videos fill this before production.",
+    "backfilled": true,
+    "hook_candidates": [
+      {
+        "text": "A farmer planted a bamboo seed.",
+        "selected": true,
+        "why": "Retrospective audit: the first line alone is plain. The strength is the whole three-line shape, which the film delivers in its first twenty seconds across three scenes.",
+        "seconds_into_video": 0.0
+      },
+      {
+        "text": "He watered it every morning for four years. Nothing came up.",
+        "selected": false,
+        "why": "",
+        "seconds_into_video": 0.0
+      },
+      {
+        "text": "In the fifth year, it came up so fast people assumed he'd been lucky.",
+        "selected": false,
+        "why": "",
+        "seconds_into_video": 0.0
+      }
+    ],
+    "retention_map": [
+      {
+        "at_sec": 0,
+        "kind": "hook",
+        "purpose": "state the promise in the first spoken line"
+      },
+      {
+        "at_sec": 30.6,
+        "kind": "escalation",
+        "purpose": "raise the cost so the premise stops being abstract"
+      },
+      {
+        "at_sec": 62.8,
+        "kind": "reveal",
+        "purpose": "name the mechanism the hook withheld"
+      },
+      {
+        "at_sec": 87.291,
+        "kind": "payoff",
+        "purpose": "deliver the moral the opening promised"
+      }
+    ],
+    "title_candidates": [
+      {
+        "text": "The Bamboo Seed: 5 Years of Nothing, Then Everything (A Parable)",
+        "selected": true
+      },
+      {
+        "text": "Nothing Grew For Four Years. Then It Caught Up.",
+        "selected": false
+      },
+      {
+        "text": "Why Your Hard Work Looks Like Nothing",
+        "selected": false
+      }
+    ],
+    "thumbnail_concepts": [
+      {
+        "focal_subject": "A split cutaway: tiny shoot above, vast root system below",
+        "emotion": "quiet revelation",
+        "text": "STILL ZERO",
+        "selected": true
+      },
+      {
+        "focal_subject": "A farmer watering bare dirt, huge roots underneath",
+        "emotion": "patience",
+        "text": "",
+        "selected": false
+      },
+      {
+        "focal_subject": "A towering grove above, gold thread of root below",
+        "emotion": "reward",
+        "text": "",
+        "selected": false
+      }
+    ],
+    "alignment": {
+      "title_promise": "A number and a reversal: five years of nothing, then everything.",
+      "thumbnail_promise": "STILL ZERO \u2014 the state that makes 'nothing' concrete and sets up 'then everything'.",
+      "hook_promise": "Plants the seed and states the four silent years in the opening line.",
+      "verdict": "aligned"
+    },
+    "claims": [],
+    "script_critique": {
+      "scores": {
+        "opening_hook": 4,
+        "clarity": 5,
+        "originality": 4,
+        "story_progression": 4,
+        "retention_potential": 4,
+        "emotional_impact": 5,
+        "visual_potential": 5,
+        "payoff": 5,
+        "accuracy": 4,
+        "pacing": 4
+      },
+      "weakest": "originality",
+      "revision": "The parable is a known one; the original work is the ground-cutaway device that shows both halves at once. No invented growth figures were added, which is why accuracy scores above 3."
+    }
+  }
 }

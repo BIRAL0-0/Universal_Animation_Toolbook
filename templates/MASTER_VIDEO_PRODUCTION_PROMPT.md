@@ -69,6 +69,39 @@ a plan, a script, a still or a report. Do not stop at recommendations.
    reference; references inform craft only.
 10. English narration, no channel name, watermark or channel branding.
 
+## 3a. Creative strategy — decide before writing, record before rendering
+
+Packaging is not applied to a finished film; it is decided first and then written into the film.
+Owner: [`skills/youtube-packaging/SKILL.md`](../skills/youtube-packaging/SKILL.md). Schema:
+[`docs/production/CREATIVE_PACKAGING.md`](../docs/production/CREATIVE_PACKAGING.md) §3.
+
+**The promise, in one sentence:** {{THE_PROMISE}} — complete the sentence *"I clicked because I
+wanted to know ___."* Nothing starts until this exists.
+
+1. **Hook candidates — at least 3, different angles, not rewordings.** Record all of them with the
+   reason the chosen one won and what it cost. The chosen hook must land inside 8 seconds and its
+   words must be the words actually spoken. Banned openers: "Have you ever wondered", "In this
+   video", "Today we're going to", "Welcome back".
+2. **Retention map — at least 4 beats** (hook → escalation → reveal → payoff), each with a stated
+   purpose and a real timestamp. Any stretch over ~20 s with nothing new for the viewer is cut or
+   given a reveal.
+3. **Title candidates — at least 3 approaches** (curiosity, question, outcome/number,
+   contradiction). One selected. It must be true to the film, and any number in it must match what
+   the film says on screen and in narration.
+4. **Thumbnail concepts — at least 3, each with a different focal subject.** Then generate base art
+   separately in the film's visual language **with no lettering**, and typeset with
+   [`tools/make_thumbnail.py`](../tools/make_thumbnail.py). The cover must complement the title,
+   never repeat it, and must be checked at 168 px — the phone search size.
+5. **Alignment statement:** how the title's promise, the cover's promise and the hook's promise are
+   the same promise. Verdict `aligned` or the film is not ready.
+6. **Claim labels:** every factual or predictive statement is `[M]` measured, `[O]` observed or
+   `[P]` predicted, and a prediction is never used as a fact. **No CTR, retention or view number may
+   be invented — there is no analytics access.**
+7. **Script critique:** score all ten criteria 1–5, name the weakest, and record what the critique
+   actually changed. A flat sheet means the script was not read critically.
+
+Gate: `python3 tools/creative_gate.py` must pass before the master is rendered.
+
 ## 4. Character descriptions
 
 `episode.json` → `cast` is the single source of truth. Mirror this table into `CHARACTERS.md`.
@@ -191,7 +224,16 @@ duration, format, produced date, directory, content fingerprint).
   hashtags, CTA, verified music/asset credits. No invented links or unverified credits.
 - **Pinned comment** — one genuine question tied to the film's central idea, inviting real
   experience. Never "like, subscribe and comment".
-- **Gate:** `python3 tools/validate_publishing.py` must print `PASS`.
+- **Gates, in order:**
+  ```bash
+  python3 tools/creative_gate.py
+  python3 tools/thumbnail_copy.py
+  python3 tools/thumbnail_style.py check videos/{{SLUG}}/{{SLUG}}.mp4 videos/{{SLUG}}/thumbnail.jpg --package videos/{{SLUG}}
+  python3 tools/seo_audit.py --min 85
+  python3 tools/validate_publishing.py
+  ```
+  All must print `PASS`. A passing gate proves the process ran; it does not prove the cover will
+  earn a click. Look at the cover and the film together before publishing.
 
 ## 10. Quality requirements — all must actually pass, with evidence
 

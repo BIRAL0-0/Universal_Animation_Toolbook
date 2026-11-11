@@ -12,11 +12,13 @@ stretches it.
 | Location | Purpose |
 |---|---|
 | [`universal_toolbook/`](universal_toolbook/README.md) | **the reusable production kit** — CLI, renderer, audio/TTS, config, bundled assets, schema, template and kit procedure. Copy this folder alone to render films. |
+| [`master_prompt.md`](master_prompt.md) | **the operating manual — read this first.** Commands verified from `--help`, architecture map, production architecture, format policy, voice policy, QA gates |
 | [`AGENTS.md`](AGENTS.md) | mandatory rules for autonomous agents, architecture and skill activation |
-| [`skills/`](skills/README.md) | six permanent agent skills: animation production, scriptwriting, stickman animation, voiceover/audio, YouTube research, production quality |
+| [`skills/`](skills/README.md) | seventeen permanent agent skills — see the index for the full list and when to activate each |
 | [`templates/`](templates/README.md) | the one master video-production prompt and the project skeleton |
-| [`projects/`](projects/) | one independent, never-overwritten folder per finished video |
-| [`examples/`](examples/) | 11 validated reference episode specs |
+| [`videos/`](videos/PUBLISHING_KIT.md) | **every finished video**, one complete publishing package per folder, plus `index.json` |
+| `projects/` | *not present in the repository.* Created on demand by [`scripts/new_project.py`](scripts/new_project.py) for long multi-session productions; `projects/video-*` is gitignored and it is **not** the standard route (see [`master_prompt.md`](master_prompt.md) §1) |
+| [`examples/`](examples/) | 14 validated reference episode specs |
 | [`docs/`](docs/architecture/SYSTEM_OVERVIEW.md) | architecture, setup, development, production detail, troubleshooting, decisions |
 | [`tests/`](tests/README.md) | unit, integration, regression, production and fixture tests |
 | [`tools/`](tools/README.md), [`scripts/`](scripts/README.md) | repository validation, QA and developer entry points |
@@ -24,7 +26,7 @@ stretches it.
 | [`runtime/`](runtime/README.md) | git-ignored temporary work, renders, previews, cache and logs |
 
 **Kit vs repository:** `universal_toolbook/` is the runtime and is copyable on its own. `skills/`,
-`AGENTS.md`, `projects/`, `docs/`, `tests/`, `tools/` and `scripts/` are the complete development
+`AGENTS.md`, `videos/`, `docs/`, `tests/`, `tools/` and `scripts/` are the complete development
 repository around it; they are **not** required to render a film from the kit.
 
 ## Requirements
@@ -73,7 +75,21 @@ For an autonomous agent: read [`AGENTS.md`](AGENTS.md) and activate
 new video."* already authorises the full research → prompt → script → animation → narration →
 render → QA workflow.
 
-For a human starting a new project:
+For a single video — the standard route, used by all eight shipped films:
+
+```bash
+python3 universal_toolbook/run_studio.py check
+cp examples/the_two_second_reach.json runtime/work/my-episode.json   # then edit it
+python3 universal_toolbook/run_studio.py validate runtime/work/my-episode.json
+python3 universal_toolbook/run_studio.py stills   runtime/work/my-episode.json --out-dir runtime/work/stills
+python3 universal_toolbook/run_studio.py render   runtime/work/my-episode.json --out runtime/work/master.mp4 --full --shorts
+```
+
+Then package it and run the gates — the full sequence is in
+[`master_prompt.md`](master_prompt.md) §3.4 and §7.5.
+
+For a long multi-session production with a client and a shot list, the optional project route
+scaffolds a folder with a saved prompt first:
 
 ```bash
 python3 scripts/new_project.py video-003-topic --title "Your title"
@@ -81,6 +97,9 @@ python3 scripts/new_project.py video-003-topic --title "Your title"
 python3 tools/make_scene_plan.py projects/video-003-topic
 python3 tools/produce_video.py projects/video-003-topic
 ```
+
+`projects/` is gitignored scratch: a finished project must still be filed into `videos/<slug>/`
+as a complete publishing package.
 
 Each project keeps its own prompt, research, original/polished scripts, storyboard, characters,
 scene plan, asset manifest, production log, QA report, audio, renders and `final.mp4`. The

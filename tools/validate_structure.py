@@ -62,6 +62,10 @@ REQUIRED_FILES = (
     "skills/scriptwriting/SKILL.md",
     "skills/voiceover-audio/SKILL.md", "skills/youtube-research/SKILL.md",
     "skills/production-quality/SKILL.md",
+    "skills/youtube-packaging/SKILL.md",
+    "docs/production/CREATIVE_PACKAGING.md",
+    "tools/creative_gate.py",
+    "master_prompt.md",
     "templates/MASTER_VIDEO_PRODUCTION_PROMPT.md",
     "universal_toolbook/run_studio.py", "universal_toolbook/config/studio_config.json",
     "universal_toolbook/tts/config/voices.json",
@@ -89,7 +93,7 @@ SKILLS = (
     "physical-interactions-and-props", "animation-principles", "cinematic-composition",
     "environment-and-asset-continuity", "subtitles-and-typography", "sound-design",
     "animation-quality-assurance", "animation-production", "voiceover-audio",
-    "production-quality",
+    "production-quality", "youtube-packaging",
 )
 # Historical projects predate the template's directory names; accept equivalent evidence.
 PROJECT_REQUIRED_GROUPS = (
