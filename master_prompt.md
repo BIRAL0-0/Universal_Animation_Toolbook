@@ -95,7 +95,7 @@ Every top-level entry, what it is responsible for, when to use it, and whether i
 | `tests/` | `unit/`, `production/`, `integration/`, `regression/` | Before and after any change | Permanent |
 | `deliverables/` | Historical hand-off packages (142 MB) | Only to recover an old artifact | Permanent, frozen — do not add to it |
 | `runtime/` | Scratch: work dirs, audit notes | During a production run | **Temporary** — gitignored except `README.md` |
-| `tools/__pycache__`, `*/__pycache__`, `node_modules/` | Build artifacts | Never | **Temporary** — never commit |
+| Python bytecode caches and `node_modules/` | Build artifacts, created by running anything | Never | **Temporary** — never commit |
 | `projects/` | **Does not exist.** Created on demand by `scripts/new_project.py` | Only for long multi-session productions (§3.5) | **Temporary** — `projects/video-*` is gitignored |
 
 Rules that follow from the map:
@@ -947,7 +947,7 @@ To extend safely:
 |---|---|
 | `videos/<slug>/` — masters, thumbnails, scripts, records | `runtime/` (gitignored except `README.md`) |
 | `docs/`, `skills/`, `templates/`, `examples/` | `projects/video-*` (gitignored) |
-| `tools/`, `scripts/`, `tests/`, `universal_toolbook/` | `__pycache__/`, `node_modules/`, draft renders |
+| `tools/`, `scripts/`, `tests/`, `universal_toolbook/` | Python caches, `node_modules/`, draft renders |
 | `deliverables/` (frozen evidence) | stills, work dirs, scratch mp3s |
 
 **Sizes at the time of writing:** `.git` ≈ 256 MB, `deliverables/` 142 MB, `videos/` 105 MB,
@@ -1053,7 +1053,7 @@ A document in this repository is acceptable only if:
 
 - **One branch.** Work only on the branch the session assigns. Push only to it.
 - **Commit at meaningful milestones** — a gate passing, a feature complete, a defect fixed.
-- **Never commit** `runtime/`, `__pycache__`, `node_modules/`, draft renders, or `projects/video-*`.
+- **Never commit** `runtime/`, Python caches, `node_modules/`, draft renders, or `projects/video-*`.
 - **Commit messages** say what changed and why, in the imperative. Reference the gate that proves it.
 - **Open the PR from the assigned branch.** Merge only after the checks are green and the change is
   verified by running it.
