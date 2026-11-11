@@ -11,6 +11,10 @@ Ensure every physical interaction between a character and a world prop in `unive
 
 ## Trigger Conditions
 
+## Inputs
+
+The prop's canonical ID, the character's grip anchors, and frames from before, during and after the contact. A single frame cannot show whether a hand ever actually held anything.
+
 Activate whenever:
 - authoring or debugging scenes where a character reaches, picks up, holds, scrolls, types on, or puts down a phone, cup, laptop, computer, book, or prop,
 - staging characters sitting on chairs/sofas, typing at desks, touching tables, or opening doors,
@@ -55,6 +59,12 @@ Activate whenever:
 - Thomas, F. & Johnston, O. (1981), *The Illusion of Life* — anticipation before reach, follow-through on release, and weight in object handling.
 - Craig, J. J. (2005), *Introduction to Robotics: Mechanics and Control* — analytical 2-link planar inverse kinematics and workspace clamping (adapted in `solveIK`).
 - Official Remotion Agent Skills (`https://github.com/remotion-dev/skills`) — pure frame-function state evaluation without mutable inter-frame state (`docs/decisions/ADR-0001-remotion-evaluation.md`).
+
+## Examples
+
+### A phone held two inches from the hand
+
+The hand follows the prop's origin instead of its grip anchor. Switch the parent to the anchor, then move the prop.
 
 ## Concrete Engine Recipes
 

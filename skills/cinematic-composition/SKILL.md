@@ -11,6 +11,10 @@ Ensure every shot in `universal_toolbook/engine/render_layout.js`, `universal_to
 
 ## Trigger Conditions
 
+## Inputs
+
+The planned duration (which decides 9:16 or 16:9), the shot intent, and frames at the chosen aspect ratio. Composing at the wrong ratio and cropping later is the failure this prevents.
+
 Activate whenever:
 - planning video format, aspect ratio, storyboard framing, character `x` positions, or camera shots,
 - authoring `camera`, `camera_shots[]`, `portrait_focus`, `portrait_focus_x`, or `boards[]` in `episode.json`,
@@ -58,6 +62,12 @@ Activate whenever:
 - Katz, S. D. (1991), *Film Directing Shot by Shot* — shot scale, eyeline continuity, 180-degree staging rule, and motivated camera movement.
 - Block, B. (2020), *The Visual Story* — screen space, depth cues, contrast of affinity, and negative space.
 - Official Remotion Agent Skills (`https://github.com/remotion-dev/skills`) — composition metadata and dynamic duration concepts (`calculateMetadata` mapped to Python pre-render retiming; `docs/decisions/ADR-0001-remotion-evaluation.md`).
+
+## Examples
+
+### A landscape shot delivered as portrait
+
+The composition was framed at 16:9 and the film turned out to run 58 s. Re-stage for the narrow frame rather than cropping the sides.
 
 ## Concrete Engine Recipes
 

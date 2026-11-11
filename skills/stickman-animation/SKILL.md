@@ -11,6 +11,10 @@ Turn narrative beats into clear, grounded, physically expressive stickman perfor
 
 ## Trigger Conditions
 
+## Inputs
+
+An action name from the supported library, the character's canonical scale, and the frames either side of the problem. Posture changes need a start and an end pose, not a single frame.
+
 Activate whenever:
 - authoring `scenes[].characters[].beats[]` in `episode.json`,
 - adding or refining actions in `universal_toolbook/engine/motion_library.js`,
@@ -53,6 +57,12 @@ Activate whenever:
 - Williams, R. (2001), *The Animator's Survival Kit* — contact/down/passing/up walk-cycle mechanics and weight shifts (adapted in `walkMotion` / `runMotion`).
 - Thomas, F. & Johnston, O. (1981), *The Illusion of Life* — staging, pose-to-pose clarity, and secondary action.
 - Official Remotion Agent Skills (`https://github.com/remotion-dev/skills`) — deterministic frame-driven sequencing concepts; see `docs/decisions/ADR-0001-remotion-evaluation.md`.
+
+## Examples
+
+### A sit that slides through the chair
+
+The seat height is derived from the character scale, and the scale changed. Re-derive rather than nudging the pose.
 
 ## Concrete Engine Recipes
 

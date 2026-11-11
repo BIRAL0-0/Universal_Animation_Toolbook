@@ -11,6 +11,10 @@ Eliminate mechanical, linear, robotic motion across all actions in `universal_to
 
 ## Trigger Conditions
 
+## Inputs
+
+An action name or beat from `episode.json`, the motion curve that currently drives it, and a rendered still or preview showing the problem. You do not need the whole film to fix one beat.
+
 Activate whenever:
 - designing or tuning motion curves, action beats, reactions, transitions, or camera drifts,
 - implementing new actions in `universal_toolbook/engine/motion_library.js`,
@@ -52,6 +56,12 @@ Activate whenever:
 - Thomas, F. & Johnston, O. (1981), *The Illusion of Life: Disney Animation* — the 12 foundational principles of animation (squash/stretch via posture compression, anticipation, staging, pose-to-pose, follow-through/overlapping action, slow in/out, arcs, secondary action, timing, exaggeration, solid drawing, appeal).
 - Lasseter, J. (1987), *Principles of Traditional Animation Applied to 3D Computer Animation* (SIGGRAPH) — translating traditional timing, anticipation, and overlapping action into spline/procedural curves.
 - Official Remotion Agent Skills (`https://github.com/remotion-dev/skills`) — spring and interpolation timing concepts adapted in original code (`docs/decisions/ADR-0001-remotion-evaluation.md`).
+
+## Examples
+
+### A reach that reads as robotic
+
+The hand travels in a straight line at constant speed and stops dead. Fix: route it through `arcPoint` with a lift, drive it with `anticipationEase` then `springEase`, and stagger the head and torso a few frames earlier. The stills before and after show the arc; the eye reads the difference immediately.
 
 ## Concrete Engine Recipes
 

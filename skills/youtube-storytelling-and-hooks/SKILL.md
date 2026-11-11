@@ -11,6 +11,10 @@ Maximize viewer retention and emotional clarity across both YouTube Shorts (`< 6
 
 ## Trigger Conditions
 
+## Inputs
+
+The fully drafted script and the promise the packaging is making. A hook cannot be written before the promise exists.
+
 Activate whenever:
 - crafting opening hooks, titles, premises, or scene-1 staging,
 - structuring narrative pacing for Shorts (`< 60s`) vs long-form (`>= 60s`) episodes,
@@ -59,6 +63,12 @@ Activate whenever:
 - McKee, R. (1997), *Story* — inciting incident, progressive complications, crisis, climax, and resolution.
 - Heath, C. & Heath, D. (2007), *Made to Stick* — curiosity gaps, concrete sensory specifics, and emotional credibility.
 - Internal studio references: `skills/youtube-research/SKILL.md` and `docs/production/VIRAL_POTENTIAL_EVALUATION.md`.
+
+## Examples
+
+### A hook that describes the video
+
+'In this video we look at...' — that is a contents page, not a hook. Start inside the problem instead.
 
 ## Concrete Engine Recipes
 

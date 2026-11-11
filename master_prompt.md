@@ -711,12 +711,23 @@ thumbnails at all** — a single mention in `youtube-research` was the entire co
 `purpose` · `when to use` · `inputs` · `workflow` · `rules` · `common mistakes` ·
 `quality checklist` · `implementation references` · `examples`.
 
+**This is enforced, not aspirational.** `tools/validate_structure.py` checks each skill for all nine
+sections and `tests/production/test_skill_contracts.py` re-checks them per skill, including that
+`## Inputs` is non-empty. Before this was enforced, four skills — including `animation-production`,
+the primary orchestrator — were missing most of the set, and **no skill had an Inputs section at
+all**.
+
 Two anti-duplication rules:
 
 - **One owner per topic.** If two skills describe the same procedure, one of them is wrong.
   The skill that owns a decision is named in this file (§10 index).
 - **A skill points at the tool; it does not restate the tool.** Commands belong in this file,
   behaviour belongs in the skill, numbers belong in the doc that verified them.
+- **Numbers inside a skill must be arithmetic that a test can re-check.** The one place a shared
+  number must be repeated is word budgets (a writer needs them), so those are recomputed by
+  `test_skill_contracts.py`: an earlier revision published 135/150 words as the portrait/landscape
+  split, but at its own stated 2.55 words/s those are 52.9 s and 58.8 s — both portrait. Following
+  the skill would have planned landscape staging into a portrait render.
 
 ### 8.3 External knowledge — knowledge only, no migration
 
