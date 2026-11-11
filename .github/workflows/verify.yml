@@ -56,6 +56,12 @@ jobs:
         run: python tools/thumbnail_copy.py
       - name: Every video shows its hook, title and thumbnail were chosen, not defaulted
         run: python tools/creative_gate.py
+      - name: No two covers are the same picture at phone size
+        run: |
+          pip install --quiet imageio-ffmpeg pillow numpy
+          python tools/thumbnail_legibility.py --all
+      - name: Every rendered film agrees with its own record
+        run: python tools/creative_review.py --all
       - name: Every video clears the SEO floor
         run: python tools/seo_audit.py --min 78
       - name: Workflow files must parse as YAML

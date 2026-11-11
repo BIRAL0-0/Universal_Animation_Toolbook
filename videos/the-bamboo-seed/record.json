@@ -100,15 +100,32 @@
     "title_candidates": [
       {
         "text": "The Bamboo Seed: 5 Years of Nothing, Then Everything (A Parable)",
-        "selected": true
+        "selected": true,
+        "approach": "curiosity_gap"
       },
       {
         "text": "Nothing Grew For Four Years. Then It Caught Up.",
-        "selected": false
+        "selected": false,
+        "approach": "outcome_number"
       },
       {
         "text": "Why Your Hard Work Looks Like Nothing",
-        "selected": false
+        "selected": false,
+        "approach": "identity"
+      },
+      {
+        "text": "The Farmer Who Watered A Dead-Looking Patch For Five Years",
+        "selected": false,
+        "approach": "stakes_loss",
+        "drafted_in_review": true,
+        "why_not_chosen": "Drafted during the packaging audit, not before production; the shipped title was already fixed."
+      },
+      {
+        "text": "Would You Keep Watering If Nothing Grew?",
+        "selected": false,
+        "approach": "question",
+        "drafted_in_review": true,
+        "why_not_chosen": "Drafted during the packaging audit, not before production; the shipped title was already fixed."
       }
     ],
     "thumbnail_concepts": [
@@ -154,5 +171,23 @@
       "weakest": "originality",
       "revision": "The parable is a known one; the original work is the ground-cutaway device that shows both halves at once. No invented growth figures were added, which is why accuracy scores above 3."
     }
-  }
+  },
+  "secondary_keywords": [
+    "bamboo seed parable",
+    "bamboo story",
+    "growth mindset"
+  ],
+  "title_alternates": [
+    "Nothing Grew For Four Years. Then It Caught Up.",
+    "Why Your Hard Work Looks Like Nothing",
+    "The Farmer Who Watered A Dead-Looking Patch For Five Years"
+  ],
+  "hashtags": [
+    "#bamboostory",
+    "#perseverance",
+    "#patience",
+    "#motivation",
+    "#growthmindset"
+  ],
+  "category": "Education"
 }

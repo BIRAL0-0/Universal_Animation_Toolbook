@@ -99,15 +99,32 @@
     "title_candidates": [
       {
         "text": "Cutting Corners: What a 2-Inch Shortcut Really Costs",
-        "selected": true
+        "selected": true,
+        "approach": "curiosity_gap"
       },
       {
         "text": "Two Inches. Eight Hundred Metres. Nobody Checked.",
-        "selected": false
+        "selected": false,
+        "approach": "contradiction"
       },
       {
         "text": "The Shortcut Nobody Measured",
-        "selected": false
+        "selected": false,
+        "approach": "question"
+      },
+      {
+        "text": "The Two Inches That Flooded A Valley",
+        "selected": false,
+        "approach": "stakes_loss",
+        "drafted_in_review": true,
+        "why_not_chosen": "Drafted during the packaging audit, not before production; the shipped title was already fixed."
+      },
+      {
+        "text": "What Is Your Safety Margin Actually For?",
+        "selected": false,
+        "approach": "question",
+        "drafted_in_review": true,
+        "why_not_chosen": "Drafted during the packaging audit, not before production; the shipped title was already fixed."
       }
     ],
     "thumbnail_concepts": [
@@ -159,5 +176,22 @@
       "weakest": "opening_hook",
       "revision": "Flagged for future re-edit: lead with the two inches, then the chasm. Not re-rendered in this pass."
     }
-  }
+  },
+  "secondary_keywords": [
+    "safety margin",
+    "engineering ethics",
+    "why short cuts fail"
+  ],
+  "title_alternates": [
+    "Two Inches. Eight Hundred Metres. Nobody Checked.",
+    "The Shortcut Nobody Measured",
+    "The Two Inches That Flooded A Valley"
+  ],
+  "hashtags": [
+    "#engineering",
+    "#craftsmanship",
+    "#quality",
+    "#safety"
+  ],
+  "category": "Education"
 }

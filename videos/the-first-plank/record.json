@@ -100,15 +100,32 @@
     "title_candidates": [
       {
         "text": "Procrastination: Why 1 Plank Beats a Whole Bridge",
-        "selected": true
+        "selected": true,
+        "approach": "curiosity_gap"
       },
       {
         "text": "The Bridge Was Finished. She Still Didn't Move.",
-        "selected": false
+        "selected": false,
+        "approach": "contradiction"
       },
       {
         "text": "Why Planning Feels Like Progress",
-        "selected": false
+        "selected": false,
+        "approach": "identity"
+      },
+      {
+        "text": "The Bridge Was Already Finished",
+        "selected": false,
+        "approach": "curiosity_gap",
+        "drafted_in_review": true,
+        "why_not_chosen": "Drafted during the packaging audit, not before production; the shipped title was already fixed."
+      },
+      {
+        "text": "One Plank Or None: The Procrastination Choice",
+        "selected": false,
+        "approach": "stakes_loss",
+        "drafted_in_review": true,
+        "why_not_chosen": "Drafted during the packaging audit, not before production; the shipped title was already fixed."
       }
     ],
     "thumbnail_concepts": [
@@ -154,5 +171,22 @@
       "weakest": "opening_hook",
       "revision": "Flagged for future re-edit: open on the blank plank or on the quote, not on the desk. Not re-rendered in this pass because the master is already published."
     }
-  }
+  },
+  "secondary_keywords": [
+    "why we procrastinate",
+    "first step motivation",
+    "how to stop overthinking"
+  ],
+  "title_alternates": [
+    "The Bridge Was Finished. She Still Didn't Move.",
+    "Why Planning Feels Like Progress",
+    "The Bridge Was Already Finished"
+  ],
+  "hashtags": [
+    "#procrastination",
+    "#firststep",
+    "#overthinking",
+    "#perfectionism"
+  ],
+  "category": "Education"
 }

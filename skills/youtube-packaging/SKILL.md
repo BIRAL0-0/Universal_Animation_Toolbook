@@ -67,10 +67,22 @@ selected hook, and rejects the generic openers ("Have you ever wondered…", "In
 The hook must be inside the first 8 seconds, and its words must actually be spoken in the film —
 the gate compares the recorded hook against the record's dialogue.
 
-### 3. Draft at least three title approaches
+### 3. Draft titles from at least four different strategies
 
-At minimum one each of: curiosity, question, outcome/number, contradiction. Fill
-`creative.title_candidates` and mark the chosen one `selected: true`; its text must equal
+Seven approaches are recognised; four must be represented before the choice is a strategy rather
+than a rewording. Label each candidate with `approach`:
+
+| `approach` | What it does | Example shape |
+|---|---|---|
+| `curiosity_gap` | withholds what the film reveals | "Why Your Hard Work Looks Like Nothing" |
+| `question` | asks what the viewer is already asking | "Would You Keep Watering If Nothing Grew?" |
+| `outcome_number` | a concrete quantity or result | "Five Years Of Watering Nothing" |
+| `contradiction` | two ideas that should not coexist | "You Are Not Weak. Your Room Is Designed Against You." |
+| `stakes_loss` | what it costs to get this wrong | "The Two Inches That Flooded A Valley" |
+| `identity` | who this is for, or who they are | "Why Slow Growth Is Not Failed Growth" |
+| `reversal` | the expected ending, inverted | "It Was Never There" |
+
+Fill `creative.title_candidates`, mark the chosen one `selected: true`; its text must equal
 `record.json` `title` exactly.
 
 Title rules, honestly applied:
@@ -124,7 +136,35 @@ A high score is not a substitute for judgement. `the-first-plank` scores 2/5 on 
 its own record, and that is the correct, useful answer — it opens on a desk instead of on a
 problem, and it is flagged for a future re-edit rather than scored away.
 
-### 7. Label every claim
+### 7. Complete the SEO package
+
+These live at the top level of `record.json`, not inside `creative`, and `creative_gate.py`
+requires them:
+
+| Field | Rule |
+|---|---|
+| `primary_keyword` | the one phrase the video is trying to win; it must appear in the title and slug |
+| `secondary_keywords` | 1–3 supporting phrases a real person would type |
+| `title_alternates` | ≥ 2 genuinely usable alternates, never the title in use |
+| `hashtags` | 3–5, each with `#` — YouTube shows the first three |
+| `category` | the YouTube category this belongs in |
+
+`tools/seo_audit.py` scores the description, tags and title against this package. A high score
+still is not a promise of reach.
+
+### 8. Review the rendered film, not just the plan
+
+Once the master exists, `tools/creative_review.py` asks what only the artifact can answer: does the
+opening actually move, where does the film go static, is the promised payoff where the record says,
+and does the record describe the file. Run it with `--frames` and **look at the saved frames** — the
+questions it cannot answer are the ones that matter.
+
+For the cover, `tools/thumbnail_legibility.py --all --sheet <path>` renders every cover at 168 px
+and 216 px. Open that sheet. The tool gates only on two covers being the same picture; it will not
+tell you whether yours reads, because no measure it has can be trusted to (that was tested — see
+`docs/production/CREATIVE_PACKAGING.md` §2.1).
+
+### 9. Label every claim
 
 `creative.claims[]` takes `{text, label, used_as}` with `label` in `M` (measured), `O` (observed)
 or `P` (predicted). A `P` may never be `used_as: "fact"`. Do not invent a study, a percentage or a
@@ -145,15 +185,18 @@ CTR. If no data was collected, say so — that is a `limitation`, not a loss.
 - [ ] One-sentence promise written and recorded
 - [ ] ≥3 distinct hook candidates, one selected with a `why`
 - [ ] Selected hook lands ≤8 s and its words appear in the film
-- [ ] ≥3 title approaches, selected title matches `record.json` exactly
+- [ ] ≥4 distinct title approaches labelled, selected title matches `record.json` exactly
+- [ ] SEO package present: primary + secondary keywords, alternates, hashtags, category
 - [ ] ≥3 thumbnail concepts with different focal subjects
 - [ ] Base art generated separately; type added by `compose_thumbnail.py`
 - [ ] `thumbnail_copy.py` and `thumbnail_style.py` both pass
-- [ ] Cover inspected at 168 px beside the other covers
+- [ ] Contact sheet rendered with `thumbnail_legibility.py` and inspected at 168/216 px
+- [ ] No two covers are the same picture at phone size
 - [ ] Retention map has hook + escalation/reveal + payoff, each with a purpose
 - [ ] Ten critique criteria scored, weakest named, revision recorded
 - [ ] Every claim labelled `M`/`O`/`P`; no prediction presented as fact
 - [ ] `python3 tools/creative_gate.py` passes
+- [ ] `python3 tools/creative_review.py --check <slug>` passes and its saved frames were looked at
 
 ## Common mistakes
 
@@ -166,6 +209,8 @@ CTR. If no data was collected, say so — that is a `limitation`, not a loss.
 | Every criterion scored 5 | Means the script was not critiqued |
 | Writing the hook in the record only | The gate compares it to the spoken dialogue |
 | Promising "this will get clicks" | No analytics exist; state it as a prediction or not at all |
+| Trusting a legibility number over your eye | The numbers were tested and lost; look at the contact sheet |
+| Three titles that are one idea reworded | Not a comparison; the gate counts distinct approach labels |
 
 ## Implementation references
 
@@ -174,6 +219,8 @@ CTR. If no data was collected, say so — that is a `limitation`, not a loss.
 | Machine gate | [`tools/creative_gate.py`](../../tools/creative_gate.py) |
 | Copy rule | [`tools/thumbnail_copy.py`](../../tools/thumbnail_copy.py) |
 | Palette match | [`tools/thumbnail_style.py`](../../tools/thumbnail_style.py) |
+| Phone-size rendering | [`tools/thumbnail_legibility.py`](../../tools/thumbnail_legibility.py) |
+| Post-render review | [`tools/creative_review.py`](../../tools/creative_review.py) |
 | Typesetting | [`tools/compose_thumbnail.py`](../../tools/compose_thumbnail.py) |
 | SEO scoring | [`tools/seo_audit.py`](../../tools/seo_audit.py) |
 | Package completeness | [`tools/validate_publishing.py`](../../tools/validate_publishing.py) |

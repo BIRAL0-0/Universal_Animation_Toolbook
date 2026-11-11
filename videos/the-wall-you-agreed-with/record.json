@@ -99,15 +99,32 @@
     "title_candidates": [
       {
         "text": "Limiting Beliefs: Did You Agree to That Wall?",
-        "selected": true
+        "selected": true,
+        "approach": "question"
       },
       {
         "text": "The Wall Was Never There",
-        "selected": false
+        "selected": false,
+        "approach": "identity"
       },
       {
         "text": "Why You Stopped At A Wall That Wasn't Real",
-        "selected": false
+        "selected": false,
+        "approach": "curiosity_gap"
+      },
+      {
+        "text": "The Wall You Built And Forgot You Built",
+        "selected": false,
+        "approach": "contradiction",
+        "drafted_in_review": true,
+        "why_not_chosen": "Drafted during the packaging audit, not before production; the shipped title was already fixed."
+      },
+      {
+        "text": "It Was Never There",
+        "selected": false,
+        "approach": "reversal",
+        "drafted_in_review": true,
+        "why_not_chosen": "Drafted during the packaging audit, not before production; the shipped title was already fixed."
       }
     ],
     "thumbnail_concepts": [
@@ -153,5 +170,22 @@
       "weakest": "accuracy",
       "revision": "Removed an implied claim about how beliefs form neurologically; the film stays a fable and says so."
     }
-  }
+  },
+  "secondary_keywords": [
+    "self imposed limits",
+    "growth mindset",
+    "how to change your mindset"
+  ],
+  "title_alternates": [
+    "The Wall Was Never There",
+    "Why You Stopped At A Wall That Wasn't Real",
+    "The Wall You Built And Forgot You Built"
+  ],
+  "hashtags": [
+    "#mindset",
+    "#limitingbeliefs",
+    "#growth",
+    "#psychology"
+  ],
+  "category": "Education"
 }

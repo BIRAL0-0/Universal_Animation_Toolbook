@@ -14,6 +14,9 @@ proves and what it deliberately does not prove.
 | `tools/validate_specs.py` | every episode spec validates | that a spec makes a good film |
 | `node tests/regression/run_all_tests.js` | frame animation actions, builds, hairstyles, geometries and bone-stretch limits | browser playback |
 | `tests/integration/test_studio_pipeline.py` | Python timing, exact word matching, BGM, silence compaction, speech-locked camera/board | neural voice model availability |
+| `tools/creative_gate.py` | every video records its hook/title/thumbnail candidates, alignment, labelled claims and script critique | whether any of those choices are good |
+| `tools/thumbnail_legibility.py --all` | every cover is rendered at the real phone sizes and no two are the same picture | whether a cover reads at 168 px — that is the eye's job |
+| `tools/creative_review.py --all` | the shipped MP4 delivers the record's hook window, beats and format | taste, or whether a static stretch is deliberate |
 | `pytest tests/production tests/unit -q` | doc/hygiene/environment/structure contracts | subjective audio/visual review |
 | silent draft render + validation report | ffmpeg encode path, frame count, clean render report, no grain and no unexpected warnings | voiceover, music sync or human-visible composition |
 | `scripts/verify_fresh_checkout.py` | tracked-only copy initializes `runtime/`, resolves kit paths, validates specs and renders a silent draft | Kokoro weights (network-dependent) |
@@ -23,6 +26,18 @@ measured WAV data; they do not watch the film or listen to it. A claim that visu
 passed requires actual frame inspection/listening and must cite the files reviewed. On a machine
 without Kokoro/Piper weights, `kokoro_ready: false` and `offline_voiceover_ready: false` are
 expected; `--voice none` is the only offline-valid smoke mode.
+
+## Cost: do not decode the catalog inside a unit test
+
+A test that shells out to `creative_review.py --all` decodes all eight masters. That took the
+`structure` CI job from **1m37s to 9m38s** for no extra coverage, because CI already runs
+`creative_review.py --all` as its own step. Unit tests should assert the contract on **one** real
+artifact and leave whole-catalog sweeps to the dedicated step.
+
+The same rule applies to the media-backed suites generally: a test that needs Pillow, numpy or
+imageio-ffmpeg must `pytest.importorskip` them **before** importing the module under test, because
+the `fresh checkout` job installs only the kit's runtime requirements and would otherwise fail at
+collection instead of skipping.
 
 ## Before changing shared components
 
