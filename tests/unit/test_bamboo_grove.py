@@ -24,6 +24,20 @@ MODULE = ROOT / "universal_toolbook" / "engine" / "bamboo_grove.js"
 pytestmark = pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
 
 
+def _canvas_backend_available() -> bool:
+    """The 2D canvas backend is an optional npm dependency, not a pip one.
+
+    CI's structure job installs only pyyaml + pytest, so the rasterising test below has to
+    stand down rather than fail the build on a missing compile target.
+    """
+    script = (
+        "try { require(%s); console.log('yes'); } catch (e) { console.log('no'); }"
+        % json.dumps(str(ROOT / "universal_toolbook/engine/canvas_backend.js"))
+    )
+    proc = subprocess.run(["node", "-e", script], capture_output=True, text=True, timeout=60)
+    return "yes" in proc.stdout
+
+
 def run_js(body: str) -> str:
     """Evaluate a snippet against the real module and return stdout."""
     script = textwrap.dedent(
@@ -85,6 +99,7 @@ def test_engine_modules_still_load_together():
     assert "loaded" in proc.stdout
 
 
+@pytest.mark.skipif(not _canvas_backend_available(), reason="no 2D canvas backend installed")
 def test_backdrop_covers_an_overscanned_camera():
     """A zoomed-out camera must not reveal the paper edge behind the stage rectangle."""
     script = textwrap.dedent(
