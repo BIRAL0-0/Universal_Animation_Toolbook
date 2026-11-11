@@ -141,9 +141,39 @@ opening and are recorded that way rather than quietly marked fine:
 | `the-first-plank` | **2 / 5** | Opens on *"Behind her, a clean desk held an untouched page."* A desk, not a problem. The real hook — the blank plank — arrives third. |
 | `the-two-inch-bridge` | **2 / 5** | Opens on *"The chasm at Kessa was eight hundred metres of nothing."* Scale, with nothing at stake for a person yet. The real hook is *"Two inches. Nobody measured it."* |
 
-Both are flagged `revision: "Flagged for future re-edit… not re-rendered in this pass"` because
-their masters are already published and re-cutting them is a separate, deliberate decision. That
-is the intended behaviour: the record tells the truth about a known weakness instead of hiding it.
+Both were originally flagged for a future re-edit rather than fixed. **`the-two-inch-bridge` has
+now been re-cut (3.1.0)** — see §4.1. `the-first-plank` remains flagged, and the reason is
+technical rather than editorial: its episode spec was never committed to `examples/`, so the only
+surviving record of its visuals is the rendered master. Re-cutting it means re-authoring eight
+scenes of choreography, not re-ordering two.
+
+### 4.1 The first re-cut: `the-two-inch-bridge` 3.0.0 → 3.1.0
+
+The judged weakness was that S01 established *scale* — "eight hundred metres of nothing" — with
+nothing at stake for a person. The fix swaps S01 and S02 so the film opens on the shortcut being
+taken and lets the chasm supply the scale that decision is measured against.
+
+**No word of the narration changed.** Every line is the line it always was; only the order of the
+two scenes changed. Each scene's environment, props, character beats, camera cues, board content
+and `accent_words` moved with the lines they belong to — swapping only the `dialogue` arrays and
+leaving the choreography behind was the first attempt, and it produced a lab scene with office
+blocking.
+
+| | 3.0.0 | 3.1.0 |
+|---|---|---|
+| Opens on | the chasm (scale, no stakes) | "Two inches off every joint." |
+| `opening_hook` | 2 / 5 | 4 / 5 |
+| Weakest criterion | `opening_hook` | `retention_potential` (3) — act two holds one beat for four scenes |
+| Runtime | 102.91 s | 101.60 s |
+| Master | preserved at `deliverables/superseded/` | `videos/the-two-inch-bridge/the-two-inch-bridge.mp4` |
+
+The re-cut scored 4/5, not 5/5, and `retention_potential` is now honestly the weakest: the film
+still runs four scenes on the same rising-water beat. **A good re-cut does not make a film perfect;
+it moves the weakness somewhere more specific.**
+
+Retention-map timings were re-derived from the rendered master's own chapter file rather than
+estimated, because the shorter runtime put the recorded payoff beat 1.4 s past the end of the film
+— which the post-render review caught by refusing to pass it.
 
 The same exercise found a **factual conflict** in `discipline-vs-obsession`: the title promises
 "9 PM vs 2 AM" while the rendered film's clock reads **9 PM and 1 AM**. The title is wrong; the

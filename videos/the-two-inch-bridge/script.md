@@ -6,9 +6,9 @@
 | Slug | `the-two-inch-bridge` |
 | Format | Long-form (landscape) — 16:9 |
 | Resolution | 1920x1080 |
-| Runtime | 1 min 43 s (102.91 s) |
+| Runtime | 1 min 42 s (101.60 s) |
 | Published | 2026-11-10 |
-| Production version | 3.0.0 |
+| Production version | 3.1.0 |
 | Voice engine | Kokoro-82M int8 ONNX (local, offline) |
 
 ## Logline
@@ -20,19 +20,7 @@ Nia shaves two inches off every joint to finish the Kessa bridge five weeks earl
 
 ---
 
-## S01 — Kessa Chasm | Twelve Weeks
-
-_environment: `modern_office` · mood: *reflective*_
-
-**NARRATOR:** The chasm at Kessa was eight hundred metres of nothing.
-
-**NARRATOR:** In spring, the city asked for a bridge.
-
-**OKORO:** Twelve weeks. Write it down.
-
-**NARRATOR:** Nia wrote it down, and quietly planned for nine.
-
-## S02 — The Shortcut | Two Inches
+## S01 — The Shortcut | Two Inches
 
 _environment: `tech_lab` · mood: *calm*_
 
@@ -43,6 +31,18 @@ _environment: `tech_lab` · mood: *calm*_
 **NIA:** Two inches is nothing.
 
 **NARRATOR:** Ninety joints. Two inches each.
+
+## S02 — Kessa Chasm | Twelve Weeks
+
+_environment: `modern_office` · mood: *reflective*_
+
+**NARRATOR:** The chasm at Kessa was eight hundred metres of nothing.
+
+**NARRATOR:** In spring, the city asked for a bridge.
+
+**OKORO:** Twelve weeks. Write it down.
+
+**NARRATOR:** Nia wrote it down, and quietly planned for nine.
 
 ## S03 — Ahead of Schedule | Too Fast
 
@@ -131,3 +131,16 @@ _environment: `sunrise_summit` · mood: *hopeful*_
   "The Restoration (Monomyth 12)" — see the video description for attribution.
 - Callipers, cut pin and deck-loading props carry the thesis visually: margin, not luck, is what
   survives a bad day.
+
+## Re-cut note (3.1.0, 2026-11-11)
+
+The opening two scenes were swapped so the film opens on the two inches rather than on
+the chasm. The judged weakness was that S01 established *scale* with nothing at stake for a
+person; the fix puts the decision in frame first and lets the chasm supply the scale it is
+measured against.
+
+**No word of the narration changed.** Every line in this film is the line it always was; only
+the order of S01 and S02 changed, and each scene's environment, props, character beats, camera
+cues, board content and `accent_words` moved with the lines they belong to.
+
+The previous master is preserved at `deliverables/superseded/the-two-inch-bridge.v3.0.0.mp4`.
