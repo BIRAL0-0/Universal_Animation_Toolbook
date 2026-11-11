@@ -22,8 +22,8 @@ engine/video_renderer.js
   ├── episode.js ──> character_rig.js, environments.js, motion_library.js,
   │                  world_props_and_boards.js
   ├── character_rig.js, motion_library.js, environments.js
-  ├── world_props_and_boards.js ──> beacon_harbor.js, impossible_wall.js
-  ├── parchment_ink_style.js ──> beacon_harbor.js, impossible_wall.js
+  ├── world_props_and_boards.js ──> beacon_harbor.js, impossible_wall.js, bamboo_grove.js
+  ├── parchment_ink_style.js ──> beacon_harbor.js, impossible_wall.js, bamboo_grove.js
   ├── portrait_framing.js, render_layout.js
   └── camera / subtitle / transition drawing (all local)
 

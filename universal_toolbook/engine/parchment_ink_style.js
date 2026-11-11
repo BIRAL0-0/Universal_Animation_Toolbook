@@ -15,6 +15,8 @@ const { BONES, clamp, lerp, ease, eo, ca, skeleton, applyPostureToPose } = requi
 const { HARBOR_BACKDROPS, drawBeaconBackdrop, keeperGate } = require('./beacon_harbor');
 // "The Wall You Agreed With" stage (empty parchment + ghost wall); same extension pattern.
 const { WALL_BACKDROPS, drawWallBackdrop } = require('./impossible_wall');
+// "The Bamboo Seed" set: ground cutaway + above/below-ground staging; same extension pattern.
+const { BAMBOO_BACKDROPS, drawBambooBackdrop } = require('./bamboo_grove');
 
 const INK = '#1a1612';
 const INK_SOFT = 'rgba(26, 22, 18, 0.55)';
@@ -214,6 +216,11 @@ function drawParchmentEnvironment(g, setting, globalT, ts, panX, floorY = 835, W
   // owning the shared ink vocabulary and every existing backdrop is untouched.
   if (HARBOR_BACKDROPS.includes(kind)) {
     return drawBeaconBackdrop(g, setting, globalT, ts, panX, floorY);
+  }
+
+  // Bamboo cutaway set (see engine/bamboo_grove.js): sky, cycling sun, soil strata, ground line.
+  if (BAMBOO_BACKDROPS.includes(kind)) {
+    return drawBambooBackdrop(g, setting, globalT, ts, panX, floorY, W, H);
   }
 
   // Bare stage for the wall fable: deliberately empty, so the only object in frame is the wall.

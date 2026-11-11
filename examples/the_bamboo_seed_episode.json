@@ -1,0 +1,792 @@
+{
+  "title": "The Bamboo Seed",
+  "channel_name": "",
+  "thesis": "Nothing was wasted. It was growing where no one could see. Your hard work is never invisible. Keep going.",
+  "style": "parchment",
+  "bgm": "reflective_piano",
+  "subtitles_mode": "cinema",
+  "outro": false,
+  "voices": {
+    "narrator": {
+      "voice": "en-US-GuyNeural",
+      "rate": "-2%",
+      "pitch": "-1Hz"
+    },
+    "neighbour": {
+      "voice": "en-US-ChristopherNeural",
+      "rate": "-1%",
+      "pitch": "-2Hz"
+    }
+  },
+  "cast": {
+    "farmer": {
+      "name": "THE FARMER",
+      "style": "ink_stick",
+      "accessories": [
+        "tunic",
+        "straw_hat"
+      ],
+      "expression": "patient",
+      "posture": 0.22,
+      "scale": 1.0,
+      "eyes": true
+    },
+    "neighbour": {
+      "name": "THE NEIGHBOUR",
+      "style": "ink_stick",
+      "accessories": [
+        "coat",
+        "side_wisps"
+      ],
+      "expression": "skeptical",
+      "posture": -0.08,
+      "scale": 0.98,
+      "eyes": true
+    }
+  },
+  "chapters": [
+    {
+      "scene": "S02",
+      "number": "01",
+      "title": "Year One: the measurement does not change"
+    },
+    {
+      "scene": "S04",
+      "number": "02",
+      "title": "What was happening underneath"
+    },
+    {
+      "scene": "S05",
+      "number": "03",
+      "title": "Year Five"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "S01",
+      "chapter": "The Seed | Day One",
+      "mood": "calm",
+      "bgm": "reflective_piano",
+      "bgm_gain": 0.85,
+      "accent_color": "#b4762a",
+      "duration": 13.5,
+      "lead_in": 0.5,
+      "tail_out": 0.5,
+      "setting": {
+        "backdrop": "parchment_bamboo",
+        "soil_y": 0.54,
+        "sun_cycles": 1,
+        "hour": "dawn"
+      },
+      "props": [
+        {
+          "type": "bamboo_cutaway",
+          "x": 0.62,
+          "scale": 1.0,
+          "year": 0,
+          "z": -16,
+          "sole_prop": true,
+          "soil_y": 0.54,
+          "stalk_height": 560,
+          "x_portrait": 0.66
+        },
+        {
+          "type": "bamboo_label",
+          "x": 0.74,
+          "elevation": 323.8,
+          "text": "0 cm",
+          "size": 34,
+          "z": -8,
+          "opacity": 1.0,
+          "x_portrait": 0.8
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.04,
+          "zoom_to": 1.0,
+          "focus_x": 0.5,
+          "focus_y": 0.54,
+          "cut": true
+        },
+        {
+          "cue_on": "watered it",
+          "zoom_from": 1.0,
+          "zoom_to": 1.07,
+          "focus_x": 0.5,
+          "focus_y": 0.58,
+          "move_dur": 2.2,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "farmer",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 4.2,
+              "action": "kneel_lookup",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "patient",
+              "elevation": 271.8
+            },
+            {
+              "start": 4.2,
+              "end": 9.0,
+              "action": "look_horizon",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "patient",
+              "elevation": 271.8
+            },
+            {
+              "start": 9.0,
+              "end": 13.5,
+              "action": "walk_sad",
+              "x": 0.44,
+              "facing": -1,
+              "expression": "calm",
+              "elevation": 271.8
+            }
+          ]
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "A farmer planted a bamboo seed.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "Then he watered it.",
+          "pause_after": 0.45
+        },
+        {
+          "speaker": "narrator",
+          "text": "The sun came up. The sun went down. Nothing happened.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "Nobody clapped. Nobody noticed. There was nothing to notice.",
+          "pause_after": 0.6
+        }
+      ],
+      "accent_words": [
+        "bamboo seed",
+        "watered it",
+        "Nothing happened"
+      ]
+    },
+    {
+      "id": "S02",
+      "chapter": "Year One",
+      "mood": "reflective",
+      "bgm": "reflective_piano",
+      "bgm_gain": 0.85,
+      "accent_color": "#b4762a",
+      "duration": 15.0,
+      "lead_in": 0.5,
+      "tail_out": 0.5,
+      "setting": {
+        "backdrop": "parchment_bamboo",
+        "soil_y": 0.54,
+        "sun_cycles": 2,
+        "hour": "morning"
+      },
+      "props": [
+        {
+          "type": "bamboo_cutaway",
+          "x": 0.62,
+          "scale": 1.0,
+          "year": 1,
+          "z": -16,
+          "sole_prop": true,
+          "soil_y": 0.54,
+          "stalk_height": 560,
+          "x_portrait": 0.66
+        },
+        {
+          "type": "bamboo_label",
+          "x": 0.74,
+          "elevation": 323.8,
+          "text": "0 cm",
+          "size": 34,
+          "z": -8,
+          "opacity": 1.0,
+          "x_portrait": 0.8
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.06,
+          "zoom_to": 1.02,
+          "focus_x": 0.5,
+          "focus_y": 0.55,
+          "cut": true
+        },
+        {
+          "cue_on": "Zero",
+          "zoom_from": 1.02,
+          "zoom_to": 1.1,
+          "focus_x": 0.5,
+          "focus_y": 0.62,
+          "move_dur": 2.4,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "farmer",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.0,
+              "action": "look_horizon",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "patient",
+              "elevation": 271.8
+            },
+            {
+              "start": 6.0,
+              "end": 10.4,
+              "action": "kneel_lookup",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "patient",
+              "elevation": 271.8
+            },
+            {
+              "start": 10.4,
+              "end": 15.0,
+              "action": "stand_up_resolve",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "determined",
+              "elevation": 271.8
+            }
+          ]
+        },
+        {
+          "id": "neighbour",
+          "beats": [
+            {
+              "start": 7.4,
+              "end": 15.0,
+              "action": "cross_arms_skeptical",
+              "x": 0.8,
+              "facing": -1,
+              "expression": "skeptical",
+              "elevation": 271.8
+            }
+          ]
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "A year went by.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "Every morning he watered that patch of bare ground. Every evening he watered it again.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "Above the ground, the measurement did not change. Zero.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "neighbour",
+          "text": "You are watering dirt.",
+          "pause_after": 0.7
+        }
+      ],
+      "accent_words": [
+        "year went by",
+        "Zero",
+        "watering dirt"
+      ]
+    },
+    {
+      "id": "S03",
+      "chapter": "The Same Ground",
+      "mood": "melancholic",
+      "bgm": "reflective_piano",
+      "bgm_gain": 0.8,
+      "accent_color": "#8a7a4a",
+      "duration": 14.5,
+      "lead_in": 0.5,
+      "tail_out": 0.5,
+      "setting": {
+        "backdrop": "parchment_bamboo",
+        "soil_y": 0.54,
+        "sun_cycles": 4,
+        "hour": "dusk"
+      },
+      "props": [
+        {
+          "type": "bamboo_cutaway",
+          "x": 0.62,
+          "scale": 1.0,
+          "year": 3.4,
+          "z": -16,
+          "sole_prop": true,
+          "soil_y": 0.54,
+          "stalk_height": 560,
+          "x_portrait": 0.66
+        },
+        {
+          "type": "bamboo_label",
+          "x": 0.74,
+          "elevation": 323.8,
+          "text": "0 cm",
+          "size": 34,
+          "z": -8,
+          "opacity": 1.0,
+          "x_portrait": 0.8
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.02,
+          "zoom_to": 1.06,
+          "focus_x": 0.5,
+          "focus_y": 0.54,
+          "cut": true
+        },
+        {
+          "cue_on": "nobody was looking",
+          "zoom_from": 1.06,
+          "zoom_to": 1.16,
+          "focus_x": 0.5,
+          "focus_y": 0.74,
+          "move_dur": 2.6,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "farmer",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 7.5,
+              "action": "kneel_exhausted",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "tired",
+              "elevation": 271.8
+            },
+            {
+              "start": 7.5,
+              "end": 14.5,
+              "action": "stand_up_resolve",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "determined",
+              "elevation": 271.8
+            }
+          ]
+        },
+        {
+          "id": "neighbour",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.0,
+              "action": "cross_arms_skeptical",
+              "x": 0.82,
+              "facing": -1,
+              "expression": "skeptical",
+              "elevation": 271.8
+            },
+            {
+              "start": 6.0,
+              "end": 14.5,
+              "action": "walk_sad",
+              "x": 0.86,
+              "facing": 1,
+              "expression": "skeptical",
+              "elevation": 271.8
+            }
+          ]
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Two years. Three years. Four.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "He kept the same appointment with the same square of earth.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "The neighbour stopped watching. There is nothing interesting about a man who waters dirt.",
+          "pause_after": 0.6
+        },
+        {
+          "speaker": "narrator",
+          "text": "And underneath \u2014 quietly, patiently, in a place no one had thought to look \u2014",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "the seed was doing all of its work.",
+          "pause_after": 0.7
+        }
+      ],
+      "accent_words": [
+        "same appointment",
+        "stopped watching",
+        "all of its work"
+      ]
+    },
+    {
+      "id": "S04",
+      "chapter": "The Roots",
+      "mood": "wonder",
+      "bgm": "reflective_piano",
+      "bgm_gain": 0.9,
+      "accent_color": "#b4762a",
+      "duration": 14.0,
+      "lead_in": 0.5,
+      "tail_out": 0.5,
+      "setting": {
+        "backdrop": "parchment_bamboo",
+        "soil_y": 0.46,
+        "sun_cycles": 3,
+        "hour": "night"
+      },
+      "props": [
+        {
+          "type": "bamboo_cutaway",
+          "x": 0.5,
+          "scale": 1.18,
+          "year": 4.2,
+          "z": -16,
+          "sole_prop": true,
+          "soil_y": 0.46,
+          "stalk_height": 560,
+          "x_portrait": 0.5
+        },
+        {
+          "type": "bamboo_label",
+          "x": 0.76,
+          "elevation": 410.2,
+          "text": "0 cm",
+          "size": 34,
+          "z": -8,
+          "opacity": 1.0,
+          "x_portrait": 0.78
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.16,
+          "zoom_to": 1.1,
+          "focus_x": 0.5,
+          "focus_y": 0.72,
+          "cut": true
+        },
+        {
+          "cue_on": "nobody was looking",
+          "zoom_from": 1.1,
+          "zoom_to": 1.0,
+          "focus_x": 0.5,
+          "focus_y": 0.6,
+          "move_dur": 2.4,
+          "cut": true
+        }
+      ],
+      "characters": [],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Roots. Wider every season. Deeper every rain.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "Nothing above the ground would have told you.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "The ground line stayed flat, and the measurement stayed at zero, and the whole time the work was real.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "It was happening in the one place nobody was looking.",
+          "pause_after": 0.7
+        }
+      ],
+      "accent_words": [
+        "Roots",
+        "the work was real",
+        "nobody was looking"
+      ]
+    },
+    {
+      "id": "S05",
+      "chapter": "Year Five",
+      "mood": "triumph",
+      "bgm": "triumph_horizon",
+      "bgm_gain": 0.95,
+      "accent_color": "#d9a521",
+      "duration": 15.5,
+      "lead_in": 0.4,
+      "tail_out": 0.5,
+      "setting": {
+        "backdrop": "parchment_bamboo",
+        "soil_y": 0.62,
+        "sun_cycles": 2,
+        "hour": "sunrise"
+      },
+      "props": [
+        {
+          "type": "bamboo_cutaway",
+          "x": 0.62,
+          "scale": 1.0,
+          "z": -16,
+          "sole_prop": true,
+          "soil_y": 0.62,
+          "stalk_height": 560,
+          "x_portrait": 0.66,
+          "year_from": 3.9,
+          "year_to": 5.0
+        },
+        {
+          "type": "bamboo_label",
+          "x": 0.74,
+          "elevation": 237.4,
+          "text": "0 cm",
+          "size": 34,
+          "z": -8,
+          "opacity": 1.0,
+          "x_portrait": 0.8,
+          "track_growth": true,
+          "year_from": 3.9,
+          "year_to": 5.0,
+          "zero_text": "0 cm"
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.0,
+          "zoom_to": 1.0,
+          "focus_x": 0.5,
+          "focus_y": 0.6,
+          "cut": true
+        },
+        {
+          "cue_on": "three feet",
+          "zoom_from": 1.0,
+          "zoom_to": 0.9,
+          "focus_x": 0.5,
+          "focus_y": 0.46,
+          "move_dur": 2.2,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "farmer",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.2,
+              "action": "look_horizon",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "calm",
+              "elevation": 185.4
+            },
+            {
+              "start": 6.2,
+              "end": 11.0,
+              "action": "react_surprise",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "surprised",
+              "elevation": 185.4
+            },
+            {
+              "start": 11.0,
+              "end": 15.5,
+              "action": "look_horizon",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "happy",
+              "elevation": 185.4
+            }
+          ]
+        },
+        {
+          "id": "neighbour",
+          "beats": [
+            {
+              "start": 11.2,
+              "end": 15.5,
+              "action": "react_surprise",
+              "x": 0.84,
+              "facing": -1,
+              "expression": "surprised",
+              "elevation": 185.4
+            }
+          ]
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Then, in the fifth year, the sun came up on a shape that had not been there the night before.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "It came up three feet before breakfast.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "It came up so fast that the neighbour heard it and came back out to the fence.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "Nothing. He had done nothing different. That was the thing.",
+          "pause_after": 0.7
+        }
+      ],
+      "accent_words": [
+        "fifth year",
+        "three feet",
+        "nothing different"
+      ]
+    },
+    {
+      "id": "S06",
+      "chapter": "The Moral",
+      "mood": "triumph",
+      "bgm": "triumph_horizon",
+      "bgm_gain": 0.9,
+      "accent_color": "#d9a521",
+      "duration": 16.0,
+      "lead_in": 0.4,
+      "tail_out": 0.9,
+      "setting": {
+        "backdrop": "parchment_bamboo",
+        "soil_y": 0.6,
+        "sun_cycles": 1,
+        "hour": "sunrise"
+      },
+      "props": [
+        {
+          "type": "bamboo_cutaway",
+          "x": 0.62,
+          "scale": 0.92,
+          "year": 5.0,
+          "z": -16,
+          "sole_prop": true,
+          "soil_y": 0.6,
+          "stalk_height": 560,
+          "x_portrait": 0.66
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 0.94,
+          "zoom_to": 0.9,
+          "focus_x": 0.5,
+          "focus_y": 0.5,
+          "cut": true
+        },
+        {
+          "cue_on": "never invisible",
+          "zoom_from": 0.9,
+          "zoom_to": 0.86,
+          "focus_x": 0.5,
+          "focus_y": 0.42,
+          "move_dur": 2.6,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "farmer",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 8.0,
+              "action": "look_horizon",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "happy",
+              "elevation": 207.0
+            },
+            {
+              "start": 8.0,
+              "end": 16.0,
+              "action": "stand_up_resolve",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "determined",
+              "elevation": 207.0
+            }
+          ]
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "The bamboo did not grow in six weeks. It grew for five years and showed up in six weeks.",
+          "pause_after": 0.6
+        },
+        {
+          "speaker": "narrator",
+          "text": "The farmer stood under it and looked up at all that green, and he did not feel lucky.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "He felt like a man who had watered a seed every morning for five years.",
+          "pause_after": 0.6
+        },
+        {
+          "speaker": "narrator",
+          "text": "Nothing was wasted. It was growing where no one could see.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "Your hard work is never invisible. Keep going.",
+          "pause_after": 1.1
+        }
+      ],
+      "accent_words": [
+        "six weeks",
+        "not feel lucky",
+        "never invisible",
+        "Keep going"
+      ]
+    }
+  ]
+}
