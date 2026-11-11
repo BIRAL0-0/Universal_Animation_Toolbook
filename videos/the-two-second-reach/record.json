@@ -51,5 +51,114 @@
   "format_policy_exception": null,
   "previous_title": "The Two-Second Reach",
   "primary_keyword": "phone distraction",
-  "thumbnail_text": "TWO STEPS"
+  "thumbnail_text": "TWO STEPS",
+  "creative": {
+    "_note": "Backfilled 2026-11-11 from the shipped script, thumbnail and record. Honest: weaknesses are recorded rather than scored away. New videos fill this before production.",
+    "backfilled": true,
+    "hook_candidates": [
+      {
+        "text": "You never lose an hour all at once.",
+        "selected": true,
+        "why": "A reframe in the first line: it denies the assumption the viewer holds, then names the real mechanism.",
+        "seconds_into_video": 0.0
+      },
+      {
+        "text": "You lose it in a two-second reach.",
+        "selected": false,
+        "why": "",
+        "seconds_into_video": 0.0
+      },
+      {
+        "text": "The reach is not the problem. The two seconds after it are.",
+        "selected": false,
+        "why": "",
+        "seconds_into_video": 0.0
+      }
+    ],
+    "retention_map": [
+      {
+        "at_sec": 0,
+        "kind": "hook",
+        "purpose": "state the promise in the first spoken line"
+      },
+      {
+        "at_sec": 11.4,
+        "kind": "escalation",
+        "purpose": "raise the cost so the premise stops being abstract"
+      },
+      {
+        "at_sec": 23.5,
+        "kind": "reveal",
+        "purpose": "name the mechanism the hook withheld"
+      },
+      {
+        "at_sec": 32.66,
+        "kind": "payoff",
+        "purpose": "deliver the moral the opening promised"
+      }
+    ],
+    "title_candidates": [
+      {
+        "text": "Phone Distraction: The 2-Second Reach That Ends Focus",
+        "selected": true
+      },
+      {
+        "text": "You Lose Hours Two Seconds At A Time",
+        "selected": false
+      },
+      {
+        "text": "The Reach That Ends A Morning",
+        "selected": false
+      }
+    ],
+    "thumbnail_concepts": [
+      {
+        "focal_subject": "A large figure hovering over a glowing phone in the dark",
+        "emotion": "temptation",
+        "text": "TWO STEPS",
+        "selected": true
+      },
+      {
+        "focal_subject": "A hand frozen mid-reach, phone lighting the desk",
+        "emotion": "hesitation",
+        "text": "",
+        "selected": false
+      },
+      {
+        "focal_subject": "A phone placed far from a desk, in focus",
+        "emotion": "resolution",
+        "text": "",
+        "selected": false
+      }
+    ],
+    "alignment": {
+      "title_promise": "A mechanism claim: focus ends in a two-second reach.",
+      "thumbnail_promise": "TWO STEPS \u2014 the concrete counter-move, which the title does not name.",
+      "hook_promise": "Denies the 'big distraction' assumption in the first three words.",
+      "verdict": "aligned"
+    },
+    "claims": [
+      {
+        "text": "a two-second reach precedes most focus loss",
+        "label": "O",
+        "used_as": "fact"
+      }
+    ],
+    "script_critique": {
+      "scores": {
+        "opening_hook": 5,
+        "clarity": 5,
+        "originality": 4,
+        "story_progression": 3,
+        "retention_potential": 4,
+        "emotional_impact": 3,
+        "visual_potential": 4,
+        "payoff": 4,
+        "accuracy": 3,
+        "pacing": 4
+      },
+      "weakest": "story_progression",
+      "revision": "Added a middle beat showing a second reach, so the progression is not one example stretched over the runtime."
+    }
+  }
 }

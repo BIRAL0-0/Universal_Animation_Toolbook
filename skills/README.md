@@ -17,6 +17,7 @@ repository.
 | `youtube-storytelling-and-hooks` | First-3-second visual+spoken hooks, retention pacing for `<60s` Shorts vs `>=60s` long-form | [`youtube-storytelling-and-hooks/SKILL.md`](youtube-storytelling-and-hooks/SKILL.md) |
 | `sound-design` | Stereo contact foley, BGM mood selection, `-9.5 dB` speech ducking, broadcast loudness targets | [`sound-design/SKILL.md`](sound-design/SKILL.md) |
 | `animation-quality-assurance` | Automated 17-scenario visual regression suite + mandatory frame-by-frame visual inspection | [`animation-quality-assurance/SKILL.md`](animation-quality-assurance/SKILL.md) |
+| `youtube-packaging` | Hook, title and thumbnail as one promise; retention map; script critique; creative gate | [`youtube-packaging/SKILL.md`](youtube-packaging/SKILL.md) |
 | `scriptwriting` | General script intake, polishing via `VOICEOVER_POLISH_PROMPT.md`, meaning preservation | [`scriptwriting/SKILL.md`](scriptwriting/SKILL.md) |
 | `voiceover-audio` | Kokoro `am_michael` / Piper TTS setup, word-level alignment, speech synchronization | [`voiceover-audio/SKILL.md`](voiceover-audio/SKILL.md) |
 | `youtube-research` | Topic discovery, primary-source verification, `[M]`/`[O]`/`[P]` claim confidence | [`youtube-research/SKILL.md`](youtube-research/SKILL.md) |

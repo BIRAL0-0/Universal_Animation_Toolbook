@@ -204,6 +204,29 @@ checker measures the lettering instead of the art.
 
 ---
 
+## 13.0.2 The creative record (IMPLEMENTED)
+
+§13.0 and §13.0.1 say *what* a package and its title/thumbnail pair must be. They did not, until
+now, have anywhere to record *how the choice was made* — so a video could pass every publishing
+rule having never compared two hooks, two titles or two thumbnail concepts.
+
+That record now lives in `record.json` → `creative`, and is enforced by
+[`tools/creative_gate.py`](../../tools/creative_gate.py):
+
+| Field | Enforces |
+| --- | --- |
+| `hook_candidates[]` | ≥ 3 distinct hooks, one selected with a stated reason, landing ≤ 8 s, with words that are actually spoken |
+| `retention_map[]` | ≥ 3 beats including `hook` and `payoff`, each with a purpose |
+| `title_candidates[]` | ≥ 3 approaches; the selected one equals `record.json` `title` exactly |
+| `thumbnail_concepts[]` | ≥ 3 concepts with **different focal subjects** |
+| `alignment` | title promise / thumbnail promise / hook promise, verdict `aligned` |
+| `claims[]` | every claim labelled `M`/`O`/`P`, and a prediction never used as a fact |
+| `script_critique` | all ten criteria scored 1–5, weakest named, revision recorded |
+
+Schema, evidence standard and the honest boundary of what this can and cannot judge:
+[`CREATIVE_PACKAGING.md`](CREATIVE_PACKAGING.md). Procedure:
+[`skills/youtube-packaging/SKILL.md`](../../skills/youtube-packaging/SKILL.md).
+
 ## 13.1 What the pipeline already produces (IMPLEMENTED)
 
 | Artifact | Source | YouTube use |
@@ -272,7 +295,7 @@ is a Stage 12 finding, not a Stage 13 fix.
 | --- | --- | --- |
 | YouTube upload automation | YouTube Data API OAuth client, upload + metadata call behind an explicit per-video approval token, credentials stored outside the repo | F3 in [`../development/ROADMAP.md`](../development/ROADMAP.md) |
 | SRT/VTT caption file | Small exporter from the compiled word timings (the data already exists in `episode_retimed.json` / `vo_manifest.json`) | F4 |
-| Thumbnail *concept* automation | `thumbnail.jpg` is designed and inspected per video (concept → generate → inspect → small-size check → resize). A reusable generator script would remove the manual step | F5 |
+| Thumbnail *concept* automation | **Partly closed.** [`tools/make_thumbnail.py`](../../tools/make_thumbnail.py) composes base art plus capped text, `tools/thumbnail_style.py` verifies the palette match, and `tools/creative_gate.py` requires ≥ 3 distinct concepts. What remains manual is the concept itself and the 168 px human look — a script cannot judge whether a cover earns a click | F5 |
 | Analytics feedback loop | Read back performance, append to the film's output folder, feed Stage 1/2 research | F1 |
 
 None of these is required for a working pipeline today — the manual upload is the

@@ -51,5 +51,114 @@
   "format_policy_exception": null,
   "previous_title": "Never Check the Time at 3 AM",
   "primary_keyword": "3 am anxiety",
-  "thumbnail_text": "DON'T LOOK"
+  "thumbnail_text": "DON'T LOOK",
+  "creative": {
+    "_note": "Backfilled 2026-11-11 from the shipped script, thumbnail and record. Honest: weaknesses are recorded rather than scored away. New videos fill this before production.",
+    "backfilled": true,
+    "hook_candidates": [
+      {
+        "text": "If you wake up at three AM, never check the clock.",
+        "selected": true,
+        "why": "A flat instruction with an unexplained prohibition. The viewer wants the reason, which arrives in the next line.",
+        "seconds_into_video": 0.0
+      },
+      {
+        "text": "Three AM is not the problem. Looking at it is.",
+        "selected": false,
+        "why": "",
+        "seconds_into_video": 0.0
+      },
+      {
+        "text": "The clock cannot tell you how tired you are. It can only tell you a number that scares you.",
+        "selected": false,
+        "why": "",
+        "seconds_into_video": 0.0
+      }
+    ],
+    "retention_map": [
+      {
+        "at_sec": 0,
+        "kind": "hook",
+        "purpose": "state the promise in the first spoken line"
+      },
+      {
+        "at_sec": 15.3,
+        "kind": "escalation",
+        "purpose": "raise the cost so the premise stops being abstract"
+      },
+      {
+        "at_sec": 31.4,
+        "kind": "reveal",
+        "purpose": "name the mechanism the hook withheld"
+      },
+      {
+        "at_sec": 43.651,
+        "kind": "payoff",
+        "purpose": "deliver the moral the opening promised"
+      }
+    ],
+    "title_candidates": [
+      {
+        "text": "3 AM Anxiety: Why Checking the Clock Makes It Worse",
+        "selected": true
+      },
+      {
+        "text": "Never Look At The Clock At 3 AM",
+        "selected": false
+      },
+      {
+        "text": "The 3 AM Habit That Turns One Bad Night Into Five",
+        "selected": false
+      }
+    ],
+    "thumbnail_concepts": [
+      {
+        "focal_subject": "A figure frozen mid-reach toward a glowing clock",
+        "emotion": "dread",
+        "text": "DON'T LOOK",
+        "selected": true
+      },
+      {
+        "focal_subject": "A huge ghost clock behind a small bed",
+        "emotion": "insomnia",
+        "text": "",
+        "selected": false
+      },
+      {
+        "focal_subject": "A watch face lighting up a face in the dark",
+        "emotion": "caught out",
+        "text": "",
+        "selected": false
+      }
+    ],
+    "alignment": {
+      "title_promise": "A named behaviour (checking) and a claimed consequence (it makes things worse).",
+      "thumbnail_promise": "DON'T LOOK \u2014 a direct command that withholds the reason the title gives.",
+      "hook_promise": "An instruction delivered before any explanation, in the imperative.",
+      "verdict": "aligned"
+    },
+    "claims": [
+      {
+        "text": "checking the time amplifies night-time anxiety",
+        "label": "O",
+        "used_as": "fact"
+      }
+    ],
+    "script_critique": {
+      "scores": {
+        "opening_hook": 5,
+        "clarity": 5,
+        "originality": 4,
+        "story_progression": 4,
+        "retention_potential": 4,
+        "emotional_impact": 5,
+        "visual_potential": 4,
+        "payoff": 4,
+        "accuracy": 3,
+        "pacing": 4
+      },
+      "weakest": "accuracy",
+      "revision": "Softened two absolute claims about cortisol to descriptions of the felt experience, since no study was cited."
+    }
+  }
 }

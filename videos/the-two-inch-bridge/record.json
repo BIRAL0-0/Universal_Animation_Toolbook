@@ -50,5 +50,114 @@
   "format_policy_exception": null,
   "previous_title": "The Two-Inch Bridge",
   "primary_keyword": "cutting corners",
-  "thumbnail_text": "NOBODY NOTICED"
+  "thumbnail_text": "NOBODY NOTICED",
+  "creative": {
+    "_note": "Backfilled 2026-11-11 from the shipped script, thumbnail and record. Honest: weaknesses are recorded rather than scored away. New videos fill this before production.",
+    "backfilled": true,
+    "hook_candidates": [
+      {
+        "text": "The chasm at Kessa was eight hundred metres of nothing.",
+        "selected": true,
+        "why": "Retrospective audit: a descriptive establishing line. Scale is impressive but nothing is at stake for a person yet. The real hook is 'two inches, nobody measured it'.",
+        "seconds_into_video": 0.0
+      },
+      {
+        "text": "In spring, the city asked for a bridge.",
+        "selected": false,
+        "why": "",
+        "seconds_into_video": 0.0
+      },
+      {
+        "text": "Two inches. Nobody measured it.",
+        "selected": false,
+        "why": "",
+        "seconds_into_video": 0.0
+      }
+    ],
+    "retention_map": [
+      {
+        "at_sec": 0,
+        "kind": "hook",
+        "purpose": "state the promise in the first spoken line"
+      },
+      {
+        "at_sec": 36.0,
+        "kind": "escalation",
+        "purpose": "raise the cost so the premise stops being abstract"
+      },
+      {
+        "at_sec": 74.1,
+        "kind": "reveal",
+        "purpose": "name the mechanism the hook withheld"
+      },
+      {
+        "at_sec": 102.914,
+        "kind": "payoff",
+        "purpose": "deliver the moral the opening promised"
+      }
+    ],
+    "title_candidates": [
+      {
+        "text": "Cutting Corners: What a 2-Inch Shortcut Really Costs",
+        "selected": true
+      },
+      {
+        "text": "Two Inches. Eight Hundred Metres. Nobody Checked.",
+        "selected": false
+      },
+      {
+        "text": "The Shortcut Nobody Measured",
+        "selected": false
+      }
+    ],
+    "thumbnail_concepts": [
+      {
+        "focal_subject": "Two inspectors pointing at a frayed cable join",
+        "emotion": "alarm",
+        "text": "NOBODY NOTICED",
+        "selected": true
+      },
+      {
+        "focal_subject": "A close view of a two-inch gap in a bridge cable",
+        "emotion": "dread",
+        "text": "",
+        "selected": false
+      },
+      {
+        "focal_subject": "A crowd crossing a bridge, one cable glowing hot",
+        "emotion": "suspense",
+        "text": "",
+        "selected": false
+      }
+    ],
+    "alignment": {
+      "title_promise": "A tiny, absurd shortcut measured against a catastrophic consequence.",
+      "thumbnail_promise": "NOBODY NOTICED \u2014 states that the failure was silent, which the title's 'really costs' sets up.",
+      "hook_promise": "Scale first, then the two-inch human error.",
+      "verdict": "aligned"
+    },
+    "claims": [
+      {
+        "text": "a two-inch error is invisible to casual inspection",
+        "label": "O",
+        "used_as": "illustration"
+      }
+    ],
+    "script_critique": {
+      "scores": {
+        "opening_hook": 2,
+        "clarity": 4,
+        "originality": 4,
+        "story_progression": 4,
+        "retention_potential": 3,
+        "emotional_impact": 3,
+        "visual_potential": 4,
+        "payoff": 4,
+        "accuracy": 3,
+        "pacing": 3
+      },
+      "weakest": "opening_hook",
+      "revision": "Flagged for future re-edit: lead with the two inches, then the chasm. Not re-rendered in this pass."
+    }
+  }
 }

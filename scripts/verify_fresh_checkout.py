@@ -75,6 +75,7 @@ def main() -> int:
         # Pure-python gates must work with no installed dependencies at all.
         run("check_docs", [system_py, "tools/check_docs.py"], clone, steps)
         run("validate_structure", [system_py, "tools/validate_structure.py"], clone, steps)
+        run("creative gate", [system_py, "tools/creative_gate.py"], clone, steps)
 
         if not args.skip_install:
             run("venv", [py, "-m", "venv", ".venv"], clone, steps)

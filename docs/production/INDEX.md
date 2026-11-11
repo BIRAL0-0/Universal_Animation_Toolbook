@@ -90,6 +90,13 @@ you where that contract sits inside the wider pipeline and what happens before a
 human-approval gates, and keep everything in `runtime/work/` (see [`ASSET_MANAGEMENT.md`](ASSET_MANAGEMENT.md)).
 Do not begin rendering before the Stage 6 approval (final narration approved).
 
+**Making or fixing a thumbnail, title or hook.** Read
+[`CREATIVE_PACKAGING.md`](CREATIVE_PACKAGING.md) for the `creative` record schema and the honest
+limits of what can be automated, then
+[`skills/youtube-packaging/SKILL.md`](../../skills/youtube-packaging/SKILL.md) for the procedure.
+The numbers behind the rules (what is verified about title/thumbnail complementarity and mobile
+legibility) stay in [`YOUTUBE_PUBLISHING.md`](YOUTUBE_PUBLISHING.md) §13.0.1.
+
 **Engine developer.** [`TOOLS_AND_MODELS.md`](TOOLS_AND_MODELS.md) is the component inventory,
 [`docs/architecture/SYSTEM_OVERVIEW.md`](../../docs/architecture/SYSTEM_OVERVIEW.md) is the
 module-to-effect map, and the maintenance rule in
