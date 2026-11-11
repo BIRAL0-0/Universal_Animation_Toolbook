@@ -177,7 +177,8 @@ not metadata failures.
 ## 3. Part 2 — Commands and tools
 
 Every flag below was read from `--help` or the source on the date in the header. **If a flag is
-not listed here, verify it before using it.** Nothing in this section is aspirational.
+not listed here, verify it before using it.** Nothing in this section is aspirational, and where a
+tool was previously misdescribed the correction is recorded in 3.3 rather than erased.
 
 ### 3.1 `run_studio.py` — the orchestrator
 
@@ -253,19 +254,26 @@ Three behaviours worth knowing because they are not obvious from flag names:
 | `seo_audit.py` | Score search-facing metadata 0–100 (CI floor is **78**) | `[--min N] [--verbose] [--json]` |
 | `package_video.py` | File a finished master into `videos/<slug>/` as a publishing package | see `--help`; requires `--thumbnail --title --description-file --pinned-comment-file --topic --summary --key-angle` |
 | `make_thumbnail.py` | Compose base art + minimal text into a platform-sized cover | `base out [--size --text --y --text-size --stroke --font --plate …]` |
-| `compose_thumbnail.py` | **Do not call blind** — crashes on `--help`; read the source first | argparse broken |
+| `compose_thumbnail.py` | Typeset a cover over base art with a text band, scrim or accent rule | `art out [--size --align --scrim --band-fill …]` |
 | `make_scene_plan.py` | Scene breakdown from a **project** dir | positional `project` |
 | `produce_video.py` | Full project-route pipeline: `validate stills draft master measure frames verify publish` | positional `project`; needs `projects/<slug>` |
-| `probe`-style checks: `mix_probe.py` | Audio loudness/mix analysis — **not `--help`**, it expects a work dir | run with a work dir containing `vo_manifest.json` |
-| `subtitle_check.py` | Subtitle timing sync — same caveat as above | run with a work dir |
-| `audio_report.py` | **Not `--help`-safe** (argparse misuse) | read source |
+| `mix_probe.py` | Narration-vs-music separation and true peak, without rendering | `[episode_spec] [work_dir]` |
+| `subtitle_check.py` | Subtitle timing against the real speech track | `[work_dir]` |
+| `audio_report.py` | Measure a rendered WAV against its voiceover manifest | `wav manifest` |
 | `bulk builders`: `build_wall_episode.py` | Rebuild the wall episode from a template | episode-specific |
 | `serve_downloads.py` | Serve a directory as browser-friendly downloads with Range support | `<dir> [--port]` |
 | `make_poster.js` | Node poster generation | node only |
 
-**Three tools crash on `--help`** (`compose_thumbnail.py`, `audio_report.py`, and the two
-work-dir tools when run without one). This is a known defect recorded in
-`docs/production/KNOWN_ISSUES.md`, not a documentation error. Do not cite them as CLI examples.
+**Every tool in `tools/` now answers `--help` cleanly.** Two did not until recently:
+`subtitle_check.py` and `mix_probe.py` read `sys.argv` directly, so `--help` was treated as a
+directory path and the run died on a missing `vo_manifest.json`. Both now use `argparse` and say
+explicitly that they need the work dir from a previous render.
+
+An earlier revision of this page also claimed `compose_thumbnail.py` and `audio_report.py` had
+broken argparse. They did not — they were missing Pillow and numpy in the environment that ran
+them, and the `ModuleNotFoundError` was misread as an argparse fault. **A crash at import is not a
+crash in argument parsing**, and the difference matters: one is a defect in the tool, the other is
+a missing dependency in the environment.
 
 ### 3.4 The standard workflow — episode route, end to end
 
@@ -563,7 +571,7 @@ The authoritative English voiceover script-editing standard is
 
 **Audio targets:** Kokoro voiceover with BGM ducked under speech (approximately −9.5 dB), stereo
 contact foley for footsteps and object handling, broadcast loudness targets. Verify with
-`tools/mix_probe.py` against a real work dir — it does not accept `--help`.
+`tools/mix_probe.py` against the work dir from a real render (it needs `vo_manifest.json`, so there is no useful default).
 
 Owner: `skills/voiceover-audio/SKILL.md`, `skills/sound-design/SKILL.md`,
 `docs/production/TTS_ARCHITECTURE.md`, `docs/production/TTS_VOICE_COMPARISON.md`,
@@ -630,7 +638,7 @@ Title, thumbnail and hook are **one promise across three surfaces** (§10). The 
 - Inspect the cover at **168 px** width: that is the phone search result size, the only size most
   viewers ever see.
 - Generate base art **without lettering**, then typeset with `tools/make_thumbnail.py` or
-  `tools/compose_thumbnail.py` (read its source first — its argparse is broken).
+  `tools/compose_thumbnail.py` (needs Pillow; `--help` works).
 
 Owner: `skills/youtube-packaging/SKILL.md`, `docs/production/CREATIVE_PACKAGING.md`,
 `docs/production/YOUTUBE_PUBLISHING.md` §13.0.

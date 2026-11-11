@@ -65,6 +65,36 @@ Every entry: **stage** · **symptom** · **root cause** · **status** · **regre
 
 ## RESOLVED
 
+### KI-013 — Two tools treated `--help` as a directory path (resolved)
+
+- **Symptom:** `python3 tools/subtitle_check.py --help` died with
+  `FileNotFoundError: '--help/vo_manifest.json'`; `mix_probe.py` did the same against its
+  historical default work dir. Asking a tool what it does crashed it.
+- **Root cause:** both read `sys.argv[1]` / `sys.argv[2]` positionally and had no `argparse`, so
+  `--help` was consumed as a path.
+- **Fix:** both now use `argparse` with a real description and epilog, and `parser.error()` with a
+  useful message when the work dir lacks `vo_manifest.json` or `episode_retimed.json`. `--help`
+  prints usage instead of failing.
+- **Why it mattered:** `docs/production/KNOWN_ISSUES.md` told readers these tools had broken
+  argparse, so nobody ran them; the real requirement (a work dir from a previous render) was never
+  stated where a reader would look. `master_prompt.md` §3.3 now documents the actual interface.
+
+### KI-014 — A missing dependency was misdiagnosed as broken argparse and written into the manual (resolved)
+
+- **Symptom:** `compose_thumbnail.py --help` and `audio_report.py --help` both raised
+  `ModuleNotFoundError` for Pillow and numpy respectively. `master_prompt.md` originally recorded
+  this as a broken argument parser and told readers not to call the tools blind.
+- **Root cause:** the crash happened at import time, before any argument parsing ran. The tool was
+  fine; the environment was missing packages. The error was read as a code defect and the wrong
+  conclusion was published.
+- **Fix:** with Pillow and numpy installed, `--help` works on both and always did. The manual's
+  entries are corrected to their real interfaces, with the misdiagnosis recorded rather than
+  quietly overwritten.
+- **Lesson (now in `master_prompt.md`):** a crash at import is not a crash in argument parsing. One
+  is a bug in the tool, the other a missing dependency — and reporting the first when it is the
+  second sends every future reader around a bug that does not exist.
+
+
 ### KI-007 — 9:16 renders silently encoded landscape pixels behind a 9:16 label
 - **Stage:** rendering / QA gate
 - **First seen:** video-001 draft render (2026-11-09); affected **every** `--shorts` and

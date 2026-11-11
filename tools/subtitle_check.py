@@ -11,6 +11,7 @@ Three independent checks against the compiled episode + the voice manifest of a 
 """
 from __future__ import annotations
 
+import argparse
 import json
 import subprocess
 import sys
@@ -20,9 +21,29 @@ ROOT = Path(__file__).resolve().parents[1]
 STUDIO = ROOT / "universal_toolbook"
 
 
-def main() -> int:
-    work_dir = Path(sys.argv[1] if len(sys.argv) > 1 else ROOT / "runtime/renders/.work_final_film_1080p").resolve()
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="Verify subtitle timing against the real speech track.",
+        epilog=(
+            "work_dir must contain episode_retimed.json and vo_manifest.json from a previous "
+            "render. It is a work directory, not an episode path — there is no default that "
+            "exists on a fresh clone."
+        ),
+    )
+    parser.add_argument(
+        "work_dir", nargs="?", default=None,
+        help="render work dir holding episode_retimed.json + vo_manifest.json",
+    )
+    args = parser.parse_args(argv)
+
+    work_dir = Path(args.work_dir).resolve() if args.work_dir else (
+        ROOT / "runtime/renders/.work_final_film_1080p").resolve()
     retimed = work_dir / "episode_retimed.json"
+    if not retimed.exists():
+        parser.error(
+            f"{work_dir} has no episode_retimed.json — pass the work dir from a completed "
+            f"render, e.g. runtime/work/preview/.work_<slug>_draft"
+        )
     manifest = json.loads((work_dir / "vo_manifest.json").read_text())
 
     js = (

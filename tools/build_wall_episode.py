@@ -9,6 +9,7 @@ editing numbers instead of hunting through a 900-line JSON.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -437,11 +438,25 @@ def build(portrait: bool = False) -> dict:
     return spec
 
 
-def main() -> int:
-    argv = sys.argv[1:]
-    portrait = "--portrait" in argv
-    argv = [a for a in argv if a != "--portrait"]
-    out = Path(argv[0]) if argv else ROOT / "runtime/work/the_wall_you_agreed_with_episode.json"
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description='Author "The Wall You Agreed With" as an episode spec.',
+        epilog=(
+            "Every beat, prop window, caption and sound cue is derived from the constants at the "
+            "top of this file, so the cut is re-timed by editing numbers rather than JSON."
+        ),
+    )
+    parser.add_argument(
+        "out", nargs="?",
+        default=str(ROOT / "runtime/work/the_wall_you_agreed_with_episode.json"),
+        help="output episode JSON (default: runtime/work/the_wall_you_agreed_with_episode.json)",
+    )
+    parser.add_argument("--portrait", action="store_true",
+                        help="emit the 1080x1920 portrait cut instead of 1920x1080 landscape")
+    args = parser.parse_args(argv)
+
+    portrait = args.portrait
+    out = Path(args.out)
     spec = build(portrait=portrait)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(spec, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

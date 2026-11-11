@@ -52,7 +52,14 @@ def check(path: Path) -> list[str]:
     return errors
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Check that every workflow file parses as YAML and carries the expected jobs and steps."
+    )
+    parser.parse_args(argv)
+
     if not WORKFLOWS:
         sys.exit("no workflow files found under .github/workflows")
 

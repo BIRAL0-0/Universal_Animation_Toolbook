@@ -13,6 +13,7 @@
 """
 from __future__ import annotations
 
+import argparse
 import json
 import math
 import subprocess
@@ -33,9 +34,28 @@ def db(x):
     return 20.0 * np.log10(np.maximum(np.asarray(x, dtype=np.float64), 1e-9))
 
 
-def main() -> int:
-    spec_path = Path(sys.argv[1] if len(sys.argv) > 1 else ROOT / "runtime/work/the_beacon_that_kept_time_episode.json")
-    work_dir = Path(sys.argv[2] if len(sys.argv) > 2 else ROOT / "runtime/work/preview/.work_the_beacon_that_kept_time_draft").resolve()
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="Measure the master mix bands (narration vs music bed vs foley) without rendering.",
+        epilog=(
+            "work_dir must contain episode_retimed.json + vo_manifest.json from a previous render "
+            "(any draft). Both arguments have historical defaults that do not exist on a fresh "
+            "clone, so pass them explicitly."
+        ),
+    )
+    parser.add_argument("episode_spec", nargs="?", default=None, help="episode spec used for the render")
+    parser.add_argument("work_dir", nargs="?", default=None, help="render work dir from that render")
+    args = parser.parse_args(argv)
+
+    spec_path = Path(args.episode_spec) if args.episode_spec else (
+        ROOT / "runtime/work/the_beacon_that_kept_time_episode.json")
+    work_dir = Path(args.work_dir).resolve() if args.work_dir else (
+        ROOT / "runtime/work/preview/.work_the_beacon_that_kept_time_draft").resolve()
+    if not (work_dir / "vo_manifest.json").exists():
+        parser.error(
+            f"{work_dir} has no vo_manifest.json — pass the work dir from a completed render, "
+            f"e.g. runtime/work/preview/.work_<slug>_draft"
+        )
     # node runs with cwd=universal_toolbook/, so every path handed to it must be absolute.
 
     retimed = (work_dir / "episode_retimed.json").resolve()
