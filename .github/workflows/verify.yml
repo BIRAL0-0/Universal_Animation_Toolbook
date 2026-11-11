@@ -50,8 +50,10 @@ jobs:
             slug=$(basename "$dir")
             [ -f "$dir/$slug.mp4" ] || continue
             echo "--- $slug"
-            python tools/thumbnail_style.py check "$dir/$slug.mp4" "$dir/thumbnail.jpg"
+            python tools/thumbnail_style.py check "$dir/$slug.mp4" "$dir/thumbnail.jpg" --package "$dir"
           done
+      - name: Thumbnail text complements the title instead of repeating it
+        run: python tools/thumbnail_copy.py
       - name: Every video clears the SEO floor
         run: python tools/seo_audit.py --min 78
       - name: Workflow files must parse as YAML

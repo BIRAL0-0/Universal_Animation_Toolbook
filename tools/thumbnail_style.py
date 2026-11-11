@@ -76,13 +76,26 @@ def _rgb_to_hsv(px: tuple[int, int, int]) -> tuple[float, float, float]:
     return colorsys.rgb_to_hsv(px[0] / 255, px[1] / 255, px[2] / 255)
 
 
-def art_region(image):
-    """Crop to the lower band of the image, where the artwork (not the type) sits."""
+def art_region(image, art_fraction=None):
+    """Crop away the text band so only artwork is measured.
+
+    Covers built by tools/compose_thumbnail.py declare where their art ends
+    (`thumbnail_spec.art_fraction`). When that is given, the band is cut from the
+    bottom. Otherwise fall back to ART_TOP_FRACTION, which crops the *top* — the
+    legacy assumption that art sat low in the frame.
+
+    This used to always crop the top. Once the covers moved their artwork into the
+    upper two-thirds and the type into a band at the bottom, that crop measured the
+    text band instead of the art and reported a style mismatch that did not exist.
+    """
+    if art_fraction is not None:
+        bottom = int(image.height * art_fraction)
+        return image.crop((0, 0, image.width, bottom))
     top = int(image.height * ART_TOP_FRACTION)
     return image.crop((0, top, image.width, image.height))
 
 
-def ink_polarity(image) -> float:
+def ink_polarity(image, art_fraction=None, split=False) -> float:
     """Share of the frame occupied by the *minority* tone — the drawn material.
 
     The mistake worth recording: this used to be "share of dark pixels", which is
@@ -96,26 +109,46 @@ def ink_polarity(image) -> float:
     sit near 0.2; a washed-out single-tone cover sits near 0 and fails, which is
     what we want.
     """
-    small = art_region(image.convert("RGB")).resize((96, 96), LANCZOS)
+    small = art_region(image.convert("RGB"), art_fraction).resize((96, 96), LANCZOS)
     pixels = list(small.getdata())
     luminance = [(r + g + b) / 765 for r, g, b in pixels]
     dark = sum(1 for v in luminance if v < 0.32) / len(pixels)
     light = sum(1 for v in luminance if v > 0.68) / len(pixels)
+    if split:
+        return round(dark, 3), round(light, 3)
     return round(min(dark, light), 3)
+
+
+def tone_balance(image, art_fraction=None) -> float:
+    """Which way the frame leans: share of drawn material that is light on dark.
+
+    0 = the drawing is light line work on a dark ground; 1 = dark line work on a
+    light ground; 0.5 = the two are equal.
+
+    `ink_polarity` below deliberately ignores this, because a cover is allowed to
+    invert the film. The catch is that two covers of the *same split-screen frame*
+    can disagree wildly here — a wide 16:9 crop that keeps the bright half scores
+    ~0.29, while a tall 9:16 crop of the same art scores ~0.02 — purely because of
+    how much of each half lands in frame. That is a framing artefact, not an art
+    direction choice, so it is reported separately and never gates a pass.
+    """
+    dark, light = ink_polarity(image, art_fraction, split=True)
+    total = dark + light
+    return round(light / total, 3) if total else 0.5
 
 
 CHROMA_FLOOR = 0.25        # saturation above which a pixel counts as "colour"
 ACHROMATIC_SHARE = 0.22     # below this share of chroma the film has no colour world
 
 
-def chroma_share(image) -> float:
+def chroma_share(image, art_fraction=None) -> float:
     """Share of the art region that carries real saturation.
 
     A cream-paper film scores near zero here: its "colour" is paper, not palette.
     Treating those near-neutral pixels as hue evidence is what made the checker
     demand that every cover be beige.
     """
-    small = art_region(image.convert("RGB")).resize((96, 96), LANCZOS)
+    small = art_region(image.convert("RGB"), art_fraction).resize((96, 96), LANCZOS)
     pixels = list(small.getdata())
     coloured = 0
     for r, g, b in pixels:
@@ -125,7 +158,7 @@ def chroma_share(image) -> float:
     return round(coloured / len(pixels), 3)
 
 
-def edge_density(image) -> float:
+def edge_density(image, art_fraction=None) -> float:
     """Fraction of pixels sitting on a strong edge — a proxy for ink line work.
 
     Flat paper scores near zero, a drawn figure scores high. Two images in the
@@ -134,21 +167,21 @@ def edge_density(image) -> float:
     """
     from PIL import ImageFilter, ImageStat
 
-    small = art_region(image.convert("L")).resize((256, 256), LANCZOS)
+    small = art_region(image.convert("L"), art_fraction).resize((256, 256), LANCZOS)
     edges = small.filter(ImageFilter.FIND_EDGES)
     # count pixels well above the image's own noise floor
     floor = ImageStat.Stat(edges).mean[0] + 12
     return round(sum(1 for px in edges.getdata() if px > floor) / (256 * 256), 4)
 
 
-def hue_histogram(image) -> list[float]:
+def hue_histogram(image, art_fraction=None) -> list[float]:
     """12-bin hue histogram, weighted by saturation so neutral ink and paper
     barely register while coloured light and accents dominate.
 
     This is the component that actually distinguishes a thumbnail cut from the
     film from one that merely happens to be dark: navy and rust sit in opposite
     hue bins even though an RGB distance calls them neighbours."""
-    small = art_region(image.convert("RGB")).resize((96, 96), LANCZOS)
+    small = art_region(image.convert("RGB"), art_fraction).resize((96, 96), LANCZOS)
     bins = [0.0] * 12
     for pixel in small.getdata():
         hue, saturation, value = _rgb_to_hsv(pixel)
@@ -161,9 +194,9 @@ def hue_histogram(image) -> list[float]:
     return [value / total for value in bins]
 
 
-def profile(image) -> dict:
+def profile(image, art_fraction=None) -> dict:
     """Summarise an image's colour world: mean RGB, HSV and a hue signature."""
-    small = art_region(image.convert("RGB")).resize((96, 96), LANCZOS)
+    small = art_region(image.convert("RGB"), art_fraction).resize((96, 96), LANCZOS)
     pixels = list(small.getdata())
     count = len(pixels)
 
@@ -174,10 +207,11 @@ def profile(image) -> dict:
         "mean_rgb": mean,
         "saturation": round(sum(h[1] for h in hsv) / count, 3),
         "value": round(sum(h[2] for h in hsv) / count, 3),
-        "hues": hue_histogram(image),
-        "polarity": ink_polarity(image),
-        "chroma": chroma_share(image),
-        "edges": edge_density(image),
+        "hues": hue_histogram(image, art_fraction),
+        "polarity": ink_polarity(image, art_fraction),
+        "tone": tone_balance(image, art_fraction),
+        "chroma": chroma_share(image, art_fraction),
+        "edges": edge_density(image, art_fraction),
     }
 
 
@@ -229,6 +263,9 @@ def compare(video_profile: dict, thumb_profile: dict) -> dict:
     """
     line = line_similarity(video_profile, thumb_profile)
 
+    # Deliberately inversion-invariant: a cover may flip the film to light-on-dark,
+    # which is what reads in a grid. Comparing tone *direction* would punish that,
+    # and it also swung wildly on pure reframing (see tone_balance).
     video_ink = video_profile.get("polarity", video_profile["value"])
     thumb_ink = thumb_profile.get("polarity", thumb_profile["value"])
     polarity = 1.0 - min(1.0, abs(video_ink - thumb_ink) / 0.30)
@@ -307,16 +344,17 @@ def video_profile(video: Path) -> dict:
         "value": round(sum(p["value"] for p in profiles) / len(profiles), 3),
         "hues": [round(value, 4) for value in hues],
         "polarity": round(sum(p["polarity"] for p in profiles) / len(profiles), 3),
+        "tone": round(sum(p.get("tone", 0.5) for p in profiles) / len(profiles), 3),
         "chroma": round(sum(p["chroma"] for p in profiles) / len(profiles), 3),
         "edges": round(sum(p["edges"] for p in profiles) / len(profiles), 4),
     }
 
 
-def report(video: Path, thumbnail: Path) -> dict:
+def report(video: Path, thumbnail: Path, art_fraction=None) -> dict:
     from PIL import Image
 
     film = video_profile(video)
-    result = compare(film, profile(Image.open(thumbnail)))
+    result = compare(film, profile(Image.open(thumbnail), art_fraction=art_fraction))
     result["video_edges"] = film["edges"]
     result["video_chroma"] = film["chroma"]
     return result
@@ -333,6 +371,8 @@ def main(argv: list[str] | None = None) -> int:
     check.add_argument("video", type=Path)
     check.add_argument("thumbnail", type=Path)
     check.add_argument("--threshold", type=float, default=THRESHOLD)
+    check.add_argument("--package", type=Path, default=None,
+                       help="video package dir; reads thumbnail_spec.art_fraction from record.json")
 
     args = parser.parse_args(argv)
 
@@ -356,7 +396,13 @@ def main(argv: list[str] | None = None) -> int:
         print(f"missing thumbnail: {args.thumbnail}", file=sys.stderr)
         return 2
 
-    result = report(args.video, args.thumbnail)
+    art_fraction = None
+    if args.package:
+        import json
+        record = json.loads((args.package / "record.json").read_text())
+        art_fraction = (record.get("thumbnail_spec") or {}).get("art_fraction")
+
+    result = report(args.video, args.thumbnail, art_fraction=art_fraction)
     kind = "achromatic film — colour not scored" if result["achromatic_film"] else "film has a colour world"
     print(f"style similarity {result['score']:.3f}  (threshold {args.threshold})  [{kind}]")
     print(f"  line       {result['line']:.3f}  edge density {result['video_edges']}")

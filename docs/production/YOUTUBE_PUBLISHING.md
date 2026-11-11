@@ -114,6 +114,96 @@ The score is a floor too: `--min 85` is the target, and the current set averages
 
 ---
 
+## 13.0.1 The title and the thumbnail are one unit (NORMATIVE)
+
+A thumbnail is not a decoration on a title, and a title is not a caption for a
+thumbnail. Together they form the only thing a viewer sees before deciding
+whether to click, and on most surfaces they appear side by side. So they must
+divide the work: **the thumbnail provokes, the title explains.**
+
+The thumbnail opens a curiosity gap that the title, and the video, closes. If the
+cover already states the title, one of the two most valuable surfaces on the
+platform is dead weight.
+
+### The evidence
+
+A study of **16,152 million-view videos** classified 217 thumbnails that carried
+text (`overseeros.com`, 2026):
+
+| Relationship to title | Share |
+| --- | --- |
+| Reproduces the title exactly | 4.1% |
+| Mostly repeats the title | 25.3% |
+| Mixed | 28.6% |
+| **Completely complementary** | **46.1%** |
+
+**74.7% of text-bearing covers did not mostly repeat their title**, and 76.0%
+contained a meaningful term that was not in the title. Word count matters just as
+much (`thumbnailcreator.com`): 1-2 words measured **+10-20% CTR**, 3-4 words
+**+5-15%**, 5-7 words **-5-10%**, 8+ words **-20-30%**. Design at **168 px** — the
+width a phone shows in search — and check that the emotion survives at that size.
+
+### The rule
+
+Every `record.json` declares `thumbnail_text`: **one to three content words**, at
+least one of which does not appear in the `title`. `tools/thumbnail_copy.py`
+enforces it, and CI fails without it.
+
+```bash
+python3 tools/thumbnail_copy.py            # audit every package
+python3 tools/thumbnail_copy.py --verbose  # explain each verdict
+```
+
+Copy that breaks the rule, for the record — this is exactly what the seven covers
+said before the rule existed:
+
+| Title | Rejected cover text | Why |
+| --- | --- | --- |
+| Discipline vs Obsession: The 9 PM vs 2 AM Problem | DISCIPLINE / OBSESSION | restates the title |
+| 3 AM Anxiety: Why Checking the Clock Makes It Worse | NEVER CHECK / AT 3 AM | restates the title |
+| Procrastination: Why 1 Plank Beats a Whole Bridge | THE FIRST / PLANK | restates the title |
+| Cutting Corners: What a 2-Inch Shortcut Really Costs | 2 INCHES / IS NOTHING | restates the title |
+| Phone Distraction: The 2-Second Reach That Ends Focus | JUST / 2 SECONDS | restates the title |
+| Limiting Beliefs: Did You Agree to That Wall? | THE WALL YOU / AGREED WITH | restates the title |
+| Notifications Cost You 23 Minutes (Every Single Time) | EVERY BUZZ COSTS / 23 MINUTES | restates the title |
+
+Their replacements, all in one to three words and all honest to the script:
+
+| Title | Approved cover text |
+| --- | --- |
+| The Two-Inch Bridge: What a 2-Inch Shortcut Really Costs | NOBODY NOTICED |
+| Limiting Beliefs: Did You Agree to That Wall? | IT WAS NEVER REAL |
+| Discipline vs Obsession: The 9 PM vs 2 AM Problem | FIVE HOURS DIFFERENCE |
+| 3 AM Anxiety: Why Checking the Clock Makes It Worse | DON'T LOOK |
+| Phone Distraction: The 2-Second Reach That Ends Focus | TWO STEPS |
+| Notifications Cost You 23 Minutes (Every Single Time) | ELEVEN BEFORE NOON |
+| Procrastination: Why 1 Plank Beats a Whole Bridge | NEAR EDGE |
+
+The cover text must also be **true to the script**. An early replacement used
+"FIVE HOURS ONE PLANK", a figure that appears nowhere in the film; it was
+rejected and replaced with the script's own phrase. A cover that lies is worse
+than one that repeats: it costs retention, and the algorithm reads retention.
+
+### Composing the cover
+
+`tools/compose_thumbnail.py` builds the finished image. It reserves a band for
+the type so the artwork is never covered, fits each line to a target width so
+short and long words share one optical size, and can bleed the band colour out of
+the art's own bottom edge.
+
+```bash
+python3 tools/compose_thumbnail.py art.jpg out.jpg --size 1080x1920 \
+    --line "#FFFFFF|DON'T" --line "#FF4B3E|LOOK"
+```
+
+Portrait (`1080x1920`) keeps its artwork in the upper 78%, `art_fraction 0.78`.
+Landscape (`1280x720`) uses `art_fraction 0.72` with `--band-fill --band-darken`.
+`record.json` carries that `art_fraction`, and `thumbnail_style.py --package`
+uses it to crop the type band away before measuring style — without it the
+checker measures the lettering instead of the art.
+
+---
+
 ## 13.1 What the pipeline already produces (IMPLEMENTED)
 
 | Artifact | Source | YouTube use |

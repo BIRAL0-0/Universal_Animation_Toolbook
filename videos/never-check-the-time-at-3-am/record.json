@@ -5,15 +5,15 @@
   "filename": "never-check-the-time-at-3-am.mp4",
   "script": "script.md",
   "thumbnail": "thumbnail.jpg",
-  "youtube_description": "3 AM anxiety has a specific shape, and checking the clock is what gives it that shape. This short film is about the arithmetic you do in the dark and why it always makes things worse.\n\nYou wake for no reason. For the first few seconds you are fine — no numbers yet, just a dark room and the ceiling. Then you look. 3:14. And instantly the night stops being a night and becomes a budget: four hours and forty-six minutes until the alarm, minus however long it takes to fall back asleep, minus the time it always takes, which is now a number you have to beat.\n\nThat is the trap. The clock turns a neutral wake-up into a performance with a scoreboard, and the part of your brain that does arithmetic is very good at arithmetic and terrible company at three in the morning. Every check makes the next one more likely, until the checking is the thing keeping you awake.\n\nThe advice at the end is almost embarrassingly small: turn the clock around. Not because time stops mattering, but because you cannot lose to a scoreboard you cannot see.\n\nIf this ever happens to you at 3 AM, you are not the only one awake, and it is not a personal failure — it is a very predictable behaviour that one small change can interrupt.\n\nIf this landed, subscribe — short films about the quiet mechanics of the mind at night, drawn in ink.\n\nWhat is the latest you have ever let yourself check the time? I suspect a few records are about to fall in the comments.\n\n#sleep #anxiety #overthinking #mentalhealth\n\nMusic: \"The Distant Sun (Monomyth 1)\" by Scott Buckley (CC BY 4.0). Full attribution link in the source repository.",
-  "pinned_comment": "The moment this film is really about is the half-second *before* the check. You wake up, you are fine, there are no numbers anywhere — and then you reach for the clock and turn a night into a scoreboard you cannot win.\n\nWhat is the latest you have ever let yourself check the time? Mine is 4:52, and I still remember the number, which is the whole point.",
+  "youtube_description": "3 AM anxiety has a specific shape, and checking the clock is what gives it that shape. This short film is about the arithmetic you do in the dark and why it always makes things worse.\n\nYou wake for no reason. For the first few seconds you are fine \u2014 no numbers yet, just a dark room and the ceiling. Then you look. 3:14. And instantly the night stops being a night and becomes a budget: four hours and forty-six minutes until the alarm, minus however long it takes to fall back asleep, minus the time it always takes, which is now a number you have to beat.\n\nThat is the trap. The clock turns a neutral wake-up into a performance with a scoreboard, and the part of your brain that does arithmetic is very good at arithmetic and terrible company at three in the morning. Every check makes the next one more likely, until the checking is the thing keeping you awake.\n\nThe advice at the end is almost embarrassingly small: turn the clock around. Not because time stops mattering, but because you cannot lose to a scoreboard you cannot see.\n\nIf this ever happens to you at 3 AM, you are not the only one awake, and it is not a personal failure \u2014 it is a very predictable behaviour that one small change can interrupt.\n\nIf this landed, subscribe \u2014 short films about the quiet mechanics of the mind at night, drawn in ink.\n\nWhat is the latest you have ever let yourself check the time? I suspect a few records are about to fall in the comments.\n\n#sleep #anxiety #overthinking #mentalhealth\n\nMusic: \"The Distant Sun (Monomyth 1)\" by Scott Buckley (CC BY 4.0). Full attribution link in the source repository.",
+  "pinned_comment": "The moment this film is really about is the half-second *before* the check. You wake up, you are fine, there are no numbers anywhere \u2014 and then you reach for the clock and turn a night into a scoreboard you cannot win.\n\nWhat is the latest you have ever let yourself check the time? Mine is 4:52, and I still remember the number, which is the whole point.",
   "format": "portrait",
   "aspect_ratio": "9:16",
   "resolution": "1080x1920",
   "duration_seconds": 43.651,
   "created_at": "2026-11-10T00:00:00Z",
   "topic": "Why 3 AM thoughts feel catastrophic, and how to park them until morning",
-  "summary": "At 3 AM the rational brain is half asleep and the threat detector is wide awake. Reading the hour invents an emergency — write the worry down and let morning carry it.",
+  "summary": "At 3 AM the rational brain is half asleep and the threat detector is wide awake. Reading the hour invents an emergency \u2014 write the worry down and let morning carry it.",
   "key_angle": "The villain is the clock itself: reading the time is the event that turns a small tomorrow problem into a verdict on your whole life.",
   "tags": [
     "3 am anxiety",
@@ -36,17 +36,20 @@
     "height": 1920,
     "aspect_ratio": "9:16",
     "text_on_image": [
-      "NEVER CHECK",
-      "AT 3 AM"
+      "DON'T",
+      "LOOK"
     ],
-    "design": "AI-generated cel-stickman base art + Poppins-Bold text overlay, inspected at 1080x1920 / 1280x720 and at mobile preview size"
+    "design": "AI-generated cel-shaded base art in the film's own drawing language, composed by tools/compose_thumbnail.py with a reserved text band; checked at 168px wide",
+    "copy_principle": "complements the title; does not repeat it",
+    "art_fraction": 0.78
   },
-  "content_fingerprint": "sha256:a211d42b9e9565bd0c0d4414033e3fa8",
+  "content_fingerprint": "sha256:b97ac9657ae4c0a6d911ef094182585b",
   "duration_sec": 43.651,
   "final_video": "never-check-the-time-at-3-am.mp4",
-  "script_summary": "At 3 AM the rational brain is half asleep and the threat detector is wide awake. Reading the hour invents an emergency — write the worry down and let morning carry it.",
+  "script_summary": "At 3 AM the rational brain is half asleep and the threat detector is wide awake. Reading the hour invents an emergency \u2014 write the worry down and let morning carry it.",
   "duration_label": "0:44",
   "format_policy_exception": null,
   "previous_title": "Never Check the Time at 3 AM",
-  "primary_keyword": "3 am anxiety"
+  "primary_keyword": "3 am anxiety",
+  "thumbnail_text": "DON'T LOOK"
 }

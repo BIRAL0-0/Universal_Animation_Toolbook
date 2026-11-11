@@ -5,15 +5,15 @@
   "filename": "the-two-second-reach.mp4",
   "script": "script.md",
   "thumbnail": "thumbnail.jpg",
-  "youtube_description": "Phone distraction is usually treated as a willpower problem, which is why the advice almost never works. This short film makes the opposite case in thirty seconds: the fight is over before you sit down.\n\nWatch where the phone is. At the start it is in his hand, hanging at his side, a warm little cone of light washing up his sleeve. It takes two seconds to lift it and four to be gone. By the end the phone is face-down on a desk across the room, far enough that reaching it costs a decision instead of costing nothing.\n\nThat difference is the entire argument. Willpower is a resource you spend, and every two-second reach spends it cheaply and often, so you lose the day in small denominations. Distance is structural — it does not care how tired you are at four in the afternoon.\n\nYou are not lazy for getting distracted by a device designed by hundreds of the most capable engineers in the world to be reached for. You are just losing a fight that was never about you.\n\nIf this landed, subscribe — short films about the quiet mechanics of attention, drawn in ink.\n\nHow far away is your phone right now, while you are reading this? Be honest in the comments.\n\n#focus #deepwork #habits #digitalminimalism\n\nMusic: \"Softly\" by Loyalty Freak Music (CC0 1.0 Public Domain). Full attribution link in the source repository.",
-  "pinned_comment": "The whole film rests on one detail: watch the light. In the opening shot the phone is in his hand and it is casting a small pale glow up his forearm and across his cheek — the thing is literally lighting him up before he has decided to look at it.\n\nHow far away is your phone at this exact moment, while you are reading this? Not where you usually put it. Right now.",
+  "youtube_description": "Phone distraction is usually treated as a willpower problem, which is why the advice almost never works. This short film makes the opposite case in thirty seconds: the fight is over before you sit down.\n\nWatch where the phone is. At the start it is in his hand, hanging at his side, a warm little cone of light washing up his sleeve. It takes two seconds to lift it and four to be gone. By the end the phone is face-down on a desk across the room, far enough that reaching it costs a decision instead of costing nothing.\n\nThat difference is the entire argument. Willpower is a resource you spend, and every two-second reach spends it cheaply and often, so you lose the day in small denominations. Distance is structural \u2014 it does not care how tired you are at four in the afternoon.\n\nYou are not lazy for getting distracted by a device designed by hundreds of the most capable engineers in the world to be reached for. You are just losing a fight that was never about you.\n\nIf this landed, subscribe \u2014 short films about the quiet mechanics of attention, drawn in ink.\n\nHow far away is your phone right now, while you are reading this? Be honest in the comments.\n\n#focus #deepwork #habits #digitalminimalism\n\nMusic: \"Softly\" by Loyalty Freak Music (CC0 1.0 Public Domain). Full attribution link in the source repository.",
+  "pinned_comment": "The whole film rests on one detail: watch the light. In the opening shot the phone is in his hand and it is casting a small pale glow up his forearm and across his cheek \u2014 the thing is literally lighting him up before he has decided to look at it.\n\nHow far away is your phone at this exact moment, while you are reading this? Not where you usually put it. Right now.",
   "format": "portrait",
   "aspect_ratio": "9:16",
   "resolution": "1080x1920",
   "duration_seconds": 32.66,
   "created_at": "2026-11-10T00:00:00Z",
   "topic": "Designing your environment to beat distraction instead of relying on willpower",
-  "summary": "An hour is never lost at once — it goes in two-second reaches. Move the phone two steps further away than your impulse and the hour stays yours.",
+  "summary": "An hour is never lost at once \u2014 it goes in two-second reaches. Move the phone two steps further away than your impulse and the hour stays yours.",
   "key_angle": "The fix is architectural, not motivational: change the room, not your brain. The camera keeps the phone and the hand in the same frame the whole time.",
   "tags": [
     "phone distraction",
@@ -36,17 +36,20 @@
     "height": 1920,
     "aspect_ratio": "9:16",
     "text_on_image": [
-      "JUST",
-      "2 SECONDS"
+      "TWO",
+      "STEPS"
     ],
-    "design": "AI-generated cel-stickman base art + Poppins-Bold text overlay, inspected at 1080x1920 / 1280x720 and at mobile preview size"
+    "design": "AI-generated cel-shaded base art in the film's own drawing language, composed by tools/compose_thumbnail.py with a reserved text band; checked at 168px wide",
+    "copy_principle": "complements the title; does not repeat it",
+    "art_fraction": 0.78
   },
-  "content_fingerprint": "sha256:69804296d7c6bde5ceb58405ae0438f7",
+  "content_fingerprint": "sha256:2e0307ea7d7532b95be2004ea076f4e9",
   "duration_sec": 32.66,
   "final_video": "the-two-second-reach.mp4",
-  "script_summary": "An hour is never lost at once — it goes in two-second reaches. Move the phone two steps further away than your impulse and the hour stays yours.",
+  "script_summary": "An hour is never lost at once \u2014 it goes in two-second reaches. Move the phone two steps further away than your impulse and the hour stays yours.",
   "duration_label": "0:33",
   "format_policy_exception": null,
   "previous_title": "The Two-Second Reach",
-  "primary_keyword": "phone distraction"
+  "primary_keyword": "phone distraction",
+  "thumbnail_text": "TWO STEPS"
 }

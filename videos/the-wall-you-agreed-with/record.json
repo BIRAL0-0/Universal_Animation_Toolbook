@@ -32,10 +32,23 @@
   "directory": "videos/the-wall-you-agreed-with",
   "video_path": "videos/the-wall-you-agreed-with/the-wall-you-agreed-with.mp4",
   "format_policy_exception": null,
-  "content_fingerprint": "sha256:4adfeb42aee90d4a99f4def37be3fa98",
+  "content_fingerprint": "sha256:3440d29467791227dfd284abfa7d1603",
   "duration_sec": 46.0,
   "final_video": "the-wall-you-agreed-with.mp4",
   "script_summary": "A small ink figure hits a wall and assumes it is permanent. The wall is drawn in dashed ink the whole time \u2014 a limit he agreed to, not one that was built.",
   "previous_title": "The Wall You Agreed With",
-  "primary_keyword": "limiting beliefs"
+  "primary_keyword": "limiting beliefs",
+  "thumbnail_text": "IT WAS NEVER REAL",
+  "thumbnail_spec": {
+    "width": 1080,
+    "height": 1920,
+    "aspect_ratio": "9:16",
+    "text_on_image": [
+      "IT WAS NEVER",
+      "REAL"
+    ],
+    "design": "AI-generated cel-shaded base art in the film's own drawing language, composed by tools/compose_thumbnail.py with a reserved text band; checked at 168px wide",
+    "copy_principle": "complements the title; does not repeat it",
+    "art_fraction": 0.78
+  }
 }

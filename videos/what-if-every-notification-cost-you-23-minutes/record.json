@@ -5,8 +5,8 @@
   "filename": "what-if-every-notification-cost-you-23-minutes.mp4",
   "script": "script.md",
   "thumbnail": "thumbnail.jpg",
-  "youtube_description": "Notifications cost you 23 minutes. Not per day, per interruption. This short film follows Kai through one ordinary Tuesday to show what that arithmetic actually does to an eight-hour day.\n\nThe figure comes from the switching-cost research, and it is why notifications cost you 23 minutes each rather than costing you an hour a day in some abstract sense: when you leave a task to look at a message and then come back, you do not resume at full speed. Part of your attention stays behind, parked on the thing you just checked, and the rebuild takes about twenty-three minutes. Four interruptions in a morning and the morning is structurally gone. Not because you were lazy, but because the shape of your day was made of interruptions and there was nothing left in between for work that needs unbroken thought.\n\nWhat makes this film sting is how unremarkable every individual buzz is. Each one is small, reasonable, easy to answer in four seconds. The cost is invisible exactly because it is never paid by the notification — it is paid by the work you never got back to.\n\nThe practical takeaway is not \"check your phone less\", which nobody manages, but \"make one block that cannot be interrupted\", which is a decision you make once rather than a discipline you renegotiate forty times a day.\n\nIf this landed, subscribe — these are short films about the quiet mechanics of attention, drawn in ink.\n\nWhich interruption in your day is the one you would defend if someone asked you to? That is usually the real one.\n\n#productivity #deepwork #focus #attention\n\nMusic: \"Where Stars Fall\" by Scott Buckley (CC BY 4.0), \"Softly\" by Loyalty Freak Music (CC0 1.0 Public Domain), \"The Distant Sun (Monomyth 1)\" by Scott Buckley (CC BY 4.0), \"The Restoration (Monomyth 12)\" by Scott Buckley (CC BY 4.0). Full links in the description notes of the source repository.",
-  "pinned_comment": "The detail I cannot get out of my head is that no single notification in this film is unreasonable. Not one of them is an emergency or an insult — every buzz is something you would probably want to know. That is the trap, isn't it? You cannot refuse any of them individually.\n\nSo here is my question: which interruption in your day would you actually defend if someone asked you to justify it out loud? That is usually the one costing the most.",
+  "youtube_description": "Notifications cost you 23 minutes. Not per day, per interruption. This short film follows Kai through one ordinary Tuesday to show what that arithmetic actually does to an eight-hour day.\n\nThe figure comes from the switching-cost research, and it is why notifications cost you 23 minutes each rather than costing you an hour a day in some abstract sense: when you leave a task to look at a message and then come back, you do not resume at full speed. Part of your attention stays behind, parked on the thing you just checked, and the rebuild takes about twenty-three minutes. Four interruptions in a morning and the morning is structurally gone. Not because you were lazy, but because the shape of your day was made of interruptions and there was nothing left in between for work that needs unbroken thought.\n\nWhat makes this film sting is how unremarkable every individual buzz is. Each one is small, reasonable, easy to answer in four seconds. The cost is invisible exactly because it is never paid by the notification \u2014 it is paid by the work you never got back to.\n\nThe practical takeaway is not \"check your phone less\", which nobody manages, but \"make one block that cannot be interrupted\", which is a decision you make once rather than a discipline you renegotiate forty times a day.\n\nIf this landed, subscribe \u2014 these are short films about the quiet mechanics of attention, drawn in ink.\n\nWhich interruption in your day is the one you would defend if someone asked you to? That is usually the real one.\n\n#productivity #deepwork #focus #attention\n\nMusic: \"Where Stars Fall\" by Scott Buckley (CC BY 4.0), \"Softly\" by Loyalty Freak Music (CC0 1.0 Public Domain), \"The Distant Sun (Monomyth 1)\" by Scott Buckley (CC BY 4.0), \"The Restoration (Monomyth 12)\" by Scott Buckley (CC BY 4.0). Full links in the description notes of the source repository.",
+  "pinned_comment": "The detail I cannot get out of my head is that no single notification in this film is unreasonable. Not one of them is an emergency or an insult \u2014 every buzz is something you would probably want to know. That is the trap, isn't it? You cannot refuse any of them individually.\n\nSo here is my question: which interruption in your day would you actually defend if someone asked you to justify it out loud? That is usually the one costing the most.",
   "format": "portrait",
   "aspect_ratio": "9:16",
   "resolution": "1080x1920",
@@ -14,7 +14,7 @@
   "created_at": "2026-11-10T00:00:00Z",
   "topic": "The hidden cost of notification-driven context switching",
   "summary": "Kai starts the day with 240 minutes of real focus. Each notification takes two seconds to read and about 23 minutes to recover from, so the day drains without a single dramatic event.",
-  "key_angle": "An on-screen focus counter counts down in real time while a narrator explains the researched 23-minute resumption lag — the loss is invisible, not catastrophic.",
+  "key_angle": "An on-screen focus counter counts down in real time while a narrator explains the researched 23-minute resumption lag \u2014 the loss is invisible, not catastrophic.",
   "tags": [
     "notifications cost you 23 minutes",
     "notification distraction",
@@ -38,17 +38,20 @@
     "height": 1920,
     "aspect_ratio": "9:16",
     "text_on_image": [
-      "EVERY BUZZ COSTS",
-      "23 MINUTES"
+      "ELEVEN",
+      "BEFORE NOON"
     ],
-    "design": "AI-generated cel-stickman base art + Poppins-Bold text overlay, inspected at 1080x1920 / 1280x720 and at mobile preview size"
+    "design": "AI-generated cel-shaded base art in the film's own drawing language, composed by tools/compose_thumbnail.py with a reserved text band; checked at 168px wide",
+    "copy_principle": "complements the title; does not repeat it",
+    "art_fraction": 0.78
   },
-  "content_fingerprint": "sha256:67d1d5de6c1acfcbd7f8613d9f7b6471",
+  "content_fingerprint": "sha256:890e251f5cc869f85cf1e17c83c4bf91",
   "duration_sec": 158.957,
   "final_video": "what-if-every-notification-cost-you-23-minutes.mp4",
   "script_summary": "Kai starts the day with 240 minutes of real focus. Each notification takes two seconds to read and about 23 minutes to recover from, so the day drains without a single dramatic event.",
   "duration_label": "2:39",
   "format_policy_exception": "158.96s under the auto policy (<60s -> 9:16, >=60s -> 16:9) would imply 16:9; the approved master is portrait 9:16 Shorts-format.",
   "previous_title": "Every Notification Costs You 23 Minutes of Focus",
-  "primary_keyword": "notifications cost you 23 minutes"
+  "primary_keyword": "notifications cost you 23 minutes",
+  "thumbnail_text": "ELEVEN BEFORE NOON"
 }
