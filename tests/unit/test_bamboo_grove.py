@@ -85,8 +85,13 @@ def test_growth_burst_completes_and_overshoots_at_most_slightly():
     assert 0.99 <= done <= 1.02, f"burst must settle at 1, overshooting only a hair, got {done}"
 
 
+@pytest.mark.skipif(not _canvas_backend_available(), reason="no 2D canvas backend installed")
 def test_engine_modules_still_load_together():
-    """The two dispatch hooks must not introduce a require cycle."""
+    """The two dispatch hooks must not introduce a require cycle.
+
+    Both modules reach the optional 2D canvas backend at require time, so this cannot run in
+    a job that installs only the Python side.
+    """
     script = textwrap.dedent(
         f"""
         require({json.dumps(str(ROOT / 'universal_toolbook/engine/world_props_and_boards.js'))});
