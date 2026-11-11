@@ -2,6 +2,36 @@
 
 ## [Unreleased]
 
+### 2026-11-11 — v4.7.0 First Re-Cut Produced: `the-two-inch-bridge` 3.0.0 → 3.1.0
+- **The first of the two 2/5 hooks is now actually fixed, not just flagged.** The film was
+  re-rendered with S01 and S02 swapped, so it opens on "Two inches off every joint. Nobody would
+  measure." and lets the chasm arrive second to supply the scale that decision is measured against.
+  The previous master is preserved at `deliverables/superseded/the-two-inch-bridge.v3.0.0.mp4`;
+  **no word of the narration changed** — only the order of two scenes.
+- **The render environment was proven end to end for the first time.** `setup_tts.py` reports
+  Kokoro **READY** (44 voices, `am_michael` present) after `pip install kokoro-onnx piper-tts`;
+  `run_studio.py render --full --voice kokoro` produced a **voiced** 1920×1080 master in 180 s with
+  `status: COMPLETE` and `warnings: []`. The long-standing "we cannot render here" assumption was
+  wrong — `@napi-rs/canvas` is the working backend and was never missing.
+- **Fixed a defect in the style test, found by the re-cut (KI-015).** `test_published_thumbnails_
+  match_their_films` called `thumbnail_style.report()` with its default `art_fraction=None` and so
+  profiled the whole cover including the reserved text band, while the CI gate reads
+  `thumbnail_spec.art_fraction` (0.72) and profiles only the art. The same film scored **0.615 in
+  pytest and 0.627 in CI** — a test that could have failed a cover the gate had just passed. The
+  test now measures what the gate measures, and was verified still to fail a deliberately foreign
+  cover (0.423 vs 0.62).
+- **Retention-map timings re-derived from the master's own chapter file (KI-016).** The 1.3 s
+  shorter runtime put the recorded payoff beat at 103 s — past the end of a 101.6 s film. The
+  post-render review caught the contradiction between plan and artifact and refused to pass it.
+  Chapter starts now come from the render, not from arithmetic.
+- **Recorded honestly what the re-cut did and did not achieve.** `opening_hook` moves 2 → 4, not
+  to 5. The weakest criterion is now `retention_potential` at 3, because act two still runs four
+  scenes on one rising-water beat. `the-first-plank` remains unfixed for a concrete reason: its
+  episode spec was never committed to `examples/`, so re-cutting it means re-authoring eight scenes
+  rather than re-ordering two. Both facts are written into `CREATIVE_PACKAGING.md` §4.1.
+- Suite: **218 passed**; structure, docs (2,595 refs), publishing, specs, SEO (avg 92.0), thumbnail
+  copy, creative gate and phone-size legibility all green.
+
 ### 2026-11-11 — v4.6.0 Every Tool Answers `--help` & Two Misdiagnoses Corrected
 - **`build_wall_episode.py` wrote a 17 KB file literally named `--help`** instead of printing help. It read `sys.argv[1]` as a path and accepted `--help` verbatim as the output filename. It now uses `argparse` with a real description, epilog and an `--portrait` flag; `--help` prints usage. A test asserts the repository root is unchanged after every tool is asked for help, so a flag can never become a filename again.
 - **`subtitle_check.py` and `mix_probe.py` crashed on `--help`** (`FileNotFoundError: '--help/vo_manifest.json'`). Both read positional `sys.argv` and had no argument parser, so the flag was consumed as a directory. Both now use `argparse`, state in their epilog that they need the work dir from a previous render, and call `parser.error()` with a useful message when `vo_manifest.json` / `episode_retimed.json` is missing (KI-013).

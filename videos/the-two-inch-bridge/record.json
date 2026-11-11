@@ -10,7 +10,7 @@
   "format": "landscape",
   "aspect_ratio": "16:9",
   "resolution": "1920x1080",
-  "duration_seconds": 102.914,
+  "duration_seconds": 101.6,
   "created_at": "2026-11-10T00:00:00Z",
   "topic": "Safety margin: why small shortcuts fail when conditions change",
   "summary": "Nia shaves two inches off every joint to finish the Kessa bridge five weeks early. In June the river rises four metres and the deck begins to sing.",
@@ -27,7 +27,7 @@
     "engineering mistakes",
     "stickman animation"
   ],
-  "production_version": "3.0.0",
+  "production_version": "3.1.0",
   "status": "completed",
   "directory": "videos/the-two-inch-bridge",
   "video_path": "videos/the-two-inch-bridge/the-two-inch-bridge.mp4",
@@ -42,11 +42,11 @@
     "copy_principle": "complements the title; does not repeat it",
     "art_fraction": 0.72
   },
-  "content_fingerprint": "sha256:2bb2bce0dcf1e09698129426be3ad5a0",
-  "duration_sec": 102.914,
+  "content_fingerprint": "sha256:6455b5adeff1f8a25dc551aceba78617",
+  "duration_sec": 101.6,
   "final_video": "the-two-inch-bridge.mp4",
   "script_summary": "Nia shaves two inches off every joint to finish the Kessa bridge five weeks early. In June the river rises four metres and the deck begins to sing.",
-  "duration_label": "1:43",
+  "duration_label": "1:42",
   "format_policy_exception": null,
   "previous_title": "The Two-Inch Bridge",
   "primary_keyword": "cutting corners",
@@ -56,9 +56,9 @@
     "backfilled": true,
     "hook_candidates": [
       {
-        "text": "The chasm at Kessa was eight hundred metres of nothing.",
+        "text": "Nine days in, she found a shortcut. Two inches off every joint.",
         "selected": true,
-        "why": "Retrospective audit: a descriptive establishing line. Scale is impressive but nothing is at stake for a person yet. The real hook is 'two inches, nobody measured it'.",
+        "why": "Chosen after the 3.1.0 re-cut. The film previously opened on the chasm \u2014 scale with nothing at stake for a person. It now opens on a decision already being made, and the chasm arrives second to supply the scale that decision is measured against.",
         "seconds_into_video": 0.0
       },
       {
@@ -76,24 +76,29 @@
     ],
     "retention_map": [
       {
-        "at_sec": 0,
+        "at_sec": 0.0,
         "kind": "hook",
-        "purpose": "state the promise in the first spoken line"
+        "purpose": "open on the shortcut being taken, not on the chasm it endangers"
       },
       {
-        "at_sec": 36.0,
+        "at_sec": 24.0,
         "kind": "escalation",
-        "purpose": "raise the cost so the premise stops being abstract"
+        "purpose": "the deck rises five weeks early, so the shortcut looks like success before it is tested"
       },
       {
-        "at_sec": 74.1,
+        "at_sec": 47.0,
         "kind": "reveal",
-        "purpose": "name the mechanism the hook withheld"
+        "purpose": "June: the river rises and the deck sings \u2014 the mechanism the hook withheld"
       },
       {
-        "at_sec": 102.914,
+        "at_sec": 58.0,
+        "kind": "escalation",
+        "purpose": "the rule Nia should have known is named, too late to be advice"
+      },
+      {
+        "at_sec": 85.0,
         "kind": "payoff",
-        "purpose": "deliver the moral the opening promised"
+        "purpose": "August: the crossing on the rebuilt bridge delivers the moral"
       }
     ],
     "title_candidates": [
@@ -162,7 +167,7 @@
     ],
     "script_critique": {
       "scores": {
-        "opening_hook": 2,
+        "opening_hook": 4,
         "clarity": 4,
         "originality": 4,
         "story_progression": 4,
@@ -173,8 +178,8 @@
         "accuracy": 3,
         "pacing": 3
       },
-      "weakest": "opening_hook",
-      "revision": "Flagged for future re-edit: lead with the two inches, then the chasm. Not re-rendered in this pass."
+      "weakest": "retention_potential",
+      "revision": "3.1.0 re-cut: S01 and S02 were swapped so the film opens on the two inches rather than on the chasm. No narration changed. opening_hook moves 2 -> 4. The weakest criterion is now retention_potential at 3: act two runs four scenes on the same rising-water beat before the deck sings, and that stretch relies on the music to hold attention."
     }
   },
   "secondary_keywords": [
@@ -193,5 +198,40 @@
     "#quality",
     "#safety"
   ],
-  "category": "Education"
+  "category": "Education",
+  "duration": 101.6,
+  "chapters": [
+    {
+      "at_sec": 0,
+      "title": "The Shortcut | Two Inches"
+    },
+    {
+      "at_sec": 11,
+      "title": "Kessa Chasm | Twelve Weeks"
+    },
+    {
+      "at_sec": 24,
+      "title": "Ahead of Schedule | Too Fast"
+    },
+    {
+      "at_sec": 36,
+      "title": "Inspection | Check It Again"
+    },
+    {
+      "at_sec": 47,
+      "title": "June | The Deck Sings"
+    },
+    {
+      "at_sec": 58,
+      "title": "The Rule | Margin"
+    },
+    {
+      "at_sec": 73,
+      "title": "Rebuild | Margin Restored"
+    },
+    {
+      "at_sec": 85,
+      "title": "August | The Crossing"
+    }
+  ]
 }

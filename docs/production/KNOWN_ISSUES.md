@@ -65,6 +65,38 @@ Every entry: **stage** · **symptom** · **root cause** · **status** · **regre
 
 ## RESOLVED
 
+### KI-015 — the style test measured a different region than the style gate
+
+**Symptom.** `pytest` failed `test_published_thumbnails_match_their_films` on
+`the-two-inch-bridge` at 0.615, while the CI step `thumbnail_style.py check ... --package`
+printed **MATCH** at 0.627 for the same film and the same `thumbnail.jpg`.
+
+**Cause.** `thumbnail_style.report()` defaults `art_fraction=None`. The documented invocation
+reads `thumbnail_spec.art_fraction` from `record.json` (e.g. `0.72`) because a cover reserves a
+text band and only the art above it belongs to the film. The test called `report()` bare, so it
+profiled the whole cover including the typography band. Two measurements, one name.
+
+**Fix.** The test now reads `art_fraction` from the record exactly as the CLI does. Verified in
+both directions: it still fails a deliberately foreign cover (0.423 against a 0.62 threshold), so
+the corrected path is not toothless.
+
+**Lesson — the fifth occurrence in this repository of a check that did not exercise the code path
+it claimed to.** When a test and a CLI disagree about the same artifact, one of them is measuring
+something else; find out which before either is trusted.
+
+### KI-016 — a package fingerprint must be computed after the last edit
+
+**Symptom.** `validate_publishing.py` reported `content_fingerprint is stale` on a package that had
+just been updated.
+
+**Cause.** `package_video.fingerprint()` hashes `<slug>.mp4`, `script.md` and `thumbnail.jpg`. The
+re-cut hashed the package, then edited `script.md` to document the re-cut — invalidating the hash
+it had just written.
+
+**Rule.** The fingerprint is the **last** write to a package. Any edit to those three files
+requires recomputing it in `record.json` and `videos/index.json`.
+
+
 ### KI-013 — Two tools treated `--help` as a directory path (resolved)
 
 - **Symptom:** `python3 tools/subtitle_check.py --help` died with

@@ -1,0 +1,1140 @@
+{
+  "title": "The Two-Inch Bridge",
+  "channel_name": "",
+  "thesis": "A structure is not safe because it holds today. It is safe because it survives a bad day.",
+  "bgm": "dynamic",
+  "subtitles_mode": "cinema",
+  "outro": false,
+  "voices": {
+    "narrator": {
+      "voice": "en-US-GuyNeural",
+      "rate": "+1%",
+      "pitch": "-1Hz"
+    },
+    "nia": {
+      "voice": "en-US-JennyNeural",
+      "rate": "+3%",
+      "pitch": "+1Hz"
+    },
+    "okoro": {
+      "voice": "en-US-ChristopherNeural",
+      "rate": "-3%",
+      "pitch": "-2Hz"
+    }
+  },
+  "cast": {
+    "nia": {
+      "name": "NIA",
+      "style": "cel",
+      "color": "#f8fafc",
+      "build": "lean",
+      "hair": "bun",
+      "hair_color": "#3f2a20",
+      "shoe_color": "#b91c1c",
+      "eyes": true,
+      "expression": "determined",
+      "posture": 0.22,
+      "accessories": [
+        "watch",
+        "shoulder_bag"
+      ],
+      "bag_color": "#b91c1c",
+      "scale": 1.55
+    },
+    "okoro": {
+      "name": "OKORO",
+      "style": "cel",
+      "color": "#134e4a",
+      "build": "broad",
+      "hair": "side_part",
+      "hair_color": "#cbd5e1",
+      "shoe_color": "#0f172a",
+      "eyes": true,
+      "expression": "smile",
+      "posture": -0.14,
+      "accessories": [
+        "glasses",
+        "coat",
+        "scarf"
+      ],
+      "coat_color": "#0f3d3e",
+      "scarf_color": "#fbbf24",
+      "scale": 1.62
+    }
+  },
+  "scenes": [
+    {
+      "id": "S01",
+      "mood": "calm",
+      "bgm": "chill_focus",
+      "bgm_gain": 0.86,
+      "accent_color": "#38bdf8",
+      "chapter": "The Shortcut | Two Inches",
+      "environment": "tech_lab",
+      "duration": 13.0,
+      "min_duration": 11.0,
+      "lead_in": 0.6,
+      "tail_out": 0.6,
+      "props": [
+        {
+          "type": "clean_desk",
+          "x": 0.44,
+          "z": -4
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.05,
+          "zoom_to": 1.09,
+          "focus_x": 0.44,
+          "focus_y": 0.62,
+          "cut": true
+        },
+        {
+          "cue_on": "Two inches off every joint",
+          "zoom_from": 1.1,
+          "zoom_to": 1.15,
+          "focus_x": 0.5,
+          "focus_y": 0.6,
+          "move_dur": 2.0,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "nia",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 13.0,
+              "action": "sit_desk_type",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "focused"
+            }
+          ]
+        },
+        {
+          "id": "okoro",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 13.0,
+              "action": "idle_stand",
+              "x": 0.78,
+              "facing": -1,
+              "expression": "skeptical"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "notebook_page",
+          "x": 0.62,
+          "y": 74,
+          "w": 600,
+          "h": 210,
+          "bold_first": true,
+          "lines": [
+            "THE SHORTCUT, IN INK:",
+            "Two inches off every joint.",
+            "Ninety joints. Nobody will measure."
+          ],
+          "cue_on": "Two inches off every joint",
+          "hold_sec": 6.4,
+          "build_dur": 1.1
+        }
+      ],
+      "accent_words": [
+        "nine days",
+        "two inches",
+        "nothing",
+        "ninety joints"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Nine days in, she found a shortcut.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "Two inches off every joint. Nobody would measure.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "nia",
+          "text": "Two inches is nothing.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ninety joints. Two inches each.",
+          "pause_after": 0.5
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "mood": "reflective",
+      "bgm": "reflective_piano",
+      "bgm_gain": 0.9,
+      "accent_color": "#38bdf8",
+      "chapter": "Kessa Chasm | Twelve Weeks",
+      "environment": "modern_office",
+      "duration": 15.0,
+      "min_duration": 13.0,
+      "lead_in": 0.8,
+      "tail_out": 0.6,
+      "props": [
+        {
+          "type": "wall_calendar",
+          "x": 0.31,
+          "z": -12,
+          "height_above_floor": 450,
+          "scale": 1.1
+        },
+        {
+          "type": "clock",
+          "x": 0.9,
+          "y": 110,
+          "z": -12
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.03,
+          "zoom_to": 1.07,
+          "focus_x": 0.54,
+          "focus_y": 0.56,
+          "cut": true
+        },
+        {
+          "cue_on": "Twelve weeks",
+          "zoom_from": 1.08,
+          "zoom_to": 1.15,
+          "focus_x": 0.68,
+          "focus_y": 0.6,
+          "move_dur": 2.2,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "nia",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.6,
+              "action": "hold_blueprint",
+              "x": 0.39,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 6.6,
+              "end": 15.0,
+              "action": "listen_nod",
+              "x": 0.39,
+              "facing": 1,
+              "expression": "determined"
+            }
+          ]
+        },
+        {
+          "id": "okoro",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.6,
+              "action": "talk_explain",
+              "x": 0.62,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 6.6,
+              "end": 15.0,
+              "action": "point_emphasis",
+              "x": 0.62,
+              "facing": -1,
+              "expression": "determined"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "eight hundred",
+        "bridge",
+        "twelve weeks",
+        "nine"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "The chasm at Kessa was eight hundred metres of nothing.",
+          "pause_after": 0.45
+        },
+        {
+          "speaker": "narrator",
+          "text": "In spring, the city asked for a bridge.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "okoro",
+          "text": "Twelve weeks. Write it down.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "Nia wrote it down, and quietly planned for nine.",
+          "pause_after": 0.5
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "mood": "hopeful",
+      "bgm": "chill_focus",
+      "bgm_gain": 0.88,
+      "accent_color": "#60a5fa",
+      "chapter": "Ahead of Schedule | Too Fast",
+      "environment": "canyon_bridge",
+      "duration": 14.0,
+      "min_duration": 12.0,
+      "lead_in": 0.6,
+      "tail_out": 0.6,
+      "props": [
+        {
+          "type": "signpost",
+          "x": 0.14,
+          "z": -8
+        },
+        {
+          "type": "streetlamp",
+          "x": 0.9,
+          "z": -10
+        },
+        {
+          "type": "passing_car",
+          "lane": "back",
+          "x": 0.5,
+          "z": -12,
+          "body_color": "#f59e0b"
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.04,
+          "zoom_to": 1.08,
+          "focus_x": 0.46,
+          "focus_y": 0.58,
+          "cut": true
+        },
+        {
+          "cue_on": "Faster than any bridge",
+          "zoom_from": 1.08,
+          "zoom_to": 1.15,
+          "focus_x": 0.58,
+          "focus_y": 0.6,
+          "move_dur": 2.2,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "nia",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 7.4,
+              "action": "walk",
+              "from_x": 0.3,
+              "to_x": 0.42,
+              "x": 0.42,
+              "facing": 1,
+              "expression": "excited"
+            },
+            {
+              "start": 7.4,
+              "end": 14.0,
+              "action": "look_horizon",
+              "x": 0.42,
+              "facing": 1,
+              "expression": "hopeful"
+            }
+          ]
+        },
+        {
+          "id": "okoro",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 14.0,
+              "action": "cross_arms_skeptical",
+              "x": 0.7,
+              "facing": -1,
+              "expression": "skeptical"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "stat_cards",
+          "x": 0.03,
+          "y": 104,
+          "w": 470,
+          "h": 168,
+          "cards": [
+            {
+              "value": "5 weeks",
+              "label": "EARLY"
+            },
+            {
+              "value": "90",
+              "label": "JOINTS SHORT"
+            }
+          ],
+          "cue_on": "Faster than any bridge",
+          "hold_sec": 5.8,
+          "build_dur": 1.1
+        }
+      ],
+      "accent_words": [
+        "faster than",
+        "five weeks early",
+        "nothing at all"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Faster than any bridge at Kessa, the deck rose.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "Five weeks early, it met the far side.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "okoro",
+          "text": "That is faster than I have ever built.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "Okoro said nothing at all.",
+          "pause_after": 0.5
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "mood": "tension",
+      "bgm": "suspense_tension",
+      "bgm_gain": 0.88,
+      "accent_color": "#fb7185",
+      "chapter": "Inspection | Check It Again",
+      "environment": "lecture_stage",
+      "duration": 14.0,
+      "min_duration": 12.0,
+      "lead_in": 0.6,
+      "tail_out": 0.6,
+      "props": [
+        {
+          "type": "framed_certificate",
+          "x": 0.16,
+          "z": -12
+        },
+        {
+          "type": "digital_clock",
+          "x": 0.86,
+          "z": -12
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.05,
+          "zoom_to": 1.1,
+          "focus_x": 0.42,
+          "focus_y": 0.6,
+          "cut": true
+        },
+        {
+          "cue_on": "third time",
+          "zoom_from": 1.1,
+          "zoom_to": 1.17,
+          "focus_x": 0.5,
+          "focus_y": 0.58,
+          "move_dur": 2.0,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "okoro",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 7.0,
+              "action": "point_emphasis",
+              "x": 0.32,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 7.0,
+              "end": 14.0,
+              "action": "cross_arms_skeptical",
+              "x": 0.32,
+              "facing": 1,
+              "expression": "tense"
+            }
+          ]
+        },
+        {
+          "id": "nia",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 7.0,
+              "action": "hold_blueprint",
+              "x": 0.64,
+              "facing": -1,
+              "expression": "focused"
+            },
+            {
+              "start": 7.0,
+              "end": 14.0,
+              "action": "listen_nod",
+              "x": 0.64,
+              "facing": -1,
+              "expression": "worried"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "bar_chart",
+          "x": 0.62,
+          "y": 74,
+          "w": 600,
+          "h": 210,
+          "bars": [
+            {
+              "label": "STEEL SPECIFIED",
+              "value": 1.0,
+              "color": "#94a3b8"
+            },
+            {
+              "label": "STEEL IN THE JOINTS",
+              "value": 0.62,
+              "color": "#fb7185"
+            }
+          ],
+          "cue_on": "Check the joints",
+          "hold_sec": 7.6,
+          "build_dur": 1.1
+        }
+      ],
+      "accent_words": [
+        "check the joints",
+        "twice",
+        "third time"
+      ],
+      "dialogue": [
+        {
+          "speaker": "okoro",
+          "text": "Check the joints before we open it.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "nia",
+          "text": "I checked them twice.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "okoro",
+          "text": "Then check them a third time. With me.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "The callipers answered before she did.",
+          "pause_after": 0.55
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "mood": "tension",
+      "bgm": "suspense_tension",
+      "bgm_gain": 0.9,
+      "accent_color": "#fb7185",
+      "chapter": "June | The Deck Sings",
+      "duration": 13.0,
+      "min_duration": 11.0,
+      "lead_in": 0.7,
+      "tail_out": 0.6,
+      "setting": {
+        "sky": [
+          "#071022",
+          "#16304f"
+        ],
+        "floor_color": "#132131",
+        "light_color": "#7dd3fc",
+        "backdrop": "mountains",
+        "weather": "rain",
+        "rain_intensity": 1.15,
+        "lighting": "spotlights"
+      },
+      "props": [
+        {
+          "type": "streetlamp",
+          "x": 0.12,
+          "z": -10
+        },
+        {
+          "type": "streetlamp",
+          "x": 0.92,
+          "z": -16
+        },
+        {
+          "type": "headlights",
+          "x": 0.62,
+          "z": -14
+        },
+        {
+          "type": "water_trail",
+          "from_x": 0.28,
+          "to_x": 0.72,
+          "count": 11,
+          "z": -12
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.04,
+          "zoom_to": 1.08,
+          "focus_x": 0.46,
+          "focus_y": 0.6,
+          "cut": true
+        },
+        {
+          "cue_on": "deck began to sing",
+          "zoom_from": 1.1,
+          "zoom_to": 1.18,
+          "focus_x": 0.46,
+          "focus_y": 0.64,
+          "move_dur": 2.2,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "nia",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.6,
+              "action": "idle_stand",
+              "x": 0.4,
+              "facing": 1,
+              "expression": "worried"
+            },
+            {
+              "start": 6.6,
+              "end": 13.0,
+              "action": "look_horizon",
+              "x": 0.4,
+              "facing": 1,
+              "expression": "shocked"
+            }
+          ]
+        },
+        {
+          "id": "okoro",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 13.0,
+              "action": "idle_stand",
+              "x": 0.68,
+              "facing": -1,
+              "expression": "tense"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "june",
+        "four metres",
+        "sing",
+        "never made that sound"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "In June, the river came up four metres.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "The deck began to sing.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "nia",
+          "text": "It has never made that sound.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "okoro",
+          "text": "No. Nothing we build should.",
+          "pause_after": 0.55
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "mood": "reflective",
+      "bgm": "reflective_piano",
+      "bgm_gain": 0.9,
+      "accent_color": "#fbbf24",
+      "chapter": "The Rule | Margin",
+      "environment": "library_study",
+      "duration": 18.0,
+      "min_duration": 15.0,
+      "lead_in": 0.7,
+      "tail_out": 0.6,
+      "props": [
+        {
+          "type": "clean_desk",
+          "x": 0.5,
+          "z": -4
+        },
+        {
+          "type": "framed_certificate",
+          "x": 0.14,
+          "z": -12,
+          "height_above_floor": 300
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.06,
+          "zoom_to": 1.1,
+          "focus_x": 0.36,
+          "focus_y": 0.58,
+          "cut": true
+        },
+        {
+          "cue_on": "survives a bad day",
+          "zoom_from": 1.1,
+          "zoom_to": 1.16,
+          "focus_x": 0.52,
+          "focus_y": 0.56,
+          "move_dur": 2.2,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "okoro",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 9.6,
+              "action": "chest_hand_sincere",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "hopeful"
+            },
+            {
+              "start": 9.6,
+              "end": 18.0,
+              "action": "talk_explain",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "determined"
+            }
+          ]
+        },
+        {
+          "id": "nia",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 9.6,
+              "action": "listen_nod",
+              "x": 0.66,
+              "facing": -1,
+              "expression": "sad"
+            },
+            {
+              "start": 9.6,
+              "end": 18.0,
+              "action": "clench_fist",
+              "x": 0.66,
+              "facing": -1,
+              "expression": "tired"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "notebook_page",
+          "x": 0.62,
+          "y": 74,
+          "w": 580,
+          "h": 210,
+          "bold_first": true,
+          "lines": [
+            "THE RULE, IN INK:",
+            "Safe today is not safe.",
+            "Safe is surviving a bad day."
+          ],
+          "cue_on": "holds today",
+          "hold_sec": 7.2,
+          "build_dur": 1.1
+        }
+      ],
+      "accent_words": [
+        "not safe",
+        "survives a bad day",
+        "small",
+        "fails first"
+      ],
+      "dialogue": [
+        {
+          "speaker": "okoro",
+          "text": "A structure isn't safe because it holds today.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "okoro",
+          "text": "It's safe because it survives a bad day.",
+          "pause_after": 0.45
+        },
+        {
+          "speaker": "narrator",
+          "text": "He set the cut pin on the desk between them.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "nia",
+          "text": "I did it because it was small.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "okoro",
+          "text": "Small is what fails first.",
+          "pause_after": 0.6
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "mood": "resolve",
+      "bgm": "triumph_horizon",
+      "bgm_gain": 0.88,
+      "accent_color": "#22d3ee",
+      "chapter": "Rebuild | Margin Restored",
+      "environment": "tech_lab",
+      "duration": 14.0,
+      "min_duration": 12.0,
+      "lead_in": 0.6,
+      "tail_out": 0.6,
+      "props": [
+        {
+          "type": "clean_desk",
+          "x": 0.3,
+          "z": -4
+        },
+        {
+          "type": "digital_clock",
+          "x": 0.86,
+          "y": 120,
+          "z": -12
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.05,
+          "zoom_to": 1.09,
+          "focus_x": 0.5,
+          "focus_y": 0.6,
+          "cut": true
+        },
+        {
+          "cue_on": "put the flood on it",
+          "zoom_from": 1.1,
+          "zoom_to": 1.16,
+          "focus_x": 0.56,
+          "focus_y": 0.56,
+          "move_dur": 2.0,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "nia",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 7.6,
+              "action": "point_board",
+              "x": 0.46,
+              "facing": -1,
+              "expression": "determined"
+            },
+            {
+              "start": 7.6,
+              "end": 14.0,
+              "action": "handoff_give",
+              "partner_id": "okoro",
+              "x": 0.48,
+              "facing": 1,
+              "expression": "hopeful"
+            }
+          ]
+        },
+        {
+          "id": "okoro",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 7.6,
+              "action": "idle_stand",
+              "x": 0.64,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 7.6,
+              "end": 14.0,
+              "action": "handoff_receive",
+              "partner_id": "nia",
+              "x": 0.64,
+              "facing": -1,
+              "expression": "hopeful"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "stat_cards",
+          "x": 0.03,
+          "y": 104,
+          "w": 500,
+          "h": 168,
+          "cards": [
+            {
+              "value": "3 in",
+              "label": "OF MARGIN"
+            },
+            {
+              "value": "12 weeks",
+              "label": "NOT NINE"
+            }
+          ],
+          "cue_on": "three inches of margin",
+          "hold_sec": 6.0,
+          "build_dur": 1.1
+        }
+      ],
+      "accent_words": [
+        "three inches",
+        "twelve weeks",
+        "flood",
+        "it held"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "They rebuilt every joint with three inches of margin.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "nia",
+          "text": "Twelve weeks. Not nine.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "okoro",
+          "text": "Now put the flood on it.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "They loaded the deck until it complained. It held.",
+          "pause_after": 0.55
+        }
+      ]
+    },
+    {
+      "id": "S08",
+      "mood": "hopeful",
+      "bgm": "triumph_horizon",
+      "bgm_gain": 0.92,
+      "accent_color": "#fbbf24",
+      "chapter": "August | The Crossing",
+      "environment": "sunrise_summit",
+      "duration": 20.0,
+      "min_duration": 16.0,
+      "lead_in": 0.8,
+      "tail_out": 1.4,
+      "props": [
+        {
+          "type": "streetlamp",
+          "x": 0.09,
+          "z": -12
+        },
+        {
+          "type": "park_tree",
+          "x": 0.8,
+          "z": -10
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.08,
+          "zoom_to": 1.12,
+          "focus_x": 0.4,
+          "focus_y": 0.6,
+          "cut": true
+        },
+        {
+          "cue_on": "nobody can see",
+          "zoom_from": 1.12,
+          "zoom_to": 1.04,
+          "focus_x": 0.5,
+          "focus_y": 0.5,
+          "move_dur": 2.6,
+          "cut": false,
+          "blend_sec": 0.6
+        }
+      ],
+      "characters": [
+        {
+          "id": "nia",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 10.6,
+              "action": "walk",
+              "from_x": 0.2,
+              "to_x": 0.44,
+              "x": 0.2,
+              "facing": 1,
+              "expression": "relieved"
+            },
+            {
+              "start": 10.6,
+              "end": 20.0,
+              "action": "look_horizon",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "hopeful"
+            }
+          ]
+        },
+        {
+          "id": "okoro",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 10.6,
+              "action": "idle_stand",
+              "x": 0.64,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 10.6,
+              "end": 20.0,
+              "action": "listen_nod",
+              "x": 0.64,
+              "facing": -1,
+              "expression": "hopeful"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "rain",
+        "nobody noticed",
+        "safety",
+        "nobody can see",
+        "it will hold"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "In August, the bridge opened in the rain.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "Nobody clapped. Nobody noticed the three inches.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "okoro",
+          "text": "That is what safety sounds like.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "The answer was nothing at all.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "Care is the part of the work nobody can see.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "Leave room to be wrong, and it will hold.",
+          "pause_after": 1.0
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "title": "The Two Inch Bridge",
+    "version": "3.1.0",
+    "source_of_published_master": "videos/the-two-inch-bridge/the-two-inch-bridge.mp4",
+    "note": "3.1.0 re-cut: S01/S02 swapped so the film opens on the two inches. No narration changed. This file reproduces the published master."
+  }
+}

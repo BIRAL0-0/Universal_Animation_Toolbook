@@ -135,15 +135,15 @@
       "topic": "Safety margin: why small shortcuts fail when conditions change",
       "summary": "Nia shaves two inches off every joint to finish the Kessa bridge five weeks early. In June the river rises four metres and the deck begins to sing.",
       "key_angle": "The shortcut is measured in inches and the consequence arrives as weather \u2014 the film never moralises, it lets the callipers and the flood do the arguing.",
-      "duration": 102.914,
-      "duration_label": "1:43",
+      "duration": 101.6,
+      "duration_label": "1:42",
       "format": "landscape",
       "aspect_ratio": "16:9",
       "resolution": "1920x1080",
       "produced_at": "2026-11-10",
       "directory": "videos/the-two-inch-bridge",
-      "content_fingerprint": "sha256:2bb2bce0dcf1e09698129426be3ad5a0",
-      "duration_sec": 102.914,
+      "content_fingerprint": "sha256:6455b5adeff1f8a25dc551aceba78617",
+      "duration_sec": 101.6,
       "status": "completed",
       "created_at": "2026-11-10",
       "final_video": "the-two-inch-bridge.mp4",
@@ -160,9 +160,10 @@
         "engineering mistakes",
         "stickman animation"
       ],
-      "production_version": "3.0.0",
+      "production_version": "3.1.0",
       "previous_title": "The Two-Inch Bridge",
-      "primary_keyword": "cutting corners"
+      "primary_keyword": "cutting corners",
+      "previous_version": "3.0.0"
     },
     {
       "id": "video-005",

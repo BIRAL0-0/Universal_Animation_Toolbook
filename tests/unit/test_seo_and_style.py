@@ -127,12 +127,25 @@ def test_a_film_without_colour_is_not_scored_on_hue(style):
 
 
 def test_published_thumbnails_match_their_films(style):
+    """Score each cover the way CI and the manual actually score it.
+
+    `style.report()` defaults to `art_fraction=None`, but the documented invocation
+    is `thumbnail_style.py check ... --package <dir>`, which reads
+    `thumbnail_spec.art_fraction` from the record because the cover reserves a text
+    band and only the art above it belongs to the film. Calling report() bare
+    therefore measured a different region than the gate does — it scored
+    `the-two-inch-bridge` at 0.615 and would have failed it while the CI step
+    printed MATCH at 0.627. This test must measure what the gate measures.
+    """
     import imageio_ffmpeg  # noqa: F401  (skip cleanly when the decoder is absent)
+    import json
 
     for package in sorted(p for p in VIDEOS.iterdir() if p.is_dir()):
         master = package / f"{package.name}.mp4"
         thumbnail = package / "thumbnail.jpg"
         if not master.exists():
             continue
-        result = style.report(master, thumbnail)
+        record = json.loads((package / "record.json").read_text())
+        art_fraction = (record.get("thumbnail_spec") or {}).get("art_fraction")
+        result = style.report(master, thumbnail, art_fraction=art_fraction)
         assert result["score"] >= style.THRESHOLD, (package.name, result)
