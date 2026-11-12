@@ -79,11 +79,20 @@ def _tokens(text: str) -> set[str]:
 
 
 def _dialogue_text(record: dict) -> str:
-    """All spoken narration in the record, if the record carries it."""
+    """All narration in the record, in both registers, if the record carries it.
+
+    A dialogue line has a written form (`text`, what the subtitle shows) and a spoken
+    form (explicit `spoken`, or the engine's verbalization of `text`). The hook-overlap
+    check only asks "does the film actually say this word", which is register-agnostic,
+    so both forms are offered rather than guessing which one the hook was written from.
+    """
     parts = []
     for scene in record.get("scenes", []) or []:
         for line in scene.get("dialogue", []) or []:
             parts.append(str(line.get("text", "")))
+            spoken = str(line.get("spoken") or "")
+            if spoken:
+                parts.append(spoken)
     return " ".join(parts)
 
 

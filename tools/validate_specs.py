@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import glob
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -99,6 +100,74 @@ def chapter_problems(spec: Path) -> list[str]:
     return problems
 
 
+def _verbalizer():
+    """Load the verbalizer by path (the ``tts`` package pulls in numpy; this is pure text)."""
+    import importlib.util
+
+    path = ROOT / "universal_toolbook" / "tts" / "verbalize.py"
+    if not path.exists():
+        return None
+    name = "_utb_verbalize_for_validate"
+    if name in sys.modules:
+        return sys.modules[name]
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def register_problems(spec: Path) -> list[str]:
+    """Keep the display and spoken registers of a dialogue line from diverging.
+
+    A line may declare `spoken` (what the engine says) alongside `text` (what the subtitle
+    shows). That split exists so a subtitle can keep the authored written form -- `254 days`
+    -- while the audio says "two hundred and fifty four days". It must never let a film
+    make two different claims, so:
+
+    * `spoken` has to be a non-empty string when present.
+    * if `spoken` is omitted, the engine verbalizes `text`; that is always safe.
+    * if `spoken` is present and `text` is already fully spellable, an override that is not
+      just the verbalization of `text` has rewritten the words rather than the
+      pronunciation. That is a meaning change and belongs in the script, not here.
+    """
+    try:
+        data = json.loads(spec.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return []
+    problems: list[str] = []
+    vz = _verbalizer()
+
+    def tokens(s: str) -> list[str]:
+        return [w for w in re.findall(r"[a-z0-9']+", s.lower()) if w]
+
+    for scene in data.get("scenes", []) or []:
+        sid = scene.get("id", "?")
+        for line in scene.get("dialogue") or []:
+            if "spoken" not in line:
+                continue
+            text = str(line.get("text") or "")
+            spoken = line.get("spoken")
+            if not isinstance(spoken, str) or not spoken.strip():
+                problems.append(
+                    f"{spec.name}:{sid} `spoken` must be a non-empty string when present — "
+                    f"got {type(spoken).__name__}; omit it to let the engine verbalize `text`"
+                )
+                continue
+            if vz is None:
+                continue
+            expected = vz.verbalize(text).spoken
+            if tokens(spoken) == tokens(expected):
+                continue
+            # The override says different words than the written line would produce.
+            problems.append(
+                f"{spec.name}:{sid} `spoken` says something different from `text`: "
+                f"text={text!r} would be voiced {expected!r}, but `spoken` is {spoken!r}. "
+                "`spoken` may only control pronunciation — change the words in `text` instead"
+            )
+    return problems
+
+
 def validate(spec: Path) -> tuple[bool, str]:
     proc = subprocess.run(
         [sys.executable, str(RUN), "validate", str(spec)],
@@ -114,7 +183,12 @@ def validate(spec: Path) -> tuple[bool, str]:
     except json.JSONDecodeError:
         return False, "validate did not emit JSON"
 
-    warnings = list(data.get("warnings") or []) + motion_problems(spec) + chapter_problems(spec)
+    warnings = (
+        list(data.get("warnings") or [])
+        + motion_problems(spec)
+        + chapter_problems(spec)
+        + register_problems(spec)
+    )
     rel = spec.relative_to(ROOT) if spec.is_relative_to(ROOT) else spec
     line = (
         f"{str(rel):52s} {data.get('scene_count', '?'):>3} scenes  "

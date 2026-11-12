@@ -7,6 +7,36 @@ Format: date · type · what changed · why · verification.
 
 ---
 
+## 2026-11-12
+
+### PC-011 · ENGINE FIX — subtitles and speech are now separate registers (KI-023)
+- **Type:** engine feature + bug fix + gate + docs
+- **What:** added `universal_toolbook/tts/verbalize.py`, which turns VOICEOVER_POLISH_PROMPT
+  rules 5–7 into code (cardinals, years, dates, clock times, ranges, multipliers, ordinals,
+  currency, percentages, codec/version tails, symbols, and acronyms via the existing
+  pronunciation dictionary) and returns the spoken string **plus a display-token →
+  spoken-word alignment**. `engine/voice_engine.py` keeps `dialogue[].text` as the subtitle
+  source and speaks the verbalized form, carrying the alignment on `line_timings[].align`
+  and the written form as the display string; `engine/episode.js` gained
+  `mapDisplayTokensByAlignment` so subtitle glow follows the alignment instead of fuzzy
+  word matching (which could never match `254` to "two hundred and fifty four").
+  New optional `dialogue[].spoken` pronunciation override, validated by
+  `tools/validate_specs.py:register_problems()` so it can change pronunciation but never
+  meaning. `tools/creative_gate.py` and `tools/subtitle_check.py` now read both registers;
+  `_find_phrase_time` verbalizes its `cue_on` phrase so a numeral-authored script still
+  speech-locks its boards.
+- **Why:** one string served both the TTS engine and the subtitles, so the polish prompt's
+  spoken-form rules had to be hand-baked into the text the viewer reads. A board reading
+  `254 days` ended up directly above a subtitle reading *two hundred and fifty four* — two
+  registers of one fact in one frame. 13 lines across 6 committed specs were affected.
+- **Verification:** `tests/unit/test_verbalize.py` (29 tests: rules, idempotence, no digits in
+  the spoken register, the reproducer) and `tests/unit/test_subtitle_registers.py` (5 tests
+  exercising the real Python→JS seam with the real episode compiler). The verbalizer is
+  idempotent over all 427 shipped dialogue lines, and every migrated line's spoken form was
+  confirmed byte-identical, so no film's audio changes — only its subtitles.
+
+---
+
 ## 2026-11-09
 
 ### PC-010 · ENGINE FIX — mixes now reach the documented loudness band (KI-008)
