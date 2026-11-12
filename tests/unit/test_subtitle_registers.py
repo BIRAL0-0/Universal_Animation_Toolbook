@@ -160,3 +160,49 @@ def test_reproducer_scene_compiles_with_numerals_on_screen():
     assert "254" in text
     assert "eighteen" not in text.lower()
     assert "two hundred" not in text.lower()
+
+
+def test_alignment_token_count_matches_the_subtitle_tokenizer():
+    """The two tokenizers must agree, or alignment indices would address the wrong token.
+
+    `verbalize.py` tokenizes Python-side and `episode.js` tokenizes JS-side. If they
+    disagree about a glued em dash, index-based mapping silently shifts every subsequent
+    token. This pins them together on the exact inputs the corpus contains.
+    """
+    cases = [
+        "It takes 18 days to 254 days.",
+        "Now I think it means knowing what deserves my effort—and what does not.",
+        "Time ran 18 to 254 days — and then stopped.",
+        "40-90 seconds, 1.5x, H.264, 20%.",
+        "7 Nov 2076",
+    ]
+    js = (
+        "const fs=require('fs');"
+        "const texts=JSON.parse(fs.readFileSync(0,'utf8'));"
+        "const toks=texts.map((t)=>String(t||'').replace(/\\s*—\\s*/g,' — ')"
+        ".replace(/\\s+/g,' ').trim().split(' '));"
+        "console.log(JSON.stringify(toks));"
+    )
+    out = subprocess.run(
+        ["node", "-e", js], input=json.dumps(cases), text=True, capture_output=True, check=True
+    )
+    js_tokens = json.loads(out.stdout)
+    for text, expected in zip(cases, js_tokens):
+        aligned = _scene_spec(text)
+        align = aligned["scenes"][0]["line_timings"][0]["align"]
+        assert len(align) == len(expected), (
+            f"token count mismatch for {text!r}: python={len(align)} js={len(expected)}"
+        )
+        assert [a["raw"] for a in align] == expected
+
+
+def test_unnumeraled_line_speaks_the_authored_text_verbatim():
+    """No rule fired means no change at all -- not even re-spaced punctuation."""
+    ve = _load_engine()
+    text = "Now I think it means knowing what deserves my effort—and what does not."
+    spoken, align = ve._line_speech(text, {})
+    assert spoken == text
+    # An identity alignment is still emitted (each token maps to one spoken word); what
+    # matters is that it addresses the SAME tokens, so the subtitle output is unchanged.
+    assert align
+    assert [a["raw"] for a in align] == text.replace("—", " — ").split(" ")

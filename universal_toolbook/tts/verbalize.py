@@ -207,15 +207,18 @@ def _strip(token: str) -> Tuple[str, str, str]:
 
 
 def _split_ws(text: str) -> List[str]:
-    """Whitespace tokens of the authored text, preserving the author's own spacing.
+    """Tokenize exactly the way the subtitle builder does (``episode.js``).
 
-    No re-punctuation happens here: the spoken string must differ from the written
-    string only where a rule actually fired, so a diff between the two is meaningful.
+    That builder first pads an em dash and splits on a single space, so the two sides must
+    agree token-for-token or the alignment indices would point at the wrong words. The
+    spoken string is reassembled with ``" ".join``, so a re-spaced em dash still differs
+    from the authored text only where a rule fired.
     """
     if not text:
         return []
-    stripped = text.strip()
-    return stripped.split() if stripped else []
+    normalized = re.sub(r"\s*—\s*", " — ", text)
+    normalized = re.sub(r"\s+", " ", normalized).strip()
+    return normalized.split(" ") if normalized else []
 
 
 def load_dictionary(path: Optional[Path] = None) -> Dict[str, str]:
@@ -367,6 +370,16 @@ class Verbalized:
         return [t.as_dict() for t in self.tokens]
 
 
+def _looks_like_sentence(tokens: List[str]) -> bool:
+    """A line is a sentence (not a fragment) when it ends with terminal punctuation.
+
+    Used only to decide whether the first spoken word gets a capital: "5 weeks early, it
+    met the far side." is a sentence and opens "Five", while a bare "254 days" fragment
+    stays lower case.
+    """
+    return bool(tokens) and bool(re.search(r"[.!?][\"')\]]*$", tokens[-1]))
+
+
 def _verbalize_compound(
     core: str, prev_core: str, next_core: str, dictionary: Dict[str, str]
 ) -> Optional[str]:
@@ -450,15 +463,19 @@ def verbalize(text: str, dictionary: Optional[Dict[str, str]] = None) -> Verbali
             # opening "5 weeks early" must be spoken "Five weeks early". An ALL-CAPS token
             # (TTS, GPU) stays the dictionary's lower-case expansion, since a capitalised
             # acronym expansion would read as "Text to speech" and change the emphasis.
-            # A token is capitalized only when the author marked it so: either the token
-            # itself began with a capital (`Five weeks` -> `Five weeks`), or it follows
-            # sentence punctuation. A bare numeral carries no case information, so a line
-            # that OPENS with one stays lower case -- that keeps the spoken register
-            # deterministic instead of guessing from a fragment.
+            # Capitalize the first spoken word of the line and the first word after
+            # sentence punctuation. Every `dialogue` entry is rendered as its own spoken
+            # sentence, so the opening word is capitalized even when the author opened
+            # with a numeral ("5 weeks early" is spoken "Five weeks early"). Without this,
+            # migrating a line from words to numerals would quietly lower-case its first
+            # syllable and change the audio of a shipped film.
+            #
+            # A bare fragment ("254 days" on its own) has no sentence to be the start of,
+            # so it stays lower case and the rules can be read deterministically.
+            opens_sentence = i == 0 and _looks_like_sentence(raw_tokens)
             after_sentence_end = i > 0 and bool(re.search(r"[.!?—]\s*$", raw_tokens[i - 1]))
-            author_capitalized = core[:1].isupper() and i == 0
             if (
-                (after_sentence_end or author_capitalized)
+                (opens_sentence or after_sentence_end)
                 and spoken_piece[:1].islower()
                 and not (core.isupper() and len(core) > 1)
             ):
@@ -479,9 +496,13 @@ def verbalize(text: str, dictionary: Optional[Dict[str, str]] = None) -> Verbali
         cursor += len(spoken_word_list)
         alignments.append(TokenAlignment(raw=raw, spoken=spoken_piece, word_start=w0, word_end=cursor))
 
-    # A date reads "the seventh of November", which needs the day and month joined
-    # smoothly; joining on single spaces already achieves that.
-    spoken = " ".join(p for p in spoken_parts if p)
+    # If no rule fired, the spoken form is the authored text verbatim. Returning the
+    # re-tokenized string here would hand the engine "effort — and" where the author
+    # wrote "effort—and", a pointless edit to an already-correct line.
+    if rules:
+        spoken = " ".join(p for p in spoken_parts if p)
+    else:
+        spoken = text
     return Verbalized(text=text, spoken=spoken, words=words, tokens=alignments, rules=rules)
 
 

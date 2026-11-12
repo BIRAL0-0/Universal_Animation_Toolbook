@@ -134,11 +134,20 @@ function tokensMatchWord(cand, sub) {
 // exactly like the punctuation branch of the caller.
 function mapDisplayTokensByAlignment(displayTokens, rawWords, align, startSec, endSec) {
   const words = Array.isArray(rawWords) ? rawWords : [];
+  const entries = Array.isArray(align) ? align.filter((a) => a && typeof a === 'object') : [];
+
+  // Prefer POSITIONAL alignment. The Python tokenizer and this file's tokenizer are
+  // required to agree on token count, but they can differ on a glued em dash
+  // ("effort—and" is one token there, three here). When the counts line up, index is
+  // exact and immune to that; key matching stays as a fallback.
+  const positional = entries.length === displayTokens.length;
+
   const byRaw = new Map();
-  for (const a of Array.isArray(align) ? align : []) {
-    if (!a || typeof a !== 'object') continue;
-    if (!byRaw.has(a.raw)) byRaw.set(a.raw, []);
-    byRaw.get(a.raw).push(a);
+  if (!positional) {
+    for (const a of entries) {
+      if (!byRaw.has(a.raw)) byRaw.set(a.raw, []);
+      byRaw.get(a.raw).push(a);
+    }
   }
   const consumed = new Map();
 
@@ -146,11 +155,16 @@ function mapDisplayTokensByAlignment(displayTokens, rawWords, align, startSec, e
     if (tok.isSpeakerLabel) {
       return { ...tok, isSpeakerLabel: true, tStart: undefined, tEnd: undefined };
     }
-    const key = String(tok.raw || '');
-    const bucket = byRaw.get(key) || [];
-    const seen = consumed.get(key) || 0;
-    const a = bucket[seen];
-    consumed.set(key, seen + 1);
+    let a;
+    if (positional) {
+      a = entries[idx];
+    } else {
+      const key = String(tok.raw || '');
+      const bucket = byRaw.get(key) || [];
+      const seen = consumed.get(key) || 0;
+      a = bucket[seen];
+      consumed.set(key, seen + 1);
+    }
 
     if (!a) {
       return { ...tok, tStart: null, tEnd: null };
