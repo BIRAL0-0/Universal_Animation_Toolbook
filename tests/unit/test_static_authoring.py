@@ -59,26 +59,18 @@ def test_non_speaking_character_still_animates():
     )
 
 
-def test_idle_pose_is_more_than_breathing():
-    """`idle_stand` is the pose nearly every hold resolves to.
-
-    Breathing alone reaches ~0.5 character-region delta. A resting body needs
-    weight shift and attention as well, which means several independent
-    oscillators — not one shared `breath` term.
-    """
+def test_idle_pose_uses_shared_secondary_motion_layer():
+    """KI-020 centralizes held-pose movement instead of double-driving idle."""
     source = MOTION.read_text(encoding="utf-8")
+    assert "const SECONDARY_MOTION_ACTIONS = new Set([" in source
+    assert "'idle_stand'" in source.split("const SECONDARY_MOTION_ACTIONS", 1)[1].split("]);", 1)[0]
+    assert "return applySecondaryMotion(curState, cur, globalT" in source
+    assert "secondaryMotionStrength(prev, ts)" in source
     marker = "// Default: idle_stand"
     assert marker in source
-    idle = source.split(marker, 1)[1][:2200]
-    oscillators = idle.count("Math.sin(")
-    assert oscillators >= 4, (
-        f"idle_stand drives {oscillators} oscillators; a rest pose needs at least "
-        "four desynchronised periods or it pulses like a metronome"
-    )
-    # A hold that only offsets from `breath` is the old failure mode.
-    assert "slowShift" in idle and "microGaze" in idle, (
-        "idle_stand lost its weight-shift or gaze terms"
-    )
+    idle = source.split(marker, 1)[1][:1800]
+    assert "applySecondaryMotion" not in idle, "idle_stand must not duplicate the shared layer"
+    assert "microGaze" in idle and "slowShift" in idle
 
 
 def test_no_spec_holds_one_pose_for_a_whole_scene():

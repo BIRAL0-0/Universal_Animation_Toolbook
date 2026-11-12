@@ -65,6 +65,16 @@ Every entry: **stage** · **symptom** · **root cause** · **status** · **regre
 
 ## RESOLVED
 
+### KI-020 — held poses were nearly motionless, with no deliberate stillness control (resolved)
+- **Stage:** animation / motion evaluation
+- **Symptom:** after KI-019 improved `idle_stand`, other frequent held poses remained nearly static. An isolated 8 s render audit of 15 actions measured character-region median frame delta at 0.132 for `sit_bench`, 0.213 for `hold_blueprint`, 0.290 for `cross_arms_skeptical`, 0.431 for `listen_nod` and 0.491 for `look_horizon`; the moving `sit_desk_type` control measured 1.969.
+- **Root cause:** these actions supplied a static base pose and relied on speech-specific movement or camera motion for life. `idle_stand` had its own oscillators, but every other held action did not; layering another source onto idle made the result worse.
+- **Fix:** `applySecondaryMotion` adds deterministic, actor-seeded weight shift, head attention, arm resettling and gaze drift for 17 named held actions. Locomotion, typing, sketching and other already-moving actions are excluded. It is applied once on both steady-state and beat-blend returns; `idle_stand`'s private oscillator copy is removed. A 0.4 s eased envelope removes edge snaps and the shared phase does not reset at a beat boundary.
+- **Intentional stillness:** `secondary_motion` accepts `full` (default), `subtle` (0.35×) or `none` on an actor or beat; beat-level values override actor-level values. `none` removes only this shared layer, leaving base-pose motion intact. This is suitable for a deliberately quiet beat, but is not a literal freeze-frame switch.
+- **Verification:** `tests/unit/test_secondary_motion.py` executes the evaluator for determinism, both return paths, defaults, actor/beat overrides, moving-action exclusion and transition behavior. The 15-action render audit after the layer measured 0.53–1.04 for the previously dead cluster and unchanged moving-action controls. Six character-region strips were inspected at multiple timestamps.
+- **Honest limit:** pixel-difference magnitude establishes that pixels move, not that the motion is natural or emotionally correct. The layer makes a hold alive, not expressive; action selection and story fit remain human judgment. It is not a replacement for per-action animation refinement.
+- **Status:** RESOLVED for shared secondary motion and authorable stillness strength.
+
 ### KI-019 — a film that passed every gate still looked like a slideshow (resolved)
 - **Stage:** master visual QA, motion review
 - **First seen:** video-003, 2026-11-10
