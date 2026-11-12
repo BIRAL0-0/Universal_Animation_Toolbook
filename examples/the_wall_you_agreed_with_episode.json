@@ -369,8 +369,15 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 7.6,
+              "end": 4.18,
               "action": "idle_stand",
+              "x": 0.40225694444444443,
+              "facing": 1
+            },
+            {
+              "start": 4.18,
+              "end": 7.6,
+              "action": "listen_nod",
               "x": 0.40225694444444443,
               "facing": 1
             }
@@ -775,8 +782,15 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 7.2,
+              "end": 3.96,
               "action": "idle_stand",
+              "x": 0.40225694444444443,
+              "facing": 1
+            },
+            {
+              "start": 3.96,
+              "end": 7.2,
+              "action": "listen_nod",
               "x": 0.40225694444444443,
               "facing": 1
             }

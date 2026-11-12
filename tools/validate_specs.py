@@ -28,6 +28,49 @@ def default_specs() -> list[Path]:
     return [s for s in specs if s.exists()]
 
 
+
+# KI-018c: a beat is a pose somebody holds. Holding the SAME pose for a third of a minute is
+# not a slow beat, it is a still image with a moving camera. `discipline-vs-obsession` holds
+# `celebrate_arms_up` for 64.8 seconds. Measured on `the-first-plank`, the stretches that read
+# as dead air are exactly the single-beat scenes: stage motion falls to 34% of the film median.
+MAX_SINGLE_BEAT_SEC = 6.0
+HOLD_ACTIONS = {
+    "idle_stand", "sit_desk_slump", "sit_cafe_listen", "sit_bench", "sit_bed_edge",
+    "cross_arms_skeptical", "head_in_hands", "listen_nod", "kneel_exhausted",
+}
+
+
+def motion_problems(spec: Path) -> list[str]:
+    """Static-authoring defects a schema validator cannot see."""
+    try:
+        data = json.loads(spec.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return []
+    problems: list[str] = []
+    for scene in data.get("scenes", []):
+        sid = scene.get("id", "?")
+        dur = float(scene.get("duration") or 0)
+        for ch in scene.get("characters", []):
+            beats = ch.get("beats") or []
+            if not beats:
+                continue
+            if len(beats) == 1 and dur > MAX_SINGLE_BEAT_SEC:
+                action = beats[0].get("action")
+                hint = " (a hold action)" if action in HOLD_ACTIONS else ""
+                problems.append(
+                    f"{spec.name}:{sid} character '{ch.get('id')}' holds '{action}' for the "
+                    f"whole {dur:.1f}s scene{hint} — beats longer than {MAX_SINGLE_BEAT_SEC:.0f}s "
+                    "need at least one change of action, or the scene reads as a still")
+            for beat in beats:
+                end = float(beat.get("end") or 0)
+                start = float(beat.get("start") or 0)
+                if end - start > MAX_SINGLE_BEAT_SEC * 2 and beat.get("action") in HOLD_ACTIONS:
+                    problems.append(
+                        f"{spec.name}:{sid} character '{ch.get('id')}' holds '{beat.get('action')}' "
+                        f"for {end - start:.1f}s — split it into two beats so something changes")
+    return problems
+
+
 def validate(spec: Path) -> tuple[bool, str]:
     proc = subprocess.run(
         [sys.executable, str(RUN), "validate", str(spec)],
@@ -43,7 +86,7 @@ def validate(spec: Path) -> tuple[bool, str]:
     except json.JSONDecodeError:
         return False, "validate did not emit JSON"
 
-    warnings = data.get("warnings") or []
+    warnings = list(data.get("warnings") or []) + motion_problems(spec)
     rel = spec.relative_to(ROOT) if spec.is_relative_to(ROOT) else spec
     line = (
         f"{str(rel):52s} {data.get('scene_count', '?'):>3} scenes  "

@@ -267,8 +267,16 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 9.0,
+              "end": 4.95,
               "action": "sit_desk_type",
+              "x": 0.46,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 4.95,
+              "end": 9.0,
+              "action": "sketch_desk",
               "x": 0.46,
               "facing": 1,
               "expression": "focused"
@@ -995,8 +1003,16 @@
             },
             {
               "start": 9.0,
-              "end": 16.0,
+              "end": 12.85,
               "action": "point_emphasis",
+              "x": 0.48,
+              "facing": 1,
+              "expression": "sincere"
+            },
+            {
+              "start": 12.85,
+              "end": 16.0,
+              "action": "talk_explain",
               "x": 0.48,
               "facing": 1,
               "expression": "sincere"

@@ -278,8 +278,17 @@
           "beats": [
             {
               "start": 7.4,
-              "end": 15.0,
+              "end": 11.58,
               "action": "cross_arms_skeptical",
+              "x": 0.8,
+              "facing": -1,
+              "expression": "skeptical",
+              "elevation": 271.8
+            },
+            {
+              "start": 11.58,
+              "end": 15.0,
+              "action": "idle_stand",
               "x": 0.8,
               "facing": -1,
               "expression": "skeptical",
@@ -389,8 +398,17 @@
             },
             {
               "start": 7.5,
-              "end": 14.5,
+              "end": 11.35,
               "action": "stand_up_resolve",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "determined",
+              "elevation": 271.8
+            },
+            {
+              "start": 11.35,
+              "end": 14.5,
+              "action": "idle_stand",
               "x": 0.44,
               "facing": 1,
               "expression": "determined",
@@ -440,7 +458,7 @@
         },
         {
           "speaker": "narrator",
-          "text": "And underneath \u2014 quietly, patiently, in a place no one had thought to look \u2014",
+          "text": "And underneath — quietly, patiently, in a place no one had thought to look —",
           "pause_after": 0.4
         },
         {
@@ -611,8 +629,17 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 6.2,
+              "end": 3.41,
               "action": "look_horizon",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "calm",
+              "elevation": 185.4
+            },
+            {
+              "start": 3.41,
+              "end": 6.2,
+              "action": "idle_stand",
               "x": 0.44,
               "facing": 1,
               "expression": "calm",
@@ -643,8 +670,17 @@
           "beats": [
             {
               "start": 11.2,
-              "end": 15.5,
+              "end": 13.56,
               "action": "react_surprise",
+              "x": 0.84,
+              "facing": -1,
+              "expression": "surprised",
+              "elevation": 185.4
+            },
+            {
+              "start": 13.56,
+              "end": 15.5,
+              "action": "listen_nod",
               "x": 0.84,
               "facing": -1,
               "expression": "surprised",
@@ -735,7 +771,7 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 8.0,
+              "end": 4.4,
               "action": "look_horizon",
               "x": 0.44,
               "facing": 1,
@@ -743,9 +779,27 @@
               "elevation": 207.0
             },
             {
+              "start": 4.4,
+              "end": 8.0,
+              "action": "idle_stand",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "happy",
+              "elevation": 207.0
+            },
+            {
               "start": 8.0,
-              "end": 16.0,
+              "end": 12.4,
               "action": "stand_up_resolve",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "determined",
+              "elevation": 207.0
+            },
+            {
+              "start": 12.4,
+              "end": 16.0,
+              "action": "idle_stand",
               "x": 0.44,
               "facing": 1,
               "expression": "determined",

@@ -746,8 +746,13 @@ function compileEpisode(spec, options = {}) {
     const focusXBase = cam.focus_x ?? cam.focusX ?? 0.5;
     const focusYBase = cam.focus_y ?? cam.focusY ?? 0.54;
     const camera = {
+      // KI-018b: this used to default zoomTo to 1.04, so EVERY scene without an authored
+      // camera block silently crept 4% over its whole duration. That made an intentionally
+      // still scene impossible to author, and hid real stillness from creative_review (the
+      // creep's frame delta sits above its 0.0015 "still" bar). Default to a hold; a scene
+      // that wants motion says so.
       zoomFrom: cam.zoom_from ?? cam.zoomFrom ?? 1.0,
-      zoomTo: cam.zoom_to ?? cam.zoomTo ?? 1.04,
+      zoomTo: cam.zoom_to ?? cam.zoomTo ?? (cam.zoom_from ?? cam.zoomFrom ?? 1.0),
       panFrom: cam.pan_from ?? cam.panFrom ?? 0.0,
       panTo: cam.pan_to ?? cam.panTo ?? 0.0,
       focusXFrom: cam.focus_x_from ?? cam.focusXFrom ?? focusXBase,

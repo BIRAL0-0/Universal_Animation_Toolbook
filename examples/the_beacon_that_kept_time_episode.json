@@ -146,16 +146,32 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 6.275,
+              "end": 3.45,
               "action": "hold_blueprint",
               "x": 0.36,
               "facing": 1,
               "expression": "focused"
             },
             {
+              "start": 3.45,
+              "end": 6.275,
+              "action": "sketch_desk",
+              "x": 0.36,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
               "start": 6.275,
-              "end": 13.31,
+              "end": 10.14,
               "action": "talk_explain",
+              "x": 0.36,
+              "facing": 1,
+              "expression": "curious"
+            },
+            {
+              "start": 10.14,
+              "end": 13.31,
+              "action": "point_emphasis",
               "x": 0.36,
               "facing": 1,
               "expression": "curious"
@@ -168,16 +184,32 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 7.225,
+              "end": 3.97,
               "action": "talk_explain",
               "x": 0.6,
               "facing": -1,
               "expression": "determined"
             },
             {
-              "start": 7.225,
-              "end": 13.31,
+              "start": 3.97,
+              "end": 7.225,
               "action": "point_emphasis",
+              "x": 0.6,
+              "facing": -1,
+              "expression": "determined"
+            },
+            {
+              "start": 7.225,
+              "end": 10.57,
+              "action": "point_emphasis",
+              "x": 0.6,
+              "facing": -1,
+              "expression": "focused"
+            },
+            {
+              "start": 10.57,
+              "end": 13.31,
+              "action": "talk_explain",
               "x": 0.6,
               "facing": -1,
               "expression": "focused"
@@ -332,8 +364,16 @@
             },
             {
               "start": 5.326,
-              "end": 12.9,
+              "end": 9.49,
               "action": "talk_explain",
+              "x": 0.38,
+              "facing": 1,
+              "expression": "hopeful"
+            },
+            {
+              "start": 9.49,
+              "end": 12.9,
+              "action": "point_emphasis",
               "x": 0.38,
               "facing": 1,
               "expression": "hopeful"
@@ -346,8 +386,16 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 7.49,
+              "end": 4.12,
               "action": "listen_nod",
+              "x": 0.6,
+              "facing": -1,
+              "expression": "focused"
+            },
+            {
+              "start": 4.12,
+              "end": 7.49,
+              "action": "idle_stand",
               "x": 0.6,
               "facing": -1,
               "expression": "focused"
@@ -518,8 +566,16 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 6.399,
+              "end": 3.52,
               "action": "cross_arms_skeptical",
+              "x": 0.68,
+              "facing": -1,
+              "expression": "worried"
+            },
+            {
+              "start": 3.52,
+              "end": 6.399,
+              "action": "idle_stand",
               "x": 0.68,
               "facing": -1,
               "expression": "worried"
@@ -676,8 +732,16 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 6.517,
+              "end": 3.58,
               "action": "look_horizon",
+              "x": 0.24,
+              "facing": 1,
+              "expression": "worried"
+            },
+            {
+              "start": 3.58,
+              "end": 6.517,
+              "action": "idle_stand",
               "x": 0.24,
               "facing": 1,
               "expression": "worried"
@@ -698,8 +762,16 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 7.821,
+              "end": 4.3,
               "action": "listen_nod",
+              "x": 0.4,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 4.3,
+              "end": 7.821,
+              "action": "idle_stand",
               "x": 0.4,
               "facing": 1,
               "expression": "focused"
@@ -828,8 +900,16 @@
             },
             {
               "start": 4.815,
-              "end": 13.0,
+              "end": 9.32,
               "action": "point_emphasis",
+              "x": 0.52,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 9.32,
+              "end": 13.0,
+              "action": "talk_explain",
               "x": 0.52,
               "facing": 1,
               "expression": "focused"
@@ -850,8 +930,16 @@
             },
             {
               "start": 4.815,
-              "end": 13.0,
+              "end": 9.32,
               "action": "talk_explain",
+              "x": 0.64,
+              "facing": -1,
+              "expression": "determined"
+            },
+            {
+              "start": 9.32,
+              "end": 13.0,
+              "action": "point_emphasis",
               "x": 0.64,
               "facing": -1,
               "expression": "determined"
@@ -1001,8 +1089,16 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 6.865,
+              "end": 3.78,
               "action": "hold_blueprint",
+              "x": 0.4,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 3.78,
+              "end": 6.865,
+              "action": "sketch_desk",
               "x": 0.4,
               "facing": 1,
               "expression": "focused"
@@ -1023,8 +1119,16 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 8.683,
+              "end": 4.78,
               "action": "listen_nod",
+              "x": 0.62,
+              "facing": -1,
+              "expression": "focused"
+            },
+            {
+              "start": 4.78,
+              "end": 8.683,
+              "action": "idle_stand",
               "x": 0.62,
               "facing": -1,
               "expression": "focused"
@@ -1208,8 +1312,16 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 6.674,
+              "end": 3.67,
               "action": "look_horizon",
+              "x": 0.22,
+              "facing": 1,
+              "expression": "hopeful"
+            },
+            {
+              "start": 3.67,
+              "end": 6.674,
+              "action": "idle_stand",
               "x": 0.22,
               "facing": 1,
               "expression": "hopeful"
@@ -1230,8 +1342,16 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 7.601,
+              "end": 4.18,
               "action": "listen_nod",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 4.18,
+              "end": 7.601,
+              "action": "idle_stand",
               "x": 0.34,
               "facing": 1,
               "expression": "focused"
@@ -1374,16 +1494,32 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 7.991,
+              "end": 4.4,
               "action": "talk_explain",
               "x": 0.5,
               "facing": 1,
               "expression": "smile"
             },
             {
-              "start": 7.991,
-              "end": 17.98,
+              "start": 4.4,
+              "end": 7.991,
               "action": "point_emphasis",
+              "x": 0.5,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 7.991,
+              "end": 13.48,
+              "action": "point_emphasis",
+              "x": 0.5,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 13.48,
+              "end": 17.98,
+              "action": "talk_explain",
               "x": 0.5,
               "facing": 1,
               "expression": "determined"
@@ -1396,8 +1532,16 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 8.99,
+              "end": 4.94,
               "action": "listen_nod",
+              "x": 0.72,
+              "facing": -1,
+              "expression": "focused"
+            },
+            {
+              "start": 4.94,
+              "end": 8.99,
+              "action": "idle_stand",
               "x": 0.72,
               "facing": -1,
               "expression": "focused"

@@ -60,8 +60,16 @@ VIDEOS = ROOT / "videos"
 
 HOOK_WINDOW_SEC = 8.0
 SAMPLE_FPS = 2.0          # two frames a second is enough to see change, cheap enough to run
-STILL_THRESHOLD = 0.0015  # mean absolute difference below which two frames are "the same"
+# KI-018: an ABSOLUTE threshold cannot distinguish a still frame from an invisible camera
+# creep. Measured on `the-first-plank` (3.0.0), the 8-second dead run at 00:12 had a frame
+# delta of 0.142 — 95x this bar — because the camera smeared a 6% zoom across 13 seconds.
+# The gate therefore reported `still_share: 0.0` on a film that reads as a slideshow. The
+# metric below is relative to the film's OWN median motion, which is what the eye notices.
+STILL_THRESHOLD = 0.0015  # absolute: a genuinely frozen frame
 MIN_STILL_RUN_SEC = 4.0   # a still run shorter than this is a beat, not dead air
+DEAD_RATIO = 0.40         # <40% of the film's own median motion reads as "nothing is happening"
+MIN_DEAD_RUN_SEC = 2.5    # a low-motion run shorter than this is a beat, not dead air
+DEAD_SHARE_WARN = 0.20    # >20% of the film this quiet is worth reporting
 FRAME_SIZE = (160, 284)
 
 
@@ -153,7 +161,14 @@ def review(slug: str, out_dir: Path | None = None) -> dict:
         )
 
     # ---------------------------------------------------------------- whole film
-    samples = list(_frames(mp4))
+    # KI-018: measure the STAGE, not the whole frame. The typewriter board at the top and
+    # the word-glowing subtitle band at the bottom change on almost every frame, so their
+    # motion masks a completely static stage. Measured whole-frame, the 8-second dead run in
+    # `the-first-plank` 3.0.0 never registered; measured on the stage band it does.
+    samples_full = list(_frames(mp4))
+    _h = samples_full[0][1].shape[0] if samples_full else 0
+    _top, _bottom = int(_h * 0.35), int(_h * 0.78)
+    samples = [(t, f[_top:_bottom, :, :]) for t, f in samples_full]
     deltas = [(samples[i][0], _distance(samples[i - 1][1], samples[i][1])) for i in range(1, len(samples))]
 
     still_runs = []
@@ -175,6 +190,35 @@ def review(slug: str, out_dir: Path | None = None) -> dict:
         observations.append(
             f"{still_share:.0%} of the film is visually static ({len(still_runs)} run(s)) — "
             "fine for a contemplative piece, fatal for a hook-led one; look at the frames"
+        )
+
+    # ------------------------------------------------- relative motion (KI-018)
+    # This is the measurement that would have caught the invisible camera creep. It asks
+    # nothing about taste: it compares each moment to the film's own median liveliness.
+    deltas_only = [d for _, d in deltas]
+    median_delta = sorted(deltas_only)[len(deltas_only) // 2] if deltas_only else 0.0
+    dead_runs: list = []
+    if median_delta > 0:
+        run_start = None
+        for timestamp, delta in deltas:
+            if delta < median_delta * DEAD_RATIO:
+                if run_start is None:
+                    run_start = timestamp
+            elif run_start is not None:
+                if timestamp - run_start >= MIN_DEAD_RUN_SEC:
+                    dead_runs.append([round(run_start, 1), round(timestamp, 1)])
+                run_start = None
+        if run_start is not None and samples and samples[-1][0] - run_start >= MIN_DEAD_RUN_SEC:
+            dead_runs.append([round(run_start, 1), round(samples[-1][0], 1)])
+    dead_seconds = sum(end - start for start, end in dead_runs)
+    dead_share = dead_seconds / duration if duration else 0.0
+    if dead_share > DEAD_SHARE_WARN:
+        longest = max((e - s for s, e in dead_runs), default=0.0)
+        observations.append(
+            f"{dead_share:.0%} of the film ({dead_seconds:.1f}s in {len(dead_runs)} run(s), "
+            f"longest {longest:.1f}s) moves at under {DEAD_RATIO:.0%} of the film's own median "
+            f"motion ({median_delta:.3f}) — this is the invisible-camera-creep signature: the "
+            "renderer is still moving, the viewer sees a still image"
         )
 
     # --------------------------------------------------------- promised moment
@@ -253,6 +297,9 @@ def review(slug: str, out_dir: Path | None = None) -> dict:
         "hook_is_static": still_opening,
         "still_runs_sec": still_runs,
         "still_share": round(still_share, 3),
+        "median_frame_delta": round(median_delta, 5),
+        "dead_runs_sec": dead_runs,
+        "dead_share": round(dead_share, 3),
         "promise_checks": promise_checks,
         "cover_luma": cover_palette["mean_luma"] if cover_palette else None,
         "cover_world_delta": world_delta,

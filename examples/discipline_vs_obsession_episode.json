@@ -1,5 +1,5 @@
 {
-  "title": "Discipline vs Obsession \u2014 The Man Who Sacrificed Everything",
+  "title": "Discipline vs Obsession — The Man Who Sacrificed Everything",
   "thesis": "Discipline builds your future. Obsession can make you lose your present.",
   "bgm": "dynamic",
   "subtitles_mode": "cinema",
@@ -1212,8 +1212,8 @@
       "split_screen": {
         "from_t": 0.0,
         "to_t": 44.11,
-        "left_label": "DANIEL \u2022 9:00 PM",
-        "right_label": "MARCUS \u2022 2:00 AM",
+        "left_label": "DANIEL • 9:00 PM",
+        "right_label": "MARCUS • 2:00 AM",
         "left_tint": "rgba(56, 189, 248, 0.07)",
         "right_tint": "rgba(2, 6, 16, 0.48)",
         "left_lights_out_at": 34.73
@@ -1293,8 +1293,24 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 15.99,
+              "end": 4.83,
               "action": "sit_desk_type",
+              "x": 0.27,
+              "facing": 1,
+              "expression": "neutral"
+            },
+            {
+              "start": 4.83,
+              "end": 8.79,
+              "action": "sketch_desk",
+              "x": 0.27,
+              "facing": 1,
+              "expression": "neutral"
+            },
+            {
+              "start": 8.79,
+              "end": 15.99,
+              "action": "sketch_desk",
               "x": 0.27,
               "facing": 1,
               "expression": "neutral"
@@ -1317,8 +1333,16 @@
             },
             {
               "start": 34.73,
-              "end": 47.708,
+              "end": 41.87,
               "action": "sit_bed_edge",
+              "x": 0.13,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 41.87,
+              "end": 47.708,
+              "action": "stretch_wake",
               "x": 0.13,
               "facing": 1,
               "expression": "smile"
@@ -1331,7 +1355,7 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 24.24,
+              "end": 7.33,
               "action": "sit_desk_type",
               "x": 0.74,
               "facing": 1,
@@ -1339,8 +1363,26 @@
               "posture": -0.18
             },
             {
+              "start": 7.33,
+              "end": 13.33,
+              "action": "sketch_desk",
+              "x": 0.74,
+              "facing": 1,
+              "expression": "tense",
+              "posture": -0.18
+            },
+            {
+              "start": 13.33,
+              "end": 24.24,
+              "action": "sketch_desk",
+              "x": 0.74,
+              "facing": 1,
+              "expression": "tense",
+              "posture": -0.18
+            },
+            {
               "start": 24.24,
-              "end": 35.23,
+              "end": 27.56,
               "action": "sit_desk_slump",
               "x": 0.74,
               "facing": 1,
@@ -1348,9 +1390,36 @@
               "posture": -0.26
             },
             {
+              "start": 27.56,
+              "end": 30.28,
+              "action": "stand_from_desk",
+              "x": 0.74,
+              "facing": 1,
+              "expression": "tired",
+              "posture": -0.26
+            },
+            {
+              "start": 30.28,
+              "end": 35.23,
+              "action": "stand_from_desk",
+              "x": 0.74,
+              "facing": 1,
+              "expression": "tired",
+              "posture": -0.26
+            },
+            {
               "start": 35.23,
-              "end": 47.708,
+              "end": 42.09,
               "action": "sketch_desk",
+              "x": 0.74,
+              "facing": 1,
+              "expression": "determined",
+              "posture": -0.22
+            },
+            {
+              "start": 42.09,
+              "end": 47.708,
+              "action": "hold_blueprint",
               "x": 0.74,
               "facing": 1,
               "expression": "determined",
@@ -1433,7 +1502,7 @@
           "w": 460,
           "h": 265,
           "accent": "#38bdf8",
-          "sender": "FRIEND \u2022 4:05 PM",
+          "sender": "FRIEND • 4:05 PM",
           "incoming": [
             "Football this evening?"
           ],
@@ -2785,8 +2854,24 @@
             },
             {
               "start": 4.8,
-              "end": 22.23,
+              "end": 10.07,
               "action": "sit_desk_type",
+              "x": 0.4,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 10.07,
+              "end": 14.39,
+              "action": "sketch_desk",
+              "x": 0.4,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 14.39,
+              "end": 22.23,
+              "action": "sketch_desk",
               "x": 0.4,
               "facing": 1,
               "expression": "determined"
@@ -2817,8 +2902,16 @@
             },
             {
               "start": 32.06,
-              "end": 53.0,
+              "end": 43.58,
               "action": "sit_cafe_talk",
+              "x": 0.39,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 43.58,
+              "end": 53.0,
+              "action": "listen_nod",
               "x": 0.39,
               "facing": 1,
               "expression": "smile"
@@ -2832,8 +2925,32 @@
           "beats": [
             {
               "start": 32.06,
-              "end": 53.0,
+              "end": 38.4,
               "action": "sit_cafe_listen",
+              "x": 0.65,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 38.4,
+              "end": 43.58,
+              "action": "talk_explain",
+              "x": 0.65,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 43.58,
+              "end": 48.76,
+              "action": "talk_explain",
+              "x": 0.65,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 48.76,
+              "end": 53.0,
+              "action": "point_emphasis",
               "x": 0.65,
               "facing": -1,
               "expression": "smile"
@@ -2949,7 +3066,7 @@
           "w": 490,
           "h": 325,
           "accent": "#ef4444",
-          "sender": "MUM \u2022 12:14 AM",
+          "sender": "MUM • 12:14 AM",
           "call_declined": "MUM",
           "incoming": [
             "Have you eaten?",
@@ -4192,7 +4309,7 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 10.0,
+              "end": 5.5,
               "action": "sketch_desk",
               "x": 0.61,
               "facing": 1,
@@ -4200,9 +4317,36 @@
               "posture": -0.14
             },
             {
+              "start": 5.5,
+              "end": 10.0,
+              "action": "hold_blueprint",
+              "x": 0.61,
+              "facing": 1,
+              "expression": "determined",
+              "posture": -0.14
+            },
+            {
               "start": 10.0,
-              "end": 27.34,
+              "end": 15.25,
               "action": "sit_desk_type",
+              "x": 0.61,
+              "facing": 1,
+              "expression": "tired",
+              "posture": -0.24
+            },
+            {
+              "start": 15.25,
+              "end": 19.54,
+              "action": "sketch_desk",
+              "x": 0.61,
+              "facing": 1,
+              "expression": "tired",
+              "posture": -0.24
+            },
+            {
+              "start": 19.54,
+              "end": 27.34,
+              "action": "sketch_desk",
               "x": 0.61,
               "facing": 1,
               "expression": "tired",
@@ -4219,8 +4363,26 @@
             },
             {
               "start": 35.236,
-              "end": 56.0,
+              "end": 41.52,
               "action": "sit_desk_slump",
+              "x": 0.61,
+              "facing": 1,
+              "expression": "tired",
+              "posture": -0.32
+            },
+            {
+              "start": 41.52,
+              "end": 46.66,
+              "action": "stand_from_desk",
+              "x": 0.61,
+              "facing": 1,
+              "expression": "tired",
+              "posture": -0.32
+            },
+            {
+              "start": 46.66,
+              "end": 56.0,
+              "action": "stand_from_desk",
               "x": 0.61,
               "facing": 1,
               "expression": "tired",
@@ -5687,6 +5849,33 @@
           "beats": [
             {
               "start": 0.0,
+              "end": 6.41,
+              "action": "talk_explain",
+              "x": 0.38,
+              "facing": 1,
+              "expression": "neutral",
+              "posture": 0.2
+            },
+            {
+              "start": 6.41,
+              "end": 11.65,
+              "action": "point_emphasis",
+              "x": 0.38,
+              "facing": 1,
+              "expression": "neutral",
+              "posture": 0.2
+            },
+            {
+              "start": 11.65,
+              "end": 16.9,
+              "action": "point_emphasis",
+              "x": 0.38,
+              "facing": 1,
+              "expression": "neutral",
+              "posture": 0.2
+            },
+            {
+              "start": 16.9,
               "end": 21.19,
               "action": "talk_explain",
               "x": 0.38,
@@ -5696,14 +5885,56 @@
             },
             {
               "start": 21.19,
-              "end": 36.11,
+              "end": 25.71,
               "action": "walk",
               "fromX": 0.38,
               "toX": 0.16,
               "expression": "smile"
             },
             {
+              "start": 25.71,
+              "end": 29.4,
+              "action": "idle_stand",
+              "fromX": 0.38,
+              "toX": 0.16,
+              "expression": "smile"
+            },
+            {
+              "start": 29.4,
+              "end": 33.09,
+              "action": "idle_stand",
+              "fromX": 0.38,
+              "toX": 0.16,
+              "expression": "smile"
+            },
+            {
+              "start": 33.09,
+              "end": 36.11,
+              "action": "listen_nod",
+              "fromX": 0.38,
+              "toX": 0.16,
+              "expression": "smile"
+            },
+            {
               "start": 36.11,
+              "end": 47.05,
+              "action": "sketch_desk",
+              "x": 0.17,
+              "facing": 1,
+              "expression": "smile",
+              "posture": 0.18
+            },
+            {
+              "start": 47.05,
+              "end": 51.97,
+              "action": "hold_blueprint",
+              "x": 0.17,
+              "facing": 1,
+              "expression": "smile",
+              "posture": 0.18
+            },
+            {
+              "start": 51.97,
               "end": 56.0,
               "action": "sketch_desk",
               "x": 0.17,
@@ -5719,8 +5950,16 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 10.83,
+              "end": 5.96,
               "action": "cross_arms_skeptical",
+              "x": 0.56,
+              "facing": -1,
+              "expression": "skeptical"
+            },
+            {
+              "start": 5.96,
+              "end": 10.83,
+              "action": "idle_stand",
               "x": 0.56,
               "facing": -1,
               "expression": "skeptical"
@@ -5735,8 +5974,24 @@
             },
             {
               "start": 20.09,
-              "end": 36.11,
+              "end": 28.9,
               "action": "gather_pages",
+              "x": 0.6,
+              "facing": 1,
+              "expression": "tense"
+            },
+            {
+              "start": 28.9,
+              "end": 32.87,
+              "action": "hold_blueprint",
+              "x": 0.6,
+              "facing": 1,
+              "expression": "tense"
+            },
+            {
+              "start": 32.87,
+              "end": 36.11,
+              "action": "sketch_desk",
               "x": 0.6,
               "facing": 1,
               "expression": "tense"
@@ -5759,8 +6014,24 @@
           "beats": [
             {
               "start": 36.11,
-              "end": 56.0,
+              "end": 47.05,
               "action": "high_five",
+              "x": 0.7,
+              "facing": 1,
+              "expression": "excited"
+            },
+            {
+              "start": 47.05,
+              "end": 51.97,
+              "action": "celebrate_arms_up",
+              "x": 0.7,
+              "facing": 1,
+              "expression": "excited"
+            },
+            {
+              "start": 51.97,
+              "end": 56.0,
+              "action": "look_horizon",
               "x": 0.7,
               "facing": 1,
               "expression": "excited"
@@ -5774,8 +6045,24 @@
           "beats": [
             {
               "start": 36.11,
-              "end": 56.0,
+              "end": 47.05,
               "action": "high_five",
+              "x": 0.81,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 47.05,
+              "end": 51.97,
+              "action": "celebrate_arms_up",
+              "x": 0.81,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 51.97,
+              "end": 56.0,
+              "action": "look_horizon",
               "x": 0.81,
               "facing": -1,
               "expression": "smile"
@@ -5875,7 +6162,7 @@
           "w": 470,
           "h": 345,
           "accent": "#f59e0b",
-          "sender": "MUM \u2022 FAMILY DINNER",
+          "sender": "MUM • FAMILY DINNER",
           "family_empty_seat": true,
           "incoming": [
             "We saved you a seat."
@@ -5891,7 +6178,7 @@
           "w": 500,
           "h": 335,
           "accent": "#38bdf8",
-          "sender": "DANIEL \u2022 MESSAGES",
+          "sender": "DANIEL • MESSAGES",
           "accepted_badge": "PROJECT ACCEPTED",
           "incoming": [
             "Hey, haven't seen you in a while.",
@@ -6831,8 +7118,26 @@
             },
             {
               "start": 7.5,
-              "end": 25.57,
+              "end": 12.97,
               "action": "sit_desk_type",
+              "x": 0.65,
+              "facing": 1,
+              "expression": "tired",
+              "posture": -0.28
+            },
+            {
+              "start": 12.97,
+              "end": 17.44,
+              "action": "sketch_desk",
+              "x": 0.65,
+              "facing": 1,
+              "expression": "tired",
+              "posture": -0.28
+            },
+            {
+              "start": 17.44,
+              "end": 25.57,
+              "action": "sketch_desk",
               "x": 0.65,
               "facing": 1,
               "expression": "tired",
@@ -6849,8 +7154,26 @@
             },
             {
               "start": 33.871,
-              "end": 58.0,
+              "end": 41.17,
               "action": "head_in_hands",
+              "seated": true,
+              "x": 0.65,
+              "facing": 1,
+              "expression": "sad"
+            },
+            {
+              "start": 41.17,
+              "end": 47.14,
+              "action": "kneel_lookup",
+              "seated": true,
+              "x": 0.65,
+              "facing": 1,
+              "expression": "sad"
+            },
+            {
+              "start": 47.14,
+              "end": 58.0,
+              "action": "kneel_lookup",
               "seated": true,
               "x": 0.65,
               "facing": 1,
@@ -6961,7 +7284,7 @@
         },
         {
           "speaker": "daniel",
-          "text": "Now I think it means knowing what deserves my effort\u2014and what doesn't.",
+          "text": "Now I think it means knowing what deserves my effort—and what doesn't.",
           "pause_after": 1.3
         },
         {
@@ -7209,7 +7532,7 @@
         },
         {
           "speaker": "daniel",
-          "text": "Now I think it means knowing what deserves my effort\u2014and what doesn't.",
+          "text": "Now I think it means knowing what deserves my effort—and what doesn't.",
           "start": 26.099,
           "end": 29.589,
           "words": [
@@ -8052,7 +8375,7 @@
           "speaker": "daniel"
         }
       ],
-      "narration": "Why did you choose this approach? How do you do it? Do what? Work hard without letting it consume you. I used to think discipline meant forcing myself to do more. Now I think it means knowing what deserves my effort\u2014and what doesn't. So you're saying I don't work hard enough? No. I'm saying you don't know when your work is enough. You're allowed to want something badly, Marcus. Just don't make achieving it the only reason you believe your life matters.",
+      "narration": "Why did you choose this approach? How do you do it? Do what? Work hard without letting it consume you. I used to think discipline meant forcing myself to do more. Now I think it means knowing what deserves my effort—and what doesn't. So you're saying I don't work hard enough? No. I'm saying you don't know when your work is enough. You're allowed to want something badly, Marcus. Just don't make achieving it the only reason you believe your life matters.",
       "lock_beats": true,
       "lock_camera_shots": true,
       "props": [
@@ -8100,8 +8423,16 @@
             },
             {
               "start": 4.4,
-              "end": 14.57,
+              "end": 9.99,
               "action": "idle_stand",
+              "x": 0.11,
+              "facing": 1,
+              "expression": "neutral"
+            },
+            {
+              "start": 9.99,
+              "end": 14.57,
+              "action": "listen_nod",
               "x": 0.11,
               "facing": 1,
               "expression": "neutral"
@@ -8117,8 +8448,17 @@
             },
             {
               "start": 45.29,
-              "end": 55.0,
+              "end": 50.63,
               "action": "walk",
+              "fromX": 0.58,
+              "toX": 0.86,
+              "expression": "neutral",
+              "posture": 0.2
+            },
+            {
+              "start": 50.63,
+              "end": 55.0,
+              "action": "idle_stand",
               "fromX": 0.58,
               "toX": 0.86,
               "expression": "neutral",
@@ -8150,7 +8490,7 @@
             },
             {
               "start": 8.3,
-              "end": 14.57,
+              "end": 11.75,
               "action": "idle_stand",
               "x": 0.26,
               "facing": 1,
@@ -8159,8 +8499,18 @@
               "posture": -0.34
             },
             {
+              "start": 11.75,
+              "end": 14.57,
+              "action": "listen_nod",
+              "x": 0.26,
+              "facing": 1,
+              "expression": "shocked",
+              "look_y": 0.35,
+              "posture": -0.34
+            },
+            {
               "start": 14.57,
-              "end": 21.74,
+              "end": 18.51,
               "action": "talk_explain",
               "x": 0.38,
               "facing": 1,
@@ -8168,9 +8518,48 @@
               "posture": -0.25
             },
             {
+              "start": 18.51,
+              "end": 21.74,
+              "action": "point_emphasis",
+              "x": 0.38,
+              "facing": 1,
+              "expression": "tired",
+              "posture": -0.25
+            },
+            {
               "start": 21.74,
-              "end": 55.0,
+              "end": 31.8,
               "action": "idle_stand",
+              "x": 0.38,
+              "facing": 1,
+              "expression": "sad",
+              "look_y": 0.22,
+              "posture": -0.2
+            },
+            {
+              "start": 31.8,
+              "end": 40.03,
+              "action": "listen_nod",
+              "x": 0.38,
+              "facing": 1,
+              "expression": "sad",
+              "look_y": 0.22,
+              "posture": -0.2
+            },
+            {
+              "start": 40.03,
+              "end": 48.26,
+              "action": "listen_nod",
+              "x": 0.38,
+              "facing": 1,
+              "expression": "sad",
+              "look_y": 0.22,
+              "posture": -0.2
+            },
+            {
+              "start": 48.26,
+              "end": 55.0,
+              "action": "talk_explain",
               "x": 0.38,
               "facing": 1,
               "expression": "sad",
@@ -8186,6 +8575,30 @@
           "beats": [
             {
               "start": 0.0,
+              "end": 4.41,
+              "action": "point_emphasis",
+              "x": 0.54,
+              "facing": -1,
+              "expression": "skeptical"
+            },
+            {
+              "start": 4.41,
+              "end": 8.01,
+              "action": "talk_explain",
+              "x": 0.54,
+              "facing": -1,
+              "expression": "skeptical"
+            },
+            {
+              "start": 8.01,
+              "end": 11.62,
+              "action": "talk_explain",
+              "x": 0.54,
+              "facing": -1,
+              "expression": "skeptical"
+            },
+            {
+              "start": 11.62,
               "end": 14.57,
               "action": "point_emphasis",
               "x": 0.54,
@@ -10871,7 +11284,7 @@
             },
             {
               "start": 7.4,
-              "end": 31.34,
+              "end": 14.64,
               "action": "walk",
               "fromX": 0.16,
               "toX": 0.62,
@@ -10879,9 +11292,54 @@
               "posture": 0.22
             },
             {
+              "start": 14.64,
+              "end": 20.57,
+              "action": "idle_stand",
+              "fromX": 0.16,
+              "toX": 0.62,
+              "expression": "smile",
+              "posture": 0.22
+            },
+            {
+              "start": 20.57,
+              "end": 26.49,
+              "action": "idle_stand",
+              "fromX": 0.16,
+              "toX": 0.62,
+              "expression": "smile",
+              "posture": 0.22
+            },
+            {
+              "start": 26.49,
+              "end": 31.34,
+              "action": "listen_nod",
+              "fromX": 0.16,
+              "toX": 0.62,
+              "expression": "smile",
+              "posture": 0.22
+            },
+            {
               "start": 31.34,
-              "end": 64.794,
+              "end": 49.74,
               "action": "sit_cafe_talk",
+              "x": 0.23,
+              "facing": 1,
+              "expression": "smile",
+              "posture": 0.22
+            },
+            {
+              "start": 49.74,
+              "end": 58.02,
+              "action": "listen_nod",
+              "x": 0.23,
+              "facing": 1,
+              "expression": "smile",
+              "posture": 0.22
+            },
+            {
+              "start": 58.02,
+              "end": 64.794,
+              "action": "idle_stand",
               "x": 0.23,
               "facing": 1,
               "expression": "smile",
@@ -10897,8 +11355,24 @@
           "beats": [
             {
               "start": 7.4,
-              "end": 31.34,
+              "end": 14.64,
               "action": "celebrate_arms_up",
+              "x": 0.7,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 14.64,
+              "end": 20.57,
+              "action": "look_horizon",
+              "x": 0.7,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 20.57,
+              "end": 31.34,
+              "action": "look_horizon",
               "x": 0.7,
               "facing": -1,
               "expression": "smile"
@@ -10912,8 +11386,32 @@
           "beats": [
             {
               "start": 31.34,
-              "end": 64.794,
+              "end": 41.46,
               "action": "sit_cafe_listen",
+              "x": 0.45,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 41.46,
+              "end": 49.74,
+              "action": "talk_explain",
+              "x": 0.45,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 49.74,
+              "end": 58.02,
+              "action": "talk_explain",
+              "x": 0.45,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 58.02,
+              "end": 64.794,
+              "action": "point_emphasis",
               "x": 0.45,
               "facing": -1,
               "expression": "smile"
@@ -10927,8 +11425,26 @@
           "beats": [
             {
               "start": 31.34,
-              "end": 64.794,
+              "end": 49.74,
               "action": "stand_from_desk",
+              "x": 0.74,
+              "facing": -1,
+              "expression": "smile",
+              "posture": 0.22
+            },
+            {
+              "start": 49.74,
+              "end": 58.02,
+              "action": "idle_stand",
+              "x": 0.74,
+              "facing": -1,
+              "expression": "smile",
+              "posture": 0.22
+            },
+            {
+              "start": 58.02,
+              "end": 64.794,
+              "action": "look_horizon",
               "x": 0.74,
               "facing": -1,
               "expression": "smile",
@@ -12895,6 +13411,24 @@
           "beats": [
             {
               "start": 0.0,
+              "end": 8.87,
+              "action": "sketch_desk",
+              "x": 0.25,
+              "facing": 1,
+              "expression": "smile",
+              "posture": 0.22
+            },
+            {
+              "start": 8.87,
+              "end": 12.86,
+              "action": "hold_blueprint",
+              "x": 0.25,
+              "facing": 1,
+              "expression": "smile",
+              "posture": 0.22
+            },
+            {
+              "start": 12.86,
               "end": 16.12,
               "action": "sketch_desk",
               "x": 0.25,
@@ -12904,7 +13438,7 @@
             },
             {
               "start": 16.12,
-              "end": 28.56,
+              "end": 22.96,
               "action": "look_horizon",
               "x": 0.25,
               "facing": 1,
@@ -12912,9 +13446,45 @@
               "posture": 0.24
             },
             {
+              "start": 22.96,
+              "end": 28.56,
+              "action": "idle_stand",
+              "x": 0.25,
+              "facing": 1,
+              "expression": "smile",
+              "posture": 0.24
+            },
+            {
               "start": 28.56,
-              "end": 68.01,
+              "end": 40.49,
               "action": "walk",
+              "fromX": 0.18,
+              "toX": 0.42,
+              "expression": "smile",
+              "posture": 0.24
+            },
+            {
+              "start": 40.49,
+              "end": 50.26,
+              "action": "idle_stand",
+              "fromX": 0.18,
+              "toX": 0.42,
+              "expression": "smile",
+              "posture": 0.24
+            },
+            {
+              "start": 50.26,
+              "end": 60.02,
+              "action": "idle_stand",
+              "fromX": 0.18,
+              "toX": 0.42,
+              "expression": "smile",
+              "posture": 0.24
+            },
+            {
+              "start": 60.02,
+              "end": 68.01,
+              "action": "listen_nod",
               "fromX": 0.18,
               "toX": 0.42,
               "expression": "smile",
@@ -12937,7 +13507,7 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 16.62,
+              "end": 5.03,
               "action": "sit_desk_type",
               "x": 0.69,
               "facing": 1,
@@ -12945,8 +13515,26 @@
               "posture": 0.18
             },
             {
+              "start": 5.03,
+              "end": 9.14,
+              "action": "sketch_desk",
+              "x": 0.69,
+              "facing": 1,
+              "expression": "neutral",
+              "posture": 0.18
+            },
+            {
+              "start": 9.14,
+              "end": 16.62,
+              "action": "sketch_desk",
+              "x": 0.69,
+              "facing": 1,
+              "expression": "neutral",
+              "posture": 0.18
+            },
+            {
               "start": 16.62,
-              "end": 28.56,
+              "end": 23.19,
               "action": "look_horizon",
               "x": 0.69,
               "facing": -1,
@@ -12954,9 +13542,45 @@
               "posture": 0.22
             },
             {
+              "start": 23.19,
+              "end": 28.56,
+              "action": "idle_stand",
+              "x": 0.69,
+              "facing": -1,
+              "expression": "smile",
+              "posture": 0.22
+            },
+            {
               "start": 28.56,
-              "end": 68.01,
+              "end": 40.49,
               "action": "walk",
+              "fromX": 0.82,
+              "toX": 0.58,
+              "expression": "smile",
+              "posture": 0.22
+            },
+            {
+              "start": 40.49,
+              "end": 50.26,
+              "action": "idle_stand",
+              "fromX": 0.82,
+              "toX": 0.58,
+              "expression": "smile",
+              "posture": 0.22
+            },
+            {
+              "start": 50.26,
+              "end": 60.02,
+              "action": "idle_stand",
+              "fromX": 0.82,
+              "toX": 0.58,
+              "expression": "smile",
+              "posture": 0.22
+            },
+            {
+              "start": 60.02,
+              "end": 68.01,
+              "action": "listen_nod",
               "fromX": 0.82,
               "toX": 0.58,
               "expression": "smile",
