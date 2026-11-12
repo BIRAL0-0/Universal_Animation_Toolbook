@@ -40,12 +40,17 @@ Activate whenever:
 2. **Stage tighter horizontal groupings for `< 60s` (`9:16`).** Keep two-actor conversations within `0.36..0.64` normalized stage width so both actors fit comfortably inside the vertical `9:16` field of view without excessive zoom-out.
 3. **Stage balanced rule-of-thirds spacing for `>= 60s` (`16:9`).** Place focal actors around `0.34–0.66` with clear sightlines toward props or boards.
 4. **Inspect both framing & safe margins.** Render full-resolution stills (`1080x1920` or `1920x1080`) and verify headers, held props, hands, and feet clear every margin.
+5. **Board geometry is fractional-or-pixel, and it bites.** In `notebook_page` / `sketch_card`, any of `x`, `y`, `w`, `h` **≤ 1.5 is read as a fraction of the frame**, above that as pixels (`universal_toolbook/engine/world_props_and_boards.js`, ~line 2217). `h` is also clamped: `min 160, max floorY - 125`, so a tall board silently shortens and can clip its last line. Lines type in over `0.20 s` each, so a board is not fully readable in its first second — never cue subtitle-critical information on board line one.
+6. **Vary the silhouette across consecutive scenes.** Three scenes in a row using `idle_stand` or `look_horizon` read as a still image with changing backgrounds. `the-first-plank` shipped its last three scenes that way until they were given `walk`, `stand_up_resolve`, `celebrate_arms_up`, `chest_hand_sincere` and `point_emphasis`.
 
 ## Common Failure Modes & Fixes
 
 | Failure mode | Root cause | Fix |
 |---|---|---|
 | Chapter header clipped at top of `9:16` | Header drawn in offset stage coordinates | Draw headers via `drawNativeScreenChapterRibbon` inside `layout.headerSafeRegion` |
+| Board's top edge sits under the chapter label | Board placed with `y: 0.055`, inside the label strip at the frame top | Use `y: 0.105`. Verified clear at every board height from four to five lines |
+| Board has empty space or clips its last line | `h` does not match the line count | `h = 110 + 56 * lines` (rendered pitch). Four lines ≈ 334, five ≈ 390 |
+| Board covers the character's head | Character scale too large for the board band | Keep `scale` ≈ 1.12–1.20. `1.30` lifted Mira's head into the board; board `w: 440` also clears a head at `x: 0.58` |
 | Blurry or letterboxed `9:16` video | Rasterizing to `1920x1080` scratch bitmap and scaling crop | Keep direct vector transform in `renderEpisodeFrame` (`universal_toolbook/engine/video_renderer.js`) |
 | Held prop clipped at frame edge on camera push | Authored zoom ignored prop bounds | `computePortraitViewport` and `computeLandscapePropZoomScale` automatically ease zoom back to fit held props |
 | Script crosses `60s` after TTS | Planned `58s` voiced at `62s` | Let `run_studio.py` re-evaluate `select_video_format_for_duration` post-TTS before chunk rendering |

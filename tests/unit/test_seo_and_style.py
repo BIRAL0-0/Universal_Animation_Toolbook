@@ -149,3 +149,32 @@ def test_published_thumbnails_match_their_films(style):
         art_fraction = (record.get("thumbnail_spec") or {}).get("art_fraction")
         result = style.report(master, thumbnail, art_fraction=art_fraction)
         assert result["score"] >= style.THRESHOLD, (package.name, result)
+
+
+def test_cover_art_declares_its_source():
+    """Every cover must say where its art came from, and whether it used the film's own rig.
+
+    `the-first-plank` shipped an AI-generated cover whose Mira had red shoes, a ponytail and
+    a skin tone — none of which the film's Mira has. `thumbnail_style` scored it MATCH the
+    whole time, because a colour histogram cannot tell one character from another.
+
+    The enforceable rule is narrower than "the art must be good": a cover that depicts the
+    protagonist must state that it was `rendered_from_spec`, and must name the spec. Covers
+    using generative art for scenery are fine but must not claim the rig.
+    """
+    import json
+
+    problems = []
+    for package in sorted(p for p in VIDEOS.iterdir() if p.is_dir()):
+        record = package / "record.json"
+        if not record.exists():
+            continue
+        spec = json.loads(record.read_text()).get("thumbnail_spec") or {}
+        source = spec.get("art_source")
+        if source not in (None, "rendered_from_spec", "generated_art"):
+            problems.append(f"{package.name}: unknown art_source {source!r}")
+        if source == "rendered_from_spec":
+            named = spec.get("art_spec")
+            if not named or not (REPO_ROOT / named).exists():
+                problems.append(f"{package.name}: claims rendered_from_spec but names no existing spec")
+    assert not problems, problems

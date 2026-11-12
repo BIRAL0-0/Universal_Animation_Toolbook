@@ -178,3 +178,47 @@ def test_a_real_render_completes_and_records_the_artifact(tmp_path):
     assert report["status"] == "COMPLETE", report.get("status")
     assert report["encoded"]["video_streams"] >= 1, report.get("encoded")
     assert out.stat().st_size > 10_000, "the encoded file is implausibly small"
+
+
+def test_every_published_master_is_reproducible_from_a_spec():
+    """A film whose only record is its MP4 cannot be re-cut.
+
+    `the-first-plank` had no spec, so its 2/5 hook could not be fixed by re-ordering —
+    it had to be re-authored from script.md. This asserts the traceability check works
+    and names the films it cannot trace, so the gap stays visible.
+    """
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "validate_publishing", REPO_ROOT / "tools" / "validate_publishing.py")
+    vp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(vp)
+
+    index = vp.spec_index()
+    assert index, "no example specs were indexed"
+
+    videos = REPO_ROOT / "videos"
+    unlinkable = []
+    for pkg in sorted(p for p in videos.iterdir() if p.is_dir()):
+        script = pkg / "script.md"
+        if not script.exists():
+            continue
+        first = vp._first_spoken_line(script.read_text(encoding="utf-8"))
+        if first and first not in index:
+            unlinkable.append(pkg.name)
+
+    # Every NEW production must be traceable. The one known legacy gap is allowed and
+    # must not grow — that is the whole point of recording it.
+    assert set(unlinkable) <= {"what-if-every-notification-cost-you-23-minutes"}, (
+        f"new unreproducible masters: {unlinkable}")
+
+
+def test_first_spoken_line_ignores_scene_headings():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "validate_publishing2", REPO_ROOT / "tools" / "validate_publishing.py")
+    vp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(vp)
+    text = "## S01 — Chapter One\n\n_00:00_\n\n**NARRATOR:** Hello there.\n\n**NARRATOR:** Second."
+    assert vp._first_spoken_line(text) == "hello there"

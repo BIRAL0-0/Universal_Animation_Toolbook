@@ -23,7 +23,31 @@ Activate whenever:
 
 ## Core Rules & Non-Negotiable Constraints
 
-1. **Locked near-black minimal studio background.** `studio_config.json` sets `visual_identity.mode: "near_black_minimal"` and `lock_identity: true`. `drawEnvironment` renders `renderNearBlackBackground` (`#080a0f -> #0b0e16 -> #07090e` sky gradient, `#06080d -> #04060a` floor plane, subtle `#94a3b8` horizon grounding line, zero film grain). Never introduce colourful skies, busy cityscapes, or random per-scene background colour shifts unless `allow_custom_backdrop: true` is explicitly requested by the user.
+1. **Locked near-black minimal studio background.** `studio_config.json` sets `visual_identity.mode: "near_black_minimal"` and `lock_identity: true`. `drawEnvironment` renders `renderNearBlackBackground` (`#080a0f -> #0b0e16 -> #07090e` sky gradient, `#06080d -> #04060a` floor plane, subtle `#94a3b8` horizon grounding line, zero film grain). Never introduce random per-scene background colour shifts.
+
+   **The only way to leave the near-black default is a per-scene `setting` block with
+   `override_visual_identity: true`.** There is no `allow_custom_backdrop` flag anywhere in the
+   engine — earlier versions of this skill named one, and setting it did nothing, silently. The
+   gate is `DEFAULT_VISUAL_IDENTITY.lock_identity` in `universal_toolbook/engine/environments.js`
+   (line ~923); every preset environment *and* every custom `setting` collapses to
+   `renderNearBlackBackground` without that key.
+
+   ```json
+   "setting": {
+     "backdrop": "mountains",            // mountains | hills | horizon | desert | forest | city
+                                          // | grid | arches | pillars | shelves | windows | pure_black
+     "sky": ["#070d1a", "#152238", "#6b4423"],   // 2+ colour gradient stops
+     "stars": true,                       // or "rain": true, "rain_intensity": 0.8
+     "override_visual_identity": true,    // REQUIRED or the block is ignored
+     "light_color": "#cbd5e1", "floor_color": "#06080d"
+   }
+   ```
+
+   **A preset environment does not draw scenery.** `canyon_bridge`, `storm_road` and
+   `sunrise_summit` are colour themes only — a canyon scene using `"environment": "canyon_bridge"`
+   renders as a bare room with a slightly different tint. If the script says canyon, rain or
+   sunrise, you must use a `setting` block. `the-first-plank` shipped for a full production cycle
+   looking like an office for exactly this reason.
 2. **Canonical Asset Library (`CANONICAL_ASSET_LIBRARY`).** All 12 core prop types (`phone`, `laptop`, `computer`, `desk`, `chair`, `bed`, `sofa`, `table`, `door`, `window`, `books`, `cup`) have canonical pixel dimensions, restrained architectural slate/charcoal palettes, `elevation` support, and deterministic anchors (`computePropAnchors`).
 3. **Shot-to-shot prop continuity (`propRegistry` + `location_id`).**
    - Assign stable `id`s to recurring props (or declare them once in top-level `assets: { ... }`) and tag scenes in the same room with a shared `location_id` (e.g., `"location_id": "study_room"`).
