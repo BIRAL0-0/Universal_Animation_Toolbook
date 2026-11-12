@@ -485,6 +485,7 @@ function compileEpisode(spec, options = {}) {
         voice: profile.voice || null,
         rate: profile.rate || null,
         scale: profile.scale ?? 1.0,
+        accent: profile.accent || profile.accent_color || null,
       };
     }
   }

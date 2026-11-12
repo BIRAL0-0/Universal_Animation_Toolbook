@@ -1,0 +1,1363 @@
+{
+  "title": "Doodle Date",
+  "channel_name": "",
+  "thesis": "The simplest thing you can draw \u2014 or offer \u2014 usually wins.",
+  "bgm": "dynamic",
+  "subtitles_mode": "cinema",
+  "outro": false,
+  "voices": {
+    "narrator": {
+      "voice": "am_michael",
+      "rate": "+2%",
+      "pitch": "-1Hz"
+    }
+  },
+  "cast": {
+    "stick": {
+      "name": "STICK",
+      "style": "ink_stick",
+      "accessories": [],
+      "expression": "worried",
+      "posture": -0.18,
+      "scale": 1.0
+    },
+    "sticka": {
+      "name": "STICKA",
+      "style": "ink_stick",
+      "accessories": [
+        "dress",
+        "long_hair"
+      ],
+      "expression": "skeptical",
+      "posture": 0.18,
+      "scale": 0.88,
+      "accent": "#cc292b"
+    },
+    "waiter": {
+      "name": "WAITER",
+      "style": "ink_stick",
+      "accessories": [
+        "coat"
+      ],
+      "expression": "neutral",
+      "scale": 1.05
+    },
+    "knight": {
+      "name": "KNIGHT",
+      "style": "ink_stick",
+      "accessories": [],
+      "expression": "shocked",
+      "posture": 0.35,
+      "scale": 0.32
+    }
+  },
+  "chapters": [
+    {
+      "scene": "S01",
+      "number": "01",
+      "title": "The first date"
+    },
+    {
+      "scene": "S04",
+      "number": "02",
+      "title": "The out-drawing"
+    },
+    {
+      "scene": "S07",
+      "number": "03",
+      "title": "The taco"
+    },
+    {
+      "scene": "S08",
+      "number": "04",
+      "title": "Simple wins"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "S01",
+      "mood": "tension",
+      "bgm": "upbeat_ncs_synth",
+      "bgm_gain": 0.9,
+      "accent_color": "#cc292b",
+      "chapter": "First date | Both artists",
+      "duration": 6.1,
+      "lead_in": 0.4,
+      "tail_out": 0.5,
+      "setting": {
+        "backdrop": "parchment_stage",
+        "mood": "tension"
+      },
+      "portrait_focus": "stick",
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.18,
+          "zoom_to": 1.24,
+          "focus_x": 0.5,
+          "focus_y": 0.6,
+          "cut": true
+        }
+      ],
+      "props": [
+        {
+          "id": "cafe_table_main",
+          "type": "cafe_table",
+          "x": 0.5,
+          "scale": 1.18,
+          "z": -2
+        }
+      ],
+      "sfx": [
+        {
+          "type": "door_bell",
+          "at": 0.15,
+          "pan": -0.2
+        },
+        {
+          "type": "cup_set",
+          "at": 2.55,
+          "pan": -0.1
+        },
+        {
+          "type": "phone_buzz",
+          "at": 3.35,
+          "pan": 0.25
+        },
+        {
+          "type": "clock_tick",
+          "at": 5.15,
+          "pan": 0.0
+        }
+      ],
+      "characters": [
+        {
+          "id": "stick",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.6,
+              "action": "sit_cafe_listen",
+              "x": 0.415,
+              "facing": 1,
+              "expression": "worried"
+            },
+            {
+              "start": 2.6,
+              "end": 6.1,
+              "action": "sit_cafe_listen",
+              "x": 0.415,
+              "facing": 1,
+              "expression": "burnout_cry"
+            }
+          ]
+        },
+        {
+          "id": "sticka",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.2,
+              "action": "sit_cafe_listen",
+              "x": 0.585,
+              "facing": -1,
+              "expression": "skeptical"
+            },
+            {
+              "start": 2.2,
+              "end": 6.1,
+              "action": "phone_scroll",
+              "seated": true,
+              "x": 0.585,
+              "facing": -1,
+              "expression": "neutral"
+            }
+          ]
+        },
+        {
+          "id": "waiter",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.5,
+              "action": "walk",
+              "from_x": 0.06,
+              "to_x": 0.335,
+              "facing": 1,
+              "expression": "neutral"
+            },
+            {
+              "start": 2.5,
+              "end": 4.3,
+              "action": "point_emphasis",
+              "x": 0.335,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 4.3,
+              "end": 6.1,
+              "action": "walk",
+              "from_x": 0.335,
+              "to_x": 0.05,
+              "facing": -1,
+              "expression": "neutral"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "First date",
+        "small talk"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "First date. Two artists. One table. Zero small talk.",
+          "pause_after": 0.3
+        }
+      ],
+      "portrait_focus_x": 0.5
+    },
+    {
+      "id": "S02",
+      "mood": "playful",
+      "bgm": "upbeat_ncs_synth",
+      "bgm_gain": 0.9,
+      "accent_color": "#cc292b",
+      "duration": 5.9,
+      "lead_in": 0.35,
+      "tail_out": 0.45,
+      "setting": {
+        "backdrop": "parchment_stage",
+        "mood": "playful"
+      },
+      "portrait_focus": "stick",
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.15,
+          "zoom_to": 1.2,
+          "focus_x": 0.5,
+          "focus_y": 0.58,
+          "cut": true
+        }
+      ],
+      "props": [
+        {
+          "id": "cafe_table_main",
+          "type": "cafe_table",
+          "x": 0.5,
+          "scale": 1.18,
+          "z": -2
+        }
+      ],
+      "boards": [
+        {
+          "type": "doodle",
+          "doodle": "rose",
+          "x": 0.395,
+          "y": 0.26,
+          "w": 0.17,
+          "h": 0.42,
+          "reveal_at": 1.5,
+          "build_dur": 1.6,
+          "persist": true,
+          "z": -18
+        }
+      ],
+      "sfx": [
+        {
+          "type": "pencil_scratch",
+          "at": 0.4,
+          "pan": -0.15
+        },
+        {
+          "type": "pencil_scratch",
+          "at": 1.0,
+          "pan": -0.1
+        }
+      ],
+      "characters": [
+        {
+          "id": "stick",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.8,
+              "action": "sit_cafe_write",
+              "x": 0.415,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 2.8,
+              "end": 5.9,
+              "action": "sit_cafe_listen",
+              "x": 0.415,
+              "facing": 1,
+              "expression": "smile"
+            }
+          ]
+        },
+        {
+          "id": "sticka",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.2,
+              "action": "sit_cafe_listen",
+              "x": 0.585,
+              "facing": -1,
+              "expression": "skeptical"
+            },
+            {
+              "start": 3.2,
+              "end": 5.9,
+              "action": "sit_cafe_listen",
+              "x": 0.585,
+              "facing": -1,
+              "expression": "smile"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "rose",
+        "thin air"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "He opens with a rose, drawn from thin air.",
+          "pause_after": 0.3
+        }
+      ],
+      "portrait_focus_x": 0.5
+    },
+    {
+      "id": "S03",
+      "mood": "playful",
+      "bgm": "upbeat_ncs_synth",
+      "bgm_gain": 0.9,
+      "accent_color": "#cc292b",
+      "duration": 6.3,
+      "lead_in": 0.35,
+      "tail_out": 0.45,
+      "setting": {
+        "backdrop": "parchment_stage",
+        "mood": "playful"
+      },
+      "portrait_focus": "sticka",
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.24,
+          "zoom_to": 1.3,
+          "focus_x": 0.5,
+          "focus_y": 0.58,
+          "cut": true
+        }
+      ],
+      "props": [
+        {
+          "id": "cafe_table_main",
+          "type": "cafe_table",
+          "x": 0.5,
+          "scale": 1.18,
+          "z": -2
+        }
+      ],
+      "boards": [
+        {
+          "type": "doodle",
+          "doodle": "necklace",
+          "x": 0.545,
+          "y": 0.615,
+          "w": 0.115,
+          "h": 0.115,
+          "reveal_at": 1.4,
+          "build_dur": 1.5,
+          "persist": true,
+          "z": 6,
+          "portrait_x": 0.6
+        }
+      ],
+      "sfx": [
+        {
+          "type": "pencil_scratch",
+          "at": 0.35,
+          "pan": 0.15
+        },
+        {
+          "type": "chapter_chime",
+          "at": 1.6,
+          "pan": 0.0
+        }
+      ],
+      "characters": [
+        {
+          "id": "sticka",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.7,
+              "action": "sit_cafe_write",
+              "x": 0.585,
+              "facing": -1,
+              "expression": "determined"
+            },
+            {
+              "start": 2.7,
+              "end": 6.3,
+              "action": "sit_cafe_listen",
+              "x": 0.585,
+              "facing": -1,
+              "expression": "smile"
+            }
+          ]
+        },
+        {
+          "id": "stick",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.0,
+              "action": "sit_cafe_listen",
+              "x": 0.415,
+              "facing": 1,
+              "expression": "neutral"
+            },
+            {
+              "start": 2.0,
+              "end": 6.3,
+              "action": "sit_cafe_listen",
+              "x": 0.415,
+              "facing": 1,
+              "expression": "worried"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "diamond necklace",
+        "Sparkles"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "She counters with a diamond necklace. Sparkles included.",
+          "pause_after": 0.3
+        }
+      ],
+      "portrait_focus_x": 0.5
+    },
+    {
+      "id": "S04",
+      "mood": "triumph",
+      "bgm": "upbeat_ncs_synth",
+      "bgm_gain": 0.95,
+      "accent_color": "#cc292b",
+      "duration": 7.6,
+      "lead_in": 0.35,
+      "tail_out": 0.5,
+      "setting": {
+        "backdrop": "parchment_stage",
+        "mood": "triumph"
+      },
+      "portrait_focus": "stick",
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.2,
+          "zoom_to": 1.33,
+          "focus_x": 0.5,
+          "focus_y": 0.6,
+          "cut": true,
+          "move_dur": 2.6
+        }
+      ],
+      "props": [
+        {
+          "id": "cafe_table_main",
+          "type": "cafe_table",
+          "x": 0.5,
+          "scale": 1.18,
+          "z": -2
+        }
+      ],
+      "boards": [
+        {
+          "type": "doodle",
+          "doodle": "car",
+          "x": 0.23,
+          "y": 0.345,
+          "w": 0.54,
+          "h": 0.37,
+          "reveal_at": 0.9,
+          "build_dur": 1.8,
+          "persist": true,
+          "z": -18
+        },
+        {
+          "type": "doodle",
+          "doodle": "jetpack",
+          "x": 0.6,
+          "y": 0.3,
+          "w": 0.16,
+          "h": 0.34,
+          "reveal_at": 4.3,
+          "build_dur": 1.3,
+          "persist": true,
+          "z": 6
+        }
+      ],
+      "sfx": [
+        {
+          "type": "pencil_scratch",
+          "at": 0.25,
+          "pan": -0.1
+        },
+        {
+          "type": "engine_rev",
+          "at": 1.15,
+          "pan": 0.0
+        },
+        {
+          "type": "pencil_scratch",
+          "at": 2.9,
+          "pan": 0.12
+        },
+        {
+          "type": "wind_gust",
+          "at": 4.45,
+          "pan": 0.1
+        }
+      ],
+      "characters": [
+        {
+          "id": "stick",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.9,
+              "action": "sit_cafe_write",
+              "x": 0.415,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 2.9,
+              "end": 5.6,
+              "action": "sit_cafe_talk",
+              "x": 0.415,
+              "facing": 1,
+              "expression": "excited"
+            },
+            {
+              "start": 5.6,
+              "end": 7.6,
+              "action": "sit_cafe_listen",
+              "x": 0.415,
+              "facing": 1,
+              "expression": "smile"
+            }
+          ]
+        },
+        {
+          "id": "sticka",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.6,
+              "action": "sit_cafe_listen",
+              "x": 0.585,
+              "facing": -1,
+              "expression": "skeptical"
+            },
+            {
+              "start": 2.6,
+              "end": 4.9,
+              "action": "sit_cafe_write",
+              "x": 0.585,
+              "facing": -1,
+              "expression": "determined"
+            },
+            {
+              "start": 4.9,
+              "end": 7.6,
+              "action": "sit_cafe_listen",
+              "x": 0.585,
+              "facing": -1,
+              "expression": "smile"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "sports car",
+        "jetpack"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "So he wraps the table in a sports car. She answers with a jetpack.",
+          "pause_after": 0.3
+        }
+      ],
+      "portrait_focus_x": 0.5
+    },
+    {
+      "id": "S05",
+      "mood": "tension",
+      "bgm": "upbeat_ncs_synth",
+      "bgm_gain": 0.85,
+      "accent_color": "#cc292b",
+      "duration": 7.4,
+      "lead_in": 0.35,
+      "tail_out": 0.45,
+      "setting": {
+        "backdrop": "parchment_stage",
+        "mood": "tension"
+      },
+      "portrait_focus": "sticka",
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.24,
+          "zoom_to": 1.29,
+          "focus_x": 0.5,
+          "focus_y": 0.55,
+          "cut": true
+        }
+      ],
+      "props": [
+        {
+          "id": "cafe_table_main",
+          "type": "cafe_table",
+          "x": 0.5,
+          "scale": 1.18,
+          "z": -2
+        }
+      ],
+      "boards": [
+        {
+          "type": "doodle",
+          "doodle": "castle",
+          "x": 0.25,
+          "y": 0.15,
+          "w": 0.44,
+          "h": 0.4,
+          "reveal_at": 0.8,
+          "build_dur": 1.7,
+          "hide_at": 4.55,
+          "z": -18
+        },
+        {
+          "type": "doodle",
+          "doodle": "dragon",
+          "x": 0.29,
+          "y": 0.24,
+          "w": 0.5,
+          "h": 0.44,
+          "reveal_at": 2.9,
+          "build_dur": 1.6,
+          "persist": true,
+          "z": -18
+        }
+      ],
+      "sfx": [
+        {
+          "type": "pencil_scratch",
+          "at": 0.2,
+          "pan": -0.1
+        },
+        {
+          "type": "pencil_scratch",
+          "at": 2.5,
+          "pan": 0.12
+        },
+        {
+          "type": "thunder_rumble",
+          "at": 3.15,
+          "pan": 0.0
+        },
+        {
+          "type": "body_thud",
+          "at": 4.6,
+          "pan": 0.0
+        }
+      ],
+      "characters": [
+        {
+          "id": "stick",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.6,
+              "action": "sit_cafe_write",
+              "x": 0.415,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 2.6,
+              "end": 7.4,
+              "action": "sit_cafe_listen",
+              "x": 0.415,
+              "facing": 1,
+              "expression": "burnout_cry"
+            }
+          ]
+        },
+        {
+          "id": "sticka",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.4,
+              "action": "sit_cafe_listen",
+              "x": 0.585,
+              "facing": -1,
+              "expression": "skeptical"
+            },
+            {
+              "start": 2.4,
+              "end": 3.7,
+              "action": "sit_cafe_write",
+              "x": 0.585,
+              "facing": -1,
+              "expression": "determined"
+            },
+            {
+              "start": 3.7,
+              "end": 7.4,
+              "action": "sit_cafe_listen",
+              "x": 0.585,
+              "facing": -1,
+              "expression": "smile"
+            }
+          ]
+        },
+        {
+          "id": "knight",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 1.3,
+              "action": "walk",
+              "from_x": 0.13,
+              "to_x": 0.5,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 1.3,
+              "end": 3.5,
+              "action": "idle_stand",
+              "x": 0.5,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 3.5,
+              "end": 4.1,
+              "action": "idle_stand",
+              "x": 0.5,
+              "facing": 1,
+              "expression": "shocked"
+            },
+            {
+              "start": 4.1,
+              "end": 6.1,
+              "action": "run",
+              "from_x": 0.5,
+              "to_x": 1.15,
+              "facing": 1,
+              "expression": "shocked"
+            },
+            {
+              "start": 6.1,
+              "end": 7.4,
+              "action": "idle_stand",
+              "x": 1.15,
+              "facing": 1,
+              "expression": "shocked"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "dragon",
+        "castle is lunch",
+        "quits"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "She unleashes the dragon. The castle is lunch.",
+          "pause_after": 0.25
+        },
+        {
+          "speaker": "narrator",
+          "text": "His knight takes one look, and quits.",
+          "pause_after": 0.3
+        }
+      ],
+      "portrait_focus_x": 0.5
+    },
+    {
+      "id": "S06",
+      "mood": "tension",
+      "bgm": "suspense_tension",
+      "bgm_gain": 0.85,
+      "accent_color": "#cc292b",
+      "duration": 6.5,
+      "lead_in": 0.35,
+      "tail_out": 0.4,
+      "wind_blackout_at": 5.15,
+      "setting": {
+        "backdrop": "parchment_stage",
+        "mood": "tension"
+      },
+      "portrait_focus": "stick",
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.22,
+          "zoom_to": 1.5,
+          "focus_x": 0.5,
+          "focus_y": 0.58,
+          "cut": true,
+          "move_dur": 4.6
+        }
+      ],
+      "props": [
+        {
+          "id": "cafe_table_main",
+          "type": "cafe_table",
+          "x": 0.5,
+          "scale": 1.18,
+          "z": -2
+        }
+      ],
+      "boards": [
+        {
+          "type": "doodle",
+          "doodle": "black_hole",
+          "x": 0.36,
+          "y": 0.28,
+          "w": 0.28,
+          "h": 0.44,
+          "reveal_at": 2.5,
+          "build_dur": 1.5,
+          "persist": true,
+          "z": 6
+        }
+      ],
+      "sfx": [
+        {
+          "type": "pencil_scratch",
+          "at": 2.35,
+          "pan": -0.1
+        },
+        {
+          "type": "vacuum_suck",
+          "at": 2.7,
+          "pan": 0.0
+        },
+        {
+          "type": "record_scratch",
+          "at": 5.2,
+          "pan": 0.0
+        }
+      ],
+      "characters": [
+        {
+          "id": "stick",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.35,
+              "action": "sit_cafe_listen",
+              "x": 0.415,
+              "facing": 1,
+              "expression": "burnout_cry"
+            },
+            {
+              "start": 2.35,
+              "end": 4.6,
+              "action": "sit_cafe_write",
+              "x": 0.415,
+              "facing": 1,
+              "expression": "burnout_cry"
+            },
+            {
+              "start": 4.6,
+              "end": 6.5,
+              "action": "fall_down",
+              "x": 0.415,
+              "facing": 1,
+              "expression": "shocked"
+            }
+          ]
+        },
+        {
+          "id": "sticka",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.35,
+              "action": "sit_cafe_listen",
+              "x": 0.585,
+              "facing": -1,
+              "expression": "worried"
+            },
+            {
+              "start": 2.35,
+              "end": 4.6,
+              "action": "sit_cafe_listen",
+              "x": 0.585,
+              "facing": -1,
+              "expression": "shocked"
+            },
+            {
+              "start": 4.6,
+              "end": 6.5,
+              "action": "fall_down",
+              "x": 0.585,
+              "facing": -1,
+              "expression": "shocked"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "never draw"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Panic makes him draw the one thing you never draw.",
+          "pause_after": 0.3
+        }
+      ],
+      "portrait_focus_x": 0.5
+    },
+    {
+      "id": "S07",
+      "mood": "calm",
+      "bgm": "reflective_piano",
+      "bgm_gain": 1.1,
+      "accent_color": "#cc292b",
+      "duration": 8.0,
+      "lead_in": 0.45,
+      "tail_out": 0.55,
+      "setting": {
+        "backdrop": "parchment_stage",
+        "mood": "calm"
+      },
+      "portrait_focus": "stick",
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.22,
+          "zoom_to": 1.3,
+          "focus_x": 0.5,
+          "focus_y": 0.6,
+          "cut": true
+        }
+      ],
+      "boards": [
+        {
+          "type": "doodle",
+          "doodle": "taco",
+          "x": 0.43,
+          "y": 0.615,
+          "w": 0.14,
+          "h": 0.13,
+          "reveal_at": 3.6,
+          "build_dur": 1.2,
+          "persist": true,
+          "z": 6
+        }
+      ],
+      "sfx": [
+        {
+          "type": "cricket_chirp",
+          "at": 0.85,
+          "pan": 0.0
+        },
+        {
+          "type": "pencil_scratch",
+          "at": 3.5,
+          "pan": -0.1
+        },
+        {
+          "type": "snack_bite",
+          "at": 6.15,
+          "pan": 0.0
+        },
+        {
+          "type": "chapter_chime",
+          "at": 6.7,
+          "pan": 0.0
+        }
+      ],
+      "characters": [
+        {
+          "id": "stick",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.2,
+              "action": "kneel_exhausted",
+              "x": 0.4,
+              "facing": 1,
+              "expression": "sad"
+            },
+            {
+              "start": 2.2,
+              "end": 3.35,
+              "action": "head_in_hands",
+              "x": 0.4,
+              "facing": 1,
+              "expression": "sad"
+            },
+            {
+              "start": 3.35,
+              "end": 4.35,
+              "action": "stand_up_resolve",
+              "x": 0.4,
+              "facing": 1,
+              "expression": "hopeful"
+            },
+            {
+              "start": 4.35,
+              "end": 6.1,
+              "action": "handoff_give",
+              "partner_id": "sticka",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "hopeful"
+            },
+            {
+              "start": 6.1,
+              "end": 8.0,
+              "action": "listen_nod",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "smile"
+            }
+          ]
+        },
+        {
+          "id": "sticka",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.3,
+              "action": "kneel_exhausted",
+              "x": 0.6,
+              "facing": -1,
+              "expression": "sad"
+            },
+            {
+              "start": 2.3,
+              "end": 4.1,
+              "action": "kneel_exhausted",
+              "x": 0.6,
+              "facing": -1,
+              "expression": "skeptical"
+            },
+            {
+              "start": 4.1,
+              "end": 5.0,
+              "action": "stand_up_resolve",
+              "x": 0.6,
+              "facing": -1,
+              "expression": "hopeful"
+            },
+            {
+              "start": 5.0,
+              "end": 6.35,
+              "action": "handoff_receive",
+              "partner_id": "stick",
+              "x": 0.56,
+              "facing": -1,
+              "expression": "hopeful"
+            },
+            {
+              "start": 6.35,
+              "end": 8.0,
+              "action": "nod_yes",
+              "x": 0.56,
+              "facing": -1,
+              "expression": "smile"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "Silence",
+        "taco"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Silence. One cricket. Then the honest move. A taco.",
+          "pause_after": 0.4
+        }
+      ],
+      "portrait_focus_x": 0.5
+    },
+    {
+      "id": "S08",
+      "mood": "calm",
+      "bgm": "reflective_piano",
+      "bgm_gain": 1.15,
+      "accent_color": "#cc292b",
+      "chapter": "Simple | Wins",
+      "duration": 5.5,
+      "lead_in": 0.4,
+      "tail_out": 0.5,
+      "setting": {
+        "backdrop": "parchment_stage",
+        "mood": "calm"
+      },
+      "portrait_focus": "sticka",
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.26,
+          "zoom_to": 1.32,
+          "focus_x": 0.5,
+          "focus_y": 0.56,
+          "cut": true
+        }
+      ],
+      "boards": [
+        {
+          "type": "doodle",
+          "doodle": "hearts",
+          "x": 0.35,
+          "y": 0.14,
+          "w": 0.3,
+          "h": 0.33,
+          "reveal_at": 0.9,
+          "build_dur": 2.1,
+          "persist": true,
+          "z": 5
+        }
+      ],
+      "sfx": [
+        {
+          "type": "pencil_scratch",
+          "at": 0.15,
+          "pan": 0.1
+        },
+        {
+          "type": "pencil_scratch",
+          "at": 0.95,
+          "pan": -0.1
+        }
+      ],
+      "characters": [
+        {
+          "id": "sticka",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.1,
+              "action": "talk_explain",
+              "x": 0.57,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 2.1,
+              "end": 5.5,
+              "action": "listen_nod",
+              "x": 0.57,
+              "facing": -1,
+              "expression": "smile"
+            }
+          ]
+        },
+        {
+          "id": "stick",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 0.85,
+              "action": "listen_nod",
+              "x": 0.43,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 0.85,
+              "end": 2.7,
+              "action": "talk_explain",
+              "x": 0.43,
+              "facing": 1,
+              "expression": "hopeful"
+            },
+            {
+              "start": 2.7,
+              "end": 5.5,
+              "action": "nod_yes",
+              "x": 0.43,
+              "facing": 1,
+              "expression": "smile"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "meet in the middle"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Her heart. His heart. They meet in the middle.",
+          "pause_after": 0.35
+        }
+      ],
+      "portrait_focus_x": 0.5
+    },
+    {
+      "id": "S09",
+      "mood": "calm",
+      "bgm": "reflective_piano",
+      "bgm_gain": 1.1,
+      "accent_color": "#cc292b",
+      "duration": 6.1,
+      "lead_in": 0.4,
+      "tail_out": 0.6,
+      "setting": {
+        "backdrop": "parchment_stage",
+        "mood": "calm"
+      },
+      "portrait_focus": "stick",
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.2,
+          "zoom_to": 1.05,
+          "focus_x": 0.5,
+          "focus_y": 0.52,
+          "cut": true,
+          "move_dur": 3.0
+        }
+      ],
+      "boards": [
+        {
+          "type": "doodle",
+          "doodle": "notepad",
+          "x": 0.29,
+          "y": 0.13,
+          "w": 0.42,
+          "h": 0.42,
+          "reveal_at": 0.2,
+          "build_dur": 1.6,
+          "persist": true,
+          "z": -18,
+          "lines": [
+            "Doodle Date",
+            "Simple wins."
+          ]
+        },
+        {
+          "type": "doodle",
+          "doodle": "subscribe",
+          "x": 0.315,
+          "y": 0.68,
+          "w": 0.37,
+          "h": 0.105,
+          "reveal_at": 2.9,
+          "build_dur": 1.1,
+          "persist": true,
+          "z": 5
+        }
+      ],
+      "sfx": [
+        {
+          "type": "page_turn",
+          "at": 0.1,
+          "pan": 0.0
+        },
+        {
+          "type": "pencil_scratch",
+          "at": 3.0,
+          "pan": 0.0
+        },
+        {
+          "type": "final_piano_note",
+          "at": 4.9,
+          "pan": 0.0
+        }
+      ],
+      "characters": [
+        {
+          "id": "sticka",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.6,
+              "action": "listen_nod",
+              "x": 0.6,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 2.6,
+              "end": 6.1,
+              "action": "nod_yes",
+              "x": 0.6,
+              "facing": -1,
+              "expression": "smile"
+            }
+          ]
+        },
+        {
+          "id": "stick",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.6,
+              "action": "listen_nod",
+              "x": 0.4,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 2.6,
+              "end": 6.1,
+              "action": "nod_yes",
+              "x": 0.4,
+              "facing": 1,
+              "expression": "smile"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "Doodle Date",
+        "subscribe"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Doodle Date. Simple wins. Subscribe for more ink.",
+          "pause_after": 0.6
+        }
+      ],
+      "portrait_focus_x": 0.5
+    }
+  ]
+}

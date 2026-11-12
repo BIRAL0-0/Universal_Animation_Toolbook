@@ -936,6 +936,38 @@ function drawInkStickFigure(g, x, fy, s, p0 = {}, flip = false, opts = {}) {
     g.stroke();
   }
 
+  // Optional single crimson accent (film's one spot colour) — a small hand-inked bow.
+  if (opts.accent) {
+    const accentCol = String(opts.accent);
+    const bowX = hd[0] + dir * hr * 0.58;
+    const bowY = hd[1] - hr * 0.74;
+    const bs = hr * 0.30;
+    g.save();
+    g.fillStyle = accentCol;
+    g.strokeStyle = INK;
+    g.lineWidth = 2.2 * s;
+    g.lineJoin = 'round';
+    // Left lobe
+    g.beginPath();
+    g.moveTo(bowX, bowY);
+    g.quadraticCurveTo(bowX - bs * 1.05, bowY - bs * 0.85, bowX - bs * 1.25, bowY + bs * 0.28);
+    g.quadraticCurveTo(bowX - bs * 0.55, bowY + bs * 0.42, bowX, bowY + bs * 0.12);
+    g.closePath();
+    g.fill(); g.stroke();
+    // Right lobe
+    g.beginPath();
+    g.moveTo(bowX, bowY);
+    g.quadraticCurveTo(bowX + bs * 1.05, bowY - bs * 0.85, bowX + bs * 1.25, bowY + bs * 0.28);
+    g.quadraticCurveTo(bowX + bs * 0.55, bowY + bs * 0.42, bowX, bowY + bs * 0.12);
+    g.closePath();
+    g.fill(); g.stroke();
+    // Knot
+    g.beginPath();
+    g.arc(bowX, bowY + bs * 0.08, bs * 0.26, 0, Math.PI * 2);
+    g.fill(); g.stroke();
+    g.restore();
+  }
+
   // Expressive Stick-House Cartoon Facial Acting!
   const expr = opts.expression || 'neutral';
   const ex1 = hd[0] + dir * hr * 0.14;
