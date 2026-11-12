@@ -356,6 +356,64 @@ def _make_sfx_clip(sfx_type: str) -> np.ndarray:
         t = np.arange(n, dtype=np.float32) / SAMPLE_RATE
         return (np.sin(2.0 * np.pi * (165.0 + 65.0 * np.sin(t * 6.5)) * t) * np.sin(np.pi * t / 0.38) * 0.05).astype(np.float32)
 
+    if sfx_type == "pencil_scratch":
+        # Graphite on paper: short gritty bursts gated by a fast tremolo.
+        n = int(0.42 * SAMPLE_RATE)
+        t = np.arange(n, dtype=np.float32) / SAMPLE_RATE
+        noise = rng.normal(0.0, 1.0, n).astype(np.float32)
+        noise = np.convolve(noise, np.ones(3, dtype=np.float32) / 3.0, mode="same")
+        gate = 0.55 + 0.45 * np.sin(2.0 * np.pi * 26.0 * t)
+        env = np.minimum(1.0, t / 0.02) * np.exp(-4.6 * t)
+        scratch = noise * gate * env
+        return (scratch * 0.24).astype(np.float32)
+
+    if sfx_type == "engine_rev":
+        # Small sports car waking up: rising sawtooth with a tremolo wobble.
+        n = int(1.05 * SAMPLE_RATE)
+        t = np.arange(n, dtype=np.float32) / SAMPLE_RATE
+        freq = 58.0 + 165.0 * np.power(t / 1.05, 1.6)
+        phase = 2.0 * np.pi * np.cumsum(freq) / SAMPLE_RATE
+        saw = 2.0 * (phase / (2.0 * np.pi) % 1.0) - 1.0
+        saw = saw * 0.6 + np.sin(phase * 0.5) * 0.4
+        env = np.minimum(1.0, t / 0.06) * (0.72 + 0.28 * np.sin(2.0 * np.pi * 11.0 * t))
+        env *= np.minimum(1.0, (1.05 - t) / 0.22 + 0.25)
+        return (saw * env * 0.42).astype(np.float32)
+
+    if sfx_type == "vacuum_suck":
+        # Everything nearby gets inhaled: sweeping band-limited noise gliding downward.
+        n = int(1.45 * SAMPLE_RATE)
+        t = np.arange(n, dtype=np.float32) / SAMPLE_RATE
+        noise = rng.normal(0.0, 1.0, n).astype(np.float32)
+        sweep = np.convolve(noise, np.ones(24, dtype=np.float32) / 24.0, mode="same")
+        tone = np.sin(2.0 * np.pi * (290.0 * np.exp(-1.9 * t) + 52.0) * t)
+        env = np.power(np.minimum(1.0, t / 1.45), 1.8) * np.exp(-1.1 * np.maximum(0.0, t - 1.05))
+        return ((sweep * 0.55 + tone * 0.45) * env * 0.55).astype(np.float32)
+
+    if sfx_type == "cricket_chirp":
+        # One tiny cricket in a very quiet room: two gated 4.2 kHz pulse trains.
+        n = int(0.60 * SAMPLE_RATE)
+        t = np.arange(n, dtype=np.float32) / SAMPLE_RATE
+        carrier = np.sin(2.0 * np.pi * 4200.0 * t)
+        train = np.zeros_like(t)
+        for start in (0.02, 0.16):
+            local = t - start
+            window = (local > 0.0) & (local < 0.085)
+            train[window] = np.abs(np.sin(2.0 * np.pi * 52.0 * local[window])) ** 2
+        return (carrier * train * 0.16).astype(np.float32)
+
+    if sfx_type == "snack_bite":
+        # Two happy little crunches.
+        out = np.zeros(int(0.55 * SAMPLE_RATE), dtype=np.float32)
+        for start, amp in ((0.02, 0.5), (0.26, 0.38)):
+            m = int(0.085 * SAMPLE_RATE)
+            t = np.arange(m, dtype=np.float32) / SAMPLE_RATE
+            crunch = rng.normal(0.0, 1.0, m).astype(np.float32)
+            crunch = np.convolve(crunch, np.ones(5, dtype=np.float32) / 5.0, mode="same")
+            env = np.minimum(1.0, t / 0.008) * np.exp(-28.0 * t)
+            i0 = int(start * SAMPLE_RATE)
+            out[i0:i0 + m] += crunch * env * amp
+        return (out * 0.5).astype(np.float32)
+
     n = int(0.30 * SAMPLE_RATE)
     t = np.arange(n, dtype=np.float32) / SAMPLE_RATE
     return (np.sin(2.0 * np.pi * 587.33 * t) * np.exp(-9.0 * t) * 0.09).astype(np.float32)

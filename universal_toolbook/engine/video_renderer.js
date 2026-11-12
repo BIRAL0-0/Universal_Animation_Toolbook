@@ -856,6 +856,7 @@ function renderCharacterPass(ctx, entry, drawMode, parchmentMode, activeLight, s
     }
     return drawInkStickFigure(ctx, state.x, state.fy, state.s, state.pose, state.flip, {
       accessories: actor.accessories || actor.accessory,
+      accent: actor.accent || actor.accentColor || null,
       expression: state.expression || actor.expression,
       posture: state.posture ?? actor.posture,
       nameTag: actor.showNameTag ? actor.name : null,

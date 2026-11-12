@@ -1,7 +1,7 @@
 {
   "catalog_version": "2.0.0",
   "last_updated": "2026-11-12",
-  "total_videos": 8,
+  "total_videos": 9,
   "schema": {
     "directory": "videos/<slug>/",
     "required_files": [
@@ -309,6 +309,42 @@
         "hard work pays off",
         "stickman animation"
       ]
+    },
+    {
+      "id": "video-009",
+      "title": "Doodle Date: 1 Black Hole, 1 Taco, 2 Hearts",
+      "slug": "doodle-date",
+      "topic": "Two stick-figure artists out-draw each other on a first date until one draws a black hole \u2014 and discovers that simple wins",
+      "summary": "A first date between two rival artists escalates from a rose to a black hole. Between them hangs one honest taco \u2014 and the crimson hearts they finally draw meet in the middle.",
+      "key_angle": "Escalation as comedy: every doodle tops the last until the scene literally collapses into itself; the payoff is the smallest drawing in the film, not the biggest.",
+      "duration": 39.13,
+      "format": "portrait",
+      "aspect_ratio": "9:16",
+      "resolution": "1080x1920",
+      "produced_at": "2026-11-12",
+      "directory": "videos/doodle-date",
+      "content_fingerprint": "sha256:5241766fde69986bd092c91f394e10b7",
+      "duration_sec": 39.13,
+      "status": "completed",
+      "created_at": "2026-11-12",
+      "final_video": "doodle-date.mp4",
+      "script_summary": "A first date between two rival artists escalates from a rose to a black hole. Between them hangs one honest taco \u2014 and the crimson hearts they finally draw meet in the middle.",
+      "tags": [
+        "doodle date",
+        "stick figure",
+        "stickman animation",
+        "stick figure love story",
+        "first date",
+        "short animation",
+        "doodle animation",
+        "cute animation",
+        "ink animation",
+        "love story animation",
+        "date night",
+        "red pencil"
+      ],
+      "production_version": "3.0.0",
+      "previous_title": "Doodle Date: He Drew a Black Hole on the First Date"
     }
   ]
 }

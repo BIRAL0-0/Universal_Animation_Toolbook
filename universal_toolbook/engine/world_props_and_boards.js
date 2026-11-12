@@ -9,6 +9,8 @@ const { BEACON_PROPS, drawBeaconProp } = require('./beacon_harbor');
 const { WALL_PROPS, drawWallProp } = require('./impossible_wall');
 // Bamboo set: the ground cutaway, its sun, labels and stalks.
 const { BAMBOO_PROPS, drawBambooProp } = require('./bamboo_grove');
+// "Doodle Date" ink-doodle board set (rose, car, dragon, black hole …).
+const { DOODLE_SET, drawDoodleBoard } = require('./doodle_date');
 const WALL_PROP_SET = new Set(WALL_PROPS);
 const BEACON_PROP_SET = new Set(BEACON_PROPS);
 const BAMBOO_PROP_SET = new Set(BAMBOO_PROPS);
@@ -518,6 +520,7 @@ const SUPPORTED_BOARDS = Object.freeze([
   'obsessive_rule_card',
   'photo_back_card',
   'stat_cards',
+  'doodle',
 ]);
 
 function drawWorldProp(g, prop, W, floorY, t, sceneAccent = '#38bdf8', sceneT = null, propPass = 'full', propOpts = {}) {
@@ -2571,6 +2574,11 @@ function drawWorldBoard(g, board, ts, dur, W, floorY, sceneAccent = '#38bdf8') {
     }
     g.restore();
     return { centerX: bx + bw * 0.5, centerY: by + bh * 0.5, leftX: bx, rightX: bx + bw };
+  }
+
+  // "Doodle Date" ink doodles — hand-drawn objects coming alive on the parchment page.
+  if (board.type === 'doodle') {
+    return drawDoodleBoard(g, board, ts, dur, W, floorY, accent);
   }
 
   // Bespoke old family photograph + turned-over handwritten note from Mum (Scene 7!)

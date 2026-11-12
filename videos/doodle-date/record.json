@@ -1,0 +1,218 @@
+{
+  "id": "video-009",
+  "slug": "doodle-date",
+  "title": "Doodle Date: 1 Black Hole, 1 Taco, 2 Hearts",
+  "filename": "doodle-date.mp4",
+  "script": "script.md",
+  "thumbnail": "thumbnail.jpg",
+  "youtube_description": "First date. Two artists. One table. Zero small talk. \u2014 Doodle Date is a 39-second stick-figure short about two artists who try to out-draw each other on a first date, drawn entirely in ink on parchment with one crimson accent.\n\nHe opens with a rose, drawn from thin air. She counters with a diamond necklace; he wraps the whole table in a sports car. She answers with a jetpack, unleashes a dragon that eats his castle, and his tiny knight takes one look and quits. Panic makes him draw the one thing you never draw \u2014 a black hole that swallows the rose, the necklace, the car, the jetpack, the castle and the knight whole.\n\nSilence. One cricket. Then the honest move: a taco. Her heart, his heart \u2014 they meet in the middle. Simple wins.\n\nEvery doodle date on this channel is drawn the same way: ink, parchment, one crimson accent and no mercy. If you like small ink-drawn stories about big feelings, subscribe \u2014 more doodles every week. And tell me below: what is the most unhinged thing you have ever drawn to impress someone, or attempted on a first date?\n\n#shorts #animation #stickman #doodledate\n\nMusic: \"Regeneration\" by QuarksUnited (CC BY 3.0) \u2014 https://commons.wikimedia.org/wiki/File:QuarksUnited_-_Regeneration_(Trance).opus\nMusic: \"The Distant Sun (Monomyth 1)\" by Scott Buckley (CC BY 4.0) \u2014 https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Distant_Sun_(Monomyth_1).oga\nMusic: \"Where Stars Fall\" by Scott Buckley (CC BY 4.0) \u2014 https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Where_Stars_Fall.oga",
+  "pinned_comment": "Pause at 0:19 \u2014 his tiny knight takes one look at the dragon and clocks out. Be honest: what is the most over-the-top thing you have ever drawn, cooked, or attempted to impress someone on a first date, and how did it land? Drop it below \u2014 the best one gets a nod in the next short.",
+  "format": "portrait",
+  "aspect_ratio": "9:16",
+  "resolution": "1080x1920",
+  "duration_seconds": 39.13,
+  "created_at": "2026-11-12T05:43:10+00:00",
+  "topic": "Two stick-figure artists out-draw each other on a first date until one draws a black hole \u2014 and discovers that simple wins",
+  "summary": "A first date between two rival artists escalates from a rose to a black hole. Between them hangs one honest taco \u2014 and the crimson hearts they finally draw meet in the middle.",
+  "key_angle": "Escalation as comedy: every doodle tops the last until the scene literally collapses into itself; the payoff is the smallest drawing in the film, not the biggest.",
+  "tags": [
+    "doodle date",
+    "stick figure",
+    "stickman animation",
+    "stick figure love story",
+    "first date",
+    "short animation",
+    "doodle animation",
+    "cute animation",
+    "ink animation",
+    "love story animation",
+    "date night",
+    "red pencil"
+  ],
+  "production_version": "3.0.0",
+  "status": "completed",
+  "directory": "videos/doodle-date",
+  "video_path": "videos/doodle-date/doodle-date.mp4",
+  "format_policy_exception": null,
+  "content_fingerprint": "sha256:5241766fde69986bd092c91f394e10b7",
+  "duration_sec": 39.13,
+  "final_video": "doodle-date.mp4",
+  "script_summary": "A first date between two rival artists escalates from a rose to a black hole. Between them hangs one honest taco \u2014 and the crimson hearts they finally draw meet in the middle.",
+  "primary_keyword": "doodle date",
+  "secondary_keywords": [
+    "stick figure love story",
+    "doodle animation",
+    "first date animation"
+  ],
+  "title_alternates": [
+    "Doodle Date: He Drew a Black Hole on the First Date",
+    "What Happens When Two Artists Out-Draw Each Other on a Date?",
+    "She Out-Drew Him Until He Drew a Black Hole"
+  ],
+  "hashtags": [
+    "#shorts",
+    "#animation",
+    "#stickman",
+    "#doodledate"
+  ],
+  "category": "Film & Animation",
+  "thumbnail_text": "SIMPLE WINS",
+  "duration_label": "0:39",
+  "creative": {
+    "_note": "Written before release from this production's script, render report and QA frames. Honest: weaknesses are recorded rather than scored away.",
+    "backfilled": false,
+    "hook_candidates": [
+      {
+        "text": "First date. Two artists. One table. Zero small talk.",
+        "selected": true,
+        "why": "Four clipped beats establish identity, premise and stakes inside four seconds of narration; nothing generic, no warm-up, and it is verbatim the first voiced line.",
+        "seconds_into_video": 0.0
+      },
+      {
+        "text": "He opens with a rose, drawn from thin air.",
+        "selected": false,
+        "why": "",
+        "seconds_into_video": 4.0
+      },
+      {
+        "text": "Panic makes him draw the one thing you never draw.",
+        "selected": false,
+        "why": "",
+        "seconds_into_video": 22.0
+      },
+      {
+        "text": "She answers with a jetpack.",
+        "selected": false,
+        "why": "",
+        "seconds_into_video": 13.5
+      }
+    ],
+    "retention_map": [
+      {
+        "at_sec": 0.0,
+        "kind": "hook",
+        "purpose": "state the premise in the first spoken line \u2014 two artists, one date, zero small talk"
+      },
+      {
+        "at_sec": 12.0,
+        "kind": "escalation",
+        "purpose": "every doodle tops the last (rose, necklace, car, jetpack) so the viewer keeps watching to see what beats a jetpack"
+      },
+      {
+        "at_sec": 19.0,
+        "kind": "escalation",
+        "purpose": "the dragon eats the castle; the knight quits \u2014 the stakes become absurd and personal"
+      },
+      {
+        "at_sec": 22.0,
+        "kind": "reveal",
+        "purpose": "the black hole is the withheld image the whole film was building to; everything drawn so far gets swallowed"
+      },
+      {
+        "at_sec": 35.1,
+        "kind": "payoff",
+        "purpose": "the taco and the two bumping hearts deliver the title's promise \u2014 simple wins"
+      }
+    ],
+    "title_candidates": [
+      {
+        "text": "Doodle Date: He Drew a Black Hole on the First Date",
+        "selected": false,
+        "approach": "curiosity_gap",
+        "why": ""
+      },
+      {
+        "text": "What Happens When Two Artists Out-Draw Each Other on a Date?",
+        "selected": false,
+        "approach": "question"
+      },
+      {
+        "text": "Doodle Date: 1 Black Hole, 1 Taco, 2 Hearts",
+        "selected": true,
+        "approach": "outcome_number",
+        "why": "A numbered inventory of the film itself \u2014 the curiosity is in what a taco is doing on the list. Contains the show name in the first 40 characters."
+      },
+      {
+        "text": "She Out-Drew Him Until He Drew a Black Hole",
+        "selected": false,
+        "approach": "reversal"
+      },
+      {
+        "text": "Never Out-Draw Your Date Unless You Can Beat a Black Hole",
+        "selected": false,
+        "approach": "stakes_loss"
+      }
+    ],
+    "thumbnail_concepts": [
+      {
+        "focal_subject": "Two artists across a cafe table, a spiral black hole sucking in his doodle castle and her dragon",
+        "emotion": "panic and delight",
+        "text": "SIMPLE WINS",
+        "selected": true
+      },
+      {
+        "focal_subject": "A single red rose being swallowed into a black spiral on cream parchment",
+        "emotion": "dread of romance",
+        "text": "SIMPLE WINS",
+        "selected": false
+      },
+      {
+        "focal_subject": "A tiny knight running away from an enormous scribbled dragon",
+        "emotion": "run",
+        "text": "SIMPLE WINS",
+        "selected": false
+      }
+    ],
+    "alignment": {
+      "title_promise": "An absurd thing happens on a first date between artists; curiosity gap with no spoiler of the resolution.",
+      "thumbnail_promise": "SIMPLE WINS \u2014 the story's verdict up front, in two words the title never uses.",
+      "hook_promise": "The voiced hook delivers identity + stakes in the first line: two artists, one date, no small talk.",
+      "verdict": "aligned"
+    },
+    "claims": [
+      {
+        "text": "the master measures 39.14s at 1080x1920 with zero film grain and burned-in cinema captions",
+        "label": "M",
+        "used_as": "measured"
+      },
+      {
+        "text": "the nine boards draw on sequentially and persist correctly at runtime",
+        "label": "O",
+        "used_as": "observed in render QA"
+      },
+      {
+        "text": "escalation structure raises week-one retention versus a flat anecdote structure",
+        "label": "P",
+        "used_as": "prediction"
+      }
+    ],
+    "script_critique": {
+      "scores": {
+        "opening_hook": 5,
+        "clarity": 5,
+        "originality": 4,
+        "story_progression": 4,
+        "retention_potential": 4,
+        "emotional_impact": 3,
+        "visual_potential": 5,
+        "payoff": 4,
+        "accuracy": 4,
+        "pacing": 2
+      },
+      "weakest": "pacing",
+      "revision": "Re-choreographed S02-S07 so seated actors write, talk and react instead of floating hands; re-timed camera pushes; trimmed scene runtimes against the voice track (39.1s speech-locked, under the 60s Shorts boundary); rebuilt S09 as a spiral-bound notepad pull-back so the ending lands in one read."
+    }
+  },
+  "thumbnail_spec": {
+    "width": 1080,
+    "height": 1920,
+    "aspect_ratio": "9:16",
+    "art_source": "generated_art",
+    "text_on_image": [
+      "SIMPLE",
+      "WINS."
+    ],
+    "design": "AI-generated ink-on-parchment base art in the film's own drawing language (black spiral black hole, stick-figure artists, single crimson accent on the bow and rose), type set by tools/make_thumbnail.py in a reserved top band; style similarity to the film 0.688 against 0.62 threshold; verified at phone size",
+    "copy_principle": "complements the title; does not repeat it (0% shared words, 2 content words)"
+  }
+}
