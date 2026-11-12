@@ -65,6 +65,49 @@ Every entry: **stage** · **symptom** · **root cause** · **status** · **regre
 
 ## RESOLVED
 
+### KI-017 — a render reported COMPLETE while encoding no video at all
+
+**Symptom.** `run_studio.py render --shorts --draft --workers 4` finished in 75 s, wrote
+`status: COMPLETE`, `warnings: []`, and a validation report reading `valid: true` and
+`frames: 3919`. The MP4 contained **one audio stream and no video stream**. The same spec
+rendered correctly seconds later with `--workers 1`.
+
+**Two defects, and the second is the dangerous one.**
+
+1. **An intermittent encoder race.** Under four workers the frame pipe occasionally produced
+   no video output while the audio muxed normally. The workaround is fewer workers — but a
+   flaky encoder must never be allowed to pass silently.
+
+2. **Every gate was computed from the plan, not the file.** `valid` was
+   `compiled.errors == [] and dimensions_match_aspect`; `dimensions` and `frames` were read
+   from the compiled episode. Nothing opened the output. The report described what the
+   renderer *intended*, so a completely unplayable file scored as valid.
+
+**Fix.** `_probe_output_streams()` asks ffprobe (falling back to imageio-ffmpeg) what was
+actually written. `valid` now ANDs `artifact_ok`, a missing video stream appends a hard
+warning, `status` becomes `INCOMPLETE_ENCODE`, and the command exits **3**.
+
+**Regression test.** `tests/production/test_ki017_encoded_artifact.py` builds a real
+audio-only MP4 with ffmpeg and asserts the probe reports zero video streams; it also checks
+that `valid` is derived from the artifact and that every shipped master contains a video
+stream. Verified to fail against the reintroduced defect before being trusted.
+
+**Follow-on defect, same day.** The fix itself shipped broken: `artifact_ok` was referenced
+before it was assigned, so *every* render crashed with `NameError`. All seven KI-017 tests
+passed against the broken file, because six of them read the source as text. A seventh was
+added that **executes** `render` on a two-second spec and requires the report to exist; it was
+verified to fail against the reintroduced ordering bug.
+
+**Lesson.** A validation report is only worth what it measures — and a test that greps source
+code is not a test of behaviour. Both failures in this entry share one shape: confidence
+derived from reading rather than running.
+
+**Related, found while inspecting the re-render.** A `notebook_page` board placed at `y: 0.055`
+has its top edge under the chapter-label strip, which sits at the top of the frame. `y: 0.105`
+clears it at every board height from four to five lines.
+
+
+
 ### KI-015 — the style test measured a different region than the style gate
 
 **Symptom.** `pytest` failed `test_published_thumbnails_match_their_films` on
