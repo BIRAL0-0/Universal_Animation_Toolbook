@@ -16,7 +16,10 @@
       "duration": 12,
       "environment": "minimal",
       "setting": {
-        "sky": ["#020204", "#0a0a10"]
+        "sky": [
+          "#020204",
+          "#0a0a10"
+        ]
       },
       "narration": "Everyone talks about waiting for the perfect moment. The stars to align. The fear to vanish. But perfection is just procrastination wearing a tuxedo.",
       "characters": [
@@ -34,8 +37,17 @@
             },
             {
               "start": 3.0,
-              "end": 12.0,
+              "end": 7.95,
               "action": "walk",
+              "fromX": 0.15,
+              "toX": 0.55,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 7.95,
+              "end": 12.0,
+              "action": "idle_stand",
               "fromX": 0.15,
               "toX": 0.55,
               "facing": 1,
@@ -54,7 +66,10 @@
       "duration": 18,
       "environment": "minimal",
       "setting": {
-        "sky": ["#040408", "#0c0c14"]
+        "sky": [
+          "#040408",
+          "#0c0c14"
+        ]
       },
       "narration": "The truth? You don't need to feel ready. You just need to start. That first step isn't about confidence—it's about commitment. It's you saying 'I'm done waiting.'",
       "characters": [
@@ -101,7 +116,10 @@
       "duration": 16,
       "environment": "minimal",
       "setting": {
-        "sky": ["#060610", "#10101c"]
+        "sky": [
+          "#060610",
+          "#10101c"
+        ]
       },
       "narration": "Halfway up, doubt creeps in. Your legs burn. The top seems impossibly far. But here's what nobody tells you: the stairs don't get easier. You get stronger. Every step is proof you can keep going.",
       "characters": [
@@ -111,8 +129,18 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 16.0,
+              "end": 8.8,
               "action": "climb_stairs",
+              "stairs_x": 0.55,
+              "steps": 6,
+              "step_offset": 8,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 8.8,
+              "end": 16.0,
+              "action": "stand_up_resolve",
               "stairs_x": 0.55,
               "steps": 6,
               "step_offset": 8,
@@ -141,7 +169,10 @@
       "duration": 14,
       "environment": "minimal",
       "setting": {
-        "sky": ["#080814", "#141420"]
+        "sky": [
+          "#080814",
+          "#141420"
+        ]
       },
       "narration": "The final steps are the hardest—not because they're steeper, but because you can see the top and your brain starts bargaining. 'Maybe later. Maybe when I'm more prepared.' No. Now.",
       "characters": [
@@ -151,8 +182,18 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 14.0,
+              "end": 7.7,
               "action": "climb_stairs",
+              "stairs_x": 0.55,
+              "steps": 5,
+              "step_offset": 14,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 7.7,
+              "end": 14.0,
+              "action": "stand_up_resolve",
               "stairs_x": 0.55,
               "steps": 5,
               "step_offset": 14,
@@ -181,7 +222,10 @@
       "duration": 10,
       "environment": "minimal",
       "setting": {
-        "sky": ["#0a0a18", "#1a1a28"]
+        "sky": [
+          "#0a0a18",
+          "#1a1a28"
+        ]
       },
       "narration": "And then—you're there. Not at some magical endpoint where everything is perfect. But at a new vantage point. You can see further now. Not because the world changed, but because you did.",
       "characters": [
@@ -217,7 +261,10 @@
       "duration": 15,
       "environment": "minimal",
       "setting": {
-        "sky": ["#0c0c1c", "#1c1c2c"]
+        "sky": [
+          "#0c0c1c",
+          "#1c1c2c"
+        ]
       },
       "narration": "The staircase was never about reaching the top. It was about proving to yourself that you could take the first step when every fiber of your being wanted to wait. That's the real victory. Not the destination—the decision to begin.",
       "characters": [
@@ -227,8 +274,24 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 15.0,
+              "end": 4.54,
               "action": "celebrate_arms_up",
+              "x": 0.5,
+              "facing": 1,
+              "expression": "joyful"
+            },
+            {
+              "start": 4.54,
+              "end": 8.25,
+              "action": "look_horizon",
+              "x": 0.5,
+              "facing": 1,
+              "expression": "joyful"
+            },
+            {
+              "start": 8.25,
+              "end": 15.0,
+              "action": "look_horizon",
               "x": 0.5,
               "facing": 1,
               "expression": "joyful"
@@ -246,7 +309,10 @@
       "duration": 10,
       "environment": "minimal",
       "setting": {
-        "sky": ["#020204", "#0a0a10"]
+        "sky": [
+          "#020204",
+          "#0a0a10"
+        ]
       },
       "narration": "So what's your staircase? And more importantly—when do you take the first step? The answer is simple: now. Before you're ready. Before you feel brave. Just... begin.",
       "characters": [
@@ -256,8 +322,16 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 10.0,
+              "end": 5.5,
               "action": "idle_stand",
+              "x": 0.15,
+              "facing": 1,
+              "expression": "contemplative"
+            },
+            {
+              "start": 5.5,
+              "end": 10.0,
+              "action": "listen_nod",
               "x": 0.15,
               "facing": 1,
               "expression": "contemplative"

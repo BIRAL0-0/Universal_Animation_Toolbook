@@ -1366,8 +1366,16 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 8.65,
+              "end": 4.76,
               "action": "walk",
+              "fromX": 0.1,
+              "toX": 0.34,
+              "expression": "determined"
+            },
+            {
+              "start": 4.76,
+              "end": 8.65,
+              "action": "idle_stand",
               "fromX": 0.1,
               "toX": 0.34,
               "expression": "determined"
@@ -1382,8 +1390,18 @@
             },
             {
               "start": 11.25,
-              "end": 17.63,
+              "end": 14.76,
               "action": "pace_think",
+              "fromX": 0.46,
+              "toX": 0.5,
+              "span": 0.04,
+              "facing": 1,
+              "expression": "tense"
+            },
+            {
+              "start": 14.76,
+              "end": 17.63,
+              "action": "talk_explain",
               "fromX": 0.46,
               "toX": 0.5,
               "span": 0.04,
@@ -1400,8 +1418,16 @@
             },
             {
               "start": 19.73,
-              "end": 26.0,
+              "end": 23.18,
               "action": "walk",
+              "fromX": 0.5,
+              "toX": 0.78,
+              "expression": "determined"
+            },
+            {
+              "start": 23.18,
+              "end": 26.0,
+              "action": "idle_stand",
               "fromX": 0.5,
               "toX": 0.78,
               "expression": "determined"
@@ -1425,8 +1451,15 @@
             },
             {
               "start": 9.9,
-              "end": 17.33,
+              "end": 13.99,
               "action": "idle_stand",
+              "x": 1.35,
+              "facing": 1
+            },
+            {
+              "start": 13.99,
+              "end": 17.33,
+              "action": "listen_nod",
               "x": 1.35,
               "facing": 1
             },
@@ -2174,7 +2207,7 @@
             },
             {
               "start": 6.0,
-              "end": 18.48,
+              "end": 9.77,
               "action": "idle_stand",
               "x": 0.13,
               "facing": 1,
@@ -2182,9 +2215,45 @@
               "look_x": 0.5
             },
             {
-              "start": 18.48,
-              "end": 30.0,
+              "start": 9.77,
+              "end": 12.86,
               "action": "listen_nod",
+              "x": 0.13,
+              "facing": 1,
+              "expression": "shocked",
+              "look_x": 0.5
+            },
+            {
+              "start": 12.86,
+              "end": 18.48,
+              "action": "listen_nod",
+              "x": 0.13,
+              "facing": 1,
+              "expression": "shocked",
+              "look_x": 0.5
+            },
+            {
+              "start": 18.48,
+              "end": 21.97,
+              "action": "listen_nod",
+              "x": 0.14,
+              "facing": 1,
+              "expression": "curious",
+              "posture": -0.1
+            },
+            {
+              "start": 21.97,
+              "end": 24.82,
+              "action": "talk_explain",
+              "x": 0.14,
+              "facing": 1,
+              "expression": "curious",
+              "posture": -0.1
+            },
+            {
+              "start": 24.82,
+              "end": 30.0,
+              "action": "idle_stand",
               "x": 0.14,
               "facing": 1,
               "expression": "curious",
@@ -2232,16 +2301,62 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 12.73,
+              "end": 3.85,
               "action": "sit_bench",
               "x": 0.65,
               "facing": -1,
               "expression": "curious"
             },
             {
+              "start": 3.85,
+              "end": 7.0,
+              "action": "idle_stand",
+              "x": 0.65,
+              "facing": -1,
+              "expression": "curious"
+            },
+            {
+              "start": 7.0,
+              "end": 12.73,
+              "action": "idle_stand",
+              "x": 0.65,
+              "facing": -1,
+              "expression": "curious"
+            },
+            {
               "start": 12.73,
-              "end": 27.7,
+              "end": 17.26,
               "action": "sit_bench",
+              "talking": true,
+              "x": 0.65,
+              "facing": -1,
+              "expression": "smile",
+              "look_y": -0.45
+            },
+            {
+              "start": 17.26,
+              "end": 20.96,
+              "action": "idle_stand",
+              "talking": true,
+              "x": 0.65,
+              "facing": -1,
+              "expression": "smile",
+              "look_y": -0.45
+            },
+            {
+              "start": 20.96,
+              "end": 24.67,
+              "action": "idle_stand",
+              "talking": true,
+              "x": 0.65,
+              "facing": -1,
+              "expression": "smile",
+              "look_y": -0.45
+            },
+            {
+              "start": 24.67,
+              "end": 27.7,
+              "action": "listen_nod",
               "talking": true,
               "x": 0.65,
               "facing": -1,
@@ -3230,8 +3345,35 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 35.0,
+              "end": 10.59,
               "action": "idle_stand",
+              "x": 0.12,
+              "facing": 1,
+              "expression": "sad",
+              "posture": -0.12
+            },
+            {
+              "start": 10.59,
+              "end": 19.25,
+              "action": "listen_nod",
+              "x": 0.12,
+              "facing": 1,
+              "expression": "sad",
+              "posture": -0.12
+            },
+            {
+              "start": 19.25,
+              "end": 27.91,
+              "action": "listen_nod",
+              "x": 0.12,
+              "facing": 1,
+              "expression": "sad",
+              "posture": -0.12
+            },
+            {
+              "start": 27.91,
+              "end": 35.0,
+              "action": "talk_explain",
               "x": 0.12,
               "facing": 1,
               "expression": "sad",
@@ -3269,6 +3411,30 @@
             },
             {
               "start": 20.96,
+              "end": 25.21,
+              "action": "listen_nod",
+              "x": 0.62,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 25.21,
+              "end": 28.68,
+              "action": "talk_explain",
+              "x": 0.62,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 28.68,
+              "end": 32.16,
+              "action": "idle_stand",
+              "x": 0.62,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 32.16,
               "end": 35.0,
               "action": "listen_nod",
               "x": 0.62,
@@ -3291,16 +3457,56 @@
             },
             {
               "start": 3.5,
-              "end": 16.68,
+              "end": 7.49,
               "action": "celebrate_arms_up",
               "x": 0.63,
               "facing": 1,
               "expression": "smile"
             },
             {
+              "start": 7.49,
+              "end": 10.75,
+              "action": "look_horizon",
+              "x": 0.63,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 10.75,
+              "end": 16.68,
+              "action": "look_horizon",
+              "x": 0.63,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
               "start": 16.68,
-              "end": 35.0,
+              "end": 22.22,
               "action": "idle_stand",
+              "x": 0.58,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 22.22,
+              "end": 26.76,
+              "action": "listen_nod",
+              "x": 0.58,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 26.76,
+              "end": 31.29,
+              "action": "listen_nod",
+              "x": 0.58,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 31.29,
+              "end": 35.0,
+              "action": "talk_explain",
               "x": 0.58,
               "facing": -1,
               "expression": "smile"
@@ -4059,8 +4265,17 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 6.3,
+              "end": 3.47,
               "action": "sit_bench",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "tired",
+              "posture": -0.25
+            },
+            {
+              "start": 3.47,
+              "end": 6.3,
+              "action": "idle_stand",
               "x": 0.34,
               "facing": 1,
               "expression": "tired",
@@ -4098,8 +4313,18 @@
             },
             {
               "start": 22.62,
-              "end": 32.0,
+              "end": 27.78,
               "action": "sit_bench",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "curious",
+              "look_x": 0.5,
+              "look_y": -0.45
+            },
+            {
+              "start": 27.78,
+              "end": 32.0,
+              "action": "idle_stand",
               "x": 0.34,
               "facing": 1,
               "expression": "curious",
@@ -4116,8 +4341,16 @@
           "beats": [
             {
               "start": 10.96,
-              "end": 19.42,
+              "end": 15.61,
               "action": "celebrate_arms_up",
+              "x": 0.54,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 15.61,
+              "end": 19.42,
+              "action": "look_horizon",
               "x": 0.54,
               "facing": -1,
               "expression": "smile"
@@ -5045,6 +5278,33 @@
           "beats": [
             {
               "start": 0.0,
+              "end": 5.14,
+              "action": "talk_explain",
+              "x": 0.6,
+              "facing": 1,
+              "expression": "tense",
+              "posture": 0.18
+            },
+            {
+              "start": 5.14,
+              "end": 9.34,
+              "action": "point_emphasis",
+              "x": 0.6,
+              "facing": 1,
+              "expression": "tense",
+              "posture": 0.18
+            },
+            {
+              "start": 9.34,
+              "end": 13.54,
+              "action": "point_emphasis",
+              "x": 0.6,
+              "facing": 1,
+              "expression": "tense",
+              "posture": 0.18
+            },
+            {
+              "start": 13.54,
               "end": 16.98,
               "action": "talk_explain",
               "x": 0.6,
@@ -5054,8 +5314,16 @@
             },
             {
               "start": 16.98,
-              "end": 24.663,
+              "end": 21.21,
               "action": "idle_stand",
+              "x": 0.58,
+              "facing": -1,
+              "expression": "tense"
+            },
+            {
+              "start": 21.21,
+              "end": 24.663,
+              "action": "listen_nod",
               "x": 0.58,
               "facing": -1,
               "expression": "tense"
@@ -5086,8 +5354,48 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 40.0,
+              "end": 6.66,
               "action": "sit_bench",
+              "x": 0.69,
+              "facing": -1,
+              "expression": "curious"
+            },
+            {
+              "start": 6.66,
+              "end": 12.1,
+              "action": "listen_nod",
+              "x": 0.69,
+              "facing": -1,
+              "expression": "curious"
+            },
+            {
+              "start": 12.1,
+              "end": 22.0,
+              "action": "idle_stand",
+              "x": 0.69,
+              "facing": -1,
+              "expression": "curious"
+            },
+            {
+              "start": 22.0,
+              "end": 31.9,
+              "action": "idle_stand",
+              "x": 0.69,
+              "facing": -1,
+              "expression": "curious"
+            },
+            {
+              "start": 31.9,
+              "end": 36.35,
+              "action": "listen_nod",
+              "x": 0.69,
+              "facing": -1,
+              "expression": "curious"
+            },
+            {
+              "start": 36.35,
+              "end": 40.0,
+              "action": "idle_stand",
               "x": 0.69,
               "facing": -1,
               "expression": "curious"
@@ -6223,8 +6531,18 @@
             },
             {
               "start": 21.17,
-              "end": 31.0,
+              "end": 26.58,
               "action": "listen_nod",
+              "x": 0.3,
+              "facing": 1,
+              "expression": "hopeful",
+              "look_y": 0.25,
+              "posture": 0.18
+            },
+            {
+              "start": 26.58,
+              "end": 31.0,
+              "action": "idle_stand",
               "x": 0.3,
               "facing": 1,
               "expression": "hopeful",
@@ -6263,8 +6581,32 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 28.2,
+              "end": 8.53,
               "action": "sit_bench",
+              "x": 0.65,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 8.53,
+              "end": 15.51,
+              "action": "idle_stand",
+              "x": 0.65,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 15.51,
+              "end": 22.49,
+              "action": "idle_stand",
+              "x": 0.65,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 22.49,
+              "end": 28.2,
+              "action": "listen_nod",
               "x": 0.65,
               "facing": -1,
               "expression": "smile"
@@ -7058,8 +7400,26 @@
             },
             {
               "start": 16.91,
-              "end": 29.0,
+              "end": 20.57,
               "action": "walk",
+              "fromX": 0.72,
+              "toX": 0.81,
+              "expression": "smile",
+              "posture": 0.25
+            },
+            {
+              "start": 20.57,
+              "end": 23.56,
+              "action": "idle_stand",
+              "fromX": 0.72,
+              "toX": 0.81,
+              "expression": "smile",
+              "posture": 0.25
+            },
+            {
+              "start": 23.56,
+              "end": 29.0,
+              "action": "idle_stand",
               "fromX": 0.72,
               "toX": 0.81,
               "expression": "smile",
@@ -7129,8 +7489,24 @@
             },
             {
               "start": 16.71,
-              "end": 29.0,
+              "end": 20.43,
               "action": "listen_nod",
+              "x": 0.33,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 20.43,
+              "end": 23.47,
+              "action": "talk_explain",
+              "x": 0.33,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 23.47,
+              "end": 29.0,
+              "action": "idle_stand",
               "x": 0.33,
               "facing": 1,
               "expression": "smile"

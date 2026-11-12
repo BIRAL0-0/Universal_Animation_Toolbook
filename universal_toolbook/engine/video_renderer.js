@@ -634,15 +634,27 @@ function evaluateSceneCamera(sc, ts) {
     }
     const sh = sc.cameraShots[activeIdx];
     const rawSpan = Math.max(0.05, sh.end - sh.start);
+    // KI-018: these thresholds decide whether a move is *performed* (settle in ~3.2s,
+    // then hold) or *smeared* across the whole scene as an invisible creep. They used to be
+    // 0.04 / 0.05 / **0.10**, which classified 169 of 192 authored shots in this repo as
+    // insignificant — a 1.02 -> 1.08 push over a 13s scene is a 6% drift the eye reads as a
+    // still image. Every one of those shots was therefore smeared, and the film looked dead
+    // while `creative_review` reported 0% static, because its STILL_THRESHOLD (0.0015) sits
+    // far below the creep's own frame delta (measured 0.142).
     const hasSignificantPanOrFocus =
-      Math.abs(sh.panTo - sh.panFrom) > 0.04 ||
-      Math.abs(sh.focusXTo - sh.focusXFrom) > 0.05 ||
-      Math.abs(sh.zoomTo - sh.zoomFrom) > 0.10;
+      Math.abs(sh.panTo - sh.panFrom) > 0.015 ||
+      Math.abs(sh.focusXTo - sh.focusXFrom) > 0.015 ||
+      Math.abs(sh.zoomTo - sh.zoomFrom) > 0.02;
     // Motivated camera move duration: if a shot moves significantly across the stage, settle over a crisp
     // cinematic window (`moveDur` or `min(rawSpan, 3.2s)`) rather than drifting aimlessly for 20+ seconds!
-    const effDur = sh.moveDur !== null && sh.moveDur !== undefined
-      ? Math.max(0.15, sh.moveDur)
-      : (hasSignificantPanOrFocus ? Math.min(rawSpan, 3.2) : rawSpan);
+    // KI-018: a move that DOES arrive should read as a move. 2.6s is the default settle; a shot
+    // that wants to drift on purpose can still say so with an explicit `move_dur`.
+    // KI-018: `moveDur` is compiled as `null` when the spec does not author `move_dur`,
+    // so a `!== undefined` guard treated null as an authored duration and fell back to
+    // `rawSpan` — smearing the move over the whole shot regardless of the test above.
+    const effDur = (sh.moveDur !== null && sh.moveDur !== undefined && Number.isFinite(Number(sh.moveDur)))
+      ? Math.max(0.15, Number(sh.moveDur))
+      : (hasSignificantPanOrFocus ? Math.min(rawSpan, 2.6) : rawSpan);
     const u = eio(clamp((ts - sh.start) / effDur));
     let zoom = lerp(sh.zoomFrom, sh.zoomTo, u);
     let panX = lerp(sh.panFrom, sh.panTo, u) * BASE_W;
@@ -660,9 +672,17 @@ function evaluateSceneCamera(sc, ts) {
     return { zoom, panX, focusX, focusY };
   }
 
-  const effSceneCamDur = sc.camera.moveDur !== null && sc.camera.moveDur !== undefined
-    ? Math.max(0.2, sc.camera.moveDur)
-    : Math.max(0.1, sc.duration);
+  // KI-018: the scene-level camera had no significance test at all — it always smeared
+  // `zoomFrom -> zoomTo` across the full scene duration. Same invisible-creep failure as the
+  // shot path above; same fix: if the move is real, perform it and hold.
+  const sceneCamMoves =
+    Math.abs((sc.camera.panTo ?? 0) - (sc.camera.panFrom ?? 0)) > 0.015 ||
+    Math.abs((sc.camera.focusXTo ?? 0.5) - (sc.camera.focusXFrom ?? 0.5)) > 0.015 ||
+    Math.abs(sc.camera.zoomTo - sc.camera.zoomFrom) > 0.02;
+  const effSceneCamDur = (sc.camera.moveDur !== null && sc.camera.moveDur !== undefined
+      && Number.isFinite(Number(sc.camera.moveDur)))
+    ? Math.max(0.2, Number(sc.camera.moveDur))
+    : (sceneCamMoves ? Math.min(Math.max(0.1, sc.duration), 2.6) : Math.max(0.1, sc.duration));
   const camU = eio(clamp(ts / effSceneCamDur));
   return {
     zoom: lerp(sc.camera.zoomFrom, sc.camera.zoomTo, camU),

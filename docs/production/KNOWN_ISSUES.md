@@ -65,6 +65,42 @@ Every entry: **stage** · **symptom** · **root cause** · **status** · **regre
 
 ## RESOLVED
 
+### KI-019 — a film that passed every gate still looked like a slideshow (resolved)
+- **Stage:** master visual QA, motion review
+- **First seen:** video-003, 2026-11-10
+- **Symptom:** `the-first-plank` v3 (130.62 s) satisfied every gate yet read as a still. A figure
+  stood with its arms at its sides, unchanged, for six seconds at a time.
+- **Root cause:** three rules each pulled toward stillness, and the review gate could not see the
+  result.
+  1. `motion_library` set `speakBoost = 0.0` for any character who was not speaking. Only 378
+     dialogue lines exist across `examples/`, and just 112 (30%) are spoken by a character, so for
+     70% of every film every on-screen actor was frozen.
+  2. `idle_stand` — the pose almost every hold resolves to — animated only a ribcage breath.
+     Character-region frame delta measured **0.500** against **9.753** for `walk`: a 20x gap that
+     is invisible to the eye.
+  3. `video_renderer` required a **0.10** zoom delta for a shot to count as significant, so
+     **169 of 192 (88%)** authored shots had their zoom smeared across the whole scene, while
+     `episode.js` separately gave every camera-less scene a silent `zoom_to ?? 1.04` creep. That
+     creep moved enough pixels to clear `creative_review`'s absolute `0.0015` threshold, which is
+     why the gate reported 0% static on a slideshow.
+- **Fix:** `LISTEN_BOOST = 0.45` gives a non-speaking actor listening body language; `idle_stand`
+  carries weight shift, head attention and arm resettle on four desynchronised periods; shot
+  thresholds became `0.015/0.015/0.02` with a 2.6 s settle and the scene-level camera path now
+  shares the significance test it never had; the `zoom_to` default creep is gone. `validate_specs`
+  gained a `MAX_SINGLE_BEAT_SEC = 6.0` motion budget (15 specs held one pose for a whole scene;
+  `discipline-vs-obsession` held `celebrate_arms_up` for 64.8 s). `creative_review` now measures
+  relative motion in the stage band, because a typing board and subtitle glow change every frame
+  and masked a motionless stage.
+- **Regression check / verification:** rendered, not scored. `idle_stand` character-region motion
+  rose from 0.500 to 0.601 median (p90 0.881 -> 1.418) and frame-strip inspection shows the figure
+  shifting weight onto one hip and turning its head. `tests/unit/test_static_authoring.py` pins the
+  listen boost, the idle oscillator count, the motion budget and that re-timed beats remain a valid
+  partition of their scene.
+- **Known limit:** locomotion still moves ~10x more than any rest pose. The rig animates travel
+  well and holds at secondary-animation scale; closing that gap is per-action animation work.
+  Which action belongs at a story beat remains human judgment — the gate can prove a pose changes,
+  never that it changes well.
+
 ### KI-017 — a render reported COMPLETE while encoding no video at all
 
 **Symptom.** `run_studio.py render --shorts --draft --workers 4` finished in 75 s, wrote

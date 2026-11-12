@@ -562,7 +562,18 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
   const slowShift = Math.sin(globalT * 0.82 + phaseSeed * 1.7);
   const microGaze = Math.sin(globalT * 0.62 + phaseSeed * 2.3);
   // Strict speech-gating: characters only animate talking gestures when actively speaking (never during narrator lines!)
-  const speakBoost = beat._isSpeaking ? 1.0 : (beat.force_gesture ? 0.65 : 0.0);
+  // KI-019: this used to be 0.0 whenever the character was not speaking. In a documentary
+  // narration style only ~30% of lines are character dialogue, so for 70% of the film every
+  // on-screen character dropped to a frozen default pose with only a breathing offset. Measured
+  // on a bare `idle_stand` probe: stage motion median 0.171, versus 3.406 for `walk` — a 20x
+  // drop. That is the single biggest cause of "it looks like a slideshow".
+  // An actor who is not talking is LISTENING, and listening has body language. 0.45 keeps the
+  // conversational phrases alive at roughly half amplitude without stealing focus from the
+  // narrator, and `beat.force_gesture` still opts a beat into the stronger 0.65 read.
+  const LISTEN_BOOST = 0.45;
+  const speakBoost = beat._isSpeaking
+    ? 1.0
+    : (beat.force_gesture ? 0.65 : LISTEN_BOOST);
 
   // World-locked stance feet helper: tall, natural human leg extension (~3° soft knee) with zero foot drift
   // and living ribcage/pelvis breathing (`hipY` + subtle weight balance)
@@ -2324,15 +2335,23 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
     fy: gY,
     s,
     flip,
-    lookX: 0.16 + 0.12 * microGaze,
-    lookY: 0.03 + 0.04 * slowShift,
+    // KI-019: a held pose used to be breathing only. Measured on an 8 s probe, character-region
+    // motion was 0.500 versus 9.753 for `walk` — a 20x gap, i.e. the rig was moving so little it
+    // read as a freeze-frame. Real animation rests with WEIGHT AND ATTENTION, not just a ribcage:
+    // the body drifts onto one hip, the head keeps checking its surroundings, and the hands
+    // resettle. Three desynchronised periods keep it from pulsing like a metronome.
+    lookX: 0.16 + 0.30 * microGaze + 0.10 * Math.sin(globalT * 0.23 + phaseSeed * 3.1),
+    lookY: 0.03 + 0.10 * slowShift,
     pose: P({
       ...plantedStandingLegs(10, 12),
-      lean: 0.022 + 0.012 * breath + 0.010 * slowShift,
-      head: 0.015 + 0.024 * breath + 0.016 * slowShift,
-      spineCurve: (2.6 + 0.7 * breath) * s,
-      al: [0.09 + 0.022 * breathLag, 0.22 + 0.038 * breathLag],
-      ar: [-0.07 - 0.018 * breathLag, 0.15 + 0.032 * breathLag],
+      lean: 0.022 + 0.055 * slowShift + 0.018 * breath,
+      head: 0.015 + 0.070 * Math.sin(globalT * 0.37 + phaseSeed * 1.9)
+            + 0.030 * microGaze + 0.020 * breath,
+      spineCurve: (2.6 + 2.2 * slowShift + 0.7 * breath) * s,
+      al: [0.09 + 0.10 * Math.sin(globalT * 0.41 + phaseSeed * 2.7) + 0.03 * breathLag,
+           0.22 + 0.16 * Math.sin(globalT * 0.29 + phaseSeed * 1.3) + 0.04 * breathLag],
+      ar: [-0.07 + 0.12 * Math.sin(globalT * 0.33 + phaseSeed * 3.7) - 0.03 * breathLag,
+           0.15 + 0.20 * Math.sin(globalT * 0.26 + phaseSeed * 2.1) + 0.04 * breathLag],
       handL: 'relaxed',
       handR: 'relaxed',
     }),

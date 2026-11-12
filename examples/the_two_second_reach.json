@@ -10,12 +10,20 @@
       "color": "#f5f7fb",
       "build": "athletic",
       "hair": "textured_sweep",
-      "scale": 1.90
+      "scale": 1.9
     }
   },
   "chapters": [
-    { "scene": "S01", "number": "01", "title": "The Two-Second Impulse" },
-    { "scene": "S03", "number": "02", "title": "Twenty Seconds of Friction" }
+    {
+      "scene": "S01",
+      "number": "01",
+      "title": "The Two-Second Impulse"
+    },
+    {
+      "scene": "S03",
+      "number": "02",
+      "title": "Twenty Seconds of Friction"
+    }
   ],
   "scenes": [
     {
@@ -25,12 +33,31 @@
       "environment": "studio_dark",
       "mood": "focus",
       "props": [
-        { "id": "table_side", "type": "table", "x": 0.48 },
-        { "id": "phone_main", "type": "phone", "x": 0.44, "elevation": 148, "notify_at": 0.35 },
-        { "id": "cup_main", "type": "cup", "x": 0.505, "elevation": 148 }
+        {
+          "id": "table_side",
+          "type": "table",
+          "x": 0.48
+        },
+        {
+          "id": "phone_main",
+          "type": "phone",
+          "x": 0.44,
+          "elevation": 148,
+          "notify_at": 0.35
+        },
+        {
+          "id": "cup_main",
+          "type": "cup",
+          "x": 0.505,
+          "elevation": 148
+        }
       ],
       "sfx": [
-        { "type": "phone_buzz", "at": 0.35, "pan": -0.05 }
+        {
+          "type": "phone_buzz",
+          "at": 0.35,
+          "pan": -0.05
+        }
       ],
       "dialogue": [
         {
@@ -41,10 +68,13 @@
         {
           "speaker": "narrator",
           "text": "You lose it in a two-second reach.",
-          "pause_after": 0.40
+          "pause_after": 0.4
         }
       ],
-      "accent_words": ["never lose", "two-second reach"],
+      "accent_words": [
+        "never lose",
+        "two-second reach"
+      ],
       "camera": {
         "zoom_from": 1.02,
         "zoom_to": 1.08,
@@ -55,9 +85,29 @@
         {
           "id": "alex",
           "beats": [
-            { "start": 0.0, "end": 1.8, "action": "walk", "from_x": 0.24, "to_x": 0.35 },
-            { "start": 1.8, "end": 4.4, "action": "reach_phone", "x": 0.35, "facing": 1, "target_prop": "phone_main" },
-            { "start": 4.4, "end": 9.0, "action": "pick_up_phone", "x": 0.35, "facing": 1, "target_prop": "phone_main" }
+            {
+              "start": 0.0,
+              "end": 1.8,
+              "action": "walk",
+              "from_x": 0.24,
+              "to_x": 0.35
+            },
+            {
+              "start": 1.8,
+              "end": 4.4,
+              "action": "reach_phone",
+              "x": 0.35,
+              "facing": 1,
+              "target_prop": "phone_main"
+            },
+            {
+              "start": 4.4,
+              "end": 9.0,
+              "action": "pick_up_phone",
+              "x": 0.35,
+              "facing": 1,
+              "target_prop": "phone_main"
+            }
           ]
         }
       ]
@@ -69,8 +119,17 @@
       "environment": "studio_dark",
       "mood": "tension",
       "props": [
-        { "id": "table_side", "type": "table", "x": 0.48 },
-        { "id": "cup_main", "type": "cup", "x": 0.505, "elevation": 148 }
+        {
+          "id": "table_side",
+          "type": "table",
+          "x": 0.48
+        },
+        {
+          "id": "cup_main",
+          "type": "cup",
+          "x": 0.505,
+          "elevation": 148
+        }
       ],
       "dialogue": [
         {
@@ -84,7 +143,10 @@
           "pause_after": 0.42
         }
       ],
-      "accent_words": ["quick check", "arm's reach"],
+      "accent_words": [
+        "quick check",
+        "arm's reach"
+      ],
       "camera": {
         "zoom_from": 1.08,
         "zoom_to": 1.14,
@@ -95,9 +157,30 @@
         {
           "id": "alex",
           "beats": [
-            { "start": 0.0, "end": 2.6, "action": "hold_phone", "x": 0.36, "facing": 1, "target_prop": "phone_main" },
-            { "start": 2.6, "end": 6.0, "action": "phone_scroll", "x": 0.36, "facing": 1, "target_prop": "phone_main" },
-            { "start": 6.0, "end": 9.5, "action": "phone_type", "x": 0.36, "facing": 1, "target_prop": "phone_main" }
+            {
+              "start": 0.0,
+              "end": 2.6,
+              "action": "hold_phone",
+              "x": 0.36,
+              "facing": 1,
+              "target_prop": "phone_main"
+            },
+            {
+              "start": 2.6,
+              "end": 6.0,
+              "action": "phone_scroll",
+              "x": 0.36,
+              "facing": 1,
+              "target_prop": "phone_main"
+            },
+            {
+              "start": 6.0,
+              "end": 9.5,
+              "action": "phone_type",
+              "x": 0.36,
+              "facing": 1,
+              "target_prop": "phone_main"
+            }
           ]
         }
       ]
@@ -120,7 +203,10 @@
           "pause_after": 0.42
         }
       ],
-      "accent_words": ["change the room", "across the table"],
+      "accent_words": [
+        "change the room",
+        "across the table"
+      ],
       "camera": {
         "zoom_from": 1.06,
         "zoom_to": 1.02,
@@ -131,8 +217,22 @@
         {
           "id": "alex",
           "beats": [
-            { "start": 0.0, "end": 4.4, "action": "put_down_phone", "x": 0.35, "facing": 1, "target_prop": "phone_main", "release_x": 0.50 },
-            { "start": 4.4, "end": 9.5, "action": "talk_explain", "x": 0.33, "facing": 1 }
+            {
+              "start": 0.0,
+              "end": 4.4,
+              "action": "put_down_phone",
+              "x": 0.35,
+              "facing": 1,
+              "target_prop": "phone_main",
+              "release_x": 0.5
+            },
+            {
+              "start": 4.4,
+              "end": 9.5,
+              "action": "talk_explain",
+              "x": 0.33,
+              "facing": 1
+            }
           ]
         }
       ]
@@ -144,8 +244,19 @@
       "environment": "minimal_void",
       "mood": "calm",
       "props": [
-        { "id": "desk_main", "type": "desk", "x": 0.54, "scale": 1.62 },
-        { "id": "laptop_main", "type": "laptop", "x": 0.57, "scale": 1.55, "facing": "left" }
+        {
+          "id": "desk_main",
+          "type": "desk",
+          "x": 0.54,
+          "scale": 1.62
+        },
+        {
+          "id": "laptop_main",
+          "type": "laptop",
+          "x": 0.57,
+          "scale": 1.55,
+          "facing": "left"
+        }
       ],
       "dialogue": [
         {
@@ -159,18 +270,32 @@
           "pause_after": 0.42
         }
       ],
-      "accent_words": ["room to breathe", "one craft"],
+      "accent_words": [
+        "room to breathe",
+        "one craft"
+      ],
       "camera": {
         "zoom_from": 1.04,
         "zoom_to": 1.12,
-        "focus_x": 0.50,
+        "focus_x": 0.5,
         "focus_y": 0.58
       },
       "characters": [
         {
           "id": "alex",
           "beats": [
-            { "start": 0.0, "end": 9.0, "action": "sit_desk_type", "x": 0.52 }
+            {
+              "start": 0.0,
+              "end": 4.95,
+              "action": "sit_desk_type",
+              "x": 0.52
+            },
+            {
+              "start": 4.95,
+              "end": 9.0,
+              "action": "sketch_desk",
+              "x": 0.52
+            }
           ]
         }
       ]
@@ -183,7 +308,12 @@
       "mood": "triumph",
       "fade_to_black": true,
       "props": [
-        { "id": "door_main", "type": "door", "x": 0.68, "scale": 1.48 }
+        {
+          "id": "door_main",
+          "type": "door",
+          "x": 0.68,
+          "scale": 1.48
+        }
       ],
       "dialogue": [
         {
@@ -192,7 +322,10 @@
           "pause_after": 0.65
         }
       ],
-      "accent_words": ["first two seconds", "stays yours"],
+      "accent_words": [
+        "first two seconds",
+        "stays yours"
+      ],
       "camera": {
         "zoom_from": 1.02,
         "zoom_to": 1.06,
@@ -203,8 +336,21 @@
         {
           "id": "alex",
           "beats": [
-            { "start": 0.0, "end": 2.4, "action": "walk", "from_x": 0.34, "to_x": 0.58 },
-            { "start": 2.4, "end": 8.0, "action": "open_door", "x": 0.58, "facing": 1, "target_prop": "door_main" }
+            {
+              "start": 0.0,
+              "end": 2.4,
+              "action": "walk",
+              "from_x": 0.34,
+              "to_x": 0.58
+            },
+            {
+              "start": 2.4,
+              "end": 8.0,
+              "action": "open_door",
+              "x": 0.58,
+              "facing": 1,
+              "target_prop": "door_main"
+            }
           ]
         }
       ]

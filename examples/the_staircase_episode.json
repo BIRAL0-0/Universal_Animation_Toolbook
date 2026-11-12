@@ -55,7 +55,10 @@
       "tail_out": 0.6,
       "portrait_focus_x": 0.5,
       "setting": {
-        "sky": ["#020204", "#08080c"],
+        "sky": [
+          "#020204",
+          "#08080c"
+        ],
         "floor_color": "#0c0c10",
         "light_color": "#fbbf24",
         "backdrop": "minimal",
@@ -103,7 +106,7 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 5.0,
+              "end": 4.8,
               "action": "idle_stand",
               "x": 0.38,
               "facing": 1,
@@ -117,7 +120,7 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 5.0,
+              "end": 4.8,
               "action": "idle_stand",
               "x": 0.62,
               "facing": 1,
@@ -175,7 +178,10 @@
       "tail_out": 0.6,
       "portrait_focus": "waiter",
       "setting": {
-        "sky": ["#020204", "#0a0a10"],
+        "sky": [
+          "#020204",
+          "#0a0a10"
+        ],
         "floor_color": "#0c0c10",
         "light_color": "#94a3b8",
         "backdrop": "minimal",
@@ -348,7 +354,10 @@
       "tail_out": 0.6,
       "portrait_focus": "climber",
       "setting": {
-        "sky": ["#040408", "#0c0c14"],
+        "sky": [
+          "#040408",
+          "#0c0c14"
+        ],
         "floor_color": "#0a0a10",
         "light_color": "#fbbf24",
         "backdrop": "minimal",
@@ -536,7 +545,10 @@
       "tail_out": 1.0,
       "portrait_focus_x": 0.46,
       "setting": {
-        "sky": ["#060608", "#1a1408"],
+        "sky": [
+          "#060608",
+          "#1a1408"
+        ],
         "floor_color": "#0c0c10",
         "light_color": "#fbbf24",
         "backdrop": "horizon",
@@ -617,17 +629,33 @@
           "beats": [
             {
               "start": 0.0,
-              "end": 8.0,
+              "end": 4.4,
               "action": "look_horizon",
-              "x": 0.60,
+              "x": 0.6,
+              "facing": 1,
+              "expression": "calm"
+            },
+            {
+              "start": 4.4,
+              "end": 8.0,
+              "action": "idle_stand",
+              "x": 0.6,
               "facing": 1,
               "expression": "calm"
             },
             {
               "start": 8.0,
-              "end": 16.0,
+              "end": 12.4,
               "action": "stand_up_resolve",
-              "x": 0.60,
+              "x": 0.6,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 12.4,
+              "end": 16.0,
+              "action": "idle_stand",
+              "x": 0.6,
               "facing": 1,
               "expression": "determined"
             }
