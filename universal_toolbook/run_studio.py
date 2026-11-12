@@ -773,6 +773,27 @@ def cmd_render(args: argparse.Namespace) -> int:
         aspect_warnings.append(
             f"encoded dimensions {width}x{height} contradict declared aspect {aspect_ratio}"
         )
+
+    # KI-017: `valid` must describe the artifact, not the plan. Probe the encoded file
+    # and treat a missing video stream as a hard failure — a silent audio-only MP4 used
+    # to report COMPLETE with zero warnings.
+    encoded = _probe_output_streams(out_mp4)
+    artifact_ok = encoded["video_streams"] >= 1 and not encoded["probe_error"]
+    if not artifact_ok:
+        detail = encoded["probe_error"] or "no video stream"
+        aspect_warnings.append(
+            f"ENCODED FILE IS NOT A VIDEO: {detail} "
+            f"({encoded['video_streams']} video stream(s), "
+            f"{encoded['audio_streams']} audio stream(s)). The encoder failed; re-render "
+            f"with fewer --workers."
+        )
+        print("\n" + "!" * 78 + f"\nERROR: {aspect_warnings[-1]}\n" + "!" * 78 + "\n",
+              file=sys.stderr)
+    elif encoded["width"] and (encoded["width"], encoded["height"]) != (width, height):
+        aspect_warnings.append(
+            f"encoded dimensions {encoded['width']}x{encoded['height']} disagree with the "
+            f"planned {width}x{height}"
+        )
     val_path = out_mp4.with_name(f"{out_mp4.stem}_validation_report.json")
     val_path.write_text(
         json.dumps(

@@ -149,7 +149,7 @@
       "board": {
         "type": "notebook_page",
         "x": 0.58,
-        "y": 0.055,
+        "y": 0.105,
         "w": 440,
         "h": 252,
         "bold_first": true,
@@ -295,7 +295,7 @@
       "board": {
         "type": "notebook_page",
         "x": 0.58,
-        "y": 0.055,
+        "y": 0.105,
         "w": 440,
         "h": 252,
         "bold_first": true,
@@ -429,7 +429,7 @@
       "board": {
         "type": "notebook_page",
         "x": 0.58,
-        "y": 0.055,
+        "y": 0.105,
         "w": 440,
         "h": 294,
         "bold_first": true,
@@ -578,7 +578,7 @@
       "board": {
         "type": "notebook_page",
         "x": 0.58,
-        "y": 0.055,
+        "y": 0.105,
         "w": 440,
         "h": 252,
         "bold_first": true,
@@ -734,7 +734,7 @@
       "board": {
         "type": "notebook_page",
         "x": 0.58,
-        "y": 0.055,
+        "y": 0.105,
         "w": 440,
         "h": 252,
         "bold_first": true,
@@ -832,34 +832,34 @@
           "show_name": true,
           "beats": [
             {
-              "start": 0.0,
-              "end": 5.0,
-              "action": "look_horizon",
-              "x": 0.4,
+              "start": 0,
+              "end": 4.5,
+              "action": "point_emphasis",
+              "x": 0.42,
               "facing": 1,
-              "expression": "hopeful"
-            },
-            {
-              "start": 5.0,
-              "end": 10.0,
-              "action": "walk",
-              "from_x": 0.4,
-              "to_x": 0.58,
               "expression": "determined"
             },
             {
-              "start": 10.0,
-              "end": 14.0,
+              "start": 4.5,
+              "end": 9.5,
+              "action": "walk",
+              "from_x": 0.42,
+              "to_x": 0.56,
+              "expression": "determined"
+            },
+            {
+              "start": 9.5,
+              "end": 13.5,
               "action": "stand_up_resolve",
-              "x": 0.58,
+              "x": 0.56,
               "facing": 1,
               "expression": "resolved"
             },
             {
-              "start": 14.0,
-              "end": 18.0,
+              "start": 13.5,
+              "end": 18,
               "action": "celebrate_arms_up",
-              "x": 0.6,
+              "x": 0.58,
               "facing": 1,
               "expression": "joyful"
             }
@@ -869,7 +869,7 @@
       "board": {
         "type": "notebook_page",
         "x": 0.58,
-        "y": 0.055,
+        "y": 0.105,
         "w": 440,
         "h": 252,
         "bold_first": true,
@@ -978,25 +978,25 @@
           "show_name": true,
           "beats": [
             {
-              "start": 0.0,
-              "end": 5.0,
-              "action": "idle_stand",
+              "start": 0,
+              "end": 4.5,
+              "action": "look_horizon",
               "x": 0.48,
               "facing": -1,
               "expression": "calm"
             },
             {
-              "start": 5.0,
-              "end": 10.0,
-              "action": "look_horizon",
+              "start": 4.5,
+              "end": 9.0,
+              "action": "chest_hand_sincere",
               "x": 0.48,
-              "facing": -1,
-              "expression": "hopeful"
+              "facing": 1,
+              "expression": "sincere"
             },
             {
-              "start": 10.0,
+              "start": 9.0,
               "end": 16.0,
-              "action": "chest_hand_sincere",
+              "action": "point_emphasis",
               "x": 0.48,
               "facing": 1,
               "expression": "sincere"
@@ -1007,7 +1007,7 @@
       "board": {
         "type": "notebook_page",
         "x": 0.58,
-        "y": 0.055,
+        "y": 0.105,
         "w": 440,
         "h": 252,
         "bold_first": true,

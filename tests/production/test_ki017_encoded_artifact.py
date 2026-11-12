@@ -134,3 +134,47 @@ def test_completed_reports_are_not_silently_incomplete():
         except Exception as exc:  # noqa: BLE001
             empty.append(f"{pkg.name}: unreadable ({type(exc).__name__})")
     assert not empty, f"published masters without a video stream: {empty}"
+
+
+def test_a_real_render_completes_and_records_the_artifact(tmp_path):
+    """Execute cmd_render on a tiny spec — not just read its source.
+
+    KI-017 shipped a fix whose ordering was wrong: ``artifact_ok`` was referenced
+    before assignment, so every render crashed with ``NameError``. The source-text
+    tests above all passed, because text is not execution. This runs the command
+    and asserts the report was actually written.
+    """
+    import json
+    import subprocess
+    import sys
+
+    pytest.importorskip("imageio_ffmpeg")
+    spec = {
+        "title": "KI-017 smoke",
+        "bgm": "reflective_piano",
+        "subtitles_mode": "off",
+        "cast": {"ada": {"name": "ADA", "style": "cel", "color": "#f8fafc", "scale": 1.1}},
+        "scenes": [{
+            "id": "S01", "duration": 2.0, "environment": "library_study",
+            "mood": "calm", "dialog": [],
+            "dialogue": [{"speaker": "narrator", "text": "A short line.", "pause_after": 0.2}],
+            "characters": [{"id": "ada", "show_name": False,
+                            "beats": [{"start": 0.0, "end": 2.0, "action": "idle_stand",
+                                       "x": 0.5, "facing": 1}]}],
+        }],
+    }
+    src = tmp_path / "smoke.json"
+    src.write_text(json.dumps(spec))
+    out = tmp_path / "smoke.mp4"
+    proc = subprocess.run(
+        [sys.executable, str(RUN_STUDIO), "render", str(src), "--out", str(out),
+         "--shorts", "--draft", "--voice", "none", "--workers", "1"],
+        capture_output=True, text=True, timeout=600)
+    assert proc.returncode == 0, (
+        f"render failed (rc={proc.returncode}).\nSTDERR tail:\n{proc.stderr[-2000:]}")
+    report_path = out.with_name("smoke_report.json")
+    assert report_path.exists(), "no report was written"
+    report = json.loads(report_path.read_text())
+    assert report["status"] == "COMPLETE", report.get("status")
+    assert report["encoded"]["video_streams"] >= 1, report.get("encoded")
+    assert out.stat().st_size > 10_000, "the encoded file is implausibly small"

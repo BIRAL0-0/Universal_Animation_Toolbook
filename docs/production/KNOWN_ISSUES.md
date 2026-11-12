@@ -92,8 +92,19 @@ audio-only MP4 with ffmpeg and asserts the probe reports zero video streams; it 
 that `valid` is derived from the artifact and that every shipped master contains a video
 stream. Verified to fail against the reintroduced defect before being trusted.
 
-**Lesson.** A validation report is only worth what it measures. This is the sixth check in
-this repository that asserted a property of the *intent* rather than the *artifact*.
+**Follow-on defect, same day.** The fix itself shipped broken: `artifact_ok` was referenced
+before it was assigned, so *every* render crashed with `NameError`. All seven KI-017 tests
+passed against the broken file, because six of them read the source as text. A seventh was
+added that **executes** `render` on a two-second spec and requires the report to exist; it was
+verified to fail against the reintroduced ordering bug.
+
+**Lesson.** A validation report is only worth what it measures — and a test that greps source
+code is not a test of behaviour. Both failures in this entry share one shape: confidence
+derived from reading rather than running.
+
+**Related, found while inspecting the re-render.** A `notebook_page` board placed at `y: 0.055`
+has its top edge under the chapter-label strip, which sits at the top of the frame. `y: 0.105`
+clears it at every board height from four to five lines.
 
 
 
