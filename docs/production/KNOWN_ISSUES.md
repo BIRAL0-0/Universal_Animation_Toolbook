@@ -61,6 +61,56 @@ Every entry: **stage** · **symptom** · **root cause** · **status** · **regre
 - **Regression check:** `QA_REPORT.md` must state which pass verified each board, and must include
   the draft-frame timestamps used.
 
+### KI-021 — an object `chapter` renders the literal string `[object Object]` into the film
+- **Stage:** spec authoring → render (chapter ribbon, chapters file)
+- **First seen:** `the-two-free-stamps` (2026-11-12), found by inspecting an encoded draft frame at
+  00:03, not by any gate.
+- **Symptom:** the burned-in chapter ribbon read `[object Object]`, and every line of the generated
+  `_chapters.txt` did too (`00:00 [object Object]`), so the YouTube chapter list would have been
+  four identical, unusable lines.
+- **Root cause:** `chapter` is a **string** of the form `"Label | Title"`. The compiler stores
+  `String(sc.chapter)` in `episode.js` and both the ribbon (`drawChapterRibbon`) and
+  `formatYouTubeChapters` print that value directly. Authoring `chapter` as an
+  `{"number", "title"}` object is a natural mistake, because the top-level `chapters[]` array in
+  older specs looks object-shaped — and `run_studio.py validate` only checked that the key was
+  present, so it passed `warnings: []`.
+- **Status:** RESOLVED in `tools/validate_specs.py` (`chapter_problems`). A non-string or blank
+  `chapter` now fails the corpus gate with the exact reason. The check was verified to fail against
+  the defect before being trusted, and the corpus (18 specs) stays clean.
+- **Related:** `the-two-free-stamps` also hand-authored a top-level `chapters[]` array, which is a
+  **second source of truth** for the same data — chapters are derived from scenes. The example spec
+  now omits it.
+- **Regression check:** `tests/unit/test_chapter_authoring.py` pins both the rejection and the
+  corpus contract.
+- **Known gap, not fixed:** `run_studio.py validate` itself still accepts an object `chapter`; only
+  `tools/validate_specs.py` rejects it. Anyone who validates a single spec with `run_studio.py` and
+  skips the corpus gate can still ship the defect. Fixing it belongs in the compiler's warning
+  path, not in a second validator.
+
+### KI-022 — a top-level `chapters[]` array is silently ignored, so some films ship fewer chapters
+- **Stage:** spec authoring → chapters file / description
+- **First seen:** `the-two-free-stamps` (2026-11-12), while writing the KI-021 regression test.
+- **Symptom:** a spec that authors `chapters[]` at the top level gets **no chapters from it**. The
+  YouTube chapters file and the compiled chapter list come only from per-scene `chapter` strings.
+  Measured by compiling each committed example:
+  `the_two_second_reach` authored 2 → compiled **1** (the title fallback);
+  `never_trust_three_am` authored 2 → compiled **1**;
+  `doodle_date` authored 4 → compiled **2**;
+  `the_bamboo_seed` authored 3 → compiled 6 (its scene strings happen to cover it).
+- **Root cause:** `formatYouTubeChapters` reads `episode.chapters`, which
+  `compileEpisode` builds **only** from `sc.chapter` (`episode.js`). Nothing ever reads
+  `spec.chapters`. `validate_specs.py` does not warn about an unread key, so an author who writes
+  the object-shaped array — the shape that appears in five committed examples — gets a silent no-op.
+- **Blast radius:** the two films above are published with fewer chapters than they were authored
+  with. That is a real, small defect in shipped packages, not a documentation issue.
+- **Status:** OPEN. **Not fixed in this session**, deliberately: the fix changes published chapter
+  output for four other films, which is a re-cut decision with its own review, and this session's
+  scope is one new film. The safe fix is to read `spec.chapters` as a fallback in `compileEpisode`
+  (never overriding a scene string), add the missing scene strings to the two affected examples, and
+  re-package with the gates re-run.
+- **Regression check:** `tests/unit/test_chapter_authoring.py::test_top_level_chapters_are_not_a_source_of_truth`
+  pins the current mechanism, so whoever wires it up finds the test rather than a surprise.
+
 ---
 
 ## RESOLVED

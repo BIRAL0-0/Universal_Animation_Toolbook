@@ -11,6 +11,9 @@ const { WALL_PROPS, drawWallProp } = require('./impossible_wall');
 const { BAMBOO_PROPS, drawBambooProp } = require('./bamboo_grove');
 // "Doodle Date" ink-doodle board set (rose, car, dragon, black hole …).
 const { DOODLE_SET, drawDoodleBoard } = require('./doodle_date');
+// Stamp-card board: a count-and-fill loyalty card, including a partly filled "endowed progress"
+// card that `checklist_card` structurally cannot express (it ticks every row as it builds).
+const { drawStampCardBoard } = require('./stamp_card');
 const WALL_PROP_SET = new Set(WALL_PROPS);
 const BEACON_PROP_SET = new Set(BEACON_PROPS);
 const BAMBOO_PROP_SET = new Set(BAMBOO_PROPS);
@@ -521,6 +524,7 @@ const SUPPORTED_BOARDS = Object.freeze([
   'photo_back_card',
   'stat_cards',
   'doodle',
+  'stamp_card',
 ]);
 
 function drawWorldProp(g, prop, W, floorY, t, sceneAccent = '#38bdf8', sceneT = null, propPass = 'full', propOpts = {}) {
@@ -2939,6 +2943,10 @@ function drawWorldBoard(g, board, ts, dur, W, floorY, sceneAccent = '#38bdf8') {
       });
       g.restore();
     }
+  } else if (board.type === 'stamp_card') {
+    // Count-and-fill loyalty card. Handles the whole card envelope itself, including the
+    // partly-filled "already started" state that carries an argument about perceived progress.
+    drawStampCardBoard(g, board, { bx, by, bw, bh, boardVis, accent, u, ts, dur });
   } else if (board.type === 'checklist_card') {
     const items = board.items || [
       '1. Remove starting friction',

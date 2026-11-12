@@ -71,6 +71,34 @@ def motion_problems(spec: Path) -> list[str]:
     return problems
 
 
+def chapter_problems(spec: Path) -> list[str]:
+    """`chapter` is a "Label | Title" string; an object silently renders as `[object Object]`.
+
+    KI-021: the episode compiler stores `String(sc.chapter)` and the ribbon and the YouTube
+    chapters file both print that value directly. An authored object therefore passed `validate`
+    (which only counted it as present) and shipped `[object Object]` into a real render — as a
+    burned-in title ribbon and as every line of the chapters file.
+    """
+    try:
+        data = json.loads(spec.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return []
+    problems: list[str] = []
+    for scene in data.get("scenes", []):
+        if "chapter" not in scene or scene.get("chapter") in (None, ""):
+            continue
+        value = scene["chapter"]
+        if not isinstance(value, str):
+            problems.append(
+                f"{spec.name}:{scene.get('id', '?')} `chapter` must be a string like "
+                f"\"One | The Title\" — got {type(value).__name__}, which renders as "
+                "[object Object] in the ribbon and the chapters file")
+            continue
+        if not value.strip():
+            problems.append(f"{spec.name}:{scene.get('id', '?')} `chapter` is blank")
+    return problems
+
+
 def validate(spec: Path) -> tuple[bool, str]:
     proc = subprocess.run(
         [sys.executable, str(RUN), "validate", str(spec)],
@@ -86,7 +114,7 @@ def validate(spec: Path) -> tuple[bool, str]:
     except json.JSONDecodeError:
         return False, "validate did not emit JSON"
 
-    warnings = list(data.get("warnings") or []) + motion_problems(spec)
+    warnings = list(data.get("warnings") or []) + motion_problems(spec) + chapter_problems(spec)
     rel = spec.relative_to(ROOT) if spec.is_relative_to(ROOT) else spec
     line = (
         f"{str(rel):52s} {data.get('scene_count', '?'):>3} scenes  "

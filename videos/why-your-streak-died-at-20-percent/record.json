@@ -1,0 +1,263 @@
+{
+  "id": "video-010",
+  "slug": "why-your-streak-died-at-20-percent",
+  "title": "Why Your Streak Died at 20% (It Was Never Willpower)",
+  "filename": "why-your-streak-died-at-20-percent.mp4",
+  "script": "script.md",
+  "thumbnail": "thumbnail.jpg",
+  "youtube_description": "Why your streak died at 20%: the endowed progress effect, explained with two car-wash cards: 34% finished the card that already had two stamps on it, 19% finished the identical blank card.\n\nIn 2006, Joseph Nunes and Xavier Drèze handed out car-wash loyalty cards at random. One group got a blank eight-stamp card. The other got a ten-stamp card with two stamps already applied. Both needed exactly eight more washes for the same free wash. 34% of the endowed group finished; 19% of the blank-card group did. They named it the endowed progress effect: what moves people is not the work left, it is whether the task reads as not yet begun or already under way.\n\nThen the film turns to the deadline most of us were handed. \"21 days to form a habit\" is not a habit finding at all. It comes from Maxwell Maltz's 1960 Psycho-Cybernetics, where a plastic surgeon wrote that patients took a minimum of about 21 days to get used to a changed face — and the word minimum went missing. When Phillippa Lally and colleagues measured habit formation in 2010 (96 volunteers, twelve weeks, one small daily behaviour each), time to feeling automatic ran from 18 days to 254, median 66. The range is the useful part: you are not late, and you were never on a clock.\n\nThe catch is the last third of the film. The endowed progress effect disappeared when no reason was given for the head start. Two squares filled in for no reason is a lie you can see, and you will not fall for your own. So the move is not to credit yourself two stamps — it is to find a reason the person you are would accept. Start the draft at the second sentence. Start the book at page twenty.\n\nNo habit-formation shortcut in 21 days. No promise that this makes you consistent. Just the one lever the research supports: decide where the card starts.\n\nSOURCES\nNunes & Drèze (2006), Journal of Consumer Research 32(4), 504–512. doi:10.1086/500480\nKivetz, Urminsky & Zheng (2006), Journal of Marketing Research 43(1), 39–58. doi:10.1509/jmkr.43.1.39\nLally, van Jaarsveld, Potts & Wardle (2010), European Journal of Social Psychology 40(6), 998–1009. doi:10.1002/ejsp.674\nMaltz (1960), Psycho-Cybernetics\n\nChapters\n00:00 Two Cards | Same Eight Washes\n00:22 One | The Twenty-One-Day Lie\n00:55 Two | What They Actually Measured\n01:29 Three | The Catch\n\nTell me in the comments what your honest reason was — that part is the whole trick, and it is the part no video can hand you.\n\nMusic: \"Where Stars Fall\" by Scott Buckley (CC BY 4.0).\n\n#psychology #habits #motivation #endowedprogress #willpower\n",
+  "pinned_comment": "The detail that surprised me most while researching this: the \"21 days\" rule has no habit study behind it. It came from a plastic surgeon in 1960 describing how long his patients took to adjust to a new face — and he wrote \"a minimum of about 21 days.\" The word minimum is the one that got dropped.\n\nIf you try the two-free-stamps idea: what was your honest reason? Reply with it — the reason is the whole trick, and I read these.",
+  "format": "landscape",
+  "aspect_ratio": "16:9",
+  "resolution": "1920x1080",
+  "duration_seconds": 128.57,
+  "created_at": "2026-11-12T07:04:55+00:00",
+  "topic": "Endowed progress: why a task that looks already started gets finished, and why the 21-day habit rule has no research behind it",
+  "summary": "Two people need the same eight car washes; one is handed a card with two stamps already on it and completes it 34% of the time against 19%. The film traces the endowed progress effect, exposes the 21-day habit rule as a surgeon's dropped qualifier, and hands the mechanism to the viewer: pick a start that is already in progress.",
+  "key_angle": "The start of a task decides its finish. Perceived progress, not willpower, and not the size of the remaining task, is what moves people to continue.",
+  "tags": [
+    "endowed progress effect",
+    "habit formation",
+    "21 day myth",
+    "willpower",
+    "behavioral psychology",
+    "progress",
+    "consistency",
+    "motivation",
+    "psychology of progress",
+    "66 days"
+  ],
+  "production_version": "3.0.0",
+  "status": "completed",
+  "directory": "videos/why-your-streak-died-at-20-percent",
+  "video_path": "videos/why-your-streak-died-at-20-percent/why-your-streak-died-at-20-percent.mp4",
+  "format_policy_exception": null,
+  "content_fingerprint": "sha256:bac6ff4dbfedbe0e0775bb9ecc54a706",
+  "duration_sec": 128.57,
+  "final_video": "why-your-streak-died-at-20-percent.mp4",
+  "script_summary": "Two people need the same eight car washes; one is handed a card with two stamps already on it and completes it 34% of the time against 19%. The film traces the endowed progress effect, exposes the 21-day habit rule as a surgeon's dropped qualifier, and hands the mechanism to the viewer: pick a start that is already in progress.",
+  "primary_keyword": "streak",
+  "secondary_keywords": [
+    "habit formation",
+    "21 day habit myth",
+    "endowed progress effect"
+  ],
+  "hashtags": [
+    "#psychology",
+    "#habits",
+    "#motivation",
+    "#endowedprogress",
+    "#willpower"
+  ],
+  "category": "Education",
+  "title_alternates": [
+    "The 34% Card: Why Fake Progress Works",
+    "Two Cards, Eight Washes, One Winner",
+    "The Stamps You Were Given for Free"
+  ],
+  "creative": {
+    "_note": "Written during production from this film's script, render report and inspected master frames. Weaknesses are recorded, not scored away. No analytics exist here: every audience claim is [P].",
+    "backfilled": false,
+    "hook_candidates": [
+      {
+        "text": "Two people need eight car washes. One of them is already twenty percent done.",
+        "selected": true,
+        "seconds_into_video": 0.0,
+        "why": "The concrete asymmetry is the whole argument in eleven words: an identical task, an unequal start. It withholds the result (the 34 vs 19 split arrives at 00:09 as the first escalation) and it is verbatim the film's first two voiced lines, so the record does not promise an opening the film lacks."
+      },
+      {
+        "text": "A car wash handed out two kinds of card. The lazier card won.",
+        "selected": false,
+        "seconds_into_video": 0.0,
+        "why": ""
+      },
+      {
+        "text": "You did not quit because you were weak. You quit because your card started at zero.",
+        "selected": false,
+        "seconds_into_video": 16.0,
+        "why": ""
+      },
+      {
+        "text": "Thirty four percent finished one card. Nineteen percent finished the other. Same card.",
+        "selected": false,
+        "seconds_into_video": 9.0,
+        "why": ""
+      }
+    ],
+    "retention_map": [
+      {
+        "at_sec": 0.0,
+        "kind": "hook",
+        "purpose": "state the unfairness before explaining it — two identical tasks, one head start, on screen as two countable cards"
+      },
+      {
+        "at_sec": 9.0,
+        "kind": "reveal",
+        "purpose": "the cards fill to 2/10 against 0/8 and the viewer does the arithmetic themselves; the numbers land later as confirmation, not as a surprise"
+      },
+      {
+        "at_sec": 16.0,
+        "kind": "reframe",
+        "purpose": "from a car wash to the viewer's own abandoned attempts — 'you quit because your card started at zero'"
+      },
+      {
+        "at_sec": 24.0,
+        "kind": "reversal",
+        "purpose": "the 21-day rule is demolished; the film kills the deadline the viewer has been failing against"
+      },
+      {
+        "at_sec": 34.0,
+        "kind": "evidence",
+        "purpose": "18 to 254 days with a median of 66 — the range removes the clock instead of replacing it with a different number"
+      },
+      {
+        "at_sec": 55.0,
+        "kind": "turn",
+        "purpose": "the mechanism flips from explanation to instruction: hand yourself two stamps"
+      },
+      {
+        "at_sec": 68.0,
+        "kind": "complication",
+        "purpose": "the catch — the effect needed a reason, so the cheap version of the idea dies here and the honest one is set up"
+      },
+      {
+        "at_sec": 105.0,
+        "kind": "payoff",
+        "purpose": "the transferable move: start the draft at the second sentence, the book at page twenty"
+      },
+      {
+        "at_sec": 124.0,
+        "kind": "close",
+        "purpose": "the opening two cards return, now nearly full, so the ending re-frames the first frame"
+      }
+    ],
+    "title_candidates": [
+      {
+        "text": "Why Your Streak Died at 20% (It Was Never Willpower)",
+        "selected": true,
+        "approach": "question",
+        "why": "Puts the viewer's own failure in the first clause — 'your streak' is theirs — and removes the blame in the second, which is what the film actually argues. The parenthesis carries the twist; the topic is the first half."
+      },
+      {
+        "text": "The 34% Card: Why Fake Progress Works",
+        "selected": false,
+        "approach": "outcome_number"
+      },
+      {
+        "text": "Two Cards, Eight Washes, One Winner",
+        "selected": false,
+        "approach": "reversal"
+      },
+      {
+        "text": "The Stamps You Were Given for Free",
+        "selected": false,
+        "approach": "curiosity_gap"
+      },
+      {
+        "text": "Twenty One Days Is a Lie a Surgeon Told Us",
+        "selected": false,
+        "approach": "contradiction"
+      }
+    ],
+    "thumbnail_concepts": [
+      {
+        "focal_subject": "Two stamp cards side by side, one blank and grey, one with two crimson stamps already on it",
+        "emotion": "quiet unfairness",
+        "text": "TWO STAMPS",
+        "selected": true
+      },
+      {
+        "focal_subject": "One character's face half lit, looking down at a torn card in his hand",
+        "emotion": "shame",
+        "text": "STARTED",
+        "selected": false
+      },
+      {
+        "focal_subject": "A single crimson stamp square, oversized on near-black, with a gap where the next one would go",
+        "emotion": "anticipation",
+        "text": "ONE FREE",
+        "selected": false
+      },
+      {
+        "focal_subject": "The 34-versus-19 result as a physical bar chart leaning against a wall",
+        "emotion": "proof",
+        "text": "2X",
+        "selected": false
+      }
+    ],
+    "alignment": {
+      "title_promise": "You quit because the task was framed as not-yet-started, not because your willpower failed.",
+      "thumbnail_promise": "The two stamped squares — the visible mechanism the title does not name.",
+      "hook_promise": "Two identical tasks, one already 20% done, stated before any explanation.",
+      "verdict": "aligned"
+    },
+    "claims": [
+      {
+        "text": "given a 10-stamp car-wash card with 2 stamps pre-applied, 34% completed it, against 19% for a blank 8-stamp card, with identical required effort",
+        "label": "O",
+        "used_as": "fact"
+      },
+      {
+        "text": "this is called the endowed progress effect: artificial advancement increases effort",
+        "label": "O",
+        "used_as": "fact"
+      },
+      {
+        "text": "a 12-stamp card with 2 bonus stamps was completed faster than a plain 10-stamp card requiring the same 10 purchases",
+        "label": "O",
+        "used_as": "fact"
+      },
+      {
+        "text": "the effect disappeared when no reason was given for the head start",
+        "label": "O",
+        "used_as": "fact"
+      },
+      {
+        "text": "the 21-day habit rule traces to Maltz's 1960 Psycho-Cybernetics and a dropped 'minimum', not to habit research",
+        "label": "O",
+        "used_as": "fact"
+      },
+      {
+        "text": "in Lally et al. (2010) time to automaticity ranged from 18 to 254 days with a median of 66",
+        "label": "O",
+        "used_as": "fact"
+      },
+      {
+        "text": "you cannot credit yourself two stamps without a reason you would accept; that is what makes the self-applied version work",
+        "label": "P",
+        "used_as": "argument"
+      }
+    ],
+    "script_critique": {
+      "scores": {
+        "opening_hook": 5,
+        "clarity": 5,
+        "originality": 4,
+        "story_progression": 4,
+        "retention_potential": 4,
+        "emotional_impact": 4,
+        "visual_potential": 5,
+        "payoff": 4,
+        "accuracy": 5,
+        "pacing": 4
+      },
+      "weakest": "retention_potential",
+      "revision": "The first draft ran the car-wash study, the 21-day myth and the Lally data as three consecutive evidence blocks around 00:30, which is a lecture rather than a film. The 21-day debunk was moved to 00:22 and turned into a reversal against the viewer's own deadline, and the 'reframe' line ('you quit because your card started at zero') was pulled forward from the end into S03 to re-stake the promise mid-film. Retention is still the weakest criterion: the middle third is evidence, and evidence is the part a viewer can leave during."
+    }
+  },
+  "thumbnail_spec": {
+    "width": 1280,
+    "height": 720,
+    "aspect_ratio": "16:9",
+    "text_on_image": [
+      "TWO STAMPS"
+    ],
+    "design": "Hero art is a frame rendered from this film's own episode spec (S01 at 00:08, where both cards read 2/8 and 2/10) rather than AI-generated art, so the cards a viewer clicks are the cards the film opens on. Typography set by tools/compose_thumbnail.py over a scrim in the lower band.",
+    "copy_principle": "complements the title; does not repeat it",
+    "art_fraction": 1.0,
+    "art_source": "rendered_from_spec",
+    "art_spec": "examples/the_two_free_stamps_episode.json",
+    "art_note": "Cover art is a frame rendered from this film's own episode spec (S01 at 00:08, where the two cards read 2/8 and 2/10), with the subtitle strip cropped away and the composition padded back to 16:9 on the film's own parchment tone; typography set by tools/compose_thumbnail.py."
+  },
+  "thumbnail_text": "TWO STAMPS"
+}
