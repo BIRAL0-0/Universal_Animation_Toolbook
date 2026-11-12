@@ -1,0 +1,10 @@
+{
+  "name": "universal-animation-toolbook",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Universal AI-agnostic 16:9 and 9:16 zero-grain animation, voiceover & Creative Commons BGM toolbook",
+  "optionalDependencies": {
+    "@napi-rs/canvas": "^1.1.0",
+    "canvas": "^2.11.2"
+  }
+}

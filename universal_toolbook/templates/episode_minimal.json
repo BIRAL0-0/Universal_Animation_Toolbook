@@ -1,0 +1,322 @@
+{
+  "title": "Template Episode",
+  "channel_name": "",
+  "thesis": "Replace this with the one sentence your film argues.",
+  "style": "cel",
+  "bgm": "dynamic",
+  "subtitles_mode": "cinema",
+  "outro": false,
+  "voices": {
+    "narrator": {
+      "voice": "en-US-GuyNeural",
+      "rate": "+1%",
+      "pitch": "-1Hz"
+    },
+    "hero": {
+      "voice": "en-US-JennyNeural",
+      "rate": "+3%",
+      "pitch": "+2Hz"
+    },
+    "mentor": {
+      "voice": "en-US-ChristopherNeural",
+      "rate": "-3%",
+      "pitch": "-2Hz"
+    }
+  },
+  "cast": {
+    "hero": {
+      "name": "RIN",
+      "style": "cel",
+      "build": "lean",
+      "hair": "ponytail",
+      "hair_color": "#2f1f18",
+      "shoe_color": "#b91c1c",
+      "posture": 0.2,
+      "scale": 1.55,
+      "accessories": [
+        "watch",
+        "shoulder_bag"
+      ],
+      "color": "#f8fafc",
+      "eyes": true,
+      "expression": "determined",
+      "bag_color": "#b91c1c"
+    },
+    "mentor": {
+      "name": "HALDEN",
+      "style": "cel",
+      "build": "broad",
+      "hair": "side_part",
+      "hair_color": "#cbd5e1",
+      "shoe_color": "#0f172a",
+      "posture": -0.12,
+      "scale": 1.62,
+      "accessories": [
+        "glasses",
+        "coat",
+        "scarf"
+      ],
+      "color": "#134e4a",
+      "eyes": true,
+      "expression": "calm",
+      "coat_color": "#0f3d3e",
+      "scarf_color": "#fbbf24"
+    }
+  },
+  "scenes": [
+    {
+      "id": "S01",
+      "chapter": "Chapter One | The Problem",
+      "environment": "modern_office",
+      "mood": "reflective",
+      "bgm": "reflective_piano",
+      "bgm_gain": 0.9,
+      "accent_color": "#60a5fa",
+      "duration": 12.0,
+      "min_duration": 10.0,
+      "lead_in": 0.7,
+      "tail_out": 0.6,
+      "props": [
+        {
+          "type": "clock",
+          "x": 0.88,
+          "y": 110,
+          "z": -12
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.04,
+          "zoom_to": 1.08,
+          "focus_x": 0.44,
+          "focus_y": 0.58,
+          "cut": true
+        },
+        {
+          "cue_on": "two weeks",
+          "zoom_from": 1.1,
+          "zoom_to": 1.16,
+          "focus_x": 0.52,
+          "focus_y": 0.58,
+          "move_dur": 2.2,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "hero",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.0,
+              "action": "walk",
+              "from_x": 0.28,
+              "to_x": 0.42,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 6.0,
+              "end": 12.0,
+              "action": "check_watch",
+              "x": 0.42,
+              "facing": 1,
+              "expression": "worried"
+            }
+          ]
+        },
+        {
+          "id": "mentor",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.6,
+              "action": "talk_explain",
+              "x": 0.68,
+              "facing": -1,
+              "expression": "calm"
+            },
+            {
+              "start": 6.6,
+              "end": 12.0,
+              "action": "point_emphasis",
+              "x": 0.68,
+              "facing": -1,
+              "expression": "calm"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "notebook_page",
+          "x": 0.64,
+          "y": 104,
+          "w": 560,
+          "h": 168,
+          "build_dur": 1.1,
+          "bold_first": true,
+          "lines": [
+            "THE PLAN, IN INK:",
+            "Two weeks.",
+            "Nobody will check."
+          ],
+          "cue_on": "two weeks",
+          "hold_sec": 5.5
+        }
+      ],
+      "accent_words": [
+        "two weeks",
+        "nobody will check"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "The office was quiet when she found the gap.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "mentor",
+          "text": "You have two weeks. Write it down.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "hero",
+          "text": "Two weeks is enough.",
+          "pause_after": 0.35
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "chapter": "Chapter Two | The Cost",
+      "environment": "tech_lab",
+      "mood": "focus",
+      "bgm": "chill_focus",
+      "bgm_gain": 0.88,
+      "accent_color": "#22d3ee",
+      "duration": 12.0,
+      "min_duration": 10.0,
+      "lead_in": 0.7,
+      "tail_out": 0.6,
+      "props": [
+        {
+          "type": "clean_desk",
+          "x": 0.32,
+          "z": -4
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.04,
+          "zoom_to": 1.09,
+          "focus_x": 0.5,
+          "focus_y": 0.58,
+          "cut": true
+        },
+        {
+          "cue_on": "it held",
+          "zoom_from": 1.1,
+          "zoom_to": 1.18,
+          "focus_x": 0.56,
+          "focus_y": 0.6,
+          "move_dur": 2.2,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "hero",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.0,
+              "action": "sit_desk_type",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "focused",
+              "seated": true
+            },
+            {
+              "start": 6.0,
+              "end": 12.0,
+              "action": "stand_from_desk",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "hopeful"
+            }
+          ]
+        },
+        {
+          "id": "mentor",
+          "show_name": true,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.6,
+              "action": "listen_nod",
+              "x": 0.68,
+              "facing": -1,
+              "expression": "calm"
+            },
+            {
+              "start": 6.6,
+              "end": 12.0,
+              "action": "talk_explain",
+              "x": 0.68,
+              "facing": -1,
+              "expression": "calm"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "stat_cards",
+          "x": 0.03,
+          "y": 104,
+          "w": 470,
+          "h": 168,
+          "build_dur": 1.1,
+          "cue_on": "it held",
+          "hold_sec": 5.0,
+          "stats": [
+            {
+              "value": "0",
+              "label": "FAILURES"
+            },
+            {
+              "value": "14",
+              "label": "DAYS"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "it held"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "She built it in nine days, and it held.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "hero",
+          "text": "It held.",
+          "pause_after": 0.32
+        },
+        {
+          "speaker": "mentor",
+          "text": "Today it held. Ask it again in a year.",
+          "pause_after": 0.4
+        }
+      ]
+    }
+  ]
+}

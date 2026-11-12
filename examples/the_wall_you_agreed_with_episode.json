@@ -1,0 +1,824 @@
+{
+  "title": "The Wall You Agreed With",
+  "channel_name": "",
+  "thesis": "A limit is not a property of the world. It is a decision someone made, usually quietly, usually about themselves — and decisions can be un-made.",
+  "bgm": "dynamic",
+  "subtitles_mode": "off",
+  "outro": false,
+  "voices": {
+    "narrator": {
+      "voice": "en_US-ryan-medium",
+      "rate": "+4%"
+    }
+  },
+  "cast": {
+    "first": {
+      "name": "THE ONE WHO AGREED",
+      "style": "ink_stick",
+      "expression": "neutral",
+      "scale": 1.62,
+      "show_name": false
+    },
+    "second": {
+      "name": "THE ONE WHO DIDN'T",
+      "style": "ink_stick",
+      "expression": "smile",
+      "scale": 1.6848,
+      "show_name": false
+    }
+  },
+  "scenes": [
+    {
+      "id": "S01",
+      "mood": "energetic",
+      "accent_color": "#a8322c",
+      "duration": 5.2,
+      "min_duration": 5.2,
+      "lead_in": 1.35,
+      "tail_out": 0.42,
+      "setting": {
+        "backdrop": "parchment_wall",
+        "hour": "day",
+        "fog": 0.0
+      },
+      "props": [
+        {
+          "type": "wall_slab",
+          "x": 0.615,
+          "mode": "ghost",
+          "height": 760,
+          "width": 300,
+          "hit_ats": [
+            1.92
+          ]
+        },
+        {
+          "type": "impact_star",
+          "x": 0.615,
+          "at": 1.92,
+          "dx": -18,
+          "height": 760.0
+        },
+        {
+          "type": "ink_caption",
+          "at": 1.17,
+          "until": 4.9,
+          "text": "He hit",
+          "accent": "a wall.",
+          "size": 74,
+          "x": 0.5,
+          "y": 150
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.02,
+          "zoom_to": 1.06,
+          "focus_x": 0.42,
+          "focus_y": 0.58
+        },
+        {
+          "cue_on": "He hit",
+          "zoom_from": 1.06,
+          "zoom_to": 1.15,
+          "focus_x": 0.58,
+          "focus_y": 0.58,
+          "move_dur": 1.6
+        }
+      ],
+      "accent_words": [],
+      "sfx": [
+        {
+          "type": "body_thud",
+          "at": 1.92,
+          "pan": 0.12
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "He hit a wall."
+        }
+      ],
+      "bgm": "electronic_drive",
+      "bgm_gain": 0.9,
+      "bgm_offset": 45,
+      "hold_silent_tail": true,
+      "characters": [
+        {
+          "id": "first",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 1.86,
+              "action": "walk",
+              "from_x": 0.045,
+              "to_x": 0.44725694444444447,
+              "facing": 1
+            },
+            {
+              "start": 1.86,
+              "end": 2.72,
+              "action": "trip_stumble",
+              "x": 0.44725694444444447,
+              "facing": 1
+            },
+            {
+              "start": 2.72,
+              "end": 5.2,
+              "action": "idle_stand",
+              "x": 0.40725694444444444,
+              "facing": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "mood": "calm",
+      "accent_color": "#a8322c",
+      "duration": 6.6,
+      "min_duration": 6.6,
+      "lead_in": 0.5,
+      "tail_out": 0.42,
+      "setting": {
+        "backdrop": "parchment_wall",
+        "hour": "day",
+        "fog": 0.0
+      },
+      "props": [
+        {
+          "type": "wall_slab",
+          "x": 0.615,
+          "mode": "ghost",
+          "height": 760,
+          "width": 300,
+          "hit_ats": [
+            1.55,
+            3.05
+          ]
+        },
+        {
+          "type": "impact_star",
+          "x": 0.615,
+          "at": 1.55,
+          "dx": -14,
+          "height": 737.1999999999999
+        },
+        {
+          "type": "impact_star",
+          "x": 0.615,
+          "at": 3.05,
+          "dx": -10,
+          "height": 630.8
+        },
+        {
+          "type": "ink_caption",
+          "at": 0.32,
+          "until": 6.3,
+          "text": "So he assumed it was",
+          "accent": "permanent.",
+          "size": 74,
+          "x": 0.5,
+          "y": 150
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.04,
+          "zoom_to": 1.1,
+          "focus_x": 0.52,
+          "focus_y": 0.58
+        },
+        {
+          "cue_on": "permanent",
+          "zoom_from": 1.12,
+          "zoom_to": 1.2,
+          "focus_x": 0.56,
+          "focus_y": 0.62,
+          "move_dur": 1.8
+        }
+      ],
+      "accent_words": [],
+      "sfx": [
+        {
+          "type": "body_thud",
+          "at": 1.55,
+          "pan": 0.1
+        },
+        {
+          "type": "body_thud",
+          "at": 3.06,
+          "pan": 0.1
+        },
+        {
+          "type": "trombone_sad",
+          "at": 4.15,
+          "pan": -0.05
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "So he assumed it was permanent."
+        }
+      ],
+      "bgm": "reflective_piano",
+      "bgm_gain": 0.42,
+      "bgm_offset": 45,
+      "hold_silent_tail": true,
+      "characters": [
+        {
+          "id": "first",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 1.55,
+              "action": "push_boulder",
+              "x": 0.4502569444444445,
+              "facing": 1,
+              "posture": -0.1,
+              "hide_boulder": true
+            },
+            {
+              "start": 1.55,
+              "end": 3.05,
+              "action": "push_boulder",
+              "x": 0.4542569444444445,
+              "facing": 1,
+              "posture": -0.22,
+              "hide_boulder": true
+            },
+            {
+              "start": 3.05,
+              "end": 4.05,
+              "action": "jump",
+              "x": 0.4542569444444445,
+              "facing": 1
+            },
+            {
+              "start": 4.05,
+              "end": 6.6,
+              "action": "kneel_exhausted",
+              "x": 0.44725694444444447,
+              "facing": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "mood": "modern",
+      "accent_color": "#a8322c",
+      "duration": 7.6,
+      "min_duration": 7.6,
+      "lead_in": 3.7,
+      "tail_out": 0.42,
+      "setting": {
+        "backdrop": "parchment_wall",
+        "hour": "day",
+        "fog": 0.0
+      },
+      "props": [
+        {
+          "type": "wall_slab",
+          "x": 0.615,
+          "mode": "ghost",
+          "height": 760,
+          "width": 300,
+          "shimmer_offset": 0.4
+        },
+        {
+          "type": "wall_ripple",
+          "x": 0.615,
+          "at_many": [
+            4.92
+          ],
+          "height": 630.8
+        },
+        {
+          "type": "ink_caption",
+          "at": 3.52,
+          "until": 7.3,
+          "text": "Same wall.",
+          "accent": "Different belief.",
+          "size": 74,
+          "x": 0.5,
+          "y": 150
+        },
+        {
+          "type": "shock_marks",
+          "x": 0.545,
+          "at": 4.95,
+          "hold": 2.0,
+          "height": 900,
+          "dx": 0,
+          "scale": 1.0
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.05,
+          "zoom_to": 1.09,
+          "focus_x": 0.44,
+          "focus_y": 0.6
+        },
+        {
+          "cue_on": "Different belief",
+          "zoom_from": 1.1,
+          "zoom_to": 1.18,
+          "focus_x": 0.62,
+          "focus_y": 0.58,
+          "move_dur": 1.8
+        }
+      ],
+      "accent_words": [],
+      "sfx": [
+        {
+          "type": "record_scratch",
+          "at": 4.92,
+          "pan": 0.0
+        },
+        {
+          "type": "chapter_chime",
+          "at": 5.05,
+          "pan": 0.2
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Same wall. Different belief."
+        }
+      ],
+      "bgm": "electronic_drive",
+      "bgm_gain": 0.66,
+      "bgm_offset": 90,
+      "hold_silent_tail": true,
+      "characters": [
+        {
+          "id": "first",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 4.18,
+              "action": "idle_stand",
+              "x": 0.40225694444444443,
+              "facing": 1
+            },
+            {
+              "start": 4.18,
+              "end": 7.6,
+              "action": "listen_nod",
+              "x": 0.40225694444444443,
+              "facing": 1
+            }
+          ]
+        },
+        {
+          "id": "second",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 4.9,
+              "action": "walk",
+              "from_x": 0.045,
+              "to_x": 0.9427430555555555,
+              "facing": 1
+            },
+            {
+              "start": 4.9,
+              "end": 7.6,
+              "action": "look_horizon",
+              "x": 0.9427430555555555,
+              "facing": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "mood": "energetic",
+      "accent_color": "#a8322c",
+      "duration": 10.2,
+      "min_duration": 10.2,
+      "lead_in": 5.9,
+      "tail_out": 0.42,
+      "setting": {
+        "backdrop": "parchment_wall",
+        "hour": "day",
+        "fog": 0.0
+      },
+      "props": [
+        {
+          "type": "wall_slab",
+          "x": 0.615,
+          "mode": "ghost",
+          "height": 760,
+          "width": 300,
+          "from_t": 0.0,
+          "to_t": 3.35
+        },
+        {
+          "type": "chalk_door",
+          "x": 0.615,
+          "at": 0.55,
+          "from_t": 0.0,
+          "to_t": 3.35
+        },
+        {
+          "type": "box_stack",
+          "x": 0.40725694444444444,
+          "count": 3,
+          "from_t": 3.35,
+          "to_t": 6.75
+        },
+        {
+          "type": "wall_slab",
+          "x": 0.615,
+          "mode": "ghost",
+          "height": 760,
+          "width": 300,
+          "from_t": 3.35,
+          "to_t": 6.75,
+          "shimmer_offset": 0.7
+        },
+        {
+          "type": "ink_caption",
+          "at": 5.72,
+          "until": 9.9,
+          "text": "Limits are usually agreements we made",
+          "accent": "quietly.",
+          "size": 74,
+          "x": 0.5,
+          "y": 150
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.04,
+          "zoom_to": 1.08,
+          "focus_x": 0.5,
+          "focus_y": 0.58
+        },
+        {
+          "cue_on": "quietly",
+          "zoom_from": 1.1,
+          "zoom_to": 1.16,
+          "focus_x": 0.6,
+          "focus_y": 0.58,
+          "move_dur": 1.6
+        }
+      ],
+      "accent_words": [],
+      "sfx": [
+        {
+          "type": "beat_drop",
+          "at": 0.02,
+          "pan": 0.0
+        },
+        {
+          "type": "paper_slide",
+          "at": 0.6,
+          "pan": -0.2
+        },
+        {
+          "type": "body_thud",
+          "at": 3.4,
+          "pan": 0.15
+        },
+        {
+          "type": "body_thud",
+          "at": 3.62,
+          "pan": 0.15
+        },
+        {
+          "type": "chapter_chime",
+          "at": 6.78,
+          "pan": -0.25
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Limits are usually agreements we made quietly."
+        }
+      ],
+      "bgm": "upbeat_ncs_synth",
+      "bgm_gain": 1.0,
+      "bgm_offset": 30,
+      "hold_silent_tail": true,
+      "characters": [
+        {
+          "id": "first",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 1.45,
+              "action": "write_board",
+              "x": 0.33725694444444443,
+              "facing": 1
+            },
+            {
+              "start": 1.45,
+              "end": 3.35,
+              "action": "walk",
+              "from_x": 0.33725694444444443,
+              "to_x": 0.955,
+              "facing": 1
+            },
+            {
+              "start": 3.35,
+              "end": 4.35,
+              "action": "walk",
+              "from_x": 0.08725694444444443,
+              "to_x": 0.3972569444444444,
+              "facing": 1
+            },
+            {
+              "start": 4.35,
+              "end": 5.1,
+              "action": "jump",
+              "x": 0.3972569444444444,
+              "facing": 1
+            },
+            {
+              "start": 5.1,
+              "end": 6.75,
+              "action": "walk",
+              "from_x": 0.44725694444444447,
+              "to_x": 0.955,
+              "facing": 1
+            },
+            {
+              "start": 6.75,
+              "end": 7.85,
+              "action": "walk",
+              "from_x": 0.1172569444444444,
+              "to_x": 0.40725694444444444,
+              "facing": 1
+            },
+            {
+              "start": 7.85,
+              "end": 10.2,
+              "action": "walk",
+              "from_x": 0.40725694444444444,
+              "to_x": 0.045,
+              "facing": -1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "mood": "calm",
+      "accent_color": "#a8322c",
+      "duration": 9.2,
+      "min_duration": 9.2,
+      "lead_in": 2.9,
+      "tail_out": 0.42,
+      "setting": {
+        "backdrop": "parchment_wall",
+        "hour": "dusk",
+        "fog": 0.0
+      },
+      "props": [
+        {
+          "type": "wall_slab",
+          "x": 0.615,
+          "mode": "ghost",
+          "height": 760,
+          "width": 300,
+          "shimmer_offset": 0.15
+        },
+        {
+          "type": "wall_ripple",
+          "x": 0.615,
+          "at_many": [
+            5.35
+          ],
+          "height": 630.8
+        },
+        {
+          "type": "ink_caption",
+          "at": 2.72,
+          "until": 8.9,
+          "text": "The only wall that ever stopped you",
+          "accent": "was the one you agreed with.",
+          "size": 62,
+          "x": 0.5,
+          "y": 150
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.06,
+          "zoom_to": 1.11,
+          "focus_x": 0.52,
+          "focus_y": 0.6
+        },
+        {
+          "cue_on": "was the one",
+          "zoom_from": 1.12,
+          "zoom_to": 1.2,
+          "focus_x": 0.66,
+          "focus_y": 0.58,
+          "move_dur": 2.0
+        },
+        {
+          "cue_on": "you agreed with",
+          "zoom_from": 1.2,
+          "zoom_to": 1.28,
+          "focus_x": 0.735,
+          "focus_y": 0.56,
+          "move_dur": 2.4,
+          "cut": false
+        }
+      ],
+      "accent_words": [],
+      "sfx": [
+        {
+          "type": "body_thud",
+          "at": 1.9,
+          "pan": -0.08
+        },
+        {
+          "type": "final_piano_note",
+          "at": 5.45,
+          "pan": 0.0
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "The only wall that ever stopped you was the one you agreed with."
+        }
+      ],
+      "bgm": "reflective_piano",
+      "bgm_gain": 0.42,
+      "bgm_offset": 60,
+      "hold_silent_tail": true,
+      "characters": [
+        {
+          "id": "first",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.05,
+              "action": "stand_up_resolve",
+              "x": 0.44725694444444447,
+              "facing": 1
+            },
+            {
+              "start": 2.05,
+              "end": 3.05,
+              "action": "idle_stand",
+              "x": 0.44725694444444447,
+              "facing": 1,
+              "posture": 0.05
+            },
+            {
+              "start": 3.05,
+              "end": 5.45,
+              "action": "walk",
+              "from_x": 0.44725694444444447,
+              "to_x": 0.8727430555555555,
+              "facing": 1
+            },
+            {
+              "start": 5.45,
+              "end": 9.2,
+              "action": "idle_stand",
+              "x": 0.8727430555555555,
+              "facing": 1,
+              "posture": 0.2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "mood": "reflective",
+      "accent_color": "#a8322c",
+      "duration": 7.2,
+      "min_duration": 7.2,
+      "lead_in": 0.55,
+      "tail_out": 0.42,
+      "setting": {
+        "backdrop": "parchment_wall",
+        "hour": "dusk",
+        "fog": 0.0
+      },
+      "props": [
+        {
+          "type": "ink_caption",
+          "at": 0.37,
+          "until": 6.9,
+          "text": "What wall are you still",
+          "accent": "agreeing with?",
+          "size": 74,
+          "x": 0.5,
+          "y": 150
+        },
+        {
+          "type": "ink_caption",
+          "at": 4.55,
+          "until": 6.9,
+          "text": "",
+          "accent": "Follow for tomorrow's lesson.",
+          "size": 54,
+          "x": 0.5,
+          "y": 176
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.03,
+          "zoom_to": 1.08,
+          "focus_x": 0.55,
+          "focus_y": 0.58
+        }
+      ],
+      "accent_words": [],
+      "sfx": [
+        {
+          "type": "chapter_chime",
+          "at": 4.6,
+          "pan": 0.0
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "What wall are you still agreeing with?"
+        }
+      ],
+      "bgm": "reflective_piano",
+      "bgm_gain": 0.72,
+      "bgm_offset": 30,
+      "hold_silent_tail": true,
+      "fade_to_black": true,
+      "characters": [
+        {
+          "id": "first",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.96,
+              "action": "idle_stand",
+              "x": 0.40225694444444443,
+              "facing": 1
+            },
+            {
+              "start": 3.96,
+              "end": 7.2,
+              "action": "listen_nod",
+              "x": 0.40225694444444443,
+              "facing": 1
+            }
+          ]
+        },
+        {
+          "id": "second",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 1.7,
+              "action": "idle_stand",
+              "x": 0.8127430555555555,
+              "facing": 1,
+              "posture": 0.1
+            },
+            {
+              "start": 1.7,
+              "end": 4.05,
+              "action": "walk",
+              "from_x": 0.8127430555555555,
+              "to_x": 0.955,
+              "facing": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

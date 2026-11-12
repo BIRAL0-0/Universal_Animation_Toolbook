@@ -1,0 +1,206 @@
+name: verify
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  docs:
+    name: structure, docs and workflow contracts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - name: Install checker dependencies
+        run: pip install --quiet pyyaml pytest
+      - name: Repository structure, skills and generated-file rules
+        run: python tools/validate_structure.py
+      - name: Every path quoted in the markdown must exist
+        run: |
+          set +e
+          python tools/check_docs.py --verbose > /tmp/docs.log 2>&1
+          code=$?
+          cat /tmp/docs.log
+          if [ "$code" -ne 0 ]; then
+            # Surface the findings as annotations: they show up in the checks UI and through
+            # the API, where a full log download is not always reachable.
+            grep -E 'not found|FAILED|Error|Traceback' /tmp/docs.log | head -8 \
+              | sed 's/^/::error::docs check: /'
+          fi
+          exit "$code"
+      - name: Every completed video is a validated publishing package
+        run: |
+          pip install --quiet imageio-ffmpeg pillow
+          python tools/validate_publishing.py
+      - name: Every thumbnail matches its film's visual style
+        run: |
+          pip install --quiet imageio-ffmpeg pillow
+          for dir in videos/*/; do
+            slug=$(basename "$dir")
+            [ -f "$dir/$slug.mp4" ] || continue
+            echo "--- $slug"
+            python tools/thumbnail_style.py check "$dir/$slug.mp4" "$dir/thumbnail.jpg" --package "$dir"
+          done
+      - name: Thumbnail text complements the title instead of repeating it
+        run: python tools/thumbnail_copy.py
+      - name: Every video shows its hook, title and thumbnail were chosen, not defaulted
+        run: python tools/creative_gate.py
+      - name: No two covers are the same picture at phone size
+        run: |
+          pip install --quiet imageio-ffmpeg pillow numpy
+          python tools/thumbnail_legibility.py --all
+      - name: Every rendered film agrees with its own record
+        run: python tools/creative_review.py --all
+      - name: Every video clears the SEO floor
+        run: python tools/seo_audit.py --min 78
+      - name: Workflow files must parse as YAML
+        run: python tools/check_workflows.py
+      - name: Structure unit tests
+        run: python -m pytest tests/unit -q
+
+  specs:
+    name: specs validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+      - name: Install python deps
+        run: pip install -r universal_toolbook/requirements.txt
+      - name: Install canvas backend
+        run: npm install --prefix universal_toolbook --no-audit --no-fund
+      - name: Environment check
+        run: python universal_toolbook/run_studio.py check
+      - name: Validate the template and every reference film
+        run: python tools/validate_specs.py
+
+  engine-tests:
+    name: engine and production tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+      - name: Install python deps
+        run: pip install -r universal_toolbook/requirements.txt pytest pyyaml
+      - name: Install canvas backend
+        run: npm install --prefix universal_toolbook --no-audit --no-fund
+      - name: JS regression suite
+        run: node tests/regression/run_all_tests.js | tee /tmp/js.json
+      - name: Fail if the JS suite did not pass
+        run: grep -q 'js_tests.*PASSED' /tmp/js.json
+      - name: Python pipeline suite
+        run: python tests/integration/test_studio_pipeline.py
+      - name: Production contract tests
+        run: python -m pytest tests/production -q
+
+  render-smoke:
+    name: render smoke (silent draft)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+      - name: Install python deps
+        run: pip install -r universal_toolbook/requirements.txt
+      - name: Install canvas backend
+        run: npm install --prefix universal_toolbook --no-audit --no-fund
+      - name: Stills render (proves the compositor draws)
+        run: |
+          mkdir -p runtime/work runtime/renders runtime/previews runtime/cache runtime/logs
+          python universal_toolbook/run_studio.py stills \
+            universal_toolbook/templates/episode_minimal.json \
+            --out-dir runtime/previews/minimal --width 1920 --height 1080
+          test -f runtime/previews/minimal/S01_modern_office.png
+      - name: Silent draft encode (proves the ffmpeg path, no network needed)
+        run: |
+          python universal_toolbook/run_studio.py render \
+            universal_toolbook/templates/episode_minimal.json \
+            --out /tmp/smoke/film.mp4 --draft --voice none --workers 2 --chunk-sec 20 \
+            > /tmp/render.json
+          grep -q '"status": "COMPLETE"' /tmp/render.json
+          python -c "import json;r=json.load(open('/tmp/render.json'));assert r['warnings']==[],r['warnings'];print('deliberately silent render:',r['status'],'voiced=',r['voiced'])"
+      - name: Encoded output must self-validate
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+
+          path = pathlib.Path("/tmp/smoke/film_validation_report.json")
+          if not path.exists():
+              sys.exit("renderer did not write a validation report")
+          rep = json.loads(path.read_text())
+          ok = (
+              rep.get("valid") is True
+              and rep.get("film_grain") is False
+              and rep.get("warnings") == []
+              and rep.get("fps") == 30
+              and rep.get("frames", 0) > 0
+          )
+          print(json.dumps(rep, indent=2))
+          if not ok:
+              sys.exit("validation report is not clean")
+          print("draft validation report is clean")
+          PY
+      - name: A render with no voice backend must fail loudly, not report COMPLETE
+        run: |
+          set +e
+          python universal_toolbook/run_studio.py render \
+            universal_toolbook/templates/episode_minimal.json \
+            --out /tmp/smoke/silent.mp4 --draft --voice piper --workers 2 --chunk-sec 20 \
+            > /tmp/silent.json 2> /tmp/silent.err
+          code=$?
+          set -e
+          echo "exit code: $code"
+          test "$code" -eq 3 || { echo "expected exit 3 when no piper voices exist"; cat /tmp/silent.err; exit 1; }
+          grep -q '"status": "COMPLETE_SILENT"' /tmp/silent.json
+          grep -q '"voiced": false' /tmp/silent.json
+          grep -q 'WARNING: NO SPEECH WAS SYNTHESIZED' /tmp/silent.err
+          grep -q 'voice_diagnosis' /tmp/silent.json
+          python - <<'PY'
+          import json, pathlib, sys
+
+          rep = json.loads(pathlib.Path("/tmp/smoke/silent_validation_report.json").read_text())
+          if rep.get("voiced") is not False or not rep.get("warnings"):
+              sys.exit("a silent render must be flagged in its validation report")
+          print("silent render flagged:", rep["warnings"][0][:60], "...")
+          print("the missing-voice path is loud")
+          PY
+
+  fresh-checkout:
+    name: fresh checkout and standalone kit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+      - name: Clone only committed files, install, test and render a silent draft
+        run: python scripts/verify_fresh_checkout.py

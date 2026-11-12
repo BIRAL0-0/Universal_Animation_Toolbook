@@ -1,0 +1,26 @@
+{
+  "_note": "Pronunciation dictionary for the TTS subsystem. Each entry maps a written token (matched at word boundaries, case-insensitively) to the spelling that is actually SPOKEN. The original text is preserved unchanged in manifests, word timings and captions — only the text sent to the engine is rewritten. Never use this to change meaning; it only controls pronunciation. Add entries when you hear a misspoken name, acronym or technical term.",
+  "entries": {
+    "TTS": "text to speech",
+    "AI": "A I",
+    "GPU": "G P U",
+    "CPU": "C P U",
+    "RAM": "R A M",
+    "API": "A P I",
+    "CI/CD": "C I slash C D",
+    "FFmpeg": "ef em ee",
+    "dBFS": "D B F S",
+    "dBTP": "D B T P",
+    "HiFi-GAN": "Hi Fi GAN",
+    "Kokoro": "Ko ko ro",
+    "Piper": "Pai per",
+    "ONNX": "O NNX",
+    "WAV": "W A V",
+    "MP3": "M P three",
+    "PNG": "P N G",
+    "JS": "J S",
+    "URL": "U R L",
+    "CLI": "C L I",
+    "VPS": "V P S"
+  }
+}

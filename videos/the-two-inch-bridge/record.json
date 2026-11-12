@@ -1,0 +1,237 @@
+{
+  "id": "video-004",
+  "slug": "the-two-inch-bridge",
+  "title": "Cutting Corners: What a 2-Inch Shortcut Really Costs",
+  "filename": "the-two-inch-bridge.mp4",
+  "script": "script.md",
+  "thumbnail": "thumbnail.jpg",
+  "youtube_description": "Cutting corners feels free because the bill arrives later, addressed to someone else. This short film is about two inches of steel and the forty years it takes to matter.\n\nA margin is not padding \u2014 it is the part of the design that absorbs everything you did not predict: the heavier load, the colder winter, the inspector who is tired, the driver who is honest about the weight and the one who is not. Take two inches out and nothing happens today. Nothing happens next year either. The structure looks identical, the numbers still pass, and the money saved is real and immediate while the cost is theoretical and distant.\n\nThat asymmetry is the whole problem with shortcuts. The feedback loop is broken: the person who removes the margin is rewarded now, and the person who inherits the consequence is usually not in the room yet.\n\nThe film is not an argument that margins are sacred. It is an argument that you should be able to say, out loud, what a margin is buying you before you spend it \u2014 because \"it saves two inches\" is a calculation, and \"it has never failed before\" is a memory of the times it did not.\n\nIf this landed, subscribe \u2014 short films about the quiet mechanics of doing things properly, drawn in ink.\n\nWhat margin have you seen quietly spent somewhere in your own work? Engineering, software, cookery \u2014 I would like to hear it.\n\n#engineering #craftsmanship #quality #safety\n\nMusic: \"Where Stars Fall\" by Scott Buckley (CC BY 4.0), \"Softly\" by Loyalty Freak Music (CC0 1.0 Public Domain), \"The Distant Sun (Monomyth 1)\" by Scott Buckley (CC BY 4.0), \"The Restoration (Monomyth 12)\" by Scott Buckley (CC BY 4.0). Full attribution links in the source repository.",
+  "pinned_comment": "The thing I find genuinely chilling here is that nothing goes wrong in the film. No crack, no collapse, no dramatic beat \u2014 just a span that is two inches shorter than it should be, still carrying traffic, still looking completely correct from the outside.\n\nSo what margin have you watched get quietly spent in your own work? In software it is a timeout or a retry count, in cooking it is a rest time, in a building it is a beam. I want to know what yours looks like.",
+  "format": "landscape",
+  "aspect_ratio": "16:9",
+  "resolution": "1920x1080",
+  "duration_seconds": 101.6,
+  "created_at": "2026-11-10T00:00:00Z",
+  "topic": "Safety margin: why small shortcuts fail when conditions change",
+  "summary": "Nia shaves two inches off every joint to finish the Kessa bridge five weeks early. In June the river rises four metres and the deck begins to sing.",
+  "key_angle": "The shortcut is measured in inches and the consequence arrives as weather \u2014 the film never moralises, it lets the callipers and the flood do the arguing.",
+  "tags": [
+    "cutting corners",
+    "safety margin",
+    "engineering ethics",
+    "why short cuts fail",
+    "quality vs speed",
+    "craftsmanship",
+    "attention to detail",
+    "small errors compound",
+    "engineering mistakes",
+    "stickman animation"
+  ],
+  "production_version": "3.1.0",
+  "status": "completed",
+  "directory": "videos/the-two-inch-bridge",
+  "video_path": "videos/the-two-inch-bridge/the-two-inch-bridge.mp4",
+  "thumbnail_spec": {
+    "width": 1280,
+    "height": 720,
+    "aspect_ratio": "16:9",
+    "text_on_image": [
+      "NOBODY NOTICED"
+    ],
+    "design": "AI-generated cel-shaded base art in the film's own drawing language, composed by tools/compose_thumbnail.py with a reserved text band; checked at 168px wide",
+    "copy_principle": "complements the title; does not repeat it",
+    "art_fraction": 0.72
+  },
+  "content_fingerprint": "sha256:6455b5adeff1f8a25dc551aceba78617",
+  "duration_sec": 101.6,
+  "final_video": "the-two-inch-bridge.mp4",
+  "script_summary": "Nia shaves two inches off every joint to finish the Kessa bridge five weeks early. In June the river rises four metres and the deck begins to sing.",
+  "duration_label": "1:42",
+  "format_policy_exception": null,
+  "previous_title": "The Two-Inch Bridge",
+  "primary_keyword": "cutting corners",
+  "thumbnail_text": "NOBODY NOTICED",
+  "creative": {
+    "_note": "Backfilled 2026-11-11 from the shipped script, thumbnail and record. Honest: weaknesses are recorded rather than scored away. New videos fill this before production.",
+    "backfilled": true,
+    "hook_candidates": [
+      {
+        "text": "Nine days in, she found a shortcut. Two inches off every joint.",
+        "selected": true,
+        "why": "Chosen after the 3.1.0 re-cut. The film previously opened on the chasm \u2014 scale with nothing at stake for a person. It now opens on a decision already being made, and the chasm arrives second to supply the scale that decision is measured against.",
+        "seconds_into_video": 0.0
+      },
+      {
+        "text": "In spring, the city asked for a bridge.",
+        "selected": false,
+        "why": "",
+        "seconds_into_video": 0.0
+      },
+      {
+        "text": "Two inches. Nobody measured it.",
+        "selected": false,
+        "why": "",
+        "seconds_into_video": 0.0
+      }
+    ],
+    "retention_map": [
+      {
+        "at_sec": 0.0,
+        "kind": "hook",
+        "purpose": "open on the shortcut being taken, not on the chasm it endangers"
+      },
+      {
+        "at_sec": 24.0,
+        "kind": "escalation",
+        "purpose": "the deck rises five weeks early, so the shortcut looks like success before it is tested"
+      },
+      {
+        "at_sec": 47.0,
+        "kind": "reveal",
+        "purpose": "June: the river rises and the deck sings \u2014 the mechanism the hook withheld"
+      },
+      {
+        "at_sec": 58.0,
+        "kind": "escalation",
+        "purpose": "the rule Nia should have known is named, too late to be advice"
+      },
+      {
+        "at_sec": 85.0,
+        "kind": "payoff",
+        "purpose": "August: the crossing on the rebuilt bridge delivers the moral"
+      }
+    ],
+    "title_candidates": [
+      {
+        "text": "Cutting Corners: What a 2-Inch Shortcut Really Costs",
+        "selected": true,
+        "approach": "curiosity_gap"
+      },
+      {
+        "text": "Two Inches. Eight Hundred Metres. Nobody Checked.",
+        "selected": false,
+        "approach": "contradiction"
+      },
+      {
+        "text": "The Shortcut Nobody Measured",
+        "selected": false,
+        "approach": "question"
+      },
+      {
+        "text": "The Two Inches That Flooded A Valley",
+        "selected": false,
+        "approach": "stakes_loss",
+        "drafted_in_review": true,
+        "why_not_chosen": "Drafted during the packaging audit, not before production; the shipped title was already fixed."
+      },
+      {
+        "text": "What Is Your Safety Margin Actually For?",
+        "selected": false,
+        "approach": "question",
+        "drafted_in_review": true,
+        "why_not_chosen": "Drafted during the packaging audit, not before production; the shipped title was already fixed."
+      }
+    ],
+    "thumbnail_concepts": [
+      {
+        "focal_subject": "Two inspectors pointing at a frayed cable join",
+        "emotion": "alarm",
+        "text": "NOBODY NOTICED",
+        "selected": true
+      },
+      {
+        "focal_subject": "A close view of a two-inch gap in a bridge cable",
+        "emotion": "dread",
+        "text": "",
+        "selected": false
+      },
+      {
+        "focal_subject": "A crowd crossing a bridge, one cable glowing hot",
+        "emotion": "suspense",
+        "text": "",
+        "selected": false
+      }
+    ],
+    "alignment": {
+      "title_promise": "A tiny, absurd shortcut measured against a catastrophic consequence.",
+      "thumbnail_promise": "NOBODY NOTICED \u2014 states that the failure was silent, which the title's 'really costs' sets up.",
+      "hook_promise": "Scale first, then the two-inch human error.",
+      "verdict": "aligned"
+    },
+    "claims": [
+      {
+        "text": "a two-inch error is invisible to casual inspection",
+        "label": "O",
+        "used_as": "illustration"
+      }
+    ],
+    "script_critique": {
+      "scores": {
+        "opening_hook": 4,
+        "clarity": 4,
+        "originality": 4,
+        "story_progression": 4,
+        "retention_potential": 3,
+        "emotional_impact": 3,
+        "visual_potential": 4,
+        "payoff": 4,
+        "accuracy": 3,
+        "pacing": 3
+      },
+      "weakest": "retention_potential",
+      "revision": "3.1.0 re-cut: S01 and S02 were swapped so the film opens on the two inches rather than on the chasm. No narration changed. opening_hook moves 2 -> 4. The weakest criterion is now retention_potential at 3: act two runs four scenes on the same rising-water beat before the deck sings, and that stretch relies on the music to hold attention."
+    }
+  },
+  "secondary_keywords": [
+    "safety margin",
+    "engineering ethics",
+    "why short cuts fail"
+  ],
+  "title_alternates": [
+    "Two Inches. Eight Hundred Metres. Nobody Checked.",
+    "The Shortcut Nobody Measured",
+    "The Two Inches That Flooded A Valley"
+  ],
+  "hashtags": [
+    "#engineering",
+    "#craftsmanship",
+    "#quality",
+    "#safety"
+  ],
+  "category": "Education",
+  "duration": 101.6,
+  "chapters": [
+    {
+      "at_sec": 0,
+      "title": "The Shortcut | Two Inches"
+    },
+    {
+      "at_sec": 11,
+      "title": "Kessa Chasm | Twelve Weeks"
+    },
+    {
+      "at_sec": 24,
+      "title": "Ahead of Schedule | Too Fast"
+    },
+    {
+      "at_sec": 36,
+      "title": "Inspection | Check It Again"
+    },
+    {
+      "at_sec": 47,
+      "title": "June | The Deck Sings"
+    },
+    {
+      "at_sec": 58,
+      "title": "The Rule | Margin"
+    },
+    {
+      "at_sec": 73,
+      "title": "Rebuild | Margin Restored"
+    },
+    {
+      "at_sec": 85,
+      "title": "August | The Crossing"
+    }
+  ]
+}

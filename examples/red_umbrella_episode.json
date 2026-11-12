@@ -1,0 +1,7778 @@
+{
+  "title": "The Red Umbrella",
+  "thesis": "Understand before you judge.",
+  "bgm": "dynamic",
+  "subtitles_mode": "cinema",
+  "outro": false,
+  "voices": {
+    "narrator": {
+      "voice": "en-US-GuyNeural",
+      "rate": "-6%",
+      "pitch": "-2Hz"
+    },
+    "eli": {
+      "voice": "en-US-ChristopherNeural",
+      "rate": "-3%",
+      "pitch": "+0Hz"
+    },
+    "sam": {
+      "voice": "en-US-AndrewNeural",
+      "rate": "-7%",
+      "pitch": "-3Hz"
+    },
+    "lily": {
+      "voice": "en-US-AnaNeural",
+      "rate": "+0%",
+      "pitch": "+2Hz"
+    },
+    "mother": {
+      "voice": "en-US-JennyNeural",
+      "rate": "-5%",
+      "pitch": "-1Hz"
+    }
+  },
+  "cast": {
+    "eli": {
+      "name": "Eli",
+      "style": "cel",
+      "color": "#f8fafc",
+      "build": "lean",
+      "eyes": true,
+      "expression": "neutral",
+      "scale": 1.62
+    },
+    "sam": {
+      "name": "Sam",
+      "style": "cel",
+      "color": "#5b84b1",
+      "build": "standard",
+      "eyes": true,
+      "expression": "neutral",
+      "scale": 1.62
+    },
+    "lily": {
+      "name": "Lily",
+      "style": "cel",
+      "color": "#fde047",
+      "build": "compact",
+      "eyes": true,
+      "expression": "curious",
+      "accessories": [
+        "backpack"
+      ],
+      "bag_color": "#eab308",
+      "scale": 1.06
+    },
+    "mother": {
+      "name": "Mother",
+      "style": "cel",
+      "color": "#fb923c",
+      "build": "slim",
+      "eyes": true,
+      "expression": "tired",
+      "accessories": [
+        "work_bag"
+      ],
+      "bag_color": "#9a3412",
+      "posture": -0.22,
+      "scale": 1.56
+    },
+    "brother": {
+      "name": "Brother",
+      "style": "cel",
+      "color": "#e2e8f0",
+      "build": "compact",
+      "eyes": true,
+      "expression": "smile",
+      "scale": 1.12
+    },
+    "neighbour": {
+      "name": "Neighbour",
+      "style": "cel",
+      "color": "#94a3b8",
+      "build": "standard",
+      "eyes": true,
+      "expression": "neutral",
+      "scale": 1.58
+    }
+  },
+  "scenes": [
+    {
+      "id": "S01",
+      "mood": "reflective",
+      "bgm": "reflective_piano",
+      "bgm_gain": 0.9,
+      "accent_color": "#ef4444",
+      "lead_in": 1.6,
+      "tail_out": 1.2,
+      "min_duration": 22.0,
+      "setting": {
+        "sky": [
+          "#080c14",
+          "#121b28"
+        ],
+        "floor_color": "#060a12",
+        "light_color": "#64748b",
+        "lamp_color": "#fbbf24",
+        "window_color": "#f59e0b",
+        "window_warmth": 0.75,
+        "backdrop": "city",
+        "weather": "rain",
+        "rain_intensity": 1.05,
+        "lighting": "streetlamps",
+        "lamp_xs": [
+          0.22,
+          0.86
+        ]
+      },
+      "accent_words": [
+        "red",
+        "umbrella",
+        "rain",
+        "Three",
+        "fourth",
+        "again"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Every evening, Eli left his red umbrella by the entrance. Every morning, it was there. Until the rain came.",
+          "pause_after": 3.2
+        },
+        {
+          "speaker": "narrator",
+          "text": "Three times, someone took it. And on the fourth evening, Eli decided he was going to find out who.",
+          "pause_after": 1.2
+        },
+        {
+          "speaker": "eli",
+          "text": "Not again.",
+          "pause_after": 1.4
+        }
+      ],
+      "duration": 24.095,
+      "line_timings": [
+        {
+          "speaker": "narrator",
+          "text": "Every evening, Eli left his red umbrella by the entrance. Every morning, it was there. Until the rain came.",
+          "start": 1.6,
+          "end": 9.889,
+          "words": [
+            {
+              "word": "Every",
+              "start": 1.6,
+              "end": 1.875,
+              "speaker": "narrator"
+            },
+            {
+              "word": "evening",
+              "start": 1.901,
+              "end": 2.274,
+              "speaker": "narrator"
+            },
+            {
+              "word": "Eli",
+              "start": 2.473,
+              "end": 2.752,
+              "speaker": "narrator"
+            },
+            {
+              "word": "left",
+              "start": 2.779,
+              "end": 3.032,
+              "speaker": "narrator"
+            },
+            {
+              "word": "his",
+              "start": 3.058,
+              "end": 3.218,
+              "speaker": "narrator"
+            },
+            {
+              "word": "red",
+              "start": 3.244,
+              "end": 3.444,
+              "speaker": "narrator"
+            },
+            {
+              "word": "umbrella",
+              "start": 3.47,
+              "end": 3.949,
+              "speaker": "narrator"
+            },
+            {
+              "word": "by",
+              "start": 3.976,
+              "end": 4.109,
+              "speaker": "narrator"
+            },
+            {
+              "word": "the",
+              "start": 4.122,
+              "end": 4.228,
+              "speaker": "narrator"
+            },
+            {
+              "word": "entrance",
+              "start": 4.242,
+              "end": 4.827,
+              "speaker": "narrator"
+            },
+            {
+              "word": "Every",
+              "start": 5.761,
+              "end": 6.08,
+              "speaker": "narrator"
+            },
+            {
+              "word": "morning",
+              "start": 6.093,
+              "end": 6.506,
+              "speaker": "narrator"
+            },
+            {
+              "word": "it",
+              "start": 6.732,
+              "end": 6.851,
+              "speaker": "narrator"
+            },
+            {
+              "word": "was",
+              "start": 6.878,
+              "end": 7.077,
+              "speaker": "narrator"
+            },
+            {
+              "word": "there",
+              "start": 7.104,
+              "end": 7.516,
+              "speaker": "narrator"
+            },
+            {
+              "word": "Until",
+              "start": 8.46,
+              "end": 8.899,
+              "speaker": "narrator"
+            },
+            {
+              "word": "the",
+              "start": 8.926,
+              "end": 9.059,
+              "speaker": "narrator"
+            },
+            {
+              "word": "rain",
+              "start": 9.085,
+              "end": 9.351,
+              "speaker": "narrator"
+            },
+            {
+              "word": "came",
+              "start": 9.365,
+              "end": 9.803,
+              "speaker": "narrator"
+            }
+          ]
+        },
+        {
+          "speaker": "narrator",
+          "text": "Three times, someone took it. And on the fourth evening, Eli decided he was going to find out who.",
+          "start": 13.089,
+          "end": 19.508,
+          "words": [
+            {
+              "word": "Three",
+              "start": 13.089,
+              "end": 13.31,
+              "speaker": "narrator"
+            },
+            {
+              "word": "times",
+              "start": 13.337,
+              "end": 13.762,
+              "speaker": "narrator"
+            },
+            {
+              "word": "someone",
+              "start": 13.935,
+              "end": 14.281,
+              "speaker": "narrator"
+            },
+            {
+              "word": "took",
+              "start": 14.307,
+              "end": 14.533,
+              "speaker": "narrator"
+            },
+            {
+              "word": "it",
+              "start": 14.547,
+              "end": 14.773,
+              "speaker": "narrator"
+            },
+            {
+              "word": "And",
+              "start": 15.693,
+              "end": 15.88,
+              "speaker": "narrator"
+            },
+            {
+              "word": "on",
+              "start": 15.906,
+              "end": 16.026,
+              "speaker": "narrator"
+            },
+            {
+              "word": "the",
+              "start": 16.053,
+              "end": 16.159,
+              "speaker": "narrator"
+            },
+            {
+              "word": "fourth",
+              "start": 16.172,
+              "end": 16.451,
+              "speaker": "narrator"
+            },
+            {
+              "word": "evening",
+              "start": 16.478,
+              "end": 16.837,
+              "speaker": "narrator"
+            },
+            {
+              "word": "Eli",
+              "start": 17.037,
+              "end": 17.342,
+              "speaker": "narrator"
+            },
+            {
+              "word": "decided",
+              "start": 17.369,
+              "end": 17.888,
+              "speaker": "narrator"
+            },
+            {
+              "word": "he",
+              "start": 17.914,
+              "end": 18.021,
+              "speaker": "narrator"
+            },
+            {
+              "word": "was",
+              "start": 18.034,
+              "end": 18.193,
+              "speaker": "narrator"
+            },
+            {
+              "word": "going",
+              "start": 18.207,
+              "end": 18.433,
+              "speaker": "narrator"
+            },
+            {
+              "word": "to",
+              "start": 18.446,
+              "end": 18.526,
+              "speaker": "narrator"
+            },
+            {
+              "word": "find",
+              "start": 18.553,
+              "end": 18.845,
+              "speaker": "narrator"
+            },
+            {
+              "word": "out",
+              "start": 18.872,
+              "end": 19.018,
+              "speaker": "narrator"
+            },
+            {
+              "word": "who",
+              "start": 19.045,
+              "end": 19.404,
+              "speaker": "narrator"
+            }
+          ]
+        },
+        {
+          "speaker": "eli",
+          "text": "Not again.",
+          "start": 20.708,
+          "end": 21.495,
+          "words": [
+            {
+              "word": "Not",
+              "start": 20.708,
+              "end": 20.93,
+              "speaker": "eli"
+            },
+            {
+              "word": "again",
+              "start": 20.943,
+              "end": 21.42,
+              "speaker": "eli"
+            }
+          ]
+        }
+      ],
+      "word_timings": [
+        {
+          "word": "Every",
+          "start": 1.6,
+          "end": 1.875,
+          "speaker": "narrator"
+        },
+        {
+          "word": "evening",
+          "start": 1.901,
+          "end": 2.274,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Eli",
+          "start": 2.473,
+          "end": 2.752,
+          "speaker": "narrator"
+        },
+        {
+          "word": "left",
+          "start": 2.779,
+          "end": 3.032,
+          "speaker": "narrator"
+        },
+        {
+          "word": "his",
+          "start": 3.058,
+          "end": 3.218,
+          "speaker": "narrator"
+        },
+        {
+          "word": "red",
+          "start": 3.244,
+          "end": 3.444,
+          "speaker": "narrator"
+        },
+        {
+          "word": "umbrella",
+          "start": 3.47,
+          "end": 3.949,
+          "speaker": "narrator"
+        },
+        {
+          "word": "by",
+          "start": 3.976,
+          "end": 4.109,
+          "speaker": "narrator"
+        },
+        {
+          "word": "the",
+          "start": 4.122,
+          "end": 4.228,
+          "speaker": "narrator"
+        },
+        {
+          "word": "entrance",
+          "start": 4.242,
+          "end": 4.827,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Every",
+          "start": 5.761,
+          "end": 6.08,
+          "speaker": "narrator"
+        },
+        {
+          "word": "morning",
+          "start": 6.093,
+          "end": 6.506,
+          "speaker": "narrator"
+        },
+        {
+          "word": "it",
+          "start": 6.732,
+          "end": 6.851,
+          "speaker": "narrator"
+        },
+        {
+          "word": "was",
+          "start": 6.878,
+          "end": 7.077,
+          "speaker": "narrator"
+        },
+        {
+          "word": "there",
+          "start": 7.104,
+          "end": 7.516,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Until",
+          "start": 8.46,
+          "end": 8.899,
+          "speaker": "narrator"
+        },
+        {
+          "word": "the",
+          "start": 8.926,
+          "end": 9.059,
+          "speaker": "narrator"
+        },
+        {
+          "word": "rain",
+          "start": 9.085,
+          "end": 9.351,
+          "speaker": "narrator"
+        },
+        {
+          "word": "came",
+          "start": 9.365,
+          "end": 9.803,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Three",
+          "start": 13.089,
+          "end": 13.31,
+          "speaker": "narrator"
+        },
+        {
+          "word": "times",
+          "start": 13.337,
+          "end": 13.762,
+          "speaker": "narrator"
+        },
+        {
+          "word": "someone",
+          "start": 13.935,
+          "end": 14.281,
+          "speaker": "narrator"
+        },
+        {
+          "word": "took",
+          "start": 14.307,
+          "end": 14.533,
+          "speaker": "narrator"
+        },
+        {
+          "word": "it",
+          "start": 14.547,
+          "end": 14.773,
+          "speaker": "narrator"
+        },
+        {
+          "word": "And",
+          "start": 15.693,
+          "end": 15.88,
+          "speaker": "narrator"
+        },
+        {
+          "word": "on",
+          "start": 15.906,
+          "end": 16.026,
+          "speaker": "narrator"
+        },
+        {
+          "word": "the",
+          "start": 16.053,
+          "end": 16.159,
+          "speaker": "narrator"
+        },
+        {
+          "word": "fourth",
+          "start": 16.172,
+          "end": 16.451,
+          "speaker": "narrator"
+        },
+        {
+          "word": "evening",
+          "start": 16.478,
+          "end": 16.837,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Eli",
+          "start": 17.037,
+          "end": 17.342,
+          "speaker": "narrator"
+        },
+        {
+          "word": "decided",
+          "start": 17.369,
+          "end": 17.888,
+          "speaker": "narrator"
+        },
+        {
+          "word": "he",
+          "start": 17.914,
+          "end": 18.021,
+          "speaker": "narrator"
+        },
+        {
+          "word": "was",
+          "start": 18.034,
+          "end": 18.193,
+          "speaker": "narrator"
+        },
+        {
+          "word": "going",
+          "start": 18.207,
+          "end": 18.433,
+          "speaker": "narrator"
+        },
+        {
+          "word": "to",
+          "start": 18.446,
+          "end": 18.526,
+          "speaker": "narrator"
+        },
+        {
+          "word": "find",
+          "start": 18.553,
+          "end": 18.845,
+          "speaker": "narrator"
+        },
+        {
+          "word": "out",
+          "start": 18.872,
+          "end": 19.018,
+          "speaker": "narrator"
+        },
+        {
+          "word": "who",
+          "start": 19.045,
+          "end": 19.404,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Not",
+          "start": 20.708,
+          "end": 20.93,
+          "speaker": "eli"
+        },
+        {
+          "word": "again",
+          "start": 20.943,
+          "end": 21.42,
+          "speaker": "eli"
+        }
+      ],
+      "narration": "Every evening, Eli left his red umbrella by the entrance. Every morning, it was there. Until the rain came. Three times, someone took it. And on the fourth evening, Eli decided he was going to find out who. Not again.",
+      "lock_beats": true,
+      "lock_camera_shots": true,
+      "props": [
+        {
+          "type": "door",
+          "x": 0.72,
+          "scale": 1.58,
+          "open": 0.78,
+          "label": "APT 12"
+        },
+        {
+          "type": "umbrella_stand",
+          "x": 0.6,
+          "scale": 1.5,
+          "umbrellas": [
+            "#ef4444"
+          ],
+          "from_t": 4.2,
+          "to_t": 10.29
+        },
+        {
+          "type": "umbrella_stand",
+          "x": 0.6,
+          "scale": 1.5,
+          "umbrellas": [],
+          "from_t": 10.29
+        },
+        {
+          "type": "water_trail",
+          "from_x": 0.58,
+          "to_x": 0.22,
+          "count": 9,
+          "scale": 1.35,
+          "from_t": 15.89
+        }
+      ],
+      "sfx": [
+        {
+          "at": 3.0,
+          "type": "umbrella_shake",
+          "pan": 0.1
+        },
+        {
+          "at": 10.39,
+          "type": "room_shift",
+          "pan": 0.0
+        },
+        {
+          "at": 11.49,
+          "type": "room_shift",
+          "pan": 0.0
+        },
+        {
+          "at": 12.59,
+          "type": "room_shift",
+          "pan": 0.0
+        }
+      ],
+      "characters": [
+        {
+          "id": "eli",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.9,
+              "action": "walk_umbrella",
+              "fromX": 0.16,
+              "toX": 0.52,
+              "umbrella_color": "#ef4444",
+              "umbrella_open": true,
+              "expression": "tired"
+            },
+            {
+              "start": 2.9,
+              "end": 4.3,
+              "action": "close_shake_umbrella",
+              "x": 0.53,
+              "facing": 1,
+              "umbrella_color": "#ef4444",
+              "expression": "neutral"
+            },
+            {
+              "start": 4.3,
+              "end": 10.29,
+              "action": "walk",
+              "fromX": 0.53,
+              "toX": 0.72,
+              "expression": "neutral"
+            },
+            {
+              "start": 10.29,
+              "end": 11.44,
+              "action": "idle_stand",
+              "x": 0.48,
+              "facing": 1,
+              "expression": "curious",
+              "look_y": 0.35
+            },
+            {
+              "start": 11.44,
+              "end": 12.59,
+              "action": "listen_nod",
+              "x": 0.5,
+              "facing": 1,
+              "expression": "tense",
+              "posture": -0.18,
+              "look_y": 0.35
+            },
+            {
+              "start": 12.59,
+              "end": 16.29,
+              "action": "cross_arms_skeptical",
+              "x": 0.51,
+              "facing": 1,
+              "expression": "tense",
+              "posture": -0.25,
+              "look_y": 0.4
+            },
+            {
+              "start": 16.29,
+              "end": 21.81,
+              "action": "clench_fist",
+              "x": 0.5,
+              "facing": -1,
+              "expression": "determined",
+              "look_y": 0.35
+            },
+            {
+              "start": 21.81,
+              "end": 24.095,
+              "action": "walk",
+              "fromX": 0.5,
+              "toX": 0.18,
+              "expression": "determined"
+            }
+          ]
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "end": 10.29,
+          "zoom_from": 1.08,
+          "zoom_to": 1.24,
+          "focus_x_from": 0.44,
+          "focus_x_to": 0.58,
+          "focus_y": 0.65,
+          "cut": true
+        },
+        {
+          "start": 10.29,
+          "end": 11.44,
+          "zoom_from": 1.28,
+          "zoom_to": 1.3,
+          "focus_x": 0.55,
+          "focus_y": 0.67,
+          "cut": true
+        },
+        {
+          "start": 11.44,
+          "end": 12.59,
+          "zoom_from": 1.35,
+          "zoom_to": 1.37,
+          "focus_x": 0.56,
+          "focus_y": 0.68,
+          "cut": true
+        },
+        {
+          "start": 12.59,
+          "end": 16.69,
+          "zoom_from": 1.24,
+          "zoom_to": 1.3,
+          "focus_x": 0.46,
+          "focus_y": 0.69,
+          "cut": true
+        },
+        {
+          "start": 16.69,
+          "end": 24.095,
+          "zoom_from": 1.44,
+          "zoom_to": 1.24,
+          "focus_x_from": 0.5,
+          "focus_x_to": 0.32,
+          "focus_y": 0.63,
+          "cut": true
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "mood": "tension",
+      "bgm": "suspense_tension",
+      "bgm_gain": 0.95,
+      "accent_color": "#ef4444",
+      "lead_in": 1.5,
+      "tail_out": 1.5,
+      "min_duration": 26.0,
+      "setting": {
+        "sky": [
+          "#070e1a",
+          "#132238"
+        ],
+        "floor_color": "#060b14",
+        "light_color": "#5b84b1",
+        "lamp_color": "#fbbf24",
+        "window_color": "#94a3b8",
+        "window_warmth": 0.55,
+        "backdrop": "city",
+        "weather": "rain",
+        "rain_intensity": 1.15,
+        "lighting": "streetlamps",
+        "lamp_xs": [
+          0.18,
+          0.78
+        ]
+      },
+      "accent_words": [
+        "blue",
+        "stranger",
+        "umbrella",
+        "decided",
+        "going"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "That evening, Eli finally saw him. A blue stranger carrying the umbrella as if it belonged to him.",
+          "pause_after": 4.2
+        },
+        {
+          "speaker": "narrator",
+          "text": "Eli had already decided what kind of person Sam was.",
+          "pause_after": 2.4
+        },
+        {
+          "speaker": "eli",
+          "text": "So that's where you've been going.",
+          "pause_after": 1.8
+        }
+      ],
+      "duration": 26.0,
+      "line_timings": [
+        {
+          "speaker": "narrator",
+          "text": "That evening, Eli finally saw him. A blue stranger carrying the umbrella as if it belonged to him.",
+          "start": 1.5,
+          "end": 8.055,
+          "words": [
+            {
+              "word": "That",
+              "start": 1.5,
+              "end": 1.715,
+              "speaker": "narrator"
+            },
+            {
+              "word": "evening",
+              "start": 1.741,
+              "end": 2.127,
+              "speaker": "narrator"
+            },
+            {
+              "word": "Eli",
+              "start": 2.34,
+              "end": 2.646,
+              "speaker": "narrator"
+            },
+            {
+              "word": "finally",
+              "start": 2.672,
+              "end": 3.164,
+              "speaker": "narrator"
+            },
+            {
+              "word": "saw",
+              "start": 3.191,
+              "end": 3.417,
+              "speaker": "narrator"
+            },
+            {
+              "word": "him",
+              "start": 3.443,
+              "end": 3.669,
+              "speaker": "narrator"
+            },
+            {
+              "word": "A",
+              "start": 4.617,
+              "end": 4.763,
+              "speaker": "narrator"
+            },
+            {
+              "word": "blue",
+              "start": 4.776,
+              "end": 4.989,
+              "speaker": "narrator"
+            },
+            {
+              "word": "stranger",
+              "start": 5.016,
+              "end": 5.521,
+              "speaker": "narrator"
+            },
+            {
+              "word": "carrying",
+              "start": 5.548,
+              "end": 5.973,
+              "speaker": "narrator"
+            },
+            {
+              "word": "the",
+              "start": 6.0,
+              "end": 6.119,
+              "speaker": "narrator"
+            },
+            {
+              "word": "umbrella",
+              "start": 6.146,
+              "end": 6.718,
+              "speaker": "narrator"
+            },
+            {
+              "word": "as",
+              "start": 6.731,
+              "end": 6.891,
+              "speaker": "narrator"
+            },
+            {
+              "word": "if",
+              "start": 6.917,
+              "end": 7.037,
+              "speaker": "narrator"
+            },
+            {
+              "word": "it",
+              "start": 7.064,
+              "end": 7.157,
+              "speaker": "narrator"
+            },
+            {
+              "word": "belonged",
+              "start": 7.17,
+              "end": 7.556,
+              "speaker": "narrator"
+            },
+            {
+              "word": "to",
+              "start": 7.569,
+              "end": 7.689,
+              "speaker": "narrator"
+            },
+            {
+              "word": "him",
+              "start": 7.715,
+              "end": 7.955,
+              "speaker": "narrator"
+            }
+          ]
+        },
+        {
+          "speaker": "narrator",
+          "text": "Eli had already decided what kind of person Sam was.",
+          "start": 12.255,
+          "end": 15.534,
+          "words": [
+            {
+              "word": "Eli",
+              "start": 12.255,
+              "end": 12.609,
+              "speaker": "narrator"
+            },
+            {
+              "word": "had",
+              "start": 12.622,
+              "end": 12.769,
+              "speaker": "narrator"
+            },
+            {
+              "word": "already",
+              "start": 12.795,
+              "end": 13.221,
+              "speaker": "narrator"
+            },
+            {
+              "word": "decided",
+              "start": 13.247,
+              "end": 13.792,
+              "speaker": "narrator"
+            },
+            {
+              "word": "what",
+              "start": 13.819,
+              "end": 13.992,
+              "speaker": "narrator"
+            },
+            {
+              "word": "kind",
+              "start": 14.018,
+              "end": 14.245,
+              "speaker": "narrator"
+            },
+            {
+              "word": "of",
+              "start": 14.258,
+              "end": 14.351,
+              "speaker": "narrator"
+            },
+            {
+              "word": "person",
+              "start": 14.378,
+              "end": 14.763,
+              "speaker": "narrator"
+            },
+            {
+              "word": "Sam",
+              "start": 14.79,
+              "end": 15.096,
+              "speaker": "narrator"
+            },
+            {
+              "word": "was",
+              "start": 15.109,
+              "end": 15.481,
+              "speaker": "narrator"
+            }
+          ]
+        },
+        {
+          "speaker": "eli",
+          "text": "So that's where you've been going.",
+          "start": 17.934,
+          "end": 19.484,
+          "words": [
+            {
+              "word": "So",
+              "start": 17.934,
+              "end": 18.13,
+              "speaker": "eli"
+            },
+            {
+              "word": "that's",
+              "start": 18.143,
+              "end": 18.452,
+              "speaker": "eli"
+            },
+            {
+              "word": "where",
+              "start": 18.465,
+              "end": 18.606,
+              "speaker": "eli"
+            },
+            {
+              "word": "you've",
+              "start": 18.619,
+              "end": 18.735,
+              "speaker": "eli"
+            },
+            {
+              "word": "been",
+              "start": 18.748,
+              "end": 18.89,
+              "speaker": "eli"
+            },
+            {
+              "word": "going",
+              "start": 18.903,
+              "end": 19.405,
+              "speaker": "eli"
+            }
+          ]
+        }
+      ],
+      "word_timings": [
+        {
+          "word": "That",
+          "start": 1.5,
+          "end": 1.715,
+          "speaker": "narrator"
+        },
+        {
+          "word": "evening",
+          "start": 1.741,
+          "end": 2.127,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Eli",
+          "start": 2.34,
+          "end": 2.646,
+          "speaker": "narrator"
+        },
+        {
+          "word": "finally",
+          "start": 2.672,
+          "end": 3.164,
+          "speaker": "narrator"
+        },
+        {
+          "word": "saw",
+          "start": 3.191,
+          "end": 3.417,
+          "speaker": "narrator"
+        },
+        {
+          "word": "him",
+          "start": 3.443,
+          "end": 3.669,
+          "speaker": "narrator"
+        },
+        {
+          "word": "A",
+          "start": 4.617,
+          "end": 4.763,
+          "speaker": "narrator"
+        },
+        {
+          "word": "blue",
+          "start": 4.776,
+          "end": 4.989,
+          "speaker": "narrator"
+        },
+        {
+          "word": "stranger",
+          "start": 5.016,
+          "end": 5.521,
+          "speaker": "narrator"
+        },
+        {
+          "word": "carrying",
+          "start": 5.548,
+          "end": 5.973,
+          "speaker": "narrator"
+        },
+        {
+          "word": "the",
+          "start": 6.0,
+          "end": 6.119,
+          "speaker": "narrator"
+        },
+        {
+          "word": "umbrella",
+          "start": 6.146,
+          "end": 6.718,
+          "speaker": "narrator"
+        },
+        {
+          "word": "as",
+          "start": 6.731,
+          "end": 6.891,
+          "speaker": "narrator"
+        },
+        {
+          "word": "if",
+          "start": 6.917,
+          "end": 7.037,
+          "speaker": "narrator"
+        },
+        {
+          "word": "it",
+          "start": 7.064,
+          "end": 7.157,
+          "speaker": "narrator"
+        },
+        {
+          "word": "belonged",
+          "start": 7.17,
+          "end": 7.556,
+          "speaker": "narrator"
+        },
+        {
+          "word": "to",
+          "start": 7.569,
+          "end": 7.689,
+          "speaker": "narrator"
+        },
+        {
+          "word": "him",
+          "start": 7.715,
+          "end": 7.955,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Eli",
+          "start": 12.255,
+          "end": 12.609,
+          "speaker": "narrator"
+        },
+        {
+          "word": "had",
+          "start": 12.622,
+          "end": 12.769,
+          "speaker": "narrator"
+        },
+        {
+          "word": "already",
+          "start": 12.795,
+          "end": 13.221,
+          "speaker": "narrator"
+        },
+        {
+          "word": "decided",
+          "start": 13.247,
+          "end": 13.792,
+          "speaker": "narrator"
+        },
+        {
+          "word": "what",
+          "start": 13.819,
+          "end": 13.992,
+          "speaker": "narrator"
+        },
+        {
+          "word": "kind",
+          "start": 14.018,
+          "end": 14.245,
+          "speaker": "narrator"
+        },
+        {
+          "word": "of",
+          "start": 14.258,
+          "end": 14.351,
+          "speaker": "narrator"
+        },
+        {
+          "word": "person",
+          "start": 14.378,
+          "end": 14.763,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Sam",
+          "start": 14.79,
+          "end": 15.096,
+          "speaker": "narrator"
+        },
+        {
+          "word": "was",
+          "start": 15.109,
+          "end": 15.481,
+          "speaker": "narrator"
+        },
+        {
+          "word": "So",
+          "start": 17.934,
+          "end": 18.13,
+          "speaker": "eli"
+        },
+        {
+          "word": "that's",
+          "start": 18.143,
+          "end": 18.452,
+          "speaker": "eli"
+        },
+        {
+          "word": "where",
+          "start": 18.465,
+          "end": 18.606,
+          "speaker": "eli"
+        },
+        {
+          "word": "you've",
+          "start": 18.619,
+          "end": 18.735,
+          "speaker": "eli"
+        },
+        {
+          "word": "been",
+          "start": 18.748,
+          "end": 18.89,
+          "speaker": "eli"
+        },
+        {
+          "word": "going",
+          "start": 18.903,
+          "end": 19.405,
+          "speaker": "eli"
+        }
+      ],
+      "narration": "That evening, Eli finally saw him. A blue stranger carrying the umbrella as if it belonged to him. Eli had already decided what kind of person Sam was. So that's where you've been going.",
+      "lock_beats": true,
+      "lock_camera_shots": true,
+      "props": [
+        {
+          "type": "passing_bus",
+          "layer": "front",
+          "from_t": 8.65,
+          "to_t": 11.25,
+          "from_x": 1.38,
+          "to_x": -0.42,
+          "scale": 1.38
+        }
+      ],
+      "sfx": [
+        {
+          "at": 8.65,
+          "type": "bus_pass",
+          "pan": 0.25
+        }
+      ],
+      "characters": [
+        {
+          "id": "eli",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 4.76,
+              "action": "walk",
+              "fromX": 0.1,
+              "toX": 0.34,
+              "expression": "determined"
+            },
+            {
+              "start": 4.76,
+              "end": 8.65,
+              "action": "idle_stand",
+              "fromX": 0.1,
+              "toX": 0.34,
+              "expression": "determined"
+            },
+            {
+              "start": 8.65,
+              "end": 11.25,
+              "action": "run",
+              "fromX": 0.34,
+              "toX": 0.46,
+              "expression": "tense"
+            },
+            {
+              "start": 11.25,
+              "end": 14.76,
+              "action": "pace_think",
+              "fromX": 0.46,
+              "toX": 0.5,
+              "span": 0.04,
+              "facing": 1,
+              "expression": "tense"
+            },
+            {
+              "start": 14.76,
+              "end": 17.63,
+              "action": "talk_explain",
+              "fromX": 0.46,
+              "toX": 0.5,
+              "span": 0.04,
+              "facing": 1,
+              "expression": "tense"
+            },
+            {
+              "start": 17.63,
+              "end": 19.73,
+              "action": "point_emphasis",
+              "x": 0.5,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 19.73,
+              "end": 23.18,
+              "action": "walk",
+              "fromX": 0.5,
+              "toX": 0.78,
+              "expression": "determined"
+            },
+            {
+              "start": 23.18,
+              "end": 26.0,
+              "action": "idle_stand",
+              "fromX": 0.5,
+              "toX": 0.78,
+              "expression": "determined"
+            }
+          ]
+        },
+        {
+          "id": "sam",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 9.9,
+              "action": "walk_umbrella",
+              "fromX": 0.5,
+              "toX": 0.8,
+              "umbrella_color": "#ef4444",
+              "umbrella_open": true,
+              "umbrella_tilt": 0.12,
+              "expression": "neutral"
+            },
+            {
+              "start": 9.9,
+              "end": 13.99,
+              "action": "idle_stand",
+              "x": 1.35,
+              "facing": 1
+            },
+            {
+              "start": 13.99,
+              "end": 17.33,
+              "action": "listen_nod",
+              "x": 1.35,
+              "facing": 1
+            },
+            {
+              "start": 17.33,
+              "end": 20.13,
+              "action": "walk_umbrella",
+              "fromX": 0.9,
+              "toX": 1.07,
+              "umbrella_color": "#ef4444",
+              "umbrella_open": true,
+              "umbrella_tilt": 0.14,
+              "expression": "neutral"
+            },
+            {
+              "start": 20.13,
+              "end": 26.0,
+              "action": "idle_stand",
+              "x": 1.35,
+              "facing": 1
+            }
+          ]
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "end": 8.65,
+          "zoom_from": 1.22,
+          "zoom_to": 1.28,
+          "focus_x_from": 0.38,
+          "focus_x_to": 0.56,
+          "focus_y": 0.64,
+          "cut": true
+        },
+        {
+          "start": 8.65,
+          "end": 17.33,
+          "zoom_from": 1.15,
+          "zoom_to": 1.24,
+          "focus_x": 0.58,
+          "focus_y": 0.65,
+          "cut": false,
+          "blend_sec": 0.55
+        },
+        {
+          "start": 17.33,
+          "end": 26.0,
+          "zoom_from": 1.14,
+          "zoom_to": 1.22,
+          "focus_x_from": 0.66,
+          "focus_x_to": 0.72,
+          "focus_y": 0.64,
+          "cut": true
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "mood": "reflective",
+      "bgm": "reflective_piano",
+      "bgm_offset": 24.0,
+      "bgm_gain": 0.92,
+      "accent_color": "#fde047",
+      "lead_in": 1.4,
+      "tail_out": 1.6,
+      "min_duration": 30.0,
+      "setting": {
+        "sky": [
+          "#081222",
+          "#162a46"
+        ],
+        "floor_color": "#070d18",
+        "light_color": "#60a5fa",
+        "lamp_color": "#fbbf24",
+        "window_color": "#fbbf24",
+        "window_warmth": 0.7,
+        "backdrop": "city",
+        "weather": "rain",
+        "rain_intensity": 1.05,
+        "lighting": "streetlamps",
+        "lamp_xs": [
+          0.2,
+          0.84
+        ]
+      },
+      "accent_words": [
+        "thief",
+        "stranger",
+        "rain",
+        "little",
+        "tomorrow",
+        "whole"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Eli expected to find a thief enjoying something that wasn't his.",
+          "pause_after": 1.0
+        },
+        {
+          "speaker": "narrator",
+          "text": "But instead, he found a stranger standing in the rain so a little girl wouldn't have to.",
+          "pause_after": 2.4
+        },
+        {
+          "speaker": "lily",
+          "text": "Will you be here tomorrow?",
+          "pause_after": 1.5
+        },
+        {
+          "speaker": "sam",
+          "text": "If it's raining.",
+          "pause_after": 2.0
+        },
+        {
+          "speaker": "narrator",
+          "text": "Still, Eli didn't know the whole story. Not yet.",
+          "pause_after": 1.8
+        }
+      ],
+      "duration": 30.0,
+      "line_timings": [
+        {
+          "speaker": "narrator",
+          "text": "Eli expected to find a thief enjoying something that wasn't his.",
+          "start": 1.4,
+          "end": 4.995,
+          "words": [
+            {
+              "word": "Eli",
+              "start": 1.4,
+              "end": 1.74,
+              "speaker": "narrator"
+            },
+            {
+              "word": "expected",
+              "start": 1.766,
+              "end": 2.245,
+              "speaker": "narrator"
+            },
+            {
+              "word": "to",
+              "start": 2.272,
+              "end": 2.351,
+              "speaker": "narrator"
+            },
+            {
+              "word": "find",
+              "start": 2.378,
+              "end": 2.657,
+              "speaker": "narrator"
+            },
+            {
+              "word": "a",
+              "start": 2.671,
+              "end": 2.724,
+              "speaker": "narrator"
+            },
+            {
+              "word": "thief",
+              "start": 2.75,
+              "end": 3.03,
+              "speaker": "narrator"
+            },
+            {
+              "word": "enjoying",
+              "start": 3.056,
+              "end": 3.535,
+              "speaker": "narrator"
+            },
+            {
+              "word": "something",
+              "start": 3.561,
+              "end": 3.947,
+              "speaker": "narrator"
+            },
+            {
+              "word": "that",
+              "start": 3.974,
+              "end": 4.12,
+              "speaker": "narrator"
+            },
+            {
+              "word": "wasn't",
+              "start": 4.147,
+              "end": 4.466,
+              "speaker": "narrator"
+            },
+            {
+              "word": "his",
+              "start": 4.492,
+              "end": 4.918,
+              "speaker": "narrator"
+            }
+          ]
+        },
+        {
+          "speaker": "narrator",
+          "text": "But instead, he found a stranger standing in the rain so a little girl wouldn't have to.",
+          "start": 5.995,
+          "end": 10.432,
+          "words": [
+            {
+              "word": "But",
+              "start": 5.995,
+              "end": 6.089,
+              "speaker": "narrator"
+            },
+            {
+              "word": "instead",
+              "start": 6.102,
+              "end": 6.608,
+              "speaker": "narrator"
+            },
+            {
+              "word": "he",
+              "start": 6.807,
+              "end": 6.913,
+              "speaker": "narrator"
+            },
+            {
+              "word": "found",
+              "start": 6.927,
+              "end": 7.166,
+              "speaker": "narrator"
+            },
+            {
+              "word": "a",
+              "start": 7.179,
+              "end": 7.219,
+              "speaker": "narrator"
+            },
+            {
+              "word": "stranger",
+              "start": 7.233,
+              "end": 7.725,
+              "speaker": "narrator"
+            },
+            {
+              "word": "standing",
+              "start": 7.751,
+              "end": 8.177,
+              "speaker": "narrator"
+            },
+            {
+              "word": "in",
+              "start": 8.19,
+              "end": 8.257,
+              "speaker": "narrator"
+            },
+            {
+              "word": "the",
+              "start": 8.283,
+              "end": 8.389,
+              "speaker": "narrator"
+            },
+            {
+              "word": "rain",
+              "start": 8.403,
+              "end": 8.709,
+              "speaker": "narrator"
+            },
+            {
+              "word": "so",
+              "start": 8.735,
+              "end": 8.895,
+              "speaker": "narrator"
+            },
+            {
+              "word": "a",
+              "start": 8.921,
+              "end": 8.975,
+              "speaker": "narrator"
+            },
+            {
+              "word": "little",
+              "start": 9.001,
+              "end": 9.254,
+              "speaker": "narrator"
+            },
+            {
+              "word": "girl",
+              "start": 9.267,
+              "end": 9.546,
+              "speaker": "narrator"
+            },
+            {
+              "word": "wouldn't",
+              "start": 9.573,
+              "end": 9.852,
+              "speaker": "narrator"
+            },
+            {
+              "word": "have",
+              "start": 9.866,
+              "end": 10.065,
+              "speaker": "narrator"
+            },
+            {
+              "word": "to",
+              "start": 10.092,
+              "end": 10.304,
+              "speaker": "narrator"
+            }
+          ]
+        },
+        {
+          "speaker": "lily",
+          "text": "Will you be here tomorrow?",
+          "start": 12.832,
+          "end": 14.268,
+          "words": [
+            {
+              "word": "Will",
+              "start": 12.832,
+              "end": 12.957,
+              "speaker": "lily"
+            },
+            {
+              "word": "you",
+              "start": 12.97,
+              "end": 13.145,
+              "speaker": "lily"
+            },
+            {
+              "word": "be",
+              "start": 13.157,
+              "end": 13.345,
+              "speaker": "lily"
+            },
+            {
+              "word": "here",
+              "start": 13.357,
+              "end": 13.607,
+              "speaker": "lily"
+            },
+            {
+              "word": "tomorrow",
+              "start": 13.62,
+              "end": 14.207,
+              "speaker": "lily"
+            }
+          ]
+        },
+        {
+          "speaker": "sam",
+          "text": "If it's raining.",
+          "start": 15.768,
+          "end": 16.482,
+          "words": [
+            {
+              "word": "If",
+              "start": 15.768,
+              "end": 15.854,
+              "speaker": "sam"
+            },
+            {
+              "word": "it's",
+              "start": 15.868,
+              "end": 15.989,
+              "speaker": "sam"
+            },
+            {
+              "word": "raining",
+              "start": 16.002,
+              "end": 16.392,
+              "speaker": "sam"
+            }
+          ]
+        },
+        {
+          "speaker": "narrator",
+          "text": "Still, Eli didn't know the whole story. Not yet.",
+          "start": 18.482,
+          "end": 22.713,
+          "words": [
+            {
+              "word": "Still",
+              "start": 18.482,
+              "end": 18.878,
+              "speaker": "narrator"
+            },
+            {
+              "word": "Eli",
+              "start": 19.077,
+              "end": 19.396,
+              "speaker": "narrator"
+            },
+            {
+              "word": "didn't",
+              "start": 19.409,
+              "end": 19.742,
+              "speaker": "narrator"
+            },
+            {
+              "word": "know",
+              "start": 19.769,
+              "end": 19.941,
+              "speaker": "narrator"
+            },
+            {
+              "word": "the",
+              "start": 19.968,
+              "end": 20.088,
+              "speaker": "narrator"
+            },
+            {
+              "word": "whole",
+              "start": 20.114,
+              "end": 20.354,
+              "speaker": "narrator"
+            },
+            {
+              "word": "story",
+              "start": 20.38,
+              "end": 20.886,
+              "speaker": "narrator"
+            },
+            {
+              "word": "Not",
+              "start": 21.82,
+              "end": 22.192,
+              "speaker": "narrator"
+            },
+            {
+              "word": "yet",
+              "start": 22.219,
+              "end": 22.671,
+              "speaker": "narrator"
+            }
+          ]
+        }
+      ],
+      "word_timings": [
+        {
+          "word": "Eli",
+          "start": 1.4,
+          "end": 1.74,
+          "speaker": "narrator"
+        },
+        {
+          "word": "expected",
+          "start": 1.766,
+          "end": 2.245,
+          "speaker": "narrator"
+        },
+        {
+          "word": "to",
+          "start": 2.272,
+          "end": 2.351,
+          "speaker": "narrator"
+        },
+        {
+          "word": "find",
+          "start": 2.378,
+          "end": 2.657,
+          "speaker": "narrator"
+        },
+        {
+          "word": "a",
+          "start": 2.671,
+          "end": 2.724,
+          "speaker": "narrator"
+        },
+        {
+          "word": "thief",
+          "start": 2.75,
+          "end": 3.03,
+          "speaker": "narrator"
+        },
+        {
+          "word": "enjoying",
+          "start": 3.056,
+          "end": 3.535,
+          "speaker": "narrator"
+        },
+        {
+          "word": "something",
+          "start": 3.561,
+          "end": 3.947,
+          "speaker": "narrator"
+        },
+        {
+          "word": "that",
+          "start": 3.974,
+          "end": 4.12,
+          "speaker": "narrator"
+        },
+        {
+          "word": "wasn't",
+          "start": 4.147,
+          "end": 4.466,
+          "speaker": "narrator"
+        },
+        {
+          "word": "his",
+          "start": 4.492,
+          "end": 4.918,
+          "speaker": "narrator"
+        },
+        {
+          "word": "But",
+          "start": 5.995,
+          "end": 6.089,
+          "speaker": "narrator"
+        },
+        {
+          "word": "instead",
+          "start": 6.102,
+          "end": 6.608,
+          "speaker": "narrator"
+        },
+        {
+          "word": "he",
+          "start": 6.807,
+          "end": 6.913,
+          "speaker": "narrator"
+        },
+        {
+          "word": "found",
+          "start": 6.927,
+          "end": 7.166,
+          "speaker": "narrator"
+        },
+        {
+          "word": "a",
+          "start": 7.179,
+          "end": 7.219,
+          "speaker": "narrator"
+        },
+        {
+          "word": "stranger",
+          "start": 7.233,
+          "end": 7.725,
+          "speaker": "narrator"
+        },
+        {
+          "word": "standing",
+          "start": 7.751,
+          "end": 8.177,
+          "speaker": "narrator"
+        },
+        {
+          "word": "in",
+          "start": 8.19,
+          "end": 8.257,
+          "speaker": "narrator"
+        },
+        {
+          "word": "the",
+          "start": 8.283,
+          "end": 8.389,
+          "speaker": "narrator"
+        },
+        {
+          "word": "rain",
+          "start": 8.403,
+          "end": 8.709,
+          "speaker": "narrator"
+        },
+        {
+          "word": "so",
+          "start": 8.735,
+          "end": 8.895,
+          "speaker": "narrator"
+        },
+        {
+          "word": "a",
+          "start": 8.921,
+          "end": 8.975,
+          "speaker": "narrator"
+        },
+        {
+          "word": "little",
+          "start": 9.001,
+          "end": 9.254,
+          "speaker": "narrator"
+        },
+        {
+          "word": "girl",
+          "start": 9.267,
+          "end": 9.546,
+          "speaker": "narrator"
+        },
+        {
+          "word": "wouldn't",
+          "start": 9.573,
+          "end": 9.852,
+          "speaker": "narrator"
+        },
+        {
+          "word": "have",
+          "start": 9.866,
+          "end": 10.065,
+          "speaker": "narrator"
+        },
+        {
+          "word": "to",
+          "start": 10.092,
+          "end": 10.304,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Will",
+          "start": 12.832,
+          "end": 12.957,
+          "speaker": "lily"
+        },
+        {
+          "word": "you",
+          "start": 12.97,
+          "end": 13.145,
+          "speaker": "lily"
+        },
+        {
+          "word": "be",
+          "start": 13.157,
+          "end": 13.345,
+          "speaker": "lily"
+        },
+        {
+          "word": "here",
+          "start": 13.357,
+          "end": 13.607,
+          "speaker": "lily"
+        },
+        {
+          "word": "tomorrow",
+          "start": 13.62,
+          "end": 14.207,
+          "speaker": "lily"
+        },
+        {
+          "word": "If",
+          "start": 15.768,
+          "end": 15.854,
+          "speaker": "sam"
+        },
+        {
+          "word": "it's",
+          "start": 15.868,
+          "end": 15.989,
+          "speaker": "sam"
+        },
+        {
+          "word": "raining",
+          "start": 16.002,
+          "end": 16.392,
+          "speaker": "sam"
+        },
+        {
+          "word": "Still",
+          "start": 18.482,
+          "end": 18.878,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Eli",
+          "start": 19.077,
+          "end": 19.396,
+          "speaker": "narrator"
+        },
+        {
+          "word": "didn't",
+          "start": 19.409,
+          "end": 19.742,
+          "speaker": "narrator"
+        },
+        {
+          "word": "know",
+          "start": 19.769,
+          "end": 19.941,
+          "speaker": "narrator"
+        },
+        {
+          "word": "the",
+          "start": 19.968,
+          "end": 20.088,
+          "speaker": "narrator"
+        },
+        {
+          "word": "whole",
+          "start": 20.114,
+          "end": 20.354,
+          "speaker": "narrator"
+        },
+        {
+          "word": "story",
+          "start": 20.38,
+          "end": 20.886,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Not",
+          "start": 21.82,
+          "end": 22.192,
+          "speaker": "narrator"
+        },
+        {
+          "word": "yet",
+          "start": 22.219,
+          "end": 22.671,
+          "speaker": "narrator"
+        }
+      ],
+      "narration": "Eli expected to find a thief enjoying something that wasn't his. But instead, he found a stranger standing in the rain so a little girl wouldn't have to. Will you be here tomorrow? If it's raining. Still, Eli didn't know the whole story. Not yet.",
+      "lock_beats": true,
+      "lock_camera_shots": true,
+      "props": [
+        {
+          "type": "signpost",
+          "x": 0.15,
+          "scale": 1.48,
+          "right_label": "OAK ST"
+        },
+        {
+          "type": "bus_shelter",
+          "x": 0.63,
+          "scale": 1.5,
+          "broken_roof": true,
+          "leaking": true,
+          "shielded": true
+        },
+        {
+          "type": "headlights",
+          "x": 0.98,
+          "dir": "left",
+          "scale": 1.35,
+          "from_t": 27.4
+        }
+      ],
+      "characters": [
+        {
+          "id": "eli",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.0,
+              "action": "walk",
+              "fromX": 0.05,
+              "toX": 0.13,
+              "expression": "determined"
+            },
+            {
+              "start": 6.0,
+              "end": 9.77,
+              "action": "idle_stand",
+              "x": 0.13,
+              "facing": 1,
+              "expression": "shocked",
+              "look_x": 0.5
+            },
+            {
+              "start": 9.77,
+              "end": 12.86,
+              "action": "listen_nod",
+              "x": 0.13,
+              "facing": 1,
+              "expression": "shocked",
+              "look_x": 0.5
+            },
+            {
+              "start": 12.86,
+              "end": 18.48,
+              "action": "listen_nod",
+              "x": 0.13,
+              "facing": 1,
+              "expression": "shocked",
+              "look_x": 0.5
+            },
+            {
+              "start": 18.48,
+              "end": 21.97,
+              "action": "listen_nod",
+              "x": 0.14,
+              "facing": 1,
+              "expression": "curious",
+              "posture": -0.1
+            },
+            {
+              "start": 21.97,
+              "end": 24.82,
+              "action": "talk_explain",
+              "x": 0.14,
+              "facing": 1,
+              "expression": "curious",
+              "posture": -0.1
+            },
+            {
+              "start": 24.82,
+              "end": 30.0,
+              "action": "idle_stand",
+              "x": 0.14,
+              "facing": 1,
+              "expression": "curious",
+              "posture": -0.1
+            }
+          ]
+        },
+        {
+          "id": "sam",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 15.57,
+              "action": "hold_umbrella",
+              "x": 0.55,
+              "facing": 1,
+              "umbrella_color": "#ef4444",
+              "umbrella_open": true,
+              "shelter_other": true,
+              "umbrella_tilt": 0.22,
+              "wet_shoulder": true,
+              "expression": "neutral",
+              "look_y": 0.35
+            },
+            {
+              "start": 15.57,
+              "end": 30.0,
+              "action": "hold_umbrella",
+              "x": 0.55,
+              "facing": 1,
+              "umbrella_color": "#ef4444",
+              "umbrella_open": true,
+              "shelter_other": true,
+              "umbrella_tilt": 0.25,
+              "wet_shoulder": true,
+              "expression": "smile",
+              "look_y": 0.35
+            }
+          ]
+        },
+        {
+          "id": "lily",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.85,
+              "action": "sit_bench",
+              "x": 0.65,
+              "facing": -1,
+              "expression": "curious"
+            },
+            {
+              "start": 3.85,
+              "end": 7.0,
+              "action": "idle_stand",
+              "x": 0.65,
+              "facing": -1,
+              "expression": "curious"
+            },
+            {
+              "start": 7.0,
+              "end": 12.73,
+              "action": "idle_stand",
+              "x": 0.65,
+              "facing": -1,
+              "expression": "curious"
+            },
+            {
+              "start": 12.73,
+              "end": 17.26,
+              "action": "sit_bench",
+              "talking": true,
+              "x": 0.65,
+              "facing": -1,
+              "expression": "smile",
+              "look_y": -0.45
+            },
+            {
+              "start": 17.26,
+              "end": 20.96,
+              "action": "idle_stand",
+              "talking": true,
+              "x": 0.65,
+              "facing": -1,
+              "expression": "smile",
+              "look_y": -0.45
+            },
+            {
+              "start": 20.96,
+              "end": 24.67,
+              "action": "idle_stand",
+              "talking": true,
+              "x": 0.65,
+              "facing": -1,
+              "expression": "smile",
+              "look_y": -0.45
+            },
+            {
+              "start": 24.67,
+              "end": 27.7,
+              "action": "listen_nod",
+              "talking": true,
+              "x": 0.65,
+              "facing": -1,
+              "expression": "smile",
+              "look_y": -0.45
+            },
+            {
+              "start": 27.7,
+              "end": 30.0,
+              "action": "idle_stand",
+              "x": 0.66,
+              "facing": 1,
+              "expression": "excited"
+            }
+          ]
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "end": 7.0,
+          "zoom_from": 1.12,
+          "zoom_to": 1.18,
+          "focus_x": 0.48,
+          "focus_y": 0.64,
+          "cut": true
+        },
+        {
+          "start": 7.0,
+          "end": 18.28,
+          "zoom_from": 1.28,
+          "zoom_to": 1.42,
+          "focus_x": 0.6,
+          "focus_y": 0.64,
+          "cut": false,
+          "blend_sec": 0.9
+        },
+        {
+          "start": 18.28,
+          "end": 30.0,
+          "zoom_from": 1.36,
+          "zoom_to": 1.16,
+          "focus_x_from": 0.22,
+          "focus_x_to": 0.52,
+          "focus_y": 0.64,
+          "cut": true
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "mood": "reflective",
+      "bgm": "reflective_piano",
+      "bgm_offset": 56.0,
+      "bgm_gain": 1.0,
+      "accent_color": "#fb923c",
+      "lead_in": 1.3,
+      "tail_out": 1.8,
+      "min_duration": 35.0,
+      "setting": {
+        "sky": [
+          "#091426",
+          "#182c48"
+        ],
+        "floor_color": "#070d18",
+        "light_color": "#fbbf24",
+        "lamp_color": "#fbbf24",
+        "window_color": "#fbbf24",
+        "window_warmth": 0.9,
+        "backdrop": "city",
+        "weather": "rain",
+        "rain_intensity": 0.85,
+        "lighting": "streetlamps",
+        "lamp_xs": [
+          0.2,
+          0.84
+        ]
+      },
+      "accent_words": [
+        "late",
+        "leaked",
+        "alone",
+        "umbrella",
+        "rain",
+        "thanks"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Lily's mother worked late. The bus was often delayed, and the shelter leaked whenever the wind changed.",
+          "pause_after": 1.2
+        },
+        {
+          "speaker": "narrator",
+          "text": "Sam had noticed the little girl waiting alone. So, whenever it rained, he brought an umbrella.",
+          "pause_after": 1.6
+        },
+        {
+          "speaker": "mother",
+          "text": "You didn't have to do this.",
+          "pause_after": 0.9
+        },
+        {
+          "speaker": "sam",
+          "text": "I know.",
+          "pause_after": 1.2
+        },
+        {
+          "speaker": "sam",
+          "text": "But she shouldn't have to sit in the rain.",
+          "pause_after": 2.2
+        },
+        {
+          "speaker": "narrator",
+          "text": "He never asked for thanks. He didn't even stay long enough to receive it.",
+          "pause_after": 2.0
+        }
+      ],
+      "board": {
+        "type": "child_drawing",
+        "x": 0.54,
+        "y": 96,
+        "w": 620,
+        "h": 350,
+        "include_white": false,
+        "caption": "",
+        "cue_on": "sit in the rain",
+        "hold_sec": 4.6,
+        "reveal_at": 21.754,
+        "hide_at": 26.354
+      },
+      "duration": 35.0,
+      "line_timings": [
+        {
+          "speaker": "narrator",
+          "text": "Lily's mother worked late. The bus was often delayed, and the shelter leaked whenever the wind changed.",
+          "start": 1.3,
+          "end": 7.878,
+          "words": [
+            {
+              "word": "Lily's",
+              "start": 1.3,
+              "end": 1.697,
+              "speaker": "narrator"
+            },
+            {
+              "word": "mother",
+              "start": 1.724,
+              "end": 2.069,
+              "speaker": "narrator"
+            },
+            {
+              "word": "worked",
+              "start": 2.096,
+              "end": 2.389,
+              "speaker": "narrator"
+            },
+            {
+              "word": "late",
+              "start": 2.402,
+              "end": 2.801,
+              "speaker": "narrator"
+            },
+            {
+              "word": "The",
+              "start": 3.735,
+              "end": 3.881,
+              "speaker": "narrator"
+            },
+            {
+              "word": "bus",
+              "start": 3.908,
+              "end": 4.134,
+              "speaker": "narrator"
+            },
+            {
+              "word": "was",
+              "start": 4.147,
+              "end": 4.347,
+              "speaker": "narrator"
+            },
+            {
+              "word": "often",
+              "start": 4.373,
+              "end": 4.679,
+              "speaker": "narrator"
+            },
+            {
+              "word": "delayed",
+              "start": 4.706,
+              "end": 5.144,
+              "speaker": "narrator"
+            },
+            {
+              "word": "and",
+              "start": 5.384,
+              "end": 5.517,
+              "speaker": "narrator"
+            },
+            {
+              "word": "the",
+              "start": 5.543,
+              "end": 5.637,
+              "speaker": "narrator"
+            },
+            {
+              "word": "shelter",
+              "start": 5.65,
+              "end": 6.102,
+              "speaker": "narrator"
+            },
+            {
+              "word": "leaked",
+              "start": 6.115,
+              "end": 6.421,
+              "speaker": "narrator"
+            },
+            {
+              "word": "whenever",
+              "start": 6.448,
+              "end": 6.833,
+              "speaker": "narrator"
+            },
+            {
+              "word": "the",
+              "start": 6.847,
+              "end": 6.953,
+              "speaker": "narrator"
+            },
+            {
+              "word": "wind",
+              "start": 6.98,
+              "end": 7.219,
+              "speaker": "narrator"
+            },
+            {
+              "word": "changed",
+              "start": 7.246,
+              "end": 7.791,
+              "speaker": "narrator"
+            }
+          ]
+        },
+        {
+          "speaker": "narrator",
+          "text": "Sam had noticed the little girl waiting alone. So, whenever it rained, he brought an umbrella.",
+          "start": 9.078,
+          "end": 15.376,
+          "words": [
+            {
+              "word": "Sam",
+              "start": 9.078,
+              "end": 9.387,
+              "speaker": "narrator"
+            },
+            {
+              "word": "had",
+              "start": 9.414,
+              "end": 9.6,
+              "speaker": "narrator"
+            },
+            {
+              "word": "noticed",
+              "start": 9.626,
+              "end": 10.012,
+              "speaker": "narrator"
+            },
+            {
+              "word": "the",
+              "start": 10.039,
+              "end": 10.145,
+              "speaker": "narrator"
+            },
+            {
+              "word": "little",
+              "start": 10.172,
+              "end": 10.424,
+              "speaker": "narrator"
+            },
+            {
+              "word": "girl",
+              "start": 10.437,
+              "end": 10.743,
+              "speaker": "narrator"
+            },
+            {
+              "word": "waiting",
+              "start": 10.77,
+              "end": 11.116,
+              "speaker": "narrator"
+            },
+            {
+              "word": "alone",
+              "start": 11.142,
+              "end": 11.621,
+              "speaker": "narrator"
+            },
+            {
+              "word": "So",
+              "start": 12.568,
+              "end": 12.967,
+              "speaker": "narrator"
+            },
+            {
+              "word": "whenever",
+              "start": 13.14,
+              "end": 13.579,
+              "speaker": "narrator"
+            },
+            {
+              "word": "it",
+              "start": 13.606,
+              "end": 13.699,
+              "speaker": "narrator"
+            },
+            {
+              "word": "rained",
+              "start": 13.725,
+              "end": 14.071,
+              "speaker": "narrator"
+            },
+            {
+              "word": "he",
+              "start": 14.244,
+              "end": 14.35,
+              "speaker": "narrator"
+            },
+            {
+              "word": "brought",
+              "start": 14.364,
+              "end": 14.629,
+              "speaker": "narrator"
+            },
+            {
+              "word": "an",
+              "start": 14.656,
+              "end": 14.749,
+              "speaker": "narrator"
+            },
+            {
+              "word": "umbrella",
+              "start": 14.776,
+              "end": 15.321,
+              "speaker": "narrator"
+            }
+          ]
+        },
+        {
+          "speaker": "mother",
+          "text": "You didn't have to do this.",
+          "start": 16.976,
+          "end": 18.368,
+          "words": [
+            {
+              "word": "You",
+              "start": 16.976,
+              "end": 17.059,
+              "speaker": "mother"
+            },
+            {
+              "word": "didn't",
+              "start": 17.072,
+              "end": 17.309,
+              "speaker": "mother"
+            },
+            {
+              "word": "have",
+              "start": 17.322,
+              "end": 17.532,
+              "speaker": "mother"
+            },
+            {
+              "word": "to",
+              "start": 17.545,
+              "end": 17.638,
+              "speaker": "mother"
+            },
+            {
+              "word": "do",
+              "start": 17.651,
+              "end": 17.822,
+              "speaker": "mother"
+            },
+            {
+              "word": "this",
+              "start": 17.835,
+              "end": 18.322,
+              "speaker": "mother"
+            }
+          ]
+        },
+        {
+          "speaker": "sam",
+          "text": "I know.",
+          "start": 19.268,
+          "end": 19.757,
+          "words": [
+            {
+              "word": "I",
+              "start": 19.268,
+              "end": 19.313,
+              "speaker": "sam"
+            },
+            {
+              "word": "know",
+              "start": 19.326,
+              "end": 19.649,
+              "speaker": "sam"
+            }
+          ]
+        },
+        {
+          "speaker": "sam",
+          "text": "But she shouldn't have to sit in the rain.",
+          "start": 20.957,
+          "end": 22.819,
+          "words": [
+            {
+              "word": "But",
+              "start": 20.957,
+              "end": 21.047,
+              "speaker": "sam"
+            },
+            {
+              "word": "she",
+              "start": 21.06,
+              "end": 21.222,
+              "speaker": "sam"
+            },
+            {
+              "word": "shouldn't",
+              "start": 21.235,
+              "end": 21.558,
+              "speaker": "sam"
+            },
+            {
+              "word": "have",
+              "start": 21.571,
+              "end": 21.786,
+              "speaker": "sam"
+            },
+            {
+              "word": "to",
+              "start": 21.8,
+              "end": 21.88,
+              "speaker": "sam"
+            },
+            {
+              "word": "sit",
+              "start": 21.894,
+              "end": 22.136,
+              "speaker": "sam"
+            },
+            {
+              "word": "in",
+              "start": 22.149,
+              "end": 22.23,
+              "speaker": "sam"
+            },
+            {
+              "word": "the",
+              "start": 22.243,
+              "end": 22.31,
+              "speaker": "sam"
+            },
+            {
+              "word": "rain",
+              "start": 22.324,
+              "end": 22.714,
+              "speaker": "sam"
+            }
+          ]
+        },
+        {
+          "speaker": "narrator",
+          "text": "He never asked for thanks. He didn't even stay long enough to receive it.",
+          "start": 25.019,
+          "end": 29.998,
+          "words": [
+            {
+              "word": "He",
+              "start": 25.019,
+              "end": 25.109,
+              "speaker": "narrator"
+            },
+            {
+              "word": "never",
+              "start": 25.122,
+              "end": 25.454,
+              "speaker": "narrator"
+            },
+            {
+              "word": "asked",
+              "start": 25.468,
+              "end": 25.747,
+              "speaker": "narrator"
+            },
+            {
+              "word": "for",
+              "start": 25.773,
+              "end": 25.933,
+              "speaker": "narrator"
+            },
+            {
+              "word": "thanks",
+              "start": 25.96,
+              "end": 26.545,
+              "speaker": "narrator"
+            },
+            {
+              "word": "He",
+              "start": 27.465,
+              "end": 27.638,
+              "speaker": "narrator"
+            },
+            {
+              "word": "didn't",
+              "start": 27.665,
+              "end": 27.971,
+              "speaker": "narrator"
+            },
+            {
+              "word": "even",
+              "start": 27.997,
+              "end": 28.237,
+              "speaker": "narrator"
+            },
+            {
+              "word": "stay",
+              "start": 28.263,
+              "end": 28.529,
+              "speaker": "narrator"
+            },
+            {
+              "word": "long",
+              "start": 28.556,
+              "end": 28.875,
+              "speaker": "narrator"
+            },
+            {
+              "word": "enough",
+              "start": 28.888,
+              "end": 29.141,
+              "speaker": "narrator"
+            },
+            {
+              "word": "to",
+              "start": 29.154,
+              "end": 29.261,
+              "speaker": "narrator"
+            },
+            {
+              "word": "receive",
+              "start": 29.274,
+              "end": 29.713,
+              "speaker": "narrator"
+            },
+            {
+              "word": "it",
+              "start": 29.726,
+              "end": 29.912,
+              "speaker": "narrator"
+            }
+          ]
+        }
+      ],
+      "word_timings": [
+        {
+          "word": "Lily's",
+          "start": 1.3,
+          "end": 1.697,
+          "speaker": "narrator"
+        },
+        {
+          "word": "mother",
+          "start": 1.724,
+          "end": 2.069,
+          "speaker": "narrator"
+        },
+        {
+          "word": "worked",
+          "start": 2.096,
+          "end": 2.389,
+          "speaker": "narrator"
+        },
+        {
+          "word": "late",
+          "start": 2.402,
+          "end": 2.801,
+          "speaker": "narrator"
+        },
+        {
+          "word": "The",
+          "start": 3.735,
+          "end": 3.881,
+          "speaker": "narrator"
+        },
+        {
+          "word": "bus",
+          "start": 3.908,
+          "end": 4.134,
+          "speaker": "narrator"
+        },
+        {
+          "word": "was",
+          "start": 4.147,
+          "end": 4.347,
+          "speaker": "narrator"
+        },
+        {
+          "word": "often",
+          "start": 4.373,
+          "end": 4.679,
+          "speaker": "narrator"
+        },
+        {
+          "word": "delayed",
+          "start": 4.706,
+          "end": 5.144,
+          "speaker": "narrator"
+        },
+        {
+          "word": "and",
+          "start": 5.384,
+          "end": 5.517,
+          "speaker": "narrator"
+        },
+        {
+          "word": "the",
+          "start": 5.543,
+          "end": 5.637,
+          "speaker": "narrator"
+        },
+        {
+          "word": "shelter",
+          "start": 5.65,
+          "end": 6.102,
+          "speaker": "narrator"
+        },
+        {
+          "word": "leaked",
+          "start": 6.115,
+          "end": 6.421,
+          "speaker": "narrator"
+        },
+        {
+          "word": "whenever",
+          "start": 6.448,
+          "end": 6.833,
+          "speaker": "narrator"
+        },
+        {
+          "word": "the",
+          "start": 6.847,
+          "end": 6.953,
+          "speaker": "narrator"
+        },
+        {
+          "word": "wind",
+          "start": 6.98,
+          "end": 7.219,
+          "speaker": "narrator"
+        },
+        {
+          "word": "changed",
+          "start": 7.246,
+          "end": 7.791,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Sam",
+          "start": 9.078,
+          "end": 9.387,
+          "speaker": "narrator"
+        },
+        {
+          "word": "had",
+          "start": 9.414,
+          "end": 9.6,
+          "speaker": "narrator"
+        },
+        {
+          "word": "noticed",
+          "start": 9.626,
+          "end": 10.012,
+          "speaker": "narrator"
+        },
+        {
+          "word": "the",
+          "start": 10.039,
+          "end": 10.145,
+          "speaker": "narrator"
+        },
+        {
+          "word": "little",
+          "start": 10.172,
+          "end": 10.424,
+          "speaker": "narrator"
+        },
+        {
+          "word": "girl",
+          "start": 10.437,
+          "end": 10.743,
+          "speaker": "narrator"
+        },
+        {
+          "word": "waiting",
+          "start": 10.77,
+          "end": 11.116,
+          "speaker": "narrator"
+        },
+        {
+          "word": "alone",
+          "start": 11.142,
+          "end": 11.621,
+          "speaker": "narrator"
+        },
+        {
+          "word": "So",
+          "start": 12.568,
+          "end": 12.967,
+          "speaker": "narrator"
+        },
+        {
+          "word": "whenever",
+          "start": 13.14,
+          "end": 13.579,
+          "speaker": "narrator"
+        },
+        {
+          "word": "it",
+          "start": 13.606,
+          "end": 13.699,
+          "speaker": "narrator"
+        },
+        {
+          "word": "rained",
+          "start": 13.725,
+          "end": 14.071,
+          "speaker": "narrator"
+        },
+        {
+          "word": "he",
+          "start": 14.244,
+          "end": 14.35,
+          "speaker": "narrator"
+        },
+        {
+          "word": "brought",
+          "start": 14.364,
+          "end": 14.629,
+          "speaker": "narrator"
+        },
+        {
+          "word": "an",
+          "start": 14.656,
+          "end": 14.749,
+          "speaker": "narrator"
+        },
+        {
+          "word": "umbrella",
+          "start": 14.776,
+          "end": 15.321,
+          "speaker": "narrator"
+        },
+        {
+          "word": "You",
+          "start": 16.976,
+          "end": 17.059,
+          "speaker": "mother"
+        },
+        {
+          "word": "didn't",
+          "start": 17.072,
+          "end": 17.309,
+          "speaker": "mother"
+        },
+        {
+          "word": "have",
+          "start": 17.322,
+          "end": 17.532,
+          "speaker": "mother"
+        },
+        {
+          "word": "to",
+          "start": 17.545,
+          "end": 17.638,
+          "speaker": "mother"
+        },
+        {
+          "word": "do",
+          "start": 17.651,
+          "end": 17.822,
+          "speaker": "mother"
+        },
+        {
+          "word": "this",
+          "start": 17.835,
+          "end": 18.322,
+          "speaker": "mother"
+        },
+        {
+          "word": "I",
+          "start": 19.268,
+          "end": 19.313,
+          "speaker": "sam"
+        },
+        {
+          "word": "know",
+          "start": 19.326,
+          "end": 19.649,
+          "speaker": "sam"
+        },
+        {
+          "word": "But",
+          "start": 20.957,
+          "end": 21.047,
+          "speaker": "sam"
+        },
+        {
+          "word": "she",
+          "start": 21.06,
+          "end": 21.222,
+          "speaker": "sam"
+        },
+        {
+          "word": "shouldn't",
+          "start": 21.235,
+          "end": 21.558,
+          "speaker": "sam"
+        },
+        {
+          "word": "have",
+          "start": 21.571,
+          "end": 21.786,
+          "speaker": "sam"
+        },
+        {
+          "word": "to",
+          "start": 21.8,
+          "end": 21.88,
+          "speaker": "sam"
+        },
+        {
+          "word": "sit",
+          "start": 21.894,
+          "end": 22.136,
+          "speaker": "sam"
+        },
+        {
+          "word": "in",
+          "start": 22.149,
+          "end": 22.23,
+          "speaker": "sam"
+        },
+        {
+          "word": "the",
+          "start": 22.243,
+          "end": 22.31,
+          "speaker": "sam"
+        },
+        {
+          "word": "rain",
+          "start": 22.324,
+          "end": 22.714,
+          "speaker": "sam"
+        },
+        {
+          "word": "He",
+          "start": 25.019,
+          "end": 25.109,
+          "speaker": "narrator"
+        },
+        {
+          "word": "never",
+          "start": 25.122,
+          "end": 25.454,
+          "speaker": "narrator"
+        },
+        {
+          "word": "asked",
+          "start": 25.468,
+          "end": 25.747,
+          "speaker": "narrator"
+        },
+        {
+          "word": "for",
+          "start": 25.773,
+          "end": 25.933,
+          "speaker": "narrator"
+        },
+        {
+          "word": "thanks",
+          "start": 25.96,
+          "end": 26.545,
+          "speaker": "narrator"
+        },
+        {
+          "word": "He",
+          "start": 27.465,
+          "end": 27.638,
+          "speaker": "narrator"
+        },
+        {
+          "word": "didn't",
+          "start": 27.665,
+          "end": 27.971,
+          "speaker": "narrator"
+        },
+        {
+          "word": "even",
+          "start": 27.997,
+          "end": 28.237,
+          "speaker": "narrator"
+        },
+        {
+          "word": "stay",
+          "start": 28.263,
+          "end": 28.529,
+          "speaker": "narrator"
+        },
+        {
+          "word": "long",
+          "start": 28.556,
+          "end": 28.875,
+          "speaker": "narrator"
+        },
+        {
+          "word": "enough",
+          "start": 28.888,
+          "end": 29.141,
+          "speaker": "narrator"
+        },
+        {
+          "word": "to",
+          "start": 29.154,
+          "end": 29.261,
+          "speaker": "narrator"
+        },
+        {
+          "word": "receive",
+          "start": 29.274,
+          "end": 29.713,
+          "speaker": "narrator"
+        },
+        {
+          "word": "it",
+          "start": 29.726,
+          "end": 29.912,
+          "speaker": "narrator"
+        }
+      ],
+      "narration": "Lily's mother worked late. The bus was often delayed, and the shelter leaked whenever the wind changed. Sam had noticed the little girl waiting alone. So, whenever it rained, he brought an umbrella. You didn't have to do this. I know. But she shouldn't have to sit in the rain. He never asked for thanks. He didn't even stay long enough to receive it.",
+      "lock_beats": true,
+      "lock_camera_shots": true,
+      "props": [
+        {
+          "type": "bus_shelter",
+          "x": 0.56,
+          "scale": 1.48,
+          "broken_roof": true,
+          "leaking": true,
+          "shielded": false
+        },
+        {
+          "type": "umbrella_stand",
+          "x": 0.49,
+          "scale": 1.35,
+          "umbrellas": [
+            "#ef4444"
+          ],
+          "from_t": 24.62
+        }
+      ],
+      "sfx": [
+        {
+          "at": 21.65,
+          "type": "paper_rustle",
+          "pan": -0.1
+        }
+      ],
+      "characters": [
+        {
+          "id": "eli",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 10.59,
+              "action": "idle_stand",
+              "x": 0.12,
+              "facing": 1,
+              "expression": "sad",
+              "posture": -0.12
+            },
+            {
+              "start": 10.59,
+              "end": 19.25,
+              "action": "listen_nod",
+              "x": 0.12,
+              "facing": 1,
+              "expression": "sad",
+              "posture": -0.12
+            },
+            {
+              "start": 19.25,
+              "end": 27.91,
+              "action": "listen_nod",
+              "x": 0.12,
+              "facing": 1,
+              "expression": "sad",
+              "posture": -0.12
+            },
+            {
+              "start": 27.91,
+              "end": 35.0,
+              "action": "talk_explain",
+              "x": 0.12,
+              "facing": 1,
+              "expression": "sad",
+              "posture": -0.12
+            }
+          ]
+        },
+        {
+          "id": "mother",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.5,
+              "action": "run",
+              "fromX": 0.92,
+              "toX": 0.68,
+              "expression": "tired"
+            },
+            {
+              "start": 3.5,
+              "end": 16.68,
+              "action": "hug_kneel",
+              "x": 0.67,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 16.68,
+              "end": 20.96,
+              "action": "handoff_give",
+              "x": 0.66,
+              "facing": -1,
+              "expression": "sad"
+            },
+            {
+              "start": 20.96,
+              "end": 25.21,
+              "action": "listen_nod",
+              "x": 0.62,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 25.21,
+              "end": 28.68,
+              "action": "talk_explain",
+              "x": 0.62,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 28.68,
+              "end": 32.16,
+              "action": "idle_stand",
+              "x": 0.62,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 32.16,
+              "end": 35.0,
+              "action": "listen_nod",
+              "x": 0.62,
+              "facing": -1,
+              "expression": "smile"
+            }
+          ]
+        },
+        {
+          "id": "lily",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.5,
+              "action": "run",
+              "fromX": 0.56,
+              "toX": 0.63,
+              "expression": "excited"
+            },
+            {
+              "start": 3.5,
+              "end": 7.49,
+              "action": "celebrate_arms_up",
+              "x": 0.63,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 7.49,
+              "end": 10.75,
+              "action": "look_horizon",
+              "x": 0.63,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 10.75,
+              "end": 16.68,
+              "action": "look_horizon",
+              "x": 0.63,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 16.68,
+              "end": 22.22,
+              "action": "idle_stand",
+              "x": 0.58,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 22.22,
+              "end": 26.76,
+              "action": "listen_nod",
+              "x": 0.58,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 26.76,
+              "end": 31.29,
+              "action": "listen_nod",
+              "x": 0.58,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 31.29,
+              "end": 35.0,
+              "action": "talk_explain",
+              "x": 0.58,
+              "facing": -1,
+              "expression": "smile"
+            }
+          ]
+        },
+        {
+          "id": "sam",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 16.78,
+              "action": "hold_umbrella",
+              "x": 0.44,
+              "facing": 1,
+              "umbrella_color": "#ef4444",
+              "umbrella_open": true,
+              "wet_shoulder": true,
+              "expression": "neutral"
+            },
+            {
+              "start": 16.78,
+              "end": 21.55,
+              "action": "chest_hand_sincere",
+              "x": 0.43,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 21.55,
+              "end": 24.62,
+              "action": "hold_drawing",
+              "x": 0.41,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 24.62,
+              "end": 35.0,
+              "action": "walk_sad",
+              "fromX": 0.41,
+              "toX": 0.19,
+              "expression": "neutral"
+            }
+          ]
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "end": 16.78,
+          "zoom_from": 1.2,
+          "zoom_to": 1.28,
+          "focus_x": 0.58,
+          "focus_y": 0.65,
+          "cut": true
+        },
+        {
+          "start": 16.78,
+          "end": 24.72,
+          "zoom_from": 1.02,
+          "zoom_to": 1.04,
+          "focus_x": 0.5,
+          "focus_y": 0.52,
+          "cut": false,
+          "blend_sec": 0.65
+        },
+        {
+          "start": 24.72,
+          "end": 35.0,
+          "zoom_from": 1.16,
+          "zoom_to": 1.08,
+          "focus_x": 0.36,
+          "focus_y": 0.64,
+          "cut": false,
+          "blend_sec": 0.8
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "mood": "reflective",
+      "bgm": "reflective_piano",
+      "bgm_offset": 96.0,
+      "bgm_gain": 0.72,
+      "bgm_fade_out": true,
+      "accent_color": "#fbbf24",
+      "lead_in": 1.4,
+      "tail_out": 2.2,
+      "min_duration": 32.0,
+      "setting": {
+        "sky": [
+          "#050a14",
+          "#0e1829"
+        ],
+        "floor_color": "#050811",
+        "light_color": "#64748b",
+        "backdrop": "windows",
+        "weather": "rain",
+        "lighting": "skylights"
+      },
+      "accent_words": [
+        "taken",
+        "wondered",
+        "why",
+        "kindness",
+        "forgotten",
+        "ask"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Eli had spent three evenings thinking about what had been taken from him.",
+          "pause_after": 1.2
+        },
+        {
+          "speaker": "narrator",
+          "text": "He hadn't once wondered why someone would keep taking it.",
+          "pause_after": 2.2
+        },
+        {
+          "speaker": "narrator",
+          "text": "Long ago, someone had taught Eli that kindness wasn't always convenient. Somewhere along the way, he'd forgotten.",
+          "pause_after": 2.4
+        },
+        {
+          "speaker": "eli",
+          "text": "I didn't even ask.",
+          "pause_after": 2.8
+        }
+      ],
+      "duration": 32.0,
+      "line_timings": [
+        {
+          "speaker": "narrator",
+          "text": "Eli had spent three evenings thinking about what had been taken from him.",
+          "start": 1.4,
+          "end": 5.103,
+          "words": [
+            {
+              "word": "Eli",
+              "start": 1.4,
+              "end": 1.736,
+              "speaker": "narrator"
+            },
+            {
+              "word": "had",
+              "start": 1.75,
+              "end": 1.909,
+              "speaker": "narrator"
+            },
+            {
+              "word": "spent",
+              "start": 1.936,
+              "end": 2.228,
+              "speaker": "narrator"
+            },
+            {
+              "word": "three",
+              "start": 2.255,
+              "end": 2.521,
+              "speaker": "narrator"
+            },
+            {
+              "word": "evenings",
+              "start": 2.548,
+              "end": 2.973,
+              "speaker": "narrator"
+            },
+            {
+              "word": "thinking",
+              "start": 3.0,
+              "end": 3.372,
+              "speaker": "narrator"
+            },
+            {
+              "word": "about",
+              "start": 3.385,
+              "end": 3.665,
+              "speaker": "narrator"
+            },
+            {
+              "word": "what",
+              "start": 3.691,
+              "end": 3.837,
+              "speaker": "narrator"
+            },
+            {
+              "word": "had",
+              "start": 3.851,
+              "end": 3.957,
+              "speaker": "narrator"
+            },
+            {
+              "word": "been",
+              "start": 3.984,
+              "end": 4.143,
+              "speaker": "narrator"
+            },
+            {
+              "word": "taken",
+              "start": 4.17,
+              "end": 4.542,
+              "speaker": "narrator"
+            },
+            {
+              "word": "from",
+              "start": 4.569,
+              "end": 4.768,
+              "speaker": "narrator"
+            },
+            {
+              "word": "him",
+              "start": 4.795,
+              "end": 4.994,
+              "speaker": "narrator"
+            }
+          ]
+        },
+        {
+          "speaker": "narrator",
+          "text": "He hadn't once wondered why someone would keep taking it.",
+          "start": 6.303,
+          "end": 9.159,
+          "words": [
+            {
+              "word": "He",
+              "start": 6.303,
+              "end": 6.376,
+              "speaker": "narrator"
+            },
+            {
+              "word": "hadn't",
+              "start": 6.403,
+              "end": 6.722,
+              "speaker": "narrator"
+            },
+            {
+              "word": "once",
+              "start": 6.735,
+              "end": 7.001,
+              "speaker": "narrator"
+            },
+            {
+              "word": "wondered",
+              "start": 7.014,
+              "end": 7.36,
+              "speaker": "narrator"
+            },
+            {
+              "word": "why",
+              "start": 7.387,
+              "end": 7.586,
+              "speaker": "narrator"
+            },
+            {
+              "word": "someone",
+              "start": 7.613,
+              "end": 8.052,
+              "speaker": "narrator"
+            },
+            {
+              "word": "would",
+              "start": 8.078,
+              "end": 8.211,
+              "speaker": "narrator"
+            },
+            {
+              "word": "keep",
+              "start": 8.238,
+              "end": 8.464,
+              "speaker": "narrator"
+            },
+            {
+              "word": "taking",
+              "start": 8.491,
+              "end": 8.889,
+              "speaker": "narrator"
+            },
+            {
+              "word": "it",
+              "start": 8.903,
+              "end": 9.089,
+              "speaker": "narrator"
+            }
+          ]
+        },
+        {
+          "speaker": "narrator",
+          "text": "Long ago, someone had taught Eli that kindness wasn't always convenient. Somewhere along the way, he'd forgotten.",
+          "start": 11.359,
+          "end": 18.819,
+          "words": [
+            {
+              "word": "Long",
+              "start": 11.359,
+              "end": 11.59,
+              "speaker": "narrator"
+            },
+            {
+              "word": "ago",
+              "start": 11.617,
+              "end": 11.91,
+              "speaker": "narrator"
+            },
+            {
+              "word": "someone",
+              "start": 12.189,
+              "end": 12.495,
+              "speaker": "narrator"
+            },
+            {
+              "word": "had",
+              "start": 12.521,
+              "end": 12.668,
+              "speaker": "narrator"
+            },
+            {
+              "word": "taught",
+              "start": 12.694,
+              "end": 12.934,
+              "speaker": "narrator"
+            },
+            {
+              "word": "Eli",
+              "start": 12.947,
+              "end": 13.266,
+              "speaker": "narrator"
+            },
+            {
+              "word": "that",
+              "start": 13.293,
+              "end": 13.452,
+              "speaker": "narrator"
+            },
+            {
+              "word": "kindness",
+              "start": 13.479,
+              "end": 13.931,
+              "speaker": "narrator"
+            },
+            {
+              "word": "wasn't",
+              "start": 13.958,
+              "end": 14.303,
+              "speaker": "narrator"
+            },
+            {
+              "word": "always",
+              "start": 14.33,
+              "end": 14.729,
+              "speaker": "narrator"
+            },
+            {
+              "word": "convenient",
+              "start": 14.742,
+              "end": 15.46,
+              "speaker": "narrator"
+            },
+            {
+              "word": "Somewhere",
+              "start": 16.394,
+              "end": 16.913,
+              "speaker": "narrator"
+            },
+            {
+              "word": "along",
+              "start": 16.939,
+              "end": 17.245,
+              "speaker": "narrator"
+            },
+            {
+              "word": "the",
+              "start": 17.272,
+              "end": 17.392,
+              "speaker": "narrator"
+            },
+            {
+              "word": "way",
+              "start": 17.405,
+              "end": 17.697,
+              "speaker": "narrator"
+            },
+            {
+              "word": "he'd",
+              "start": 17.91,
+              "end": 18.083,
+              "speaker": "narrator"
+            },
+            {
+              "word": "forgotten",
+              "start": 18.11,
+              "end": 18.721,
+              "speaker": "narrator"
+            }
+          ]
+        },
+        {
+          "speaker": "eli",
+          "text": "I didn't even ask.",
+          "start": 21.219,
+          "end": 22.393,
+          "words": [
+            {
+              "word": "I",
+              "start": 21.219,
+              "end": 21.278,
+              "speaker": "eli"
+            },
+            {
+              "word": "didn't",
+              "start": 21.291,
+              "end": 21.575,
+              "speaker": "eli"
+            },
+            {
+              "word": "even",
+              "start": 21.588,
+              "end": 21.794,
+              "speaker": "eli"
+            },
+            {
+              "word": "ask",
+              "start": 21.807,
+              "end": 22.335,
+              "speaker": "eli"
+            }
+          ]
+        }
+      ],
+      "word_timings": [
+        {
+          "word": "Eli",
+          "start": 1.4,
+          "end": 1.736,
+          "speaker": "narrator"
+        },
+        {
+          "word": "had",
+          "start": 1.75,
+          "end": 1.909,
+          "speaker": "narrator"
+        },
+        {
+          "word": "spent",
+          "start": 1.936,
+          "end": 2.228,
+          "speaker": "narrator"
+        },
+        {
+          "word": "three",
+          "start": 2.255,
+          "end": 2.521,
+          "speaker": "narrator"
+        },
+        {
+          "word": "evenings",
+          "start": 2.548,
+          "end": 2.973,
+          "speaker": "narrator"
+        },
+        {
+          "word": "thinking",
+          "start": 3.0,
+          "end": 3.372,
+          "speaker": "narrator"
+        },
+        {
+          "word": "about",
+          "start": 3.385,
+          "end": 3.665,
+          "speaker": "narrator"
+        },
+        {
+          "word": "what",
+          "start": 3.691,
+          "end": 3.837,
+          "speaker": "narrator"
+        },
+        {
+          "word": "had",
+          "start": 3.851,
+          "end": 3.957,
+          "speaker": "narrator"
+        },
+        {
+          "word": "been",
+          "start": 3.984,
+          "end": 4.143,
+          "speaker": "narrator"
+        },
+        {
+          "word": "taken",
+          "start": 4.17,
+          "end": 4.542,
+          "speaker": "narrator"
+        },
+        {
+          "word": "from",
+          "start": 4.569,
+          "end": 4.768,
+          "speaker": "narrator"
+        },
+        {
+          "word": "him",
+          "start": 4.795,
+          "end": 4.994,
+          "speaker": "narrator"
+        },
+        {
+          "word": "He",
+          "start": 6.303,
+          "end": 6.376,
+          "speaker": "narrator"
+        },
+        {
+          "word": "hadn't",
+          "start": 6.403,
+          "end": 6.722,
+          "speaker": "narrator"
+        },
+        {
+          "word": "once",
+          "start": 6.735,
+          "end": 7.001,
+          "speaker": "narrator"
+        },
+        {
+          "word": "wondered",
+          "start": 7.014,
+          "end": 7.36,
+          "speaker": "narrator"
+        },
+        {
+          "word": "why",
+          "start": 7.387,
+          "end": 7.586,
+          "speaker": "narrator"
+        },
+        {
+          "word": "someone",
+          "start": 7.613,
+          "end": 8.052,
+          "speaker": "narrator"
+        },
+        {
+          "word": "would",
+          "start": 8.078,
+          "end": 8.211,
+          "speaker": "narrator"
+        },
+        {
+          "word": "keep",
+          "start": 8.238,
+          "end": 8.464,
+          "speaker": "narrator"
+        },
+        {
+          "word": "taking",
+          "start": 8.491,
+          "end": 8.889,
+          "speaker": "narrator"
+        },
+        {
+          "word": "it",
+          "start": 8.903,
+          "end": 9.089,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Long",
+          "start": 11.359,
+          "end": 11.59,
+          "speaker": "narrator"
+        },
+        {
+          "word": "ago",
+          "start": 11.617,
+          "end": 11.91,
+          "speaker": "narrator"
+        },
+        {
+          "word": "someone",
+          "start": 12.189,
+          "end": 12.495,
+          "speaker": "narrator"
+        },
+        {
+          "word": "had",
+          "start": 12.521,
+          "end": 12.668,
+          "speaker": "narrator"
+        },
+        {
+          "word": "taught",
+          "start": 12.694,
+          "end": 12.934,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Eli",
+          "start": 12.947,
+          "end": 13.266,
+          "speaker": "narrator"
+        },
+        {
+          "word": "that",
+          "start": 13.293,
+          "end": 13.452,
+          "speaker": "narrator"
+        },
+        {
+          "word": "kindness",
+          "start": 13.479,
+          "end": 13.931,
+          "speaker": "narrator"
+        },
+        {
+          "word": "wasn't",
+          "start": 13.958,
+          "end": 14.303,
+          "speaker": "narrator"
+        },
+        {
+          "word": "always",
+          "start": 14.33,
+          "end": 14.729,
+          "speaker": "narrator"
+        },
+        {
+          "word": "convenient",
+          "start": 14.742,
+          "end": 15.46,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Somewhere",
+          "start": 16.394,
+          "end": 16.913,
+          "speaker": "narrator"
+        },
+        {
+          "word": "along",
+          "start": 16.939,
+          "end": 17.245,
+          "speaker": "narrator"
+        },
+        {
+          "word": "the",
+          "start": 17.272,
+          "end": 17.392,
+          "speaker": "narrator"
+        },
+        {
+          "word": "way",
+          "start": 17.405,
+          "end": 17.697,
+          "speaker": "narrator"
+        },
+        {
+          "word": "he'd",
+          "start": 17.91,
+          "end": 18.083,
+          "speaker": "narrator"
+        },
+        {
+          "word": "forgotten",
+          "start": 18.11,
+          "end": 18.721,
+          "speaker": "narrator"
+        },
+        {
+          "word": "I",
+          "start": 21.219,
+          "end": 21.278,
+          "speaker": "eli"
+        },
+        {
+          "word": "didn't",
+          "start": 21.291,
+          "end": 21.575,
+          "speaker": "eli"
+        },
+        {
+          "word": "even",
+          "start": 21.588,
+          "end": 21.794,
+          "speaker": "eli"
+        },
+        {
+          "word": "ask",
+          "start": 21.807,
+          "end": 22.335,
+          "speaker": "eli"
+        }
+      ],
+      "narration": "Eli had spent three evenings thinking about what had been taken from him. He hadn't once wondered why someone would keep taking it. Long ago, someone had taught Eli that kindness wasn't always convenient. Somewhere along the way, he'd forgotten. I didn't even ask.",
+      "lock_beats": true,
+      "lock_camera_shots": true,
+      "flashback_window": [
+        10.96,
+        19.42
+      ],
+      "props": [
+        {
+          "type": "bench",
+          "x": 0.34,
+          "scale": 1.48,
+          "to_t": 10.96
+        },
+        {
+          "type": "bench",
+          "x": 0.34,
+          "scale": 1.48,
+          "from_t": 19.42
+        },
+        {
+          "type": "photo_table",
+          "x": 0.55,
+          "scale": 1.52,
+          "to_t": 10.96
+        },
+        {
+          "type": "photo_table",
+          "x": 0.55,
+          "scale": 1.52,
+          "from_t": 19.42
+        },
+        {
+          "type": "umbrella_stand",
+          "x": 0.78,
+          "scale": 1.5,
+          "umbrellas": [],
+          "to_t": 10.96
+        },
+        {
+          "type": "umbrella_stand",
+          "x": 0.78,
+          "scale": 1.5,
+          "umbrellas": [],
+          "from_t": 19.42
+        }
+      ],
+      "sfx": [
+        {
+          "at": 29.3,
+          "type": "thunder_rumble",
+          "pan": 0.25
+        }
+      ],
+      "characters": [
+        {
+          "id": "eli",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.47,
+              "action": "sit_bench",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "tired",
+              "posture": -0.25
+            },
+            {
+              "start": 3.47,
+              "end": 6.3,
+              "action": "idle_stand",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "tired",
+              "posture": -0.25
+            },
+            {
+              "start": 6.3,
+              "end": 10.96,
+              "action": "sit_bench",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "sad",
+              "look_x": 0.55
+            },
+            {
+              "start": 10.96,
+              "end": 19.42,
+              "action": "hold_umbrella",
+              "x": 0.45,
+              "facing": 1,
+              "umbrella_color": "#eab308",
+              "umbrella_open": true,
+              "shelter_other": true,
+              "umbrella_tilt": 0.16,
+              "expression": "smile"
+            },
+            {
+              "start": 19.42,
+              "end": 22.62,
+              "action": "head_in_hands",
+              "seated": true,
+              "x": 0.34,
+              "facing": 1,
+              "expression": "sad"
+            },
+            {
+              "start": 22.62,
+              "end": 27.78,
+              "action": "sit_bench",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "curious",
+              "look_x": 0.5,
+              "look_y": -0.45
+            },
+            {
+              "start": 27.78,
+              "end": 32.0,
+              "action": "idle_stand",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "curious",
+              "look_x": 0.5,
+              "look_y": -0.45
+            }
+          ]
+        },
+        {
+          "id": "brother",
+          "show_name": false,
+          "from_t": 10.96,
+          "to_t": 19.42,
+          "beats": [
+            {
+              "start": 10.96,
+              "end": 15.61,
+              "action": "celebrate_arms_up",
+              "x": 0.54,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 15.61,
+              "end": 19.42,
+              "action": "look_horizon",
+              "x": 0.54,
+              "facing": -1,
+              "expression": "smile"
+            }
+          ]
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "end": 10.96,
+          "zoom_from": 1.12,
+          "zoom_to": 1.38,
+          "focus_x_from": 0.46,
+          "focus_x_to": 0.52,
+          "focus_y": 0.65,
+          "cut": true
+        },
+        {
+          "start": 10.96,
+          "end": 19.42,
+          "zoom_from": 1.24,
+          "zoom_to": 1.3,
+          "focus_x": 0.5,
+          "focus_y": 0.64,
+          "cut": true
+        },
+        {
+          "start": 19.42,
+          "end": 32.0,
+          "zoom_from": 1.34,
+          "zoom_to": 1.26,
+          "focus_x": 0.4,
+          "focus_y": 0.65,
+          "cut": true
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "mood": "tension",
+      "bgm": "suspense_tension",
+      "bgm_offset": 38.0,
+      "bgm_gain": 0.92,
+      "accent_color": "#38bdf8",
+      "lead_in": 1.6,
+      "tail_out": 2.2,
+      "min_duration": 40.0,
+      "setting": {
+        "sky": [
+          "#050912",
+          "#101b2d"
+        ],
+        "floor_color": "#040810",
+        "light_color": "#64748b",
+        "lamp_color": "#fbbf24",
+        "window_color": "#fbbf24",
+        "window_warmth": 0.8,
+        "backdrop": "city",
+        "weather": "rain",
+        "rain_intensity": 1.65,
+        "lighting": "streetlamps",
+        "lamp_xs": [
+          0.18,
+          0.82
+        ]
+      },
+      "accent_words": [
+        "storm",
+        "protected",
+        "dozen",
+        "first",
+        "Take",
+        "manage"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "The next evening, the storm returned.",
+          "pause_after": 2.2
+        },
+        {
+          "speaker": "narrator",
+          "text": "Eli could have walked past. He could have protected what was his and told himself that someone else would help.",
+          "pause_after": 1.8
+        },
+        {
+          "speaker": "narrator",
+          "text": "He had a dozen reasons to keep walking.",
+          "pause_after": 3.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "For the first time, he chose not to use any of them.",
+          "pause_after": 1.8
+        },
+        {
+          "speaker": "eli",
+          "text": "Here. Take this one.",
+          "pause_after": 1.4
+        },
+        {
+          "speaker": "sam",
+          "text": "What about you?",
+          "pause_after": 1.3
+        },
+        {
+          "speaker": "eli",
+          "text": "I'll manage.",
+          "pause_after": 2.2
+        }
+      ],
+      "duration": 40.0,
+      "line_timings": [
+        {
+          "speaker": "narrator",
+          "text": "The next evening, the storm returned.",
+          "start": 1.6,
+          "end": 3.81,
+          "words": [
+            {
+              "word": "The",
+              "start": 1.6,
+              "end": 1.661,
+              "speaker": "narrator"
+            },
+            {
+              "word": "next",
+              "start": 1.674,
+              "end": 2.006,
+              "speaker": "narrator"
+            },
+            {
+              "word": "evening",
+              "start": 2.033,
+              "end": 2.392,
+              "speaker": "narrator"
+            },
+            {
+              "word": "the",
+              "start": 2.552,
+              "end": 2.671,
+              "speaker": "narrator"
+            },
+            {
+              "word": "storm",
+              "start": 2.698,
+              "end": 3.057,
+              "speaker": "narrator"
+            },
+            {
+              "word": "returned",
+              "start": 3.07,
+              "end": 3.735,
+              "speaker": "narrator"
+            }
+          ]
+        },
+        {
+          "speaker": "narrator",
+          "text": "Eli could have walked past. He could have protected what was his and told himself that someone else would help.",
+          "start": 6.01,
+          "end": 12.65,
+          "words": [
+            {
+              "word": "Eli",
+              "start": 6.01,
+              "end": 6.364,
+              "speaker": "narrator"
+            },
+            {
+              "word": "could",
+              "start": 6.391,
+              "end": 6.577,
+              "speaker": "narrator"
+            },
+            {
+              "word": "have",
+              "start": 6.59,
+              "end": 6.723,
+              "speaker": "narrator"
+            },
+            {
+              "word": "walked",
+              "start": 6.75,
+              "end": 7.069,
+              "speaker": "narrator"
+            },
+            {
+              "word": "past",
+              "start": 7.096,
+              "end": 7.627,
+              "speaker": "narrator"
+            },
+            {
+              "word": "He",
+              "start": 8.561,
+              "end": 8.734,
+              "speaker": "narrator"
+            },
+            {
+              "word": "could",
+              "start": 8.761,
+              "end": 8.934,
+              "speaker": "narrator"
+            },
+            {
+              "word": "have",
+              "start": 8.947,
+              "end": 9.067,
+              "speaker": "narrator"
+            },
+            {
+              "word": "protected",
+              "start": 9.093,
+              "end": 9.692,
+              "speaker": "narrator"
+            },
+            {
+              "word": "what",
+              "start": 9.718,
+              "end": 9.891,
+              "speaker": "narrator"
+            },
+            {
+              "word": "was",
+              "start": 9.918,
+              "end": 10.117,
+              "speaker": "narrator"
+            },
+            {
+              "word": "his",
+              "start": 10.144,
+              "end": 10.41,
+              "speaker": "narrator"
+            },
+            {
+              "word": "and",
+              "start": 10.436,
+              "end": 10.53,
+              "speaker": "narrator"
+            },
+            {
+              "word": "told",
+              "start": 10.556,
+              "end": 10.809,
+              "speaker": "narrator"
+            },
+            {
+              "word": "himself",
+              "start": 10.822,
+              "end": 11.248,
+              "speaker": "narrator"
+            },
+            {
+              "word": "that",
+              "start": 11.274,
+              "end": 11.407,
+              "speaker": "narrator"
+            },
+            {
+              "word": "someone",
+              "start": 11.434,
+              "end": 11.819,
+              "speaker": "narrator"
+            },
+            {
+              "word": "else",
+              "start": 11.846,
+              "end": 12.045,
+              "speaker": "narrator"
+            },
+            {
+              "word": "would",
+              "start": 12.059,
+              "end": 12.205,
+              "speaker": "narrator"
+            },
+            {
+              "word": "help",
+              "start": 12.232,
+              "end": 12.591,
+              "speaker": "narrator"
+            }
+          ]
+        },
+        {
+          "speaker": "narrator",
+          "text": "He had a dozen reasons to keep walking.",
+          "start": 14.45,
+          "end": 16.676,
+          "words": [
+            {
+              "word": "He",
+              "start": 14.45,
+              "end": 14.523,
+              "speaker": "narrator"
+            },
+            {
+              "word": "had",
+              "start": 14.55,
+              "end": 14.736,
+              "speaker": "narrator"
+            },
+            {
+              "word": "a",
+              "start": 14.763,
+              "end": 14.829,
+              "speaker": "narrator"
+            },
+            {
+              "word": "dozen",
+              "start": 14.856,
+              "end": 15.228,
+              "speaker": "narrator"
+            },
+            {
+              "word": "reasons",
+              "start": 15.255,
+              "end": 15.667,
+              "speaker": "narrator"
+            },
+            {
+              "word": "to",
+              "start": 15.693,
+              "end": 15.8,
+              "speaker": "narrator"
+            },
+            {
+              "word": "keep",
+              "start": 15.826,
+              "end": 16.066,
+              "speaker": "narrator"
+            },
+            {
+              "word": "walking",
+              "start": 16.092,
+              "end": 16.571,
+              "speaker": "narrator"
+            }
+          ]
+        },
+        {
+          "speaker": "narrator",
+          "text": "For the first time, he chose not to use any of them.",
+          "start": 20.076,
+          "end": 22.863,
+          "words": [
+            {
+              "word": "For",
+              "start": 20.076,
+              "end": 20.17,
+              "speaker": "narrator"
+            },
+            {
+              "word": "the",
+              "start": 20.183,
+              "end": 20.276,
+              "speaker": "narrator"
+            },
+            {
+              "word": "first",
+              "start": 20.303,
+              "end": 20.595,
+              "speaker": "narrator"
+            },
+            {
+              "word": "time",
+              "start": 20.609,
+              "end": 20.941,
+              "speaker": "narrator"
+            },
+            {
+              "word": "he",
+              "start": 21.127,
+              "end": 21.234,
+              "speaker": "narrator"
+            },
+            {
+              "word": "chose",
+              "start": 21.247,
+              "end": 21.526,
+              "speaker": "narrator"
+            },
+            {
+              "word": "not",
+              "start": 21.553,
+              "end": 21.765,
+              "speaker": "narrator"
+            },
+            {
+              "word": "to",
+              "start": 21.779,
+              "end": 21.872,
+              "speaker": "narrator"
+            },
+            {
+              "word": "use",
+              "start": 21.898,
+              "end": 22.138,
+              "speaker": "narrator"
+            },
+            {
+              "word": "any",
+              "start": 22.151,
+              "end": 22.377,
+              "speaker": "narrator"
+            },
+            {
+              "word": "of",
+              "start": 22.404,
+              "end": 22.497,
+              "speaker": "narrator"
+            },
+            {
+              "word": "them",
+              "start": 22.523,
+              "end": 22.75,
+              "speaker": "narrator"
+            }
+          ]
+        },
+        {
+          "speaker": "eli",
+          "text": "Here. Take this one.",
+          "start": 24.663,
+          "end": 26.899,
+          "words": [
+            {
+              "word": "Here",
+              "start": 24.663,
+              "end": 25.096,
+              "speaker": "eli"
+            },
+            {
+              "word": "Take",
+              "start": 25.974,
+              "end": 26.244,
+              "speaker": "eli"
+            },
+            {
+              "word": "this",
+              "start": 26.257,
+              "end": 26.463,
+              "speaker": "eli"
+            },
+            {
+              "word": "one",
+              "start": 26.476,
+              "end": 26.824,
+              "speaker": "eli"
+            }
+          ]
+        },
+        {
+          "speaker": "sam",
+          "text": "What about you?",
+          "start": 28.299,
+          "end": 28.98,
+          "words": [
+            {
+              "word": "What",
+              "start": 28.299,
+              "end": 28.399,
+              "speaker": "sam"
+            },
+            {
+              "word": "about",
+              "start": 28.412,
+              "end": 28.667,
+              "speaker": "sam"
+            },
+            {
+              "word": "you",
+              "start": 28.681,
+              "end": 28.882,
+              "speaker": "sam"
+            }
+          ]
+        },
+        {
+          "speaker": "eli",
+          "text": "I'll manage.",
+          "start": 30.28,
+          "end": 31.133,
+          "words": [
+            {
+              "word": "I'll",
+              "start": 30.28,
+              "end": 30.434,
+              "speaker": "eli"
+            },
+            {
+              "word": "manage",
+              "start": 30.447,
+              "end": 31.053,
+              "speaker": "eli"
+            }
+          ]
+        }
+      ],
+      "word_timings": [
+        {
+          "word": "The",
+          "start": 1.6,
+          "end": 1.661,
+          "speaker": "narrator"
+        },
+        {
+          "word": "next",
+          "start": 1.674,
+          "end": 2.006,
+          "speaker": "narrator"
+        },
+        {
+          "word": "evening",
+          "start": 2.033,
+          "end": 2.392,
+          "speaker": "narrator"
+        },
+        {
+          "word": "the",
+          "start": 2.552,
+          "end": 2.671,
+          "speaker": "narrator"
+        },
+        {
+          "word": "storm",
+          "start": 2.698,
+          "end": 3.057,
+          "speaker": "narrator"
+        },
+        {
+          "word": "returned",
+          "start": 3.07,
+          "end": 3.735,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Eli",
+          "start": 6.01,
+          "end": 6.364,
+          "speaker": "narrator"
+        },
+        {
+          "word": "could",
+          "start": 6.391,
+          "end": 6.577,
+          "speaker": "narrator"
+        },
+        {
+          "word": "have",
+          "start": 6.59,
+          "end": 6.723,
+          "speaker": "narrator"
+        },
+        {
+          "word": "walked",
+          "start": 6.75,
+          "end": 7.069,
+          "speaker": "narrator"
+        },
+        {
+          "word": "past",
+          "start": 7.096,
+          "end": 7.627,
+          "speaker": "narrator"
+        },
+        {
+          "word": "He",
+          "start": 8.561,
+          "end": 8.734,
+          "speaker": "narrator"
+        },
+        {
+          "word": "could",
+          "start": 8.761,
+          "end": 8.934,
+          "speaker": "narrator"
+        },
+        {
+          "word": "have",
+          "start": 8.947,
+          "end": 9.067,
+          "speaker": "narrator"
+        },
+        {
+          "word": "protected",
+          "start": 9.093,
+          "end": 9.692,
+          "speaker": "narrator"
+        },
+        {
+          "word": "what",
+          "start": 9.718,
+          "end": 9.891,
+          "speaker": "narrator"
+        },
+        {
+          "word": "was",
+          "start": 9.918,
+          "end": 10.117,
+          "speaker": "narrator"
+        },
+        {
+          "word": "his",
+          "start": 10.144,
+          "end": 10.41,
+          "speaker": "narrator"
+        },
+        {
+          "word": "and",
+          "start": 10.436,
+          "end": 10.53,
+          "speaker": "narrator"
+        },
+        {
+          "word": "told",
+          "start": 10.556,
+          "end": 10.809,
+          "speaker": "narrator"
+        },
+        {
+          "word": "himself",
+          "start": 10.822,
+          "end": 11.248,
+          "speaker": "narrator"
+        },
+        {
+          "word": "that",
+          "start": 11.274,
+          "end": 11.407,
+          "speaker": "narrator"
+        },
+        {
+          "word": "someone",
+          "start": 11.434,
+          "end": 11.819,
+          "speaker": "narrator"
+        },
+        {
+          "word": "else",
+          "start": 11.846,
+          "end": 12.045,
+          "speaker": "narrator"
+        },
+        {
+          "word": "would",
+          "start": 12.059,
+          "end": 12.205,
+          "speaker": "narrator"
+        },
+        {
+          "word": "help",
+          "start": 12.232,
+          "end": 12.591,
+          "speaker": "narrator"
+        },
+        {
+          "word": "He",
+          "start": 14.45,
+          "end": 14.523,
+          "speaker": "narrator"
+        },
+        {
+          "word": "had",
+          "start": 14.55,
+          "end": 14.736,
+          "speaker": "narrator"
+        },
+        {
+          "word": "a",
+          "start": 14.763,
+          "end": 14.829,
+          "speaker": "narrator"
+        },
+        {
+          "word": "dozen",
+          "start": 14.856,
+          "end": 15.228,
+          "speaker": "narrator"
+        },
+        {
+          "word": "reasons",
+          "start": 15.255,
+          "end": 15.667,
+          "speaker": "narrator"
+        },
+        {
+          "word": "to",
+          "start": 15.693,
+          "end": 15.8,
+          "speaker": "narrator"
+        },
+        {
+          "word": "keep",
+          "start": 15.826,
+          "end": 16.066,
+          "speaker": "narrator"
+        },
+        {
+          "word": "walking",
+          "start": 16.092,
+          "end": 16.571,
+          "speaker": "narrator"
+        },
+        {
+          "word": "For",
+          "start": 20.076,
+          "end": 20.17,
+          "speaker": "narrator"
+        },
+        {
+          "word": "the",
+          "start": 20.183,
+          "end": 20.276,
+          "speaker": "narrator"
+        },
+        {
+          "word": "first",
+          "start": 20.303,
+          "end": 20.595,
+          "speaker": "narrator"
+        },
+        {
+          "word": "time",
+          "start": 20.609,
+          "end": 20.941,
+          "speaker": "narrator"
+        },
+        {
+          "word": "he",
+          "start": 21.127,
+          "end": 21.234,
+          "speaker": "narrator"
+        },
+        {
+          "word": "chose",
+          "start": 21.247,
+          "end": 21.526,
+          "speaker": "narrator"
+        },
+        {
+          "word": "not",
+          "start": 21.553,
+          "end": 21.765,
+          "speaker": "narrator"
+        },
+        {
+          "word": "to",
+          "start": 21.779,
+          "end": 21.872,
+          "speaker": "narrator"
+        },
+        {
+          "word": "use",
+          "start": 21.898,
+          "end": 22.138,
+          "speaker": "narrator"
+        },
+        {
+          "word": "any",
+          "start": 22.151,
+          "end": 22.377,
+          "speaker": "narrator"
+        },
+        {
+          "word": "of",
+          "start": 22.404,
+          "end": 22.497,
+          "speaker": "narrator"
+        },
+        {
+          "word": "them",
+          "start": 22.523,
+          "end": 22.75,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Here",
+          "start": 24.663,
+          "end": 25.096,
+          "speaker": "eli"
+        },
+        {
+          "word": "Take",
+          "start": 25.974,
+          "end": 26.244,
+          "speaker": "eli"
+        },
+        {
+          "word": "this",
+          "start": 26.257,
+          "end": 26.463,
+          "speaker": "eli"
+        },
+        {
+          "word": "one",
+          "start": 26.476,
+          "end": 26.824,
+          "speaker": "eli"
+        },
+        {
+          "word": "What",
+          "start": 28.299,
+          "end": 28.399,
+          "speaker": "sam"
+        },
+        {
+          "word": "about",
+          "start": 28.412,
+          "end": 28.667,
+          "speaker": "sam"
+        },
+        {
+          "word": "you",
+          "start": 28.681,
+          "end": 28.882,
+          "speaker": "sam"
+        },
+        {
+          "word": "I'll",
+          "start": 30.28,
+          "end": 30.434,
+          "speaker": "eli"
+        },
+        {
+          "word": "manage",
+          "start": 30.447,
+          "end": 31.053,
+          "speaker": "eli"
+        }
+      ],
+      "narration": "The next evening, the storm returned. Eli could have walked past. He could have protected what was his and told himself that someone else would help. He had a dozen reasons to keep walking. For the first time, he chose not to use any of them. Here. Take this one. What about you? I'll manage.",
+      "lock_beats": true,
+      "lock_camera_shots": true,
+      "wind_blackout_at": 38.85,
+      "props": [
+        {
+          "type": "bus_shelter",
+          "x": 0.68,
+          "scale": 1.5,
+          "broken_roof": true,
+          "leaking": true,
+          "shielded": false
+        }
+      ],
+      "sfx": [
+        {
+          "at": 0.6,
+          "type": "thunder_rumble",
+          "pan": -0.2
+        },
+        {
+          "at": 24.56,
+          "type": "umbrella_open",
+          "pan": 0.05
+        },
+        {
+          "at": 38.65,
+          "type": "wind_gust",
+          "pan": 0.0
+        }
+      ],
+      "characters": [
+        {
+          "id": "eli",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.01,
+              "action": "walk_umbrella",
+              "fromX": 0.08,
+              "toX": 0.2,
+              "umbrella_color": "#1e293b",
+              "umbrella_open": true,
+              "expression": "determined"
+            },
+            {
+              "start": 6.01,
+              "end": 16.98,
+              "action": "hold_umbrella",
+              "x": 0.2,
+              "facing": 1,
+              "umbrella_color": "#1e293b",
+              "umbrella_open": true,
+              "expression": "tense",
+              "look_x": 0.5
+            },
+            {
+              "start": 16.98,
+              "end": 22.863,
+              "action": "walk_umbrella",
+              "fromX": 0.2,
+              "toX": 0.44,
+              "umbrella_color": "#1e293b",
+              "umbrella_open": true,
+              "expression": "determined"
+            },
+            {
+              "start": 22.863,
+              "end": 29.9,
+              "action": "offer_umbrella",
+              "x": 0.44,
+              "facing": 1,
+              "umbrella_color": "#1e293b",
+              "umbrella_open": true,
+              "expression": "neutral"
+            },
+            {
+              "start": 29.9,
+              "end": 40.0,
+              "action": "chest_hand_sincere",
+              "x": 0.44,
+              "facing": 1,
+              "expression": "smile",
+              "posture": 0.16
+            }
+          ]
+        },
+        {
+          "id": "sam",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 5.14,
+              "action": "talk_explain",
+              "x": 0.6,
+              "facing": 1,
+              "expression": "tense",
+              "posture": 0.18
+            },
+            {
+              "start": 5.14,
+              "end": 9.34,
+              "action": "point_emphasis",
+              "x": 0.6,
+              "facing": 1,
+              "expression": "tense",
+              "posture": 0.18
+            },
+            {
+              "start": 9.34,
+              "end": 13.54,
+              "action": "point_emphasis",
+              "x": 0.6,
+              "facing": 1,
+              "expression": "tense",
+              "posture": 0.18
+            },
+            {
+              "start": 13.54,
+              "end": 16.98,
+              "action": "talk_explain",
+              "x": 0.6,
+              "facing": 1,
+              "expression": "tense",
+              "posture": 0.18
+            },
+            {
+              "start": 16.98,
+              "end": 21.21,
+              "action": "idle_stand",
+              "x": 0.58,
+              "facing": -1,
+              "expression": "tense"
+            },
+            {
+              "start": 21.21,
+              "end": 24.663,
+              "action": "listen_nod",
+              "x": 0.58,
+              "facing": -1,
+              "expression": "tense"
+            },
+            {
+              "start": 24.663,
+              "end": 29.9,
+              "action": "handoff_receive",
+              "x": 0.58,
+              "facing": -1,
+              "expression": "shocked"
+            },
+            {
+              "start": 29.9,
+              "end": 40.0,
+              "action": "hold_umbrella",
+              "x": 0.58,
+              "facing": -1,
+              "umbrella_color": "#1e293b",
+              "umbrella_open": true,
+              "expression": "shocked"
+            }
+          ]
+        },
+        {
+          "id": "lily",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.66,
+              "action": "sit_bench",
+              "x": 0.69,
+              "facing": -1,
+              "expression": "curious"
+            },
+            {
+              "start": 6.66,
+              "end": 12.1,
+              "action": "listen_nod",
+              "x": 0.69,
+              "facing": -1,
+              "expression": "curious"
+            },
+            {
+              "start": 12.1,
+              "end": 22.0,
+              "action": "idle_stand",
+              "x": 0.69,
+              "facing": -1,
+              "expression": "curious"
+            },
+            {
+              "start": 22.0,
+              "end": 31.9,
+              "action": "idle_stand",
+              "x": 0.69,
+              "facing": -1,
+              "expression": "curious"
+            },
+            {
+              "start": 31.9,
+              "end": 36.35,
+              "action": "listen_nod",
+              "x": 0.69,
+              "facing": -1,
+              "expression": "curious"
+            },
+            {
+              "start": 36.35,
+              "end": 40.0,
+              "action": "idle_stand",
+              "x": 0.69,
+              "facing": -1,
+              "expression": "curious"
+            }
+          ]
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "end": 6.01,
+          "zoom_from": 1.08,
+          "zoom_to": 1.14,
+          "focus_x": 0.46,
+          "focus_y": 0.64,
+          "cut": true
+        },
+        {
+          "start": 6.01,
+          "end": 16.98,
+          "zoom_from": 1.38,
+          "zoom_to": 1.44,
+          "focus_x": 0.24,
+          "focus_y": 0.63,
+          "cut": true
+        },
+        {
+          "start": 16.98,
+          "end": 22.863,
+          "zoom_from": 1.24,
+          "zoom_to": 1.26,
+          "focus_x_from": 0.26,
+          "focus_x_to": 0.5,
+          "focus_y": 0.64,
+          "cut": false,
+          "blend_sec": 0.55
+        },
+        {
+          "start": 22.863,
+          "end": 40.0,
+          "zoom_from": 1.28,
+          "zoom_to": 1.28,
+          "focus_x": 0.52,
+          "focus_y": 0.64,
+          "cut": true
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "mood": "calm",
+      "bgm": "reflective_piano",
+      "bgm_offset": 12.0,
+      "bgm_gain": 0.95,
+      "accent_color": "#fde047",
+      "lead_in": 1.1,
+      "tail_out": 1.6,
+      "min_duration": 31.0,
+      "setting": {
+        "sky": [
+          "#081324",
+          "#172b48"
+        ],
+        "floor_color": "#060c17",
+        "light_color": "#60a5fa",
+        "lamp_color": "#fbbf24",
+        "window_color": "#fbbf24",
+        "window_warmth": 1.0,
+        "backdrop": "city",
+        "weather": "rain",
+        "rain_intensity": 0.72,
+        "lighting": "streetlamps",
+        "lamp_xs": [
+          0.2,
+          0.84
+        ]
+      },
+      "accent_words": [
+        "drawing",
+        "kindness",
+        "help",
+        "borrowing",
+        "understand",
+        "beginning"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Sam reached into his coat and showed Eli something he had never expected to see.",
+          "pause_after": 0.8
+        },
+        {
+          "speaker": "narrator",
+          "text": "A drawing from a little girl who had learned that kindness could arrive from someone she barely knew.",
+          "pause_after": 0.9
+        },
+        {
+          "speaker": "sam",
+          "text": "She made this for the people who help.",
+          "pause_after": 1.1
+        },
+        {
+          "speaker": "eli",
+          "text": "I thought you were taking something from me.",
+          "pause_after": 0.9
+        },
+        {
+          "speaker": "sam",
+          "text": "I was borrowing an umbrella.",
+          "pause_after": 1.1
+        },
+        {
+          "speaker": "sam",
+          "text": "I hope you understand why.",
+          "pause_after": 1.1
+        },
+        {
+          "speaker": "narrator",
+          "text": "Eli had thought the umbrella was the story. But it had only been the beginning.",
+          "pause_after": 1.5
+        }
+      ],
+      "board": {
+        "type": "child_drawing",
+        "x": 0.52,
+        "y": 82,
+        "w": 700,
+        "h": 375,
+        "include_white": true,
+        "caption": "FOR THE PEOPLE WHO HELP.",
+        "cue_on": "drawing from a little girl",
+        "hide_on": "people who help",
+        "reveal_at": 6.096,
+        "hide_at": 14.231
+      },
+      "duration": 31.0,
+      "line_timings": [
+        {
+          "speaker": "narrator",
+          "text": "Sam reached into his coat and showed Eli something he had never expected to see.",
+          "start": 1.1,
+          "end": 5.346,
+          "words": [
+            {
+              "word": "Sam",
+              "start": 1.1,
+              "end": 1.423,
+              "speaker": "narrator"
+            },
+            {
+              "word": "reached",
+              "start": 1.436,
+              "end": 1.716,
+              "speaker": "narrator"
+            },
+            {
+              "word": "into",
+              "start": 1.742,
+              "end": 1.928,
+              "speaker": "narrator"
+            },
+            {
+              "word": "his",
+              "start": 1.955,
+              "end": 2.101,
+              "speaker": "narrator"
+            },
+            {
+              "word": "coat",
+              "start": 2.128,
+              "end": 2.434,
+              "speaker": "narrator"
+            },
+            {
+              "word": "and",
+              "start": 2.447,
+              "end": 2.553,
+              "speaker": "narrator"
+            },
+            {
+              "word": "showed",
+              "start": 2.567,
+              "end": 2.846,
+              "speaker": "narrator"
+            },
+            {
+              "word": "Eli",
+              "start": 2.872,
+              "end": 3.178,
+              "speaker": "narrator"
+            },
+            {
+              "word": "something",
+              "start": 3.205,
+              "end": 3.617,
+              "speaker": "narrator"
+            },
+            {
+              "word": "he",
+              "start": 3.63,
+              "end": 3.71,
+              "speaker": "narrator"
+            },
+            {
+              "word": "had",
+              "start": 3.737,
+              "end": 3.91,
+              "speaker": "narrator"
+            },
+            {
+              "word": "never",
+              "start": 3.936,
+              "end": 4.202,
+              "speaker": "narrator"
+            },
+            {
+              "word": "expected",
+              "start": 4.229,
+              "end": 4.681,
+              "speaker": "narrator"
+            },
+            {
+              "word": "to",
+              "start": 4.708,
+              "end": 4.774,
+              "speaker": "narrator"
+            },
+            {
+              "word": "see",
+              "start": 4.801,
+              "end": 5.253,
+              "speaker": "narrator"
+            }
+          ]
+        },
+        {
+          "speaker": "narrator",
+          "text": "A drawing from a little girl who had learned that kindness could arrive from someone she barely knew.",
+          "start": 6.146,
+          "end": 10.855,
+          "words": [
+            {
+              "word": "A",
+              "start": 6.146,
+              "end": 6.209,
+              "speaker": "narrator"
+            },
+            {
+              "word": "drawing",
+              "start": 6.236,
+              "end": 6.582,
+              "speaker": "narrator"
+            },
+            {
+              "word": "from",
+              "start": 6.608,
+              "end": 6.781,
+              "speaker": "narrator"
+            },
+            {
+              "word": "a",
+              "start": 6.808,
+              "end": 6.861,
+              "speaker": "narrator"
+            },
+            {
+              "word": "little",
+              "start": 6.888,
+              "end": 7.154,
+              "speaker": "narrator"
+            },
+            {
+              "word": "girl",
+              "start": 7.18,
+              "end": 7.473,
+              "speaker": "narrator"
+            },
+            {
+              "word": "who",
+              "start": 7.499,
+              "end": 7.619,
+              "speaker": "narrator"
+            },
+            {
+              "word": "had",
+              "start": 7.632,
+              "end": 7.752,
+              "speaker": "narrator"
+            },
+            {
+              "word": "learned",
+              "start": 7.779,
+              "end": 8.018,
+              "speaker": "narrator"
+            },
+            {
+              "word": "that",
+              "start": 8.045,
+              "end": 8.191,
+              "speaker": "narrator"
+            },
+            {
+              "word": "kindness",
+              "start": 8.217,
+              "end": 8.696,
+              "speaker": "narrator"
+            },
+            {
+              "word": "could",
+              "start": 8.723,
+              "end": 8.869,
+              "speaker": "narrator"
+            },
+            {
+              "word": "arrive",
+              "start": 8.896,
+              "end": 9.241,
+              "speaker": "narrator"
+            },
+            {
+              "word": "from",
+              "start": 9.268,
+              "end": 9.454,
+              "speaker": "narrator"
+            },
+            {
+              "word": "someone",
+              "start": 9.481,
+              "end": 9.826,
+              "speaker": "narrator"
+            },
+            {
+              "word": "she",
+              "start": 9.853,
+              "end": 10.013,
+              "speaker": "narrator"
+            },
+            {
+              "word": "barely",
+              "start": 10.039,
+              "end": 10.385,
+              "speaker": "narrator"
+            },
+            {
+              "word": "knew",
+              "start": 10.412,
+              "end": 10.771,
+              "speaker": "narrator"
+            }
+          ]
+        },
+        {
+          "speaker": "sam",
+          "text": "She made this for the people who help.",
+          "start": 11.755,
+          "end": 13.458,
+          "words": [
+            {
+              "word": "She",
+              "start": 11.755,
+              "end": 11.916,
+              "speaker": "sam"
+            },
+            {
+              "word": "made",
+              "start": 11.93,
+              "end": 12.158,
+              "speaker": "sam"
+            },
+            {
+              "word": "this",
+              "start": 12.172,
+              "end": 12.333,
+              "speaker": "sam"
+            },
+            {
+              "word": "for",
+              "start": 12.346,
+              "end": 12.467,
+              "speaker": "sam"
+            },
+            {
+              "word": "the",
+              "start": 12.481,
+              "end": 12.561,
+              "speaker": "sam"
+            },
+            {
+              "word": "people",
+              "start": 12.575,
+              "end": 12.884,
+              "speaker": "sam"
+            },
+            {
+              "word": "who",
+              "start": 12.897,
+              "end": 13.018,
+              "speaker": "sam"
+            },
+            {
+              "word": "help",
+              "start": 13.032,
+              "end": 13.381,
+              "speaker": "sam"
+            }
+          ]
+        },
+        {
+          "speaker": "eli",
+          "text": "I thought you were taking something from me.",
+          "start": 14.558,
+          "end": 16.386,
+          "words": [
+            {
+              "word": "I",
+              "start": 14.558,
+              "end": 14.639,
+              "speaker": "eli"
+            },
+            {
+              "word": "thought",
+              "start": 14.652,
+              "end": 14.91,
+              "speaker": "eli"
+            },
+            {
+              "word": "you",
+              "start": 14.923,
+              "end": 14.987,
+              "speaker": "eli"
+            },
+            {
+              "word": "were",
+              "start": 15.0,
+              "end": 15.09,
+              "speaker": "eli"
+            },
+            {
+              "word": "taking",
+              "start": 15.103,
+              "end": 15.477,
+              "speaker": "eli"
+            },
+            {
+              "word": "something",
+              "start": 15.49,
+              "end": 15.864,
+              "speaker": "eli"
+            },
+            {
+              "word": "from",
+              "start": 15.876,
+              "end": 16.044,
+              "speaker": "eli"
+            },
+            {
+              "word": "me",
+              "start": 16.057,
+              "end": 16.353,
+              "speaker": "eli"
+            }
+          ]
+        },
+        {
+          "speaker": "sam",
+          "text": "I was borrowing an umbrella.",
+          "start": 17.286,
+          "end": 18.79,
+          "words": [
+            {
+              "word": "I",
+              "start": 17.286,
+              "end": 17.36,
+              "speaker": "sam"
+            },
+            {
+              "word": "was",
+              "start": 17.374,
+              "end": 17.521,
+              "speaker": "sam"
+            },
+            {
+              "word": "borrowing",
+              "start": 17.535,
+              "end": 18.032,
+              "speaker": "sam"
+            },
+            {
+              "word": "an",
+              "start": 18.046,
+              "end": 18.126,
+              "speaker": "sam"
+            },
+            {
+              "word": "umbrella",
+              "start": 18.14,
+              "end": 18.691,
+              "speaker": "sam"
+            }
+          ]
+        },
+        {
+          "speaker": "sam",
+          "text": "I hope you understand why.",
+          "start": 19.89,
+          "end": 21.168,
+          "words": [
+            {
+              "word": "I",
+              "start": 19.891,
+              "end": 19.959,
+              "speaker": "sam"
+            },
+            {
+              "word": "hope",
+              "start": 19.972,
+              "end": 20.147,
+              "speaker": "sam"
+            },
+            {
+              "word": "you",
+              "start": 20.16,
+              "end": 20.281,
+              "speaker": "sam"
+            },
+            {
+              "word": "understand",
+              "start": 20.295,
+              "end": 20.765,
+              "speaker": "sam"
+            },
+            {
+              "word": "why",
+              "start": 20.778,
+              "end": 21.047,
+              "speaker": "sam"
+            }
+          ]
+        },
+        {
+          "speaker": "narrator",
+          "text": "Eli had thought the umbrella was the story. But it had only been the beginning.",
+          "start": 22.268,
+          "end": 27.551,
+          "words": [
+            {
+              "word": "Eli",
+              "start": 22.268,
+              "end": 22.636,
+              "speaker": "narrator"
+            },
+            {
+              "word": "had",
+              "start": 22.649,
+              "end": 22.809,
+              "speaker": "narrator"
+            },
+            {
+              "word": "thought",
+              "start": 22.835,
+              "end": 23.074,
+              "speaker": "narrator"
+            },
+            {
+              "word": "the",
+              "start": 23.101,
+              "end": 23.221,
+              "speaker": "narrator"
+            },
+            {
+              "word": "umbrella",
+              "start": 23.247,
+              "end": 23.739,
+              "speaker": "narrator"
+            },
+            {
+              "word": "was",
+              "start": 23.766,
+              "end": 23.952,
+              "speaker": "narrator"
+            },
+            {
+              "word": "the",
+              "start": 23.979,
+              "end": 24.085,
+              "speaker": "narrator"
+            },
+            {
+              "word": "story",
+              "start": 24.112,
+              "end": 24.63,
+              "speaker": "narrator"
+            },
+            {
+              "word": "But",
+              "start": 25.564,
+              "end": 25.751,
+              "speaker": "narrator"
+            },
+            {
+              "word": "it",
+              "start": 25.777,
+              "end": 25.87,
+              "speaker": "narrator"
+            },
+            {
+              "word": "had",
+              "start": 25.897,
+              "end": 26.163,
+              "speaker": "narrator"
+            },
+            {
+              "word": "only",
+              "start": 26.176,
+              "end": 26.509,
+              "speaker": "narrator"
+            },
+            {
+              "word": "been",
+              "start": 26.522,
+              "end": 26.721,
+              "speaker": "narrator"
+            },
+            {
+              "word": "the",
+              "start": 26.748,
+              "end": 26.854,
+              "speaker": "narrator"
+            },
+            {
+              "word": "beginning",
+              "start": 26.881,
+              "end": 27.466,
+              "speaker": "narrator"
+            }
+          ]
+        }
+      ],
+      "word_timings": [
+        {
+          "word": "Sam",
+          "start": 1.1,
+          "end": 1.423,
+          "speaker": "narrator"
+        },
+        {
+          "word": "reached",
+          "start": 1.436,
+          "end": 1.716,
+          "speaker": "narrator"
+        },
+        {
+          "word": "into",
+          "start": 1.742,
+          "end": 1.928,
+          "speaker": "narrator"
+        },
+        {
+          "word": "his",
+          "start": 1.955,
+          "end": 2.101,
+          "speaker": "narrator"
+        },
+        {
+          "word": "coat",
+          "start": 2.128,
+          "end": 2.434,
+          "speaker": "narrator"
+        },
+        {
+          "word": "and",
+          "start": 2.447,
+          "end": 2.553,
+          "speaker": "narrator"
+        },
+        {
+          "word": "showed",
+          "start": 2.567,
+          "end": 2.846,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Eli",
+          "start": 2.872,
+          "end": 3.178,
+          "speaker": "narrator"
+        },
+        {
+          "word": "something",
+          "start": 3.205,
+          "end": 3.617,
+          "speaker": "narrator"
+        },
+        {
+          "word": "he",
+          "start": 3.63,
+          "end": 3.71,
+          "speaker": "narrator"
+        },
+        {
+          "word": "had",
+          "start": 3.737,
+          "end": 3.91,
+          "speaker": "narrator"
+        },
+        {
+          "word": "never",
+          "start": 3.936,
+          "end": 4.202,
+          "speaker": "narrator"
+        },
+        {
+          "word": "expected",
+          "start": 4.229,
+          "end": 4.681,
+          "speaker": "narrator"
+        },
+        {
+          "word": "to",
+          "start": 4.708,
+          "end": 4.774,
+          "speaker": "narrator"
+        },
+        {
+          "word": "see",
+          "start": 4.801,
+          "end": 5.253,
+          "speaker": "narrator"
+        },
+        {
+          "word": "A",
+          "start": 6.146,
+          "end": 6.209,
+          "speaker": "narrator"
+        },
+        {
+          "word": "drawing",
+          "start": 6.236,
+          "end": 6.582,
+          "speaker": "narrator"
+        },
+        {
+          "word": "from",
+          "start": 6.608,
+          "end": 6.781,
+          "speaker": "narrator"
+        },
+        {
+          "word": "a",
+          "start": 6.808,
+          "end": 6.861,
+          "speaker": "narrator"
+        },
+        {
+          "word": "little",
+          "start": 6.888,
+          "end": 7.154,
+          "speaker": "narrator"
+        },
+        {
+          "word": "girl",
+          "start": 7.18,
+          "end": 7.473,
+          "speaker": "narrator"
+        },
+        {
+          "word": "who",
+          "start": 7.499,
+          "end": 7.619,
+          "speaker": "narrator"
+        },
+        {
+          "word": "had",
+          "start": 7.632,
+          "end": 7.752,
+          "speaker": "narrator"
+        },
+        {
+          "word": "learned",
+          "start": 7.779,
+          "end": 8.018,
+          "speaker": "narrator"
+        },
+        {
+          "word": "that",
+          "start": 8.045,
+          "end": 8.191,
+          "speaker": "narrator"
+        },
+        {
+          "word": "kindness",
+          "start": 8.217,
+          "end": 8.696,
+          "speaker": "narrator"
+        },
+        {
+          "word": "could",
+          "start": 8.723,
+          "end": 8.869,
+          "speaker": "narrator"
+        },
+        {
+          "word": "arrive",
+          "start": 8.896,
+          "end": 9.241,
+          "speaker": "narrator"
+        },
+        {
+          "word": "from",
+          "start": 9.268,
+          "end": 9.454,
+          "speaker": "narrator"
+        },
+        {
+          "word": "someone",
+          "start": 9.481,
+          "end": 9.826,
+          "speaker": "narrator"
+        },
+        {
+          "word": "she",
+          "start": 9.853,
+          "end": 10.013,
+          "speaker": "narrator"
+        },
+        {
+          "word": "barely",
+          "start": 10.039,
+          "end": 10.385,
+          "speaker": "narrator"
+        },
+        {
+          "word": "knew",
+          "start": 10.412,
+          "end": 10.771,
+          "speaker": "narrator"
+        },
+        {
+          "word": "She",
+          "start": 11.755,
+          "end": 11.916,
+          "speaker": "sam"
+        },
+        {
+          "word": "made",
+          "start": 11.93,
+          "end": 12.158,
+          "speaker": "sam"
+        },
+        {
+          "word": "this",
+          "start": 12.172,
+          "end": 12.333,
+          "speaker": "sam"
+        },
+        {
+          "word": "for",
+          "start": 12.346,
+          "end": 12.467,
+          "speaker": "sam"
+        },
+        {
+          "word": "the",
+          "start": 12.481,
+          "end": 12.561,
+          "speaker": "sam"
+        },
+        {
+          "word": "people",
+          "start": 12.575,
+          "end": 12.884,
+          "speaker": "sam"
+        },
+        {
+          "word": "who",
+          "start": 12.897,
+          "end": 13.018,
+          "speaker": "sam"
+        },
+        {
+          "word": "help",
+          "start": 13.032,
+          "end": 13.381,
+          "speaker": "sam"
+        },
+        {
+          "word": "I",
+          "start": 14.558,
+          "end": 14.639,
+          "speaker": "eli"
+        },
+        {
+          "word": "thought",
+          "start": 14.652,
+          "end": 14.91,
+          "speaker": "eli"
+        },
+        {
+          "word": "you",
+          "start": 14.923,
+          "end": 14.987,
+          "speaker": "eli"
+        },
+        {
+          "word": "were",
+          "start": 15.0,
+          "end": 15.09,
+          "speaker": "eli"
+        },
+        {
+          "word": "taking",
+          "start": 15.103,
+          "end": 15.477,
+          "speaker": "eli"
+        },
+        {
+          "word": "something",
+          "start": 15.49,
+          "end": 15.864,
+          "speaker": "eli"
+        },
+        {
+          "word": "from",
+          "start": 15.876,
+          "end": 16.044,
+          "speaker": "eli"
+        },
+        {
+          "word": "me",
+          "start": 16.057,
+          "end": 16.353,
+          "speaker": "eli"
+        },
+        {
+          "word": "I",
+          "start": 17.286,
+          "end": 17.36,
+          "speaker": "sam"
+        },
+        {
+          "word": "was",
+          "start": 17.374,
+          "end": 17.521,
+          "speaker": "sam"
+        },
+        {
+          "word": "borrowing",
+          "start": 17.535,
+          "end": 18.032,
+          "speaker": "sam"
+        },
+        {
+          "word": "an",
+          "start": 18.046,
+          "end": 18.126,
+          "speaker": "sam"
+        },
+        {
+          "word": "umbrella",
+          "start": 18.14,
+          "end": 18.691,
+          "speaker": "sam"
+        },
+        {
+          "word": "I",
+          "start": 19.891,
+          "end": 19.959,
+          "speaker": "sam"
+        },
+        {
+          "word": "hope",
+          "start": 19.972,
+          "end": 20.147,
+          "speaker": "sam"
+        },
+        {
+          "word": "you",
+          "start": 20.16,
+          "end": 20.281,
+          "speaker": "sam"
+        },
+        {
+          "word": "understand",
+          "start": 20.295,
+          "end": 20.765,
+          "speaker": "sam"
+        },
+        {
+          "word": "why",
+          "start": 20.778,
+          "end": 21.047,
+          "speaker": "sam"
+        },
+        {
+          "word": "Eli",
+          "start": 22.268,
+          "end": 22.636,
+          "speaker": "narrator"
+        },
+        {
+          "word": "had",
+          "start": 22.649,
+          "end": 22.809,
+          "speaker": "narrator"
+        },
+        {
+          "word": "thought",
+          "start": 22.835,
+          "end": 23.074,
+          "speaker": "narrator"
+        },
+        {
+          "word": "the",
+          "start": 23.101,
+          "end": 23.221,
+          "speaker": "narrator"
+        },
+        {
+          "word": "umbrella",
+          "start": 23.247,
+          "end": 23.739,
+          "speaker": "narrator"
+        },
+        {
+          "word": "was",
+          "start": 23.766,
+          "end": 23.952,
+          "speaker": "narrator"
+        },
+        {
+          "word": "the",
+          "start": 23.979,
+          "end": 24.085,
+          "speaker": "narrator"
+        },
+        {
+          "word": "story",
+          "start": 24.112,
+          "end": 24.63,
+          "speaker": "narrator"
+        },
+        {
+          "word": "But",
+          "start": 25.564,
+          "end": 25.751,
+          "speaker": "narrator"
+        },
+        {
+          "word": "it",
+          "start": 25.777,
+          "end": 25.87,
+          "speaker": "narrator"
+        },
+        {
+          "word": "had",
+          "start": 25.897,
+          "end": 26.163,
+          "speaker": "narrator"
+        },
+        {
+          "word": "only",
+          "start": 26.176,
+          "end": 26.509,
+          "speaker": "narrator"
+        },
+        {
+          "word": "been",
+          "start": 26.522,
+          "end": 26.721,
+          "speaker": "narrator"
+        },
+        {
+          "word": "the",
+          "start": 26.748,
+          "end": 26.854,
+          "speaker": "narrator"
+        },
+        {
+          "word": "beginning",
+          "start": 26.881,
+          "end": 27.466,
+          "speaker": "narrator"
+        }
+      ],
+      "narration": "Sam reached into his coat and showed Eli something he had never expected to see. A drawing from a little girl who had learned that kindness could arrive from someone she barely knew. She made this for the people who help. I thought you were taking something from me. I was borrowing an umbrella. I hope you understand why. Eli had thought the umbrella was the story. But it had only been the beginning.",
+      "lock_beats": true,
+      "lock_camera_shots": true,
+      "props": [
+        {
+          "type": "bus_shelter",
+          "x": 0.66,
+          "scale": 1.48,
+          "broken_roof": true,
+          "leaking": true,
+          "shielded": true
+        },
+        {
+          "type": "headlights",
+          "x": 0.98,
+          "dir": "left",
+          "scale": 1.35,
+          "from_t": 28.0
+        }
+      ],
+      "sfx": [
+        {
+          "at": 6.0,
+          "type": "paper_rustle",
+          "pan": 0.0
+        }
+      ],
+      "characters": [
+        {
+          "id": "eli",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 14.231,
+              "action": "hold_drawing",
+              "x": 0.22,
+              "facing": 1,
+              "expression": "shocked"
+            },
+            {
+              "start": 14.231,
+              "end": 21.17,
+              "action": "chest_hand_sincere",
+              "x": 0.28,
+              "facing": 1,
+              "expression": "sad",
+              "posture": 0.1
+            },
+            {
+              "start": 21.17,
+              "end": 26.58,
+              "action": "listen_nod",
+              "x": 0.3,
+              "facing": 1,
+              "expression": "hopeful",
+              "look_y": 0.25,
+              "posture": 0.18
+            },
+            {
+              "start": 26.58,
+              "end": 31.0,
+              "action": "idle_stand",
+              "x": 0.3,
+              "facing": 1,
+              "expression": "hopeful",
+              "look_y": 0.25,
+              "posture": 0.18
+            }
+          ]
+        },
+        {
+          "id": "sam",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 14.231,
+              "action": "handoff_give",
+              "x": 0.4,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 14.231,
+              "end": 31.0,
+              "action": "hold_umbrella",
+              "x": 0.5,
+              "facing": -1,
+              "umbrella_color": "#1e293b",
+              "umbrella_open": true,
+              "expression": "smile"
+            }
+          ]
+        },
+        {
+          "id": "lily",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 8.53,
+              "action": "sit_bench",
+              "x": 0.65,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 8.53,
+              "end": 15.51,
+              "action": "idle_stand",
+              "x": 0.65,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 15.51,
+              "end": 22.49,
+              "action": "idle_stand",
+              "x": 0.65,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 22.49,
+              "end": 28.2,
+              "action": "listen_nod",
+              "x": 0.65,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 28.2,
+              "end": 31.0,
+              "action": "point_emphasis",
+              "fromX": 0.65,
+              "toX": 0.6,
+              "facing": 1,
+              "expression": "excited"
+            }
+          ]
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "end": 14.231,
+          "zoom_from": 1.0,
+          "zoom_to": 1.02,
+          "focus_x": 0.5,
+          "focus_y": 0.5,
+          "cut": true
+        },
+        {
+          "start": 14.231,
+          "end": 22.268,
+          "zoom_from": 1.38,
+          "zoom_to": 1.42,
+          "focus_x": 0.36,
+          "focus_y": 0.63,
+          "cut": false,
+          "blend_sec": 0.65
+        },
+        {
+          "start": 22.268,
+          "end": 31.0,
+          "zoom_from": 1.18,
+          "zoom_to": 1.14,
+          "focus_x": 0.48,
+          "focus_y": 0.64,
+          "cut": false,
+          "blend_sec": 0.75
+        }
+      ]
+    },
+    {
+      "id": "S08",
+      "mood": "triumph",
+      "bgm": "triumph_horizon",
+      "bgm_gain": 1.0,
+      "bgm_fade_out": true,
+      "fade_to_black": true,
+      "accent_color": "#fbbf24",
+      "lead_in": 1.1,
+      "tail_out": 3.4,
+      "min_duration": 29.0,
+      "setting": {
+        "sky": [
+          "#0b1629",
+          "#1d314f",
+          "#3b3549"
+        ],
+        "floor_color": "#080e1a",
+        "light_color": "#fbbf24",
+        "lamp_color": "#fde047",
+        "window_color": "#fbbf24",
+        "window_warmth": 1.65,
+        "backdrop": "city",
+        "weather": "rain",
+        "rain_intensity": 0.55,
+        "lighting": "streetlamps",
+        "lamp_xs": [
+          0.16,
+          0.84
+        ]
+      },
+      "accent_words": [
+        "apology",
+        "ask",
+        "worth",
+        "give"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Eli never got an apology for the umbrella. Eventually, he stopped needing one.",
+          "pause_after": 1.0
+        },
+        {
+          "speaker": "eli",
+          "text": "Next time, just ask me.",
+          "pause_after": 0.7
+        },
+        {
+          "speaker": "sam",
+          "text": "I will.",
+          "pause_after": 1.2
+        },
+        {
+          "speaker": "narrator",
+          "text": "Because some things are worth more than getting back exactly what you lost.",
+          "pause_after": 1.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "They're worth discovering what you can give.",
+          "pause_after": 3.4
+        }
+      ],
+      "duration": 29.0,
+      "line_timings": [
+        {
+          "speaker": "narrator",
+          "text": "Eli never got an apology for the umbrella. Eventually, he stopped needing one.",
+          "start": 1.1,
+          "end": 6.948,
+          "words": [
+            {
+              "word": "Eli",
+              "start": 1.1,
+              "end": 1.425,
+              "speaker": "narrator"
+            },
+            {
+              "word": "never",
+              "start": 1.439,
+              "end": 1.811,
+              "speaker": "narrator"
+            },
+            {
+              "word": "got",
+              "start": 1.837,
+              "end": 2.064,
+              "speaker": "narrator"
+            },
+            {
+              "word": "an",
+              "start": 2.077,
+              "end": 2.157,
+              "speaker": "narrator"
+            },
+            {
+              "word": "apology",
+              "start": 2.183,
+              "end": 2.782,
+              "speaker": "narrator"
+            },
+            {
+              "word": "for",
+              "start": 2.808,
+              "end": 2.954,
+              "speaker": "narrator"
+            },
+            {
+              "word": "the",
+              "start": 2.981,
+              "end": 3.087,
+              "speaker": "narrator"
+            },
+            {
+              "word": "umbrella",
+              "start": 3.114,
+              "end": 3.712,
+              "speaker": "narrator"
+            },
+            {
+              "word": "Eventually",
+              "start": 4.66,
+              "end": 5.391,
+              "speaker": "narrator"
+            },
+            {
+              "word": "he",
+              "start": 5.577,
+              "end": 5.684,
+              "speaker": "narrator"
+            },
+            {
+              "word": "stopped",
+              "start": 5.71,
+              "end": 6.136,
+              "speaker": "narrator"
+            },
+            {
+              "word": "needing",
+              "start": 6.162,
+              "end": 6.522,
+              "speaker": "narrator"
+            },
+            {
+              "word": "one",
+              "start": 6.535,
+              "end": 6.841,
+              "speaker": "narrator"
+            }
+          ]
+        },
+        {
+          "speaker": "eli",
+          "text": "Next time, just ask me.",
+          "start": 7.948,
+          "end": 9.724,
+          "words": [
+            {
+              "word": "Next",
+              "start": 7.948,
+              "end": 8.232,
+              "speaker": "eli"
+            },
+            {
+              "word": "time",
+              "start": 8.245,
+              "end": 8.58,
+              "speaker": "eli"
+            },
+            {
+              "word": "just",
+              "start": 8.812,
+              "end": 9.095,
+              "speaker": "eli"
+            },
+            {
+              "word": "ask",
+              "start": 9.108,
+              "end": 9.392,
+              "speaker": "eli"
+            },
+            {
+              "word": "me",
+              "start": 9.405,
+              "end": 9.688,
+              "speaker": "eli"
+            }
+          ]
+        },
+        {
+          "speaker": "sam",
+          "text": "I will.",
+          "start": 10.424,
+          "end": 10.908,
+          "words": [
+            {
+              "word": "I",
+              "start": 10.424,
+              "end": 10.53,
+              "speaker": "sam"
+            },
+            {
+              "word": "will",
+              "start": 10.543,
+              "end": 10.825,
+              "speaker": "sam"
+            }
+          ]
+        },
+        {
+          "speaker": "narrator",
+          "text": "Because some things are worth more than getting back exactly what you lost.",
+          "start": 12.108,
+          "end": 15.919,
+          "words": [
+            {
+              "word": "Because",
+              "start": 12.108,
+              "end": 12.395,
+              "speaker": "narrator"
+            },
+            {
+              "word": "some",
+              "start": 12.422,
+              "end": 12.634,
+              "speaker": "narrator"
+            },
+            {
+              "word": "things",
+              "start": 12.661,
+              "end": 12.927,
+              "speaker": "narrator"
+            },
+            {
+              "word": "are",
+              "start": 12.954,
+              "end": 13.06,
+              "speaker": "narrator"
+            },
+            {
+              "word": "worth",
+              "start": 13.087,
+              "end": 13.339,
+              "speaker": "narrator"
+            },
+            {
+              "word": "more",
+              "start": 13.366,
+              "end": 13.579,
+              "speaker": "narrator"
+            },
+            {
+              "word": "than",
+              "start": 13.592,
+              "end": 13.751,
+              "speaker": "narrator"
+            },
+            {
+              "word": "getting",
+              "start": 13.778,
+              "end": 14.057,
+              "speaker": "narrator"
+            },
+            {
+              "word": "back",
+              "start": 14.071,
+              "end": 14.35,
+              "speaker": "narrator"
+            },
+            {
+              "word": "exactly",
+              "start": 14.377,
+              "end": 14.962,
+              "speaker": "narrator"
+            },
+            {
+              "word": "what",
+              "start": 14.988,
+              "end": 15.148,
+              "speaker": "narrator"
+            },
+            {
+              "word": "you",
+              "start": 15.174,
+              "end": 15.307,
+              "speaker": "narrator"
+            },
+            {
+              "word": "lost",
+              "start": 15.334,
+              "end": 15.839,
+              "speaker": "narrator"
+            }
+          ]
+        },
+        {
+          "speaker": "narrator",
+          "text": "They're worth discovering what you can give.",
+          "start": 17.219,
+          "end": 19.439,
+          "words": [
+            {
+              "word": "They're",
+              "start": 17.219,
+              "end": 17.359,
+              "speaker": "narrator"
+            },
+            {
+              "word": "worth",
+              "start": 17.386,
+              "end": 17.652,
+              "speaker": "narrator"
+            },
+            {
+              "word": "discovering",
+              "start": 17.678,
+              "end": 18.383,
+              "speaker": "narrator"
+            },
+            {
+              "word": "what",
+              "start": 18.41,
+              "end": 18.569,
+              "speaker": "narrator"
+            },
+            {
+              "word": "you",
+              "start": 18.583,
+              "end": 18.716,
+              "speaker": "narrator"
+            },
+            {
+              "word": "can",
+              "start": 18.742,
+              "end": 18.915,
+              "speaker": "narrator"
+            },
+            {
+              "word": "give",
+              "start": 18.928,
+              "end": 19.38,
+              "speaker": "narrator"
+            }
+          ]
+        }
+      ],
+      "word_timings": [
+        {
+          "word": "Eli",
+          "start": 1.1,
+          "end": 1.425,
+          "speaker": "narrator"
+        },
+        {
+          "word": "never",
+          "start": 1.439,
+          "end": 1.811,
+          "speaker": "narrator"
+        },
+        {
+          "word": "got",
+          "start": 1.837,
+          "end": 2.064,
+          "speaker": "narrator"
+        },
+        {
+          "word": "an",
+          "start": 2.077,
+          "end": 2.157,
+          "speaker": "narrator"
+        },
+        {
+          "word": "apology",
+          "start": 2.183,
+          "end": 2.782,
+          "speaker": "narrator"
+        },
+        {
+          "word": "for",
+          "start": 2.808,
+          "end": 2.954,
+          "speaker": "narrator"
+        },
+        {
+          "word": "the",
+          "start": 2.981,
+          "end": 3.087,
+          "speaker": "narrator"
+        },
+        {
+          "word": "umbrella",
+          "start": 3.114,
+          "end": 3.712,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Eventually",
+          "start": 4.66,
+          "end": 5.391,
+          "speaker": "narrator"
+        },
+        {
+          "word": "he",
+          "start": 5.577,
+          "end": 5.684,
+          "speaker": "narrator"
+        },
+        {
+          "word": "stopped",
+          "start": 5.71,
+          "end": 6.136,
+          "speaker": "narrator"
+        },
+        {
+          "word": "needing",
+          "start": 6.162,
+          "end": 6.522,
+          "speaker": "narrator"
+        },
+        {
+          "word": "one",
+          "start": 6.535,
+          "end": 6.841,
+          "speaker": "narrator"
+        },
+        {
+          "word": "Next",
+          "start": 7.948,
+          "end": 8.232,
+          "speaker": "eli"
+        },
+        {
+          "word": "time",
+          "start": 8.245,
+          "end": 8.58,
+          "speaker": "eli"
+        },
+        {
+          "word": "just",
+          "start": 8.812,
+          "end": 9.095,
+          "speaker": "eli"
+        },
+        {
+          "word": "ask",
+          "start": 9.108,
+          "end": 9.392,
+          "speaker": "eli"
+        },
+        {
+          "word": "me",
+          "start": 9.405,
+          "end": 9.688,
+          "speaker": "eli"
+        },
+        {
+          "word": "I",
+          "start": 10.424,
+          "end": 10.53,
+          "speaker": "sam"
+        },
+        {
+          "word": "will",
+          "start": 10.543,
+          "end": 10.825,
+          "speaker": "sam"
+        },
+        {
+          "word": "Because",
+          "start": 12.108,
+          "end": 12.395,
+          "speaker": "narrator"
+        },
+        {
+          "word": "some",
+          "start": 12.422,
+          "end": 12.634,
+          "speaker": "narrator"
+        },
+        {
+          "word": "things",
+          "start": 12.661,
+          "end": 12.927,
+          "speaker": "narrator"
+        },
+        {
+          "word": "are",
+          "start": 12.954,
+          "end": 13.06,
+          "speaker": "narrator"
+        },
+        {
+          "word": "worth",
+          "start": 13.087,
+          "end": 13.339,
+          "speaker": "narrator"
+        },
+        {
+          "word": "more",
+          "start": 13.366,
+          "end": 13.579,
+          "speaker": "narrator"
+        },
+        {
+          "word": "than",
+          "start": 13.592,
+          "end": 13.751,
+          "speaker": "narrator"
+        },
+        {
+          "word": "getting",
+          "start": 13.778,
+          "end": 14.057,
+          "speaker": "narrator"
+        },
+        {
+          "word": "back",
+          "start": 14.071,
+          "end": 14.35,
+          "speaker": "narrator"
+        },
+        {
+          "word": "exactly",
+          "start": 14.377,
+          "end": 14.962,
+          "speaker": "narrator"
+        },
+        {
+          "word": "what",
+          "start": 14.988,
+          "end": 15.148,
+          "speaker": "narrator"
+        },
+        {
+          "word": "you",
+          "start": 15.174,
+          "end": 15.307,
+          "speaker": "narrator"
+        },
+        {
+          "word": "lost",
+          "start": 15.334,
+          "end": 15.839,
+          "speaker": "narrator"
+        },
+        {
+          "word": "They're",
+          "start": 17.219,
+          "end": 17.359,
+          "speaker": "narrator"
+        },
+        {
+          "word": "worth",
+          "start": 17.386,
+          "end": 17.652,
+          "speaker": "narrator"
+        },
+        {
+          "word": "discovering",
+          "start": 17.678,
+          "end": 18.383,
+          "speaker": "narrator"
+        },
+        {
+          "word": "what",
+          "start": 18.41,
+          "end": 18.569,
+          "speaker": "narrator"
+        },
+        {
+          "word": "you",
+          "start": 18.583,
+          "end": 18.716,
+          "speaker": "narrator"
+        },
+        {
+          "word": "can",
+          "start": 18.742,
+          "end": 18.915,
+          "speaker": "narrator"
+        },
+        {
+          "word": "give",
+          "start": 18.928,
+          "end": 19.38,
+          "speaker": "narrator"
+        }
+      ],
+      "narration": "Eli never got an apology for the umbrella. Eventually, he stopped needing one. Next time, just ask me. I will. Because some things are worth more than getting back exactly what you lost. They're worth discovering what you can give.",
+      "lock_beats": true,
+      "lock_camera_shots": true,
+      "intertitle": {
+        "start_at": 25.4,
+        "backdrop_alpha": 0.88,
+        "accent_color": "#ffffff",
+        "lines": [
+          "UNDERSTAND BEFORE YOU JUDGE."
+        ]
+      },
+      "props": [
+        {
+          "type": "headlights",
+          "x": 0.96,
+          "dir": "left",
+          "scale": 1.35,
+          "to_t": 7.75
+        },
+        {
+          "type": "door",
+          "x": 0.81,
+          "scale": 1.56,
+          "open": 0.88,
+          "label": "APT 12",
+          "from_t": 11.81
+        },
+        {
+          "type": "umbrella_stand",
+          "x": 0.52,
+          "scale": 1.52,
+          "umbrellas": [
+            "#ef4444",
+            "#38bdf8",
+            "#eab308",
+            "#a855f7"
+          ],
+          "sign_text": "TAKE ONE IF YOU NEED IT. | LEAVE ONE IF YOU CAN.",
+          "from_t": 11.81,
+          "to_t": 16.31
+        },
+        {
+          "type": "umbrella_stand",
+          "x": 0.52,
+          "scale": 1.52,
+          "umbrellas": [
+            "#ef4444",
+            "#38bdf8",
+            "#eab308",
+            "#a855f7",
+            "#22c55e"
+          ],
+          "sign_text": "TAKE ONE IF YOU NEED IT. | LEAVE ONE IF YOU CAN.",
+          "from_t": 16.31
+        }
+      ],
+      "sfx": [
+        {
+          "at": 0.5,
+          "type": "bus_pass",
+          "pan": 0.4
+        }
+      ],
+      "characters": [
+        {
+          "id": "lily",
+          "show_name": false,
+          "to_t": 7.75,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.4,
+              "action": "wave_hand",
+              "x": 0.64,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 2.4,
+              "end": 7.75,
+              "action": "walk",
+              "fromX": 0.64,
+              "toX": 0.88,
+              "expression": "smile"
+            }
+          ]
+        },
+        {
+          "id": "mother",
+          "show_name": false,
+          "to_t": 7.75,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.4,
+              "action": "hold_umbrella",
+              "x": 0.72,
+              "facing": -1,
+              "umbrella_color": "#ef4444",
+              "umbrella_open": true,
+              "expression": "smile"
+            },
+            {
+              "start": 2.4,
+              "end": 7.75,
+              "action": "walk_umbrella",
+              "fromX": 0.72,
+              "toX": 0.94,
+              "umbrella_color": "#ef4444",
+              "umbrella_open": true,
+              "expression": "smile"
+            }
+          ]
+        },
+        {
+          "id": "eli",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.6,
+              "action": "wave_hand",
+              "x": 0.26,
+              "facing": 1,
+              "expression": "smile",
+              "posture": 0.22
+            },
+            {
+              "start": 2.6,
+              "end": 7.95,
+              "action": "handoff_give",
+              "x": 0.28,
+              "facing": 1,
+              "expression": "smile",
+              "posture": 0.22
+            },
+            {
+              "start": 7.95,
+              "end": 11.81,
+              "action": "walk",
+              "fromX": 0.22,
+              "toX": 0.64,
+              "expression": "smile",
+              "posture": 0.25
+            },
+            {
+              "start": 11.81,
+              "end": 16.91,
+              "action": "idle_stand",
+              "x": 0.72,
+              "facing": -1,
+              "expression": "smile",
+              "posture": 0.25
+            },
+            {
+              "start": 16.91,
+              "end": 20.57,
+              "action": "walk",
+              "fromX": 0.72,
+              "toX": 0.81,
+              "expression": "smile",
+              "posture": 0.25
+            },
+            {
+              "start": 20.57,
+              "end": 23.56,
+              "action": "idle_stand",
+              "fromX": 0.72,
+              "toX": 0.81,
+              "expression": "smile",
+              "posture": 0.25
+            },
+            {
+              "start": 23.56,
+              "end": 29.0,
+              "action": "idle_stand",
+              "fromX": 0.72,
+              "toX": 0.81,
+              "expression": "smile",
+              "posture": 0.25
+            }
+          ]
+        },
+        {
+          "id": "sam",
+          "show_name": false,
+          "to_t": 11.81,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.6,
+              "action": "hold_umbrella",
+              "x": 0.4,
+              "facing": 1,
+              "umbrella_color": "#1e293b",
+              "umbrella_open": true,
+              "expression": "smile"
+            },
+            {
+              "start": 2.6,
+              "end": 7.95,
+              "action": "offer_umbrella",
+              "x": 0.4,
+              "facing": -1,
+              "umbrella_color": "#1e293b",
+              "umbrella_open": true,
+              "expression": "smile"
+            },
+            {
+              "start": 7.95,
+              "end": 11.81,
+              "action": "walk_umbrella",
+              "fromX": 0.34,
+              "toX": 0.76,
+              "umbrella_color": "#1e293b",
+              "umbrella_open": true,
+              "expression": "smile"
+            }
+          ]
+        },
+        {
+          "id": "neighbour",
+          "show_name": false,
+          "from_t": 12.51,
+          "beats": [
+            {
+              "start": 12.51,
+              "end": 15.51,
+              "action": "walk_umbrella",
+              "fromX": 0.14,
+              "toX": 0.34,
+              "umbrella_color": "#22c55e",
+              "umbrella_open": false,
+              "expression": "curious"
+            },
+            {
+              "start": 15.51,
+              "end": 16.71,
+              "action": "handoff_give",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 16.71,
+              "end": 20.43,
+              "action": "listen_nod",
+              "x": 0.33,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 20.43,
+              "end": 23.47,
+              "action": "talk_explain",
+              "x": 0.33,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 23.47,
+              "end": 29.0,
+              "action": "idle_stand",
+              "x": 0.33,
+              "facing": 1,
+              "expression": "smile"
+            }
+          ]
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "end": 7.95,
+          "zoom_from": 1.2,
+          "zoom_to": 1.24,
+          "focus_x": 0.5,
+          "focus_y": 0.64,
+          "cut": true
+        },
+        {
+          "start": 7.95,
+          "end": 11.81,
+          "zoom_from": 1.26,
+          "zoom_to": 1.28,
+          "focus_x_from": 0.32,
+          "focus_x_to": 0.66,
+          "focus_y": 0.64,
+          "cut": true
+        },
+        {
+          "start": 11.81,
+          "end": 29.0,
+          "zoom_from": 1.22,
+          "zoom_to": 1.04,
+          "focus_x": 0.54,
+          "focus_y": 0.6,
+          "cut": true
+        }
+      ]
+    },
+    {
+      "id": "S09",
+      "mood": "calm",
+      "bgm": "none",
+      "bgm_gain": 0.0,
+      "fade_to_black": true,
+      "accent_color": "#ffffff",
+      "lead_in": 0.85,
+      "tail_out": 2.4,
+      "min_duration": 7.4,
+      "setting": {
+        "backdrop": "pure_black",
+        "sky": [
+          "#000000",
+          "#000000"
+        ],
+        "floor_color": "#000000",
+        "light_color": "#ffffff"
+      },
+      "end_card": {
+        "start_at": 0.25,
+        "logo_text": "THE GROWTH PROTOCOL",
+        "tagline": "BUILD DISCIPLINE. BECOME BETTER."
+      },
+      "accent_words": [
+        "moment",
+        "understand",
+        "story"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Before you judge someone's actions, give yourself a moment to understand their story.",
+          "pause_after": 2.2
+        }
+      ],
+      "duration": 9.845,
+      "line_timings": [
+        {
+          "speaker": "narrator",
+          "text": "Before you judge someone's actions, give yourself a moment to understand their story.",
+          "start": 0.85,
+          "end": 5.245,
+          "words": [
+            {
+              "word": "Before",
+              "start": 0.85,
+              "end": 1.135,
+              "speaker": "narrator"
+            },
+            {
+              "word": "you",
+              "start": 1.161,
+              "end": 1.268,
+              "speaker": "narrator"
+            },
+            {
+              "word": "judge",
+              "start": 1.281,
+              "end": 1.56,
+              "speaker": "narrator"
+            },
+            {
+              "word": "someone's",
+              "start": 1.587,
+              "end": 1.986,
+              "speaker": "narrator"
+            },
+            {
+              "word": "actions",
+              "start": 2.012,
+              "end": 2.491,
+              "speaker": "narrator"
+            },
+            {
+              "word": "give",
+              "start": 2.704,
+              "end": 2.863,
+              "speaker": "narrator"
+            },
+            {
+              "word": "yourself",
+              "start": 2.89,
+              "end": 3.316,
+              "speaker": "narrator"
+            },
+            {
+              "word": "a",
+              "start": 3.329,
+              "end": 3.395,
+              "speaker": "narrator"
+            },
+            {
+              "word": "moment",
+              "start": 3.409,
+              "end": 3.768,
+              "speaker": "narrator"
+            },
+            {
+              "word": "to",
+              "start": 3.794,
+              "end": 3.914,
+              "speaker": "narrator"
+            },
+            {
+              "word": "understand",
+              "start": 3.927,
+              "end": 4.499,
+              "speaker": "narrator"
+            },
+            {
+              "word": "their",
+              "start": 4.512,
+              "end": 4.659,
+              "speaker": "narrator"
+            },
+            {
+              "word": "story",
+              "start": 4.685,
+              "end": 5.164,
+              "speaker": "narrator"
+            }
+          ]
+        }
+      ],
+      "word_timings": [
+        {
+          "word": "Before",
+          "start": 0.85,
+          "end": 1.135,
+          "speaker": "narrator"
+        },
+        {
+          "word": "you",
+          "start": 1.161,
+          "end": 1.268,
+          "speaker": "narrator"
+        },
+        {
+          "word": "judge",
+          "start": 1.281,
+          "end": 1.56,
+          "speaker": "narrator"
+        },
+        {
+          "word": "someone's",
+          "start": 1.587,
+          "end": 1.986,
+          "speaker": "narrator"
+        },
+        {
+          "word": "actions",
+          "start": 2.012,
+          "end": 2.491,
+          "speaker": "narrator"
+        },
+        {
+          "word": "give",
+          "start": 2.704,
+          "end": 2.863,
+          "speaker": "narrator"
+        },
+        {
+          "word": "yourself",
+          "start": 2.89,
+          "end": 3.316,
+          "speaker": "narrator"
+        },
+        {
+          "word": "a",
+          "start": 3.329,
+          "end": 3.395,
+          "speaker": "narrator"
+        },
+        {
+          "word": "moment",
+          "start": 3.409,
+          "end": 3.768,
+          "speaker": "narrator"
+        },
+        {
+          "word": "to",
+          "start": 3.794,
+          "end": 3.914,
+          "speaker": "narrator"
+        },
+        {
+          "word": "understand",
+          "start": 3.927,
+          "end": 4.499,
+          "speaker": "narrator"
+        },
+        {
+          "word": "their",
+          "start": 4.512,
+          "end": 4.659,
+          "speaker": "narrator"
+        },
+        {
+          "word": "story",
+          "start": 4.685,
+          "end": 5.164,
+          "speaker": "narrator"
+        }
+      ],
+      "narration": "Before you judge someone's actions, give yourself a moment to understand their story.",
+      "lock_beats": true,
+      "lock_camera_shots": true,
+      "characters": [],
+      "props": [],
+      "sfx": [
+        {
+          "at": 5.4,
+          "type": "final_piano_note",
+          "pan": 0.0
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "end": 9.845,
+          "zoom_from": 1.0,
+          "zoom_to": 1.0,
+          "focus_x": 0.5,
+          "focus_y": 0.54,
+          "cut": true
+        }
+      ]
+    }
+  ]
+}

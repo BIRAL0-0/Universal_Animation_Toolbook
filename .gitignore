@@ -1,0 +1,49 @@
+# Byte-compiled / caches
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Node canvas backend (installed at run time)
+node_modules/
+universal_toolbook/node_modules/
+universal_toolbook/package-lock.json.partial
+
+# Partial downloads
+*.partial
+
+# Offline neural voices and TTS weights (~60 MB each voice, ~100 MB model).
+# Fetched by: python3 universal_toolbook/setup_tts.py  (SHA-256 pinned)
+assets/voices/
+*.onnx
+*.onnx.json
+cache/
+*.npz
+
+# Unified temporary workspace. Only runtime/README.md is tracked; everything else a
+# render, install or QA run creates here is regenerable and stays out of git.
+runtime/*
+!runtime/README.md
+
+# Legacy scratch roots — still ignored so old commands and historical docs cannot
+# accidentally commit generated media. New code must use runtime/ instead.
+output/
+work/
+.work_*/
+
+# Generated draft renders are QA-only; shipped masters are committed explicitly.
+projects/*/renders/draft_*.mp4
+runtime/
+runtime/*
+runtime/jobs/
+runtime/cache/
+runtime/temp/
+# Video archives are now in videos/ - old locations ignored
+projects/video-*
+deliverables/video-*
+deliverables/the_wall_you_agreed_with/
+deliverables/two_inch_bridge_cel/
+output/

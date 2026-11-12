@@ -1,0 +1,755 @@
+{
+  "title": "The Staircase",
+  "channel_name": "",
+  "thesis": "You don't need the perfect moment. You need to begin.",
+  "style": "cel",
+  "bgm": "dynamic",
+  "subtitles_mode": "cinema",
+  "outro": false,
+  "voices": {
+    "narrator": {
+      "voice": "en-US-GuyNeural",
+      "rate": "-5%",
+      "pitch": "-1Hz"
+    }
+  },
+  "cast": {
+    "waiter": {
+      "name": "WAITER",
+      "style": "cel",
+      "color": "#e2e8f0",
+      "build": "standard",
+      "hair": "short_neat",
+      "hair_color": "#94a3b8",
+      "shoe_color": "#475569",
+      "eyes": true,
+      "expression": "hopeful",
+      "posture": -0.15,
+      "scale": 1.55
+    },
+    "climber": {
+      "name": "CLIMBER",
+      "style": "cel",
+      "color": "#f1f5f9",
+      "build": "standard",
+      "hair": "short_neat",
+      "hair_color": "#94a3b8",
+      "shoe_color": "#475569",
+      "eyes": true,
+      "expression": "determined",
+      "posture": 0.2,
+      "scale": 1.55
+    }
+  },
+  "scenes": [
+    {
+      "id": "S01",
+      "chapter": "The Promise | The Starting Line",
+      "mood": "reflective",
+      "bgm": "reflective_piano",
+      "bgm_gain": 0.88,
+      "accent_color": "#fbbf24",
+      "duration": 4.8,
+      "min_duration": 4.0,
+      "lead_in": 0.8,
+      "tail_out": 0.6,
+      "portrait_focus_x": 0.5,
+      "setting": {
+        "sky": [
+          "#020204",
+          "#08080c"
+        ],
+        "floor_color": "#0c0c10",
+        "light_color": "#fbbf24",
+        "backdrop": "minimal",
+        "weather": "stars",
+        "lighting": "horizon_glow"
+      },
+      "props": [
+        {
+          "type": "stairs",
+          "x": 0.5,
+          "scale": 1.8,
+          "z": -14
+        },
+        {
+          "type": "goal_silhouette",
+          "x": 0.5,
+          "y": 80,
+          "scale": 0.7,
+          "z": -20
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.0,
+          "zoom_to": 1.06,
+          "focus_x": 0.5,
+          "focus_y": 0.55,
+          "cut": true
+        },
+        {
+          "cue_on": "same starting line",
+          "zoom_from": 1.06,
+          "zoom_to": 1.12,
+          "focus_x": 0.42,
+          "focus_y": 0.6,
+          "move_dur": 2.0,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "waiter",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 4.8,
+              "action": "idle_stand",
+              "x": 0.38,
+              "facing": 1,
+              "expression": "hopeful"
+            }
+          ]
+        },
+        {
+          "id": "climber",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 4.8,
+              "action": "idle_stand",
+              "x": 0.62,
+              "facing": 1,
+              "expression": "determined"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "notebook_page",
+          "x": 0.5,
+          "y": 104,
+          "w": 600,
+          "h": 140,
+          "build_dur": 1.0,
+          "bold_first": true,
+          "portrait_w": 500,
+          "portrait_x": 0.5,
+          "lines": [
+            "BOTH WANT",
+            "THE SAME FUTURE."
+          ],
+          "cue_on": "same dream",
+          "hold_sec": 4.0
+        }
+      ],
+      "accent_words": [
+        "same dream",
+        "same starting line"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Two people. Same dream.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "Same starting line.",
+          "pause_after": 0.5
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "chapter": "The Wait | Almost Ready",
+      "mood": "reflective",
+      "bgm": "suspense_tension",
+      "bgm_gain": 0.82,
+      "accent_color": "#fbbf24",
+      "duration": 12.0,
+      "min_duration": 10.0,
+      "lead_in": 0.7,
+      "tail_out": 0.6,
+      "portrait_focus": "waiter",
+      "setting": {
+        "sky": [
+          "#020204",
+          "#0a0a10"
+        ],
+        "floor_color": "#0c0c10",
+        "light_color": "#94a3b8",
+        "backdrop": "minimal",
+        "weather": "clear",
+        "lighting": "spotlights"
+      },
+      "props": [
+        {
+          "type": "stairs",
+          "x": 0.72,
+          "scale": 1.4,
+          "z": -16
+        },
+        {
+          "type": "clock",
+          "x": 0.28,
+          "y": 350,
+          "scale": 1.2,
+          "z": 4
+        },
+        {
+          "type": "wall_calendar",
+          "x": 0.15,
+          "y": 280,
+          "scale": 0.9,
+          "z": -8
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.04,
+          "zoom_to": 1.1,
+          "focus_x": 0.36,
+          "focus_y": 0.58,
+          "cut": true
+        },
+        {
+          "cue_on": "next Monday",
+          "zoom_from": 1.1,
+          "zoom_to": 1.18,
+          "focus_x": 0.28,
+          "focus_y": 0.6,
+          "move_dur": 2.2,
+          "cut": true
+        },
+        {
+          "cue_on": "almost right",
+          "zoom_from": 1.16,
+          "zoom_to": 1.1,
+          "focus_x": 0.38,
+          "focus_y": 0.62,
+          "move_dur": 2.0,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "waiter",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.0,
+              "action": "check_watch",
+              "x": 0.36,
+              "facing": 1,
+              "expression": "worried"
+            },
+            {
+              "start": 3.0,
+              "end": 7.0,
+              "action": "pace_think",
+              "from_x": 0.28,
+              "to_x": 0.44,
+              "facing": 1,
+              "expression": "worried"
+            },
+            {
+              "start": 7.0,
+              "end": 10.5,
+              "action": "head_in_hands",
+              "x": 0.36,
+              "facing": 1,
+              "expression": "exhausted",
+              "seated": true
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "notebook_page",
+          "x": 0.5,
+          "y": 104,
+          "w": 620,
+          "h": 140,
+          "build_dur": 1.0,
+          "bold_first": true,
+          "portrait_w": 500,
+          "portrait_x": 0.5,
+          "lines": [
+            "WAITING FOR",
+            "THE RIGHT TIME."
+          ],
+          "cue_on": "wait for the perfect",
+          "hold_sec": 8.0
+        }
+      ],
+      "accent_words": [
+        "wait for the perfect",
+        "next Monday",
+        "almost right"
+      ],
+      "sfx": [
+        {
+          "type": "clock_tick",
+          "at": 0.5,
+          "pan": -0.2
+        },
+        {
+          "type": "clock_tick",
+          "at": 2.0,
+          "pan": -0.15
+        },
+        {
+          "type": "paper_slide",
+          "at": 5.5,
+          "pan": -0.3
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "One decided to wait for the perfect moment.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "Monday became next Monday.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "January became next January.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "The plan was flawless.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "The timing was always almost right.",
+          "pause_after": 0.5
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "chapter": "The Climb | One Ugly Step",
+      "mood": "focus",
+      "bgm": "chill_focus",
+      "bgm_gain": 0.9,
+      "accent_color": "#fbbf24",
+      "duration": 14.0,
+      "min_duration": 12.0,
+      "lead_in": 0.7,
+      "tail_out": 0.6,
+      "portrait_focus": "climber",
+      "setting": {
+        "sky": [
+          "#040408",
+          "#0c0c14"
+        ],
+        "floor_color": "#0a0a10",
+        "light_color": "#fbbf24",
+        "backdrop": "minimal",
+        "weather": "rain",
+        "rain_intensity": 0.6,
+        "lighting": "horizon_glow"
+      },
+      "props": [
+        {
+          "type": "stairs",
+          "x": 0.5,
+          "scale": 2.0,
+          "z": -14
+        },
+        {
+          "type": "goal_silhouette",
+          "x": 0.5,
+          "y": 60,
+          "scale": 0.5,
+          "z": -20
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.04,
+          "zoom_to": 1.1,
+          "focus_x": 0.5,
+          "focus_y": 0.58,
+          "cut": true
+        },
+        {
+          "cue_on": "stumbled on step two",
+          "zoom_from": 1.1,
+          "zoom_to": 1.18,
+          "focus_x": 0.48,
+          "focus_y": 0.56,
+          "move_dur": 2.2,
+          "cut": true
+        },
+        {
+          "cue_on": "one step higher",
+          "zoom_from": 1.14,
+          "zoom_to": 1.08,
+          "focus_x": 0.52,
+          "focus_y": 0.52,
+          "move_dur": 2.5,
+          "cut": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "climber",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.0,
+              "action": "climb_stairs",
+              "stairs_x": 0.5,
+              "steps": 3,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 3.0,
+              "end": 5.0,
+              "action": "trip_stumble",
+              "x": 0.5,
+              "facing": 1,
+              "expression": "tense"
+            },
+            {
+              "start": 5.0,
+              "end": 8.0,
+              "action": "climb_stairs",
+              "stairs_x": 0.5,
+              "steps": 5,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 8.0,
+              "end": 10.5,
+              "action": "stand_up_resolve",
+              "x": 0.5,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 10.5,
+              "end": 13.0,
+              "action": "look_horizon",
+              "x": 0.5,
+              "facing": 1,
+              "expression": "hopeful"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "notebook_page",
+          "x": 0.5,
+          "y": 104,
+          "w": 660,
+          "h": 140,
+          "build_dur": 1.0,
+          "bold_first": true,
+          "portrait_w": 500,
+          "portrait_x": 0.5,
+          "lines": [
+            "STARTING BEFORE",
+            "FEELING READY."
+          ],
+          "cue_on": "just started",
+          "hold_sec": 9.0
+        }
+      ],
+      "accent_words": [
+        "just started",
+        "stumbled on step two",
+        "one step higher"
+      ],
+      "sfx": [
+        {
+          "type": "footstep",
+          "at": 1.0,
+          "pan": 0.0
+        },
+        {
+          "type": "footstep",
+          "at": 2.0,
+          "pan": 0.05
+        },
+        {
+          "type": "wind_gust",
+          "at": 7.0,
+          "pan": 0.1
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "The other one just started.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "No fanfare. No perfect plan.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "She stumbled on step two.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "Slid backward on step fifteen.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "But every single day,",
+          "pause_after": 0.25
+        },
+        {
+          "speaker": "narrator",
+          "text": "she was one step higher than yesterday.",
+          "pause_after": 0.5
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "chapter": "The Reveal | Begin",
+      "mood": "reflective",
+      "bgm": "triumph_horizon",
+      "bgm_gain": 0.92,
+      "accent_color": "#fbbf24",
+      "duration": 18.0,
+      "min_duration": 15.0,
+      "lead_in": 0.8,
+      "tail_out": 1.0,
+      "portrait_focus_x": 0.46,
+      "setting": {
+        "sky": [
+          "#060608",
+          "#1a1408"
+        ],
+        "floor_color": "#0c0c10",
+        "light_color": "#fbbf24",
+        "backdrop": "horizon",
+        "weather": "clear",
+        "lighting": "sun_orb"
+      },
+      "props": [
+        {
+          "type": "stairs",
+          "x": 0.46,
+          "scale": 1.2,
+          "z": -14
+        },
+        {
+          "type": "goal_silhouette",
+          "x": 0.46,
+          "y": 60,
+          "scale": 0.45,
+          "z": -22
+        }
+      ],
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.0,
+          "zoom_to": 1.05,
+          "focus_x": 0.46,
+          "focus_y": 0.55,
+          "cut": true
+        },
+        {
+          "cue_on": "didn't need it to",
+          "zoom_from": 1.05,
+          "zoom_to": 1.1,
+          "focus_x": 0.5,
+          "focus_y": 0.5,
+          "move_dur": 2.2,
+          "cut": true
+        },
+        {
+          "cue_on": "cares that you do",
+          "zoom_from": 1.08,
+          "zoom_to": 1.04,
+          "focus_x": 0.46,
+          "focus_y": 0.54,
+          "move_dur": 2.5,
+          "cut": false,
+          "blend_sec": 0.6
+        }
+      ],
+      "characters": [
+        {
+          "id": "waiter",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 6.0,
+              "action": "head_in_hands",
+              "x": 0.32,
+              "facing": 1,
+              "expression": "exhausted",
+              "seated": true
+            },
+            {
+              "start": 6.0,
+              "end": 16.0,
+              "action": "kneel_lookup",
+              "x": 0.32,
+              "facing": 1,
+              "expression": "worried"
+            }
+          ]
+        },
+        {
+          "id": "climber",
+          "show_name": false,
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 4.4,
+              "action": "look_horizon",
+              "x": 0.6,
+              "facing": 1,
+              "expression": "calm"
+            },
+            {
+              "start": 4.4,
+              "end": 8.0,
+              "action": "idle_stand",
+              "x": 0.6,
+              "facing": 1,
+              "expression": "calm"
+            },
+            {
+              "start": 8.0,
+              "end": 12.4,
+              "action": "stand_up_resolve",
+              "x": 0.6,
+              "facing": 1,
+              "expression": "determined"
+            },
+            {
+              "start": 12.4,
+              "end": 16.0,
+              "action": "idle_stand",
+              "x": 0.6,
+              "facing": 1,
+              "expression": "determined"
+            }
+          ]
+        }
+      ],
+      "boards": [
+        {
+          "type": "notebook_page",
+          "x": 0.5,
+          "y": 104,
+          "w": 700,
+          "h": 160,
+          "build_dur": 1.0,
+          "bold_first": true,
+          "portrait_w": 520,
+          "portrait_x": 0.5,
+          "lines": [
+            "YOU DON'T NEED",
+            "THE PERFECT MOMENT."
+          ],
+          "cue_on": "stars to align",
+          "hide_on": "terrifying step",
+          "hold_sec": 5.0
+        },
+        {
+          "type": "stat_cards",
+          "x": 0.5,
+          "y": 104,
+          "w": 500,
+          "h": 140,
+          "build_dur": 0.8,
+          "portrait_w": 460,
+          "portrait_x": 0.5,
+          "cue_on": "cares that you do",
+          "hold_sec": 5.0,
+          "cards": [
+            {
+              "value": "BEGIN",
+              "label": "YOU NEED TO"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "perfect moment",
+        "stars to align",
+        "terrifying step",
+        "cares that you do"
+      ],
+      "sfx": [
+        {
+          "type": "wind_gust",
+          "at": 8.0,
+          "pan": 0.0
+        }
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "The perfect moment never came for one of them.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "The other one didn't need it to.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "You don't need the stars to align.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "You need to take the first step.",
+          "pause_after": 0.2
+        },
+        {
+          "speaker": "narrator",
+          "text": "The first ugly, imperfect, terrifying step.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "The staircase doesn't care when you start.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "It only cares that you do.",
+          "pause_after": 0.8
+        }
+      ]
+    }
+  ]
+}
