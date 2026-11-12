@@ -272,6 +272,11 @@ Record the change in `PIPELINE_CHANGELOG.md` and add a test under `tests/product
 | Guessing at a duration instead of reading it from the render | The format boundary is 60.0 s exactly and is not negotiable by feel |
 | Patching one video's spec to fix a shared bug | The next video has the same bug |
 | Writing the packaging after the render | The hook and title shape the script, not the reverse |
+| Authoring `chapter` as an object | `chapter` is the string `"Label \| Title"`; the compiler prints `String(chapter)`, so an object ships `[object Object]` into the ribbon **and** the chapters file. `run_studio.py validate` does not catch it — `validate_specs.py` does (KI-021). Chapters come from scene strings only; a top-level `chapters[]` array is never read (KI-022) |
+| Picking a backdrop by name without looking at it | Some parchment backdrops hard-code furniture at fixed screen coordinates for a specific earlier film (a chair at x≈1225 in `parchment_studio`). Under a tighter camera it floats mid-frame. Look at a still before committing a scene to a backdrop |
+| Letting the cover repeat a number the title already carries | `thumbnail_copy.py` fails it, and it is right: one surface is wasted. If the title says the number, the cover shows the mechanism the title does not name |
+| Building a cover by cropping a frame that fights the film's palette | `thumbnail_style.py` scores it (floor 0.62). A card-dominant crop on a warm ground scored 0.515; the same film's fuller frame scored 0.835 with no change to the type |
+| Placing boards and actors in separate bands without checking who occludes whom | A figure's head can cover the one square the viewer must be able to count. Compose the proof object first, then put actors where they cannot cover it |
 
 ## Quality checklist
 
@@ -280,6 +285,7 @@ Record the change in `PIPELINE_CHANGELOG.md` and add a test under `tests/product
 - [ ] Stills rendered in every delivered aspect and actually inspected
 - [ ] Draft inspected at each board cue and camera cut
 - [ ] Master reports `voiced: true`, correct aspect, 30 fps, expected frame count
+- [ ] Chapters read as real titles in the `_chapters.txt`, not `[object Object]` (KI-021)
 - [ ] Format obeys the 60.0 s policy or carries a recorded exception
 - [ ] Subtitles inside safe regions, removed at real speech end
 - [ ] Audio within the measured band, narration above music

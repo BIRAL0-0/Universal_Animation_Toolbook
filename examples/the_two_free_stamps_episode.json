@@ -1,0 +1,1379 @@
+{
+  "title": "Why Your Streak Died at 20% (It Was Never Willpower)",
+  "channel_name": "",
+  "thesis": "The start of a task decides its finish: a card that looks already started is completed nearly twice as often, for identical effort.",
+  "bgm": "reflective_piano",
+  "subtitles_mode": "cinema",
+  "outro": false,
+  "voices": {
+    "narrator": {
+      "voice": "am_michael",
+      "rate": "+0%",
+      "pitch": "+0Hz"
+    }
+  },
+  "cast": {
+    "caleb": {
+      "name": "CALEB",
+      "style": "ink_stick",
+      "accessories": [
+        "cap"
+      ],
+      "expression": "determined",
+      "scale": 1.02,
+      "posture": -0.1,
+      "accent": "#cc292b"
+    },
+    "marcus": {
+      "name": "MARCUS",
+      "style": "ink_stick",
+      "accessories": [
+        "coat"
+      ],
+      "expression": "neutral",
+      "scale": 1.06,
+      "posture": 0.12
+    },
+    "clerk": {
+      "name": "THE CLERK",
+      "style": "ink_stick",
+      "accessories": [
+        "cap",
+        "badge"
+      ],
+      "expression": "smile",
+      "scale": 1.0
+    }
+  },
+  "scenes": [
+    {
+      "id": "S01",
+      "mood": "calm",
+      "accent_color": "#cc292b",
+      "duration": 15.0,
+      "lead_in": 0.75,
+      "tail_out": 0.65,
+      "setting": {
+        "backdrop": "parchment_stage"
+      },
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.14,
+          "zoom_to": 1.19,
+          "focus_x": 0.5,
+          "focus_y": 0.44
+        }
+      ],
+      "boards": [
+        {
+          "type": "stamp_card",
+          "x": 0.055,
+          "y": 0.055,
+          "w": 0.375,
+          "h": 0.44,
+          "title": "CAR WASH CLUB",
+          "total": 8,
+          "cols": 4,
+          "pre_filled": 0,
+          "reward": "ONE FREE WASH",
+          "note": "STARTING TODAY",
+          "accent": "#64748b",
+          "reveal_at": 1.1,
+          "build_dur": 1.5,
+          "stamp_at": [
+            3.4,
+            6.1
+          ],
+          "persist": true
+        },
+        {
+          "type": "stamp_card",
+          "x": 0.57,
+          "y": 0.055,
+          "w": 0.375,
+          "h": 0.44,
+          "title": "CAR WASH CLUB",
+          "total": 10,
+          "cols": 5,
+          "pre_filled": 2,
+          "reward": "ONE FREE WASH",
+          "note": "+2 BONUS",
+          "accent": "#cc292b",
+          "reveal_at": 7.4,
+          "build_dur": 1.5,
+          "stamp_at": [
+            9.2,
+            11.0
+          ],
+          "persist": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "caleb",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 2.4,
+              "action": "walk",
+              "from_x": 0.16,
+              "to_x": 0.255,
+              "facing": 1,
+              "expression": "neutral"
+            },
+            {
+              "start": 2.4,
+              "end": 5.0,
+              "action": "hold_blueprint",
+              "x": 0.245,
+              "facing": 1,
+              "expression": "curious"
+            },
+            {
+              "start": 5.0,
+              "end": 7.6,
+              "action": "check_watch",
+              "x": 0.245,
+              "facing": 1,
+              "expression": "tired"
+            },
+            {
+              "start": 7.6,
+              "end": 10.4,
+              "action": "listen_nod",
+              "x": 0.245,
+              "facing": 1,
+              "expression": "curious"
+            },
+            {
+              "start": 10.4,
+              "end": 15.0,
+              "action": "look_horizon",
+              "x": 0.245,
+              "facing": 1,
+              "expression": "hopeful"
+            }
+          ]
+        },
+        {
+          "id": "marcus",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 4.0,
+              "action": "idle_stand",
+              "x": 0.745,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 4.0,
+              "end": 7.4,
+              "action": "hold_blueprint",
+              "x": 0.775,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 7.4,
+              "end": 10.6,
+              "action": "nod_yes",
+              "x": 0.775,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 10.6,
+              "end": 13.0,
+              "action": "clench_fist",
+              "x": 0.775,
+              "facing": -1,
+              "expression": "determined"
+            },
+            {
+              "start": 13.0,
+              "end": 15.0,
+              "action": "look_horizon",
+              "x": 0.775,
+              "facing": -1,
+              "expression": "hopeful"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "eight car washes",
+        "twenty percent done"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Two people need eight car washes.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "One of them is already twenty percent done.",
+          "pause_after": 0.45
+        },
+        {
+          "speaker": "narrator",
+          "text": "Both pay the same. Both wash the same.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "Only one of them can feel it starting.",
+          "pause_after": 0.6
+        }
+      ],
+      "chapter": "Two Cards | Same Eight Washes"
+    },
+    {
+      "id": "S02",
+      "mood": "calm",
+      "accent_color": "#64748b",
+      "duration": 12.0,
+      "lead_in": 0.55,
+      "tail_out": 0.55,
+      "setting": {
+        "backdrop": "parchment_stage"
+      },
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.14,
+          "zoom_to": 1.19,
+          "focus_x": 0.5,
+          "focus_y": 0.44
+        }
+      ],
+      "boards": [
+        {
+          "type": "stamp_card",
+          "x": 0.055,
+          "y": 0.055,
+          "w": 0.375,
+          "h": 0.44,
+          "title": "EIGHT SQUARES",
+          "total": 8,
+          "cols": 4,
+          "pre_filled": 0,
+          "reward": "EIGHT WASHES",
+          "note": "ALL YOURS",
+          "accent": "#64748b",
+          "reveal_at": 0.9,
+          "build_dur": 1.4,
+          "stamp_at": [
+            9.0
+          ],
+          "persist": true
+        },
+        {
+          "type": "stamp_card",
+          "x": 0.57,
+          "y": 0.055,
+          "w": 0.375,
+          "h": 0.44,
+          "title": "TEN SQUARES",
+          "total": 10,
+          "cols": 5,
+          "pre_filled": 2,
+          "reward": "EIGHT WASHES",
+          "note": "+2 BONUS",
+          "accent": "#cc292b",
+          "reveal_at": 6.2,
+          "build_dur": 1.4,
+          "stamp_at": [
+            8.6
+          ],
+          "persist": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "caleb",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.0,
+              "action": "cross_arms_skeptical",
+              "x": 0.255,
+              "facing": 1,
+              "expression": "tired"
+            },
+            {
+              "start": 3.0,
+              "end": 6.0,
+              "action": "head_in_hands",
+              "x": 0.245,
+              "facing": 1,
+              "expression": "sad"
+            },
+            {
+              "start": 6.0,
+              "end": 9.0,
+              "action": "pace_think",
+              "from_x": 0.22,
+              "to_x": 0.27,
+              "facing": 1,
+              "expression": "tired"
+            },
+            {
+              "start": 9.0,
+              "end": 12.0,
+              "action": "interact_table",
+              "x": 0.245,
+              "facing": 1,
+              "expression": "neutral"
+            }
+          ]
+        },
+        {
+          "id": "marcus",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.0,
+              "action": "idle_stand",
+              "x": 0.745,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 3.0,
+              "end": 6.0,
+              "action": "nod_yes",
+              "x": 0.775,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 6.0,
+              "end": 9.0,
+              "action": "point_emphasis",
+              "x": 0.775,
+              "facing": -1,
+              "expression": "determined"
+            },
+            {
+              "start": 9.0,
+              "end": 12.0,
+              "action": "clench_fist",
+              "x": 0.775,
+              "facing": -1,
+              "expression": "determined"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "eight squares",
+        "two free stamps",
+        "already filled in"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "The man with the blank card has eight squares to fill.",
+          "pause_after": 0.25
+        },
+        {
+          "speaker": "narrator",
+          "text": "All eight are his to lose.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "The man with two free stamps has ten squares.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "Two are already filled in.",
+          "pause_after": 0.55
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "mood": "reflective",
+      "accent_color": "#cc292b",
+      "duration": 15.0,
+      "lead_in": 0.6,
+      "tail_out": 0.6,
+      "setting": {
+        "backdrop": "parchment_stage"
+      },
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.22,
+          "zoom_to": 1.26,
+          "focus_x": 0.66,
+          "focus_y": 0.52
+        }
+      ],
+      "boards": [
+        {
+          "type": "stat_cards",
+          "x": 0.045,
+          "y": 0.095,
+          "w": 0.42,
+          "h": 0.19,
+          "cards": [
+            {
+              "value": "21 days",
+              "label": "THE RULE YOU WERE TOLD"
+            },
+            {
+              "value": "0",
+              "label": "DAYS THE RULE WAS TESTED"
+            }
+          ],
+          "cue_on": "twenty one days",
+          "hold_sec": 9.0,
+          "build_dur": 1.2
+        }
+      ],
+      "characters": [
+        {
+          "id": "caleb",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.4,
+              "action": "sit_desk_slump",
+              "x": 0.855,
+              "facing": 1,
+              "expression": "tired"
+            },
+            {
+              "start": 3.4,
+              "end": 6.6,
+              "action": "head_in_hands",
+              "x": 0.855,
+              "facing": 1,
+              "expression": "sad"
+            },
+            {
+              "start": 6.6,
+              "end": 9.6,
+              "action": "stand_from_desk",
+              "x": 0.855,
+              "facing": 1,
+              "expression": "neutral"
+            },
+            {
+              "start": 9.6,
+              "end": 12.4,
+              "action": "debate_gesture",
+              "x": 0.855,
+              "facing": 1,
+              "expression": "curious"
+            },
+            {
+              "start": 12.4,
+              "end": 15.0,
+              "action": "point_emphasis",
+              "x": 0.855,
+              "facing": 1,
+              "expression": "determined"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "not quit because you were weak",
+        "card started at zero",
+        "twenty one days",
+        "not their fault"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "You did not quit because you were weak.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "You quit because your card started at zero.",
+          "pause_after": 0.6
+        },
+        {
+          "speaker": "narrator",
+          "text": "And someone has been telling you it takes twenty one days.",
+          "pause_after": 0.45
+        },
+        {
+          "speaker": "narrator",
+          "text": "They are wrong, and it is not their fault.",
+          "pause_after": 0.55
+        }
+      ],
+      "chapter": "One | The Twenty-One-Day Lie"
+    },
+    {
+      "id": "S04",
+      "mood": "focus",
+      "accent_color": "#d9a521",
+      "duration": 16.0,
+      "lead_in": 0.6,
+      "tail_out": 0.6,
+      "setting": {
+        "backdrop": "library_study"
+      },
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.1,
+          "zoom_to": 1.15,
+          "focus_x": 0.72,
+          "focus_y": 0.52
+        }
+      ],
+      "props": [
+        {
+          "id": "desk_main",
+          "type": "desk",
+          "x": 0.74
+        },
+        {
+          "id": "book_main",
+          "type": "book",
+          "x": 0.74,
+          "elevation": 142
+        }
+      ],
+      "boards": [
+        {
+          "type": "notebook_page",
+          "x": 0.05,
+          "y": 0.11,
+          "w": 0.4,
+          "h": 0.36,
+          "cue_on": "plastic surgeon",
+          "hold_sec": 12.0,
+          "build_dur": 1.4,
+          "lines": [
+            "A MINIMUM OF ABOUT 21 DAYS",
+            "FOR A NEW IMAGE TO JELL."
+          ],
+          "bold_first": true,
+          "rewrite": {
+            "old_text": "a minimum of about 21 days",
+            "new_text": "21 days to form a habit"
+          }
+        }
+      ],
+      "characters": [
+        {
+          "id": "caleb",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.2,
+              "action": "sit_desk_type",
+              "x": 0.74,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 3.2,
+              "end": 6.6,
+              "action": "point_board",
+              "x": 0.74,
+              "facing": 1,
+              "expression": "curious"
+            },
+            {
+              "start": 6.6,
+              "end": 10.0,
+              "action": "sketch_desk",
+              "x": 0.74,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 10.0,
+              "end": 13.0,
+              "action": "react_surprise",
+              "x": 0.74,
+              "facing": 1,
+              "expression": "shocked"
+            },
+            {
+              "start": 13.0,
+              "end": 16.0,
+              "action": "point_emphasis",
+              "x": 0.74,
+              "facing": 1,
+              "expression": "determined"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "nineteen sixty",
+        "twenty one days",
+        "minimum of about twenty one days",
+        "fell off the truck"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "In nineteen sixty, a plastic surgeon wrote a book.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "He noticed his patients took about twenty one days to get used to a new face.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "He wrote a minimum of about twenty one days.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "Somewhere along the way, the word minimum fell off the truck.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "A surgeon's note about faces became a rule about habits.",
+          "pause_after": 0.55
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "mood": "focus",
+      "accent_color": "#d9a521",
+      "duration": 14.0,
+      "lead_in": 0.55,
+      "tail_out": 0.55,
+      "setting": {
+        "backdrop": "library_study"
+      },
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.08,
+          "zoom_to": 1.12,
+          "focus_x": 0.7,
+          "focus_y": 0.55
+        }
+      ],
+      "props": [
+        {
+          "id": "desk_main",
+          "type": "desk",
+          "x": 0.8
+        },
+        {
+          "id": "book_main",
+          "type": "book",
+          "x": 0.8,
+          "elevation": 142
+        }
+      ],
+      "boards": [
+        {
+          "type": "line_graph",
+          "x": 0.04,
+          "y": 0.09,
+          "w": 0.44,
+          "h": 0.37,
+          "cue_on": "eighteen days",
+          "hold_sec": 8.0,
+          "build_dur": 2.0,
+          "top_label": "AUTOMATICITY OVER TIME",
+          "series": [
+            {
+              "label": "FASTEST PERSON",
+              "color": "#64748b",
+              "points": [
+                0.05,
+                0.55,
+                0.88,
+                0.94,
+                0.95
+              ]
+            },
+            {
+              "label": "SLOWEST PERSON",
+              "color": "#d9a521",
+              "points": [
+                0.04,
+                0.1,
+                0.18,
+                0.26,
+                0.34
+              ]
+            }
+          ]
+        },
+        {
+          "type": "stat_cards",
+          "x": 0.04,
+          "y": 0.5,
+          "w": 0.44,
+          "h": 0.16,
+          "cue_on": "sixty six days",
+          "hold_sec": 5.0,
+          "build_dur": 1.2,
+          "cards": [
+            {
+              "value": "18 days",
+              "label": "FASTEST"
+            },
+            {
+              "value": "66 days",
+              "label": "MEDIAN"
+            },
+            {
+              "value": "254 days",
+              "label": "SLOWEST"
+            }
+          ]
+        }
+      ],
+      "characters": [
+        {
+          "id": "marcus",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.4,
+              "action": "sit_desk_type",
+              "x": 0.8,
+              "facing": -1,
+              "expression": "focused"
+            },
+            {
+              "start": 3.4,
+              "end": 6.8,
+              "action": "point_board",
+              "x": 0.8,
+              "facing": -1,
+              "expression": "curious"
+            },
+            {
+              "start": 6.8,
+              "end": 10.2,
+              "action": "listen_nod",
+              "x": 0.8,
+              "facing": -1,
+              "expression": "determined"
+            },
+            {
+              "start": 10.2,
+              "end": 14.0,
+              "action": "chest_hand_sincere",
+              "x": 0.8,
+              "facing": -1,
+              "expression": "hopeful"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "ninety six people",
+        "eighteen days",
+        "two hundred and fifty four",
+        "sixty six days"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "In twenty ten, ninety six people chose one small daily behaviour.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "They repeated it in the same context for twelve weeks.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "Time to feeling automatic ran from eighteen days to two hundred and fifty four.",
+          "pause_after": 0.45
+        },
+        {
+          "speaker": "narrator",
+          "text": "The middle of that range was sixty six days.",
+          "pause_after": 0.65
+        }
+      ],
+      "chapter": "Two | What They Actually Measured"
+    },
+    {
+      "id": "S06",
+      "mood": "reflective",
+      "accent_color": "#cc292b",
+      "duration": 16.0,
+      "lead_in": 0.6,
+      "tail_out": 0.6,
+      "setting": {
+        "backdrop": "parchment_stage"
+      },
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.1,
+          "zoom_to": 1.06,
+          "focus_x": 0.58,
+          "focus_y": 0.46
+        }
+      ],
+      "boards": [
+        {
+          "type": "stamp_card",
+          "x": 0.055,
+          "y": 0.055,
+          "w": 0.375,
+          "h": 0.44,
+          "title": "TWELVE STAMPS",
+          "total": 12,
+          "cols": 3,
+          "pre_filled": 2,
+          "reward": "TEN PURCHASES",
+          "note": "+2 BONUS",
+          "accent": "#cc292b",
+          "reveal_at": 1.0,
+          "build_dur": 1.4,
+          "stamp_at": [
+            4.6,
+            6.8,
+            9.4
+          ],
+          "persist": true
+        },
+        {
+          "type": "stamp_card",
+          "x": 0.57,
+          "y": 0.055,
+          "w": 0.375,
+          "h": 0.44,
+          "title": "TEN STAMPS",
+          "total": 10,
+          "cols": 5,
+          "pre_filled": 0,
+          "reward": "TEN PURCHASES",
+          "note": "PLAIN CARD",
+          "accent": "#64748b",
+          "reveal_at": 6.0,
+          "build_dur": 1.4,
+          "stamp_at": [
+            11.2
+          ],
+          "persist": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "clerk",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.4,
+              "action": "handoff_give",
+              "x": 0.66,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 3.4,
+              "end": 6.6,
+              "action": "interact_table",
+              "x": 0.66,
+              "facing": 1,
+              "expression": "neutral"
+            },
+            {
+              "start": 6.6,
+              "end": 10.0,
+              "action": "handoff_give",
+              "x": 0.66,
+              "facing": 1,
+              "expression": "neutral"
+            },
+            {
+              "start": 10.0,
+              "end": 16.0,
+              "action": "wave_hand",
+              "x": 0.66,
+              "facing": 1,
+              "expression": "smile"
+            }
+          ]
+        },
+        {
+          "id": "marcus",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.4,
+              "action": "handoff_receive",
+              "x": 0.82,
+              "facing": -1,
+              "expression": "curious"
+            },
+            {
+              "start": 3.4,
+              "end": 6.6,
+              "action": "hold_blueprint",
+              "x": 0.82,
+              "facing": -1,
+              "expression": "determined"
+            },
+            {
+              "start": 6.6,
+              "end": 10.0,
+              "action": "handoff_receive",
+              "x": 0.82,
+              "facing": -1,
+              "expression": "neutral"
+            },
+            {
+              "start": 10.0,
+              "end": 13.4,
+              "action": "nod_yes",
+              "x": 0.82,
+              "facing": -1,
+              "expression": "determined"
+            },
+            {
+              "start": 13.4,
+              "end": 16.0,
+              "action": "clench_fist",
+              "x": 0.82,
+              "facing": -1,
+              "expression": "determined"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "did not start at zero",
+        "twelve stamp card",
+        "ten purchases either way",
+        "finished first"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "For some of those volunteers, the card did not start at zero.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "One group got a twelve stamp card with two bonus stamps.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "The other got a plain ten stamp card.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "Ten purchases either way.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "The group that was already started finished first.",
+          "pause_after": 0.6
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "mood": "suspense",
+      "accent_color": "#cc292b",
+      "duration": 16.0,
+      "lead_in": 0.6,
+      "tail_out": 0.6,
+      "setting": {
+        "backdrop": "parchment_stage"
+      },
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.02,
+          "zoom_to": 1.075,
+          "focus_x": 0.5,
+          "focus_y": 0.42
+        }
+      ],
+      "boards": [
+        {
+          "type": "stamp_card",
+          "x": 0.055,
+          "y": 0.075,
+          "w": 0.375,
+          "h": 0.46,
+          "title": "YOUR CARD",
+          "total": 10,
+          "cols": 5,
+          "pre_filled": 2,
+          "reward": "ONE FREE WASH",
+          "note": "NO REASON GIVEN",
+          "accent": "#64748b",
+          "reveal_at": 1.0,
+          "build_dur": 1.4,
+          "stamp_at": [],
+          "persist": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "caleb",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.2,
+              "action": "point_emphasis",
+              "x": 0.74,
+              "facing": -1,
+              "expression": "determined"
+            },
+            {
+              "start": 3.2,
+              "end": 6.4,
+              "action": "react_surprise",
+              "x": 0.72,
+              "facing": -1,
+              "expression": "shocked"
+            },
+            {
+              "start": 6.4,
+              "end": 9.6,
+              "action": "cross_arms_skeptical",
+              "x": 0.72,
+              "facing": -1,
+              "expression": "skeptical"
+            },
+            {
+              "start": 9.6,
+              "end": 12.8,
+              "action": "shake_head_no",
+              "x": 0.72,
+              "facing": -1,
+              "expression": "skeptical"
+            },
+            {
+              "start": 12.8,
+              "end": 16.0,
+              "action": "point_emphasis",
+              "x": 0.72,
+              "facing": -1,
+              "expression": "determined"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "two free stamps",
+        "the catch",
+        "no reason",
+        "a lie you can see"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "So hand yourself two free stamps.",
+          "pause_after": 0.35
+        },
+        {
+          "speaker": "narrator",
+          "text": "Here is the catch.",
+          "pause_after": 0.45
+        },
+        {
+          "speaker": "narrator",
+          "text": "The effect disappeared when no reason was given for the head start.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "Two squares filled in for no reason is just a lie you can see.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "You need a reason the person will accept.",
+          "pause_after": 0.55
+        }
+      ],
+      "chapter": "Three | The Catch"
+    },
+    {
+      "id": "S08",
+      "mood": "hopeful",
+      "accent_color": "#d9a521",
+      "duration": 15.0,
+      "lead_in": 0.6,
+      "tail_out": 0.6,
+      "setting": {
+        "backdrop": "parchment_stage"
+      },
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.1,
+          "zoom_to": 1.15,
+          "focus_x": 0.46,
+          "focus_y": 0.55
+        }
+      ],
+      "props": [
+        {
+          "id": "desk_main",
+          "type": "desk",
+          "x": 0.34
+        },
+        {
+          "id": "laptop_main",
+          "type": "laptop",
+          "x": 0.34,
+          "elevation": 142
+        },
+        {
+          "id": "cup_main",
+          "type": "cup",
+          "x": 0.44,
+          "elevation": 142
+        }
+      ],
+      "boards": [
+        {
+          "type": "checklist_card",
+          "x": 0.55,
+          "y": 0.1,
+          "w": 0.38,
+          "h": 0.26,
+          "cue_on": "second paragraph",
+          "hold_sec": 8.5,
+          "build_dur": 1.4,
+          "items": [
+            "OPEN THE DOCUMENT",
+            "WRITE THE SECOND PARAGRAPH",
+            "TWO STAMPS BEFORE THE WORK"
+          ]
+        }
+      ],
+      "characters": [
+        {
+          "id": "caleb",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.2,
+              "action": "sit_desk_type",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 3.2,
+              "end": 6.4,
+              "action": "point_board",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "hopeful"
+            },
+            {
+              "start": 6.4,
+              "end": 9.6,
+              "action": "sketch_desk",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "focused"
+            },
+            {
+              "start": 9.6,
+              "end": 12.4,
+              "action": "drink_cup",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "smile"
+            },
+            {
+              "start": 12.4,
+              "end": 15.0,
+              "action": "nod_yes",
+              "x": 0.34,
+              "facing": 1,
+              "expression": "smile"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "open a conversation",
+        "first sentence",
+        "second paragraph",
+        "two stamps"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "You already know how to open a conversation.",
+          "pause_after": 0.3
+        },
+        {
+          "speaker": "narrator",
+          "text": "So do not start at the first sentence.",
+          "pause_after": 0.4
+        },
+        {
+          "speaker": "narrator",
+          "text": "Open the document, write the second paragraph.",
+          "pause_after": 0.45
+        },
+        {
+          "speaker": "narrator",
+          "text": "Two stamps before the work begins.",
+          "pause_after": 0.55
+        }
+      ]
+    },
+    {
+      "id": "S09",
+      "mood": "warm",
+      "accent_color": "#cc292b",
+      "duration": 14.0,
+      "lead_in": 0.7,
+      "tail_out": 1.2,
+      "setting": {
+        "backdrop": "parchment_stage"
+      },
+      "camera_shots": [
+        {
+          "start": 0.0,
+          "zoom_from": 1.02,
+          "zoom_to": 1.075,
+          "focus_x": 0.5,
+          "focus_y": 0.42
+        }
+      ],
+      "boards": [
+        {
+          "type": "stamp_card",
+          "x": 0.055,
+          "y": 0.055,
+          "w": 0.375,
+          "h": 0.44,
+          "title": "CAR WASH CLUB",
+          "total": 8,
+          "cols": 4,
+          "pre_filled": 6,
+          "reward": "ONE FREE WASH",
+          "note": "STARTED AT ZERO",
+          "accent": "#64748b",
+          "reveal_at": 0.8,
+          "build_dur": 1.3,
+          "stamp_at": [
+            4.0,
+            6.2
+          ],
+          "persist": true
+        },
+        {
+          "type": "stamp_card",
+          "x": 0.57,
+          "y": 0.055,
+          "w": 0.375,
+          "h": 0.44,
+          "title": "START AT PAGE TWENTY",
+          "total": 10,
+          "cols": 5,
+          "pre_filled": 7,
+          "reward": "TWO FREE STAMPS",
+          "note": "THE REASON",
+          "accent": "#cc292b",
+          "reveal_at": 1.2,
+          "build_dur": 1.3,
+          "stamp_at": [
+            4.6,
+            6.8,
+            9.4
+          ],
+          "persist": true
+        }
+      ],
+      "characters": [
+        {
+          "id": "marcus",
+          "beats": [
+            {
+              "start": 0.0,
+              "end": 3.2,
+              "action": "hold_blueprint",
+              "x": 0.5,
+              "facing": -1,
+              "expression": "hopeful"
+            },
+            {
+              "start": 3.2,
+              "end": 6.6,
+              "action": "nod_yes",
+              "x": 0.5,
+              "facing": -1,
+              "expression": "smile"
+            },
+            {
+              "start": 6.6,
+              "end": 10.0,
+              "action": "look_horizon",
+              "x": 0.5,
+              "facing": -1,
+              "expression": "hopeful"
+            },
+            {
+              "start": 10.0,
+              "end": 14.0,
+              "action": "celebrate_arms_up",
+              "x": 0.5,
+              "facing": -1,
+              "expression": "excited"
+            }
+          ]
+        }
+      ],
+      "accent_words": [
+        "page twenty",
+        "not the first page",
+        "eight washes long",
+        "wherever someone told you"
+      ],
+      "dialogue": [
+        {
+          "speaker": "narrator",
+          "text": "Start the book at page twenty.",
+          "pause_after": 0.45
+        },
+        {
+          "speaker": "narrator",
+          "text": "Not the first page.",
+          "pause_after": 0.5
+        },
+        {
+          "speaker": "narrator",
+          "text": "The card was never eight washes long.",
+          "pause_after": 0.45
+        },
+        {
+          "speaker": "narrator",
+          "text": "The card started wherever someone told you it started.",
+          "pause_after": 0.6
+        }
+      ]
+    }
+  ]
+}
