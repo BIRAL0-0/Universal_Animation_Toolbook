@@ -29,6 +29,43 @@ from typing import Any, Dict, List, Optional, Tuple
 
 SAMPLE_RATE = 44100
 
+_VERBALIZER_CACHE: Dict[str, Any] = {}
+
+
+def _verbalizer():
+    """Load ``tts/verbalize.py`` by path.
+
+    The ``tts`` package ``__init__`` imports numpy (audio backends), but verbalization is
+    pure text. Loading the module directly keeps the render path importable in the lean
+    environments where the unit suite runs, and keeps a missing file from ever failing a
+    render -- if it cannot load, the engine simply speaks the authored text (old behaviour).
+    """
+    if "module" in _VERBALIZER_CACHE:
+        return _VERBALIZER_CACHE["module"]
+    import importlib.util
+    import sys
+
+    module = None
+    path = Path(__file__).resolve().parent.parent / "tts" / "verbalize.py"
+    try:
+        name = "_utb_verbalize"
+        if name in sys.modules:
+            module = sys.modules[name]
+        else:
+            spec = importlib.util.spec_from_file_location(name, path)
+            if spec is not None and spec.loader is not None:
+                candidate = importlib.util.module_from_spec(spec)
+                # dataclasses resolves annotations through sys.modules, so the module must
+                # be registered before exec or its @dataclass definitions fail to build.
+                sys.modules[name] = candidate
+                spec.loader.exec_module(candidate)
+                module = candidate
+    except Exception:
+        sys.modules.pop("_utb_verbalize", None)
+        module = None
+    _VERBALIZER_CACHE["module"] = module
+    return module
+
 STOPWORDS = {
     "a", "an", "the", "and", "or", "but", "if", "in", "on", "at", "to", "for",
     "of", "by", "is", "it", "be", "as", "so", "we", "he", "she", "you", "they",
@@ -872,6 +909,24 @@ def _find_phrase_time(
     if not target:
         return None
 
+    # A cue phrase is authored against the DISPLAY register ("21 days") but the word
+    # stream is the SPOKEN register ("twenty one days"). Verbalize the phrase before
+    # matching so either register finds the audio; when they agree this is a no-op.
+    module = _verbalizer()
+    if module is not None:
+        try:
+            spoken_phrase = module.verbalize(phrase.strip()).spoken
+        except Exception:
+            spoken_phrase = phrase
+        if spoken_phrase.strip() and spoken_phrase != phrase.strip():
+            spoken_target = [
+                _norm_token(tok)
+                for tok in re.split(r"[\s—\-]+", spoken_phrase.strip())
+                if _norm_token(tok)
+            ]
+            if spoken_target:
+                target = spoken_target
+
     filtered = [w for w in scene_words if float(w.get("start", 0.0)) >= min_time - 0.05]
     if not filtered:
         return None
@@ -1128,6 +1183,35 @@ def _resolve_speaker_voice(
     return default_voice, default_rate, "+0Hz"
 
 
+def _line_speech(text: str, entry: Dict[str, Any]) -> Tuple[str, List[Dict[str, Any]]]:
+    """Resolve what the engine says for one dialogue line, plus display->spoken alignment.
+
+    Two ways a line gets a spoken form:
+
+    * ``dialogue[].spoken`` -- an explicit, authored override. It wins, because an author
+      who wrote one means it (names, deliberate pronunciation). Its alignment is derived by
+      treating it as one span covering the whole line.
+    * the verbalizer -- the default. It turns VOICEOVER_POLISH_PROMPT rules 5-7 into code
+      (numbers, dates, times, ranges, multipliers, symbols, acronyms) so the script itself
+      can stay in the natural written form that belongs in a subtitle.
+
+    Returns ``(spoken_text, alignment)``. ``alignment`` is empty when nothing changed, which
+    lets the subtitle builder keep its existing exact path for the overwhelmingly common case.
+    """
+    override = str(entry.get("spoken") or "").strip()
+    if override and override != text:
+        return override, []
+
+    module = _verbalizer()
+    if module is None:
+        return text, []
+    try:
+        result = module.verbalize(text)
+    except Exception:
+        return text, []
+    return result.spoken, result.as_alignment()
+
+
 def _smart_default_pause_after(speaker: str, next_speaker: Optional[str], text: str) -> float:
     """Natural human conversational turn timing (replaces sluggish 0.50s blanket pauses)."""
     spk = (speaker or "narrator").lower()
@@ -1245,16 +1329,24 @@ def _stitch_scene_lines_wav(
                 scene_words.append(w_entry)
 
             env_30 = _compute_speech_envelope_30fps(raw) if spk.lower() != "narrator" else []
-            line_timings.append(
-                {
-                    "speaker": spk,
-                    "text": it.get("text", ""),
-                    "start": round(start_t, 3),
-                    "end": round(end_t, 3),
-                    "words": shifted_words,
-                    "env_30fps": env_30,
-                }
-            )
+            line_entry: Dict[str, Any] = {
+                "speaker": spk,
+                # `text` is the DISPLAY form: the subtitle builder slices it, so it must be
+                # what the author wrote. `spoken_text` keeps the audio string for checks.
+                "text": it.get("display_text") or it.get("text", ""),
+                "start": round(start_t, 3),
+                "end": round(end_t, 3),
+                "words": shifted_words,
+                "env_30fps": env_30,
+            }
+            if it.get("display_text") and it.get("display_text") != it.get("text"):
+                line_entry["spoken_text"] = it.get("text", "")
+            if it.get("align"):
+                # Explicit display-token -> spoken-word-span map. Without it the subtitle
+                # builder would try to fuzzy-match "254" against "two hundred and fifty
+                # four", which can never succeed and would blank the highlight.
+                line_entry["align"] = it["align"]
+            line_timings.append(line_entry)
             speech_rel_intervals.append((round(start_t, 3), round(end_t, 3)))
 
         is_last = idx == len(items) - 1
@@ -1322,6 +1414,11 @@ def prepare_episode_voiceover(
             valid_entries = [e for e in dialogue if str(e.get("text") or "").strip()]
             for l_idx, entry in enumerate(valid_entries):
                 txt = str(entry.get("text") or "").strip()
+                # DISPLAY/SPOKEN SPLIT. `txt` is the authored written form and stays the
+                # subtitle source (VOICEOVER_POLISH_PROMPT rewrites used to be hand-baked
+                # into it, which is how "254 days" on a board ended up sitting under a
+                # subtitle that spelled it out). `spoken` is what the engine says.
+                spoken_txt, align = _line_speech(txt, entry)
                 spk = str(entry.get("speaker") or "narrator")
                 nxt_spk = str(valid_entries[l_idx + 1].get("speaker") or "narrator") if l_idx + 1 < len(valid_entries) else None
                 v_name, v_rate, v_pitch = _resolve_speaker_voice(
@@ -1334,11 +1431,15 @@ def prepare_episode_voiceover(
                 # Guard against unintentional long pauses unless `allow_long_pause` is set
                 eff_pa = raw_pa if entry.get("allow_long_pause") else min(raw_pa, 0.85)
 
-                h = hashlib.sha1(f"wb3|{v_name}|{eff_rate}|{eff_pitch}|{txt}".encode("utf-8")).hexdigest()[:12]
+                # The signature covers the SPOKEN text: changing a spelling rule must
+                # invalidate the cached WAV, or a re-render would keep the old audio.
+                h = hashlib.sha1(f"wb3|{v_name}|{eff_rate}|{eff_pitch}|{spoken_txt}".encode("utf-8")).hexdigest()[:12]
                 l_wav = vo_dir / f"line_{idx:03d}_{l_idx:03d}_{h}.wav"
                 l_meta = l_wav.with_suffix(".txt")
                 job = {
-                    "text": txt,
+                    "text": spoken_txt,
+                    "display_text": txt,
+                    "align": align,
                     "speaker": spk,
                     "voice": v_name,
                     "rate": eff_rate,
@@ -1347,7 +1448,7 @@ def prepare_episode_voiceover(
                     "pause_after": eff_pa,
                     "wav": l_wav,
                     "meta": l_meta,
-                    "sig": f"{sig_tag}wb3|{v_name}|{eff_rate}|{eff_pitch}|{txt}",
+                    "sig": f"{sig_tag}wb3|{v_name}|{eff_rate}|{eff_pitch}|{spoken_txt}",
                     "ok": False,
                     "dur": 0.0,
                     "words": [],
@@ -1497,7 +1598,9 @@ def prepare_episode_voiceover(
             scale_scene_choreography(sc, orig_dur, new_dur)
             sc["line_timings"] = line_timings
             sc["word_timings"] = scene_words
-            sc["narration"] = " ".join(j["text"] for j in lines)
+            # `narration` is read back by the subtitle fallback (buildCinemaSubtitles) and by
+            # the word-timing matcher, so it must be the DISPLAY form, not the spoken one.
+            sc["narration"] = " ".join(j.get("display_text") or j["text"] for j in lines)
             align_character_beats_to_speech(sc, line_timings, scene_words, new_dur)
             align_scene_board_to_speech(sc, scene_words, new_dur)
             align_scene_cameras_to_speech(sc, scene_words, new_dur)
@@ -1511,7 +1614,9 @@ def prepare_episode_voiceover(
                 }
             )
         else:
-            full_text = " ".join(j["text"] for j in lines)
+            # No audio was produced, so there is no speech to match: lay the DISPLAY text
+            # out, which is what the viewer will read.
+            full_text = " ".join(j.get("display_text") or j["text"] for j in lines)
             words = len(full_text.split())
             est = max(orig_dur, words / 2.6 + 0.6)
             scale_scene_choreography(sc, orig_dur, est)

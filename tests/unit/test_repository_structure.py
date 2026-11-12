@@ -18,7 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 VALIDATOR = ROOT / "tools" / "validate_structure.py"
 POLISH = ROOT / "docs" / "production" / "prompts" / "VOICEOVER_POLISH_PROMPT.md"
-POLISH_SHA256 = "aeef0850347ae43535379981d2cd9f4a90e747b7de63b6bb5bd93c31518dc1ea"
+POLISH_SHA256 = "d6aa621f2147aecf756bc61dcb9355e1ab656dad2fb698fb85b29dac1c8006ef"
 SKILLS = (
     "youtube-research", "youtube-storytelling-and-hooks", "scriptwriting",
     "animation-scriptwriting", "character-design-and-rigging", "stickman-animation",
@@ -80,7 +80,7 @@ def test_one_master_prompt_and_immutable_polish_prompt():
                p.endswith("MASTER_PROMPT.md")]
     assert masters == ["templates/MASTER_VIDEO_PRODUCTION_PROMPT.md"], masters
     assert hashlib.sha256(POLISH.read_bytes()).hexdigest() == POLISH_SHA256
-    assert POLISH.stat().st_size == 5256
+    assert POLISH.stat().st_size == 7643
     for redirect in ("START_HERE.md", "AGENT_OPERATING_RULES.md"):
         assert len((ROOT / redirect).read_text(encoding="utf-8").splitlines()) < 40
 

@@ -122,6 +122,63 @@ function tokensMatchWord(cand, sub) {
   return false;
 }
 
+// Alignment-driven mapping (display form -> spoken form).
+//
+// When a line's written form is not its spoken form ("254 days" is voiced as "two hundred
+// and fifty four days"), the engine emits the verbalizer's token map. Each displayed token
+// declares the span of spoken words that voice it. That is an exact mapping: no fuzzy text
+// matching, so a subtitle highlight can never drift or vanish because "254" does not look
+// like "two hundred and fifty four".
+//
+// Tokens the alignment says voice nothing (a bare em dash) are marked punctuation-only,
+// exactly like the punctuation branch of the caller.
+function mapDisplayTokensByAlignment(displayTokens, rawWords, align, startSec, endSec) {
+  const words = Array.isArray(rawWords) ? rawWords : [];
+  const byRaw = new Map();
+  for (const a of Array.isArray(align) ? align : []) {
+    if (!a || typeof a !== 'object') continue;
+    if (!byRaw.has(a.raw)) byRaw.set(a.raw, []);
+    byRaw.get(a.raw).push(a);
+  }
+  const consumed = new Map();
+
+  const mapped = displayTokens.map((tok, idx) => {
+    if (tok.isSpeakerLabel) {
+      return { ...tok, isSpeakerLabel: true, tStart: undefined, tEnd: undefined };
+    }
+    const key = String(tok.raw || '');
+    const bucket = byRaw.get(key) || [];
+    const seen = consumed.get(key) || 0;
+    const a = bucket[seen];
+    consumed.set(key, seen + 1);
+
+    if (!a) {
+      return { ...tok, tStart: null, tEnd: null };
+    }
+    const w0 = Number(a.w0);
+    const w1 = Number(a.w1);
+    if (!Number.isFinite(w0) || !Number.isFinite(w1) || w1 <= w0) {
+      // Spoken by nothing (punctuation / symbol voiced as a pause).
+      return { ...tok, isPunctuationOnly: true, tStart: undefined, tEnd: undefined };
+    }
+    const first = words[w0];
+    const last = words[Math.min(w1, words.length) - 1];
+    if (!first || !last) {
+      return { ...tok, tStart: null, tEnd: null };
+    }
+    return {
+      ...tok,
+      tStart: +Number(first.start).toFixed(3),
+      tEnd: +Number(last.end).toFixed(3),
+    };
+  });
+
+  // Any token the map could not anchor is filled proportionally between its anchored
+  // neighbours, so a gap in the alignment degrades to the old behaviour rather than
+  // dropping the subtitle entirely.
+  return fillUnmatchedProportionally(mapped, startSec, endSec);
+}
+
 function mapDisplayTokensToWordTimings(displayTokens, rawWords, startSec, endSec, hasSpeakerPrefix = false) {
   const n = displayTokens.length;
   if (n === 0) return [];
@@ -175,7 +232,13 @@ function mapDisplayTokensToWordTimings(displayTokens, rawWords, startSec, endSec
     return { ...tok, tStart: null, tEnd: null };
   });
 
-  // Fill any unmatched spoken tokens proportionally between anchored spoken neighbors
+  return fillUnmatchedProportionally(mapped, startSec, endSec);
+}
+
+// Lay unanchored tokens out evenly between their anchored neighbours. Shared by the fuzzy
+// matcher and the explicit alignment path so both degrade identically.
+function fillUnmatchedProportionally(mapped, startSec, endSec) {
+  const n = mapped.length;
   let i = 0;
   while (i < n) {
     if (mapped[i].tStart !== null) {
@@ -318,13 +381,11 @@ function buildSubtitlesFromLineTimings(lineTimings, accentWords = []) {
     });
 
     const nonPrefix = allDisplayTokens.filter((t) => !t._isPrefix);
-    const alignedNonPrefix = mapDisplayTokensToWordTimings(
-      nonPrefix,
-      lineWords,
-      Number(item.start),
-      Number(item.end),
-      false
-    );
+    // A verbalized line carries an exact display->spoken map; a line whose written form is
+    // already its spoken form takes the original fuzzy path (byte-identical output).
+    const alignedNonPrefix = Array.isArray(item.align) && item.align.length > 0
+      ? mapDisplayTokensByAlignment(nonPrefix, lineWords, item.align, Number(item.start), Number(item.end))
+      : mapDisplayTokensToWordTimings(nonPrefix, lineWords, Number(item.start), Number(item.end), false);
     let npCursor = 0;
     const alignedAll = allDisplayTokens.map((t) => {
       if (t._isPrefix) {

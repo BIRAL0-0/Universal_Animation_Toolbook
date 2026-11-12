@@ -503,7 +503,7 @@
         },
         {
           "speaker": "narrator",
-          "text": "And someone has been telling you it takes twenty one days.",
+          "text": "And someone has been telling you it takes 21 days.",
           "pause_after": 0.45
         },
         {
@@ -799,12 +799,12 @@
         },
         {
           "speaker": "narrator",
-          "text": "Time to feeling automatic ran from eighteen days to two hundred and fifty four.",
+          "text": "Time to feeling automatic ran from 18 days to 254.",
           "pause_after": 0.45
         },
         {
           "speaker": "narrator",
-          "text": "The middle of that range was sixty six days.",
+          "text": "The middle of that range was 66 days.",
           "pause_after": 0.65
         }
       ],

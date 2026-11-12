@@ -416,7 +416,7 @@
         },
         {
           "speaker": "narrator",
-          "text": "Five weeks early, the deck met the far side.",
+          "text": "5 weeks early, the deck met the far side.",
           "pause_after": 0.35
         },
         {
@@ -1000,12 +1000,12 @@
       "dialogue": [
         {
           "speaker": "narrator",
-          "text": "They rebuilt every joint with three inches of margin.",
+          "text": "They rebuilt every joint with 3 inches of margin.",
           "pause_after": 0.4
         },
         {
           "speaker": "nia",
-          "text": "Twelve weeks. Not nine.",
+          "text": "12 weeks. Not 9.",
           "pause_after": 0.35
         },
         {

@@ -111,6 +111,43 @@ Every entry: **stage** · **symptom** · **root cause** · **status** · **regre
 - **Regression check:** `tests/unit/test_chapter_authoring.py::test_top_level_chapters_are_not_a_source_of_truth`
   pins the current mechanism, so whoever wires it up finds the test rather than a surprise.
 
+### KI-023 — subtitles spelled out numbers the board beside them showed as digits (resolved)
+- **Stage:** script authoring / TTS / subtitles
+- **First seen:** `the-two-free-stamps` (2026-11-12), viewing the master.
+- **Symptom:** a scene showed `254 days` on a `stat_cards` board while the burned-in subtitle
+  directly beneath it read *two hundred and fifty four*. Same fact, two registers, one frame.
+  Measured across the committed corpus: 13 dialogue lines in 6 spec files carried the spoken
+  form of a number that a board beside them displayed as a numeral.
+- **Root cause:** one string served both registers. `dialogue[].text` was both the TTS input and
+  the subtitle source, so
+  [`prompts/VOICEOVER_POLISH_PROMPT.md`](prompts/VOICEOVER_POLISH_PROMPT.md) rules 5–7 — which
+  require numbers, times, ranges, multipliers and codec names to be *spoken-safe* — had to be
+  hand-applied into the text the viewer reads. The standard was correct for audio and wrong for
+  subtitles, and there was no way to satisfy both. The existing
+  `tts/config/pronunciation_dictionary.json` + `tts/segment.py` split (`Segment.text` vs
+  `Segment.tts_text`) already modelled the right idea, but only the standalone
+  `generate_voiceover.py` used it; the film render path (`engine/voice_engine.py`) sent `text`
+  straight to the engine.
+- **Fix:** a first-class display/spoken split.
+  `universal_toolbook/tts/verbalize.py` implements rules 5–7 as code (numbers, years, dates,
+  clock times, ranges, multipliers, ordinals, currency, percentages, codec tails, symbols,
+  acronyms via the pronunciation dictionary) and returns the spoken string **plus a
+  display-token → spoken-word alignment**. `voice_engine.py` keeps `text` for the subtitle and
+  speaks the verbalized form, carrying the alignment through `line_timings[].align`;
+  `episode.js` maps subtitle tokens through that alignment, so a numeral's highlight spans all
+  of its spoken words and the glow stays frame-accurate. `dialogue[].spoken` was added as an
+  optional pronunciation override, and `validate` rejects one that changes meaning.
+- **Blast radius / safety:** the verbalizer is **idempotent** — running it over all 427 shipped
+  dialogue lines produces byte-identical text, so the audio of every existing film is unchanged.
+  The 13 defective lines were rewritten to their numeral form and each one's *spoken* string was
+  verified identical to before, so only subtitles change. A line with no numeral takes the
+  original, untouched subtitle path.
+- **Status:** RESOLVED.
+- **Regression check:** `tests/unit/test_verbalize.py` (rules, idempotence, corpus has no digits
+  in the spoken register, reproducer) and `tests/unit/test_subtitle_registers.py` (the
+  Python→JS seam: subtitle shows the written form, every token is timed, a numeral's highlight
+  spans its spoken words).
+
 ---
 
 ## RESOLVED

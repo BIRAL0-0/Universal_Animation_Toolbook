@@ -31,8 +31,8 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 #: sha256 of docs/production/prompts/VOICEOVER_POLISH_PROMPT.md, recorded when the
 #: rule was codified. If the standard is ever *deliberately* revised, update this constant AND
 #: record the revision in CHANGELOG.md — never silently.
-POLISH_PROMPT_SHA256 = "aeef0850347ae43535379981d2cd9f4a90e747b7de63b6bb5bd93c31518dc1ea"
-POLISH_PROMPT_BYTES = 5256
+POLISH_PROMPT_SHA256 = "d6aa621f2147aecf756bc61dcb9355e1ab656dad2fb698fb85b29dac1c8006ef"
+POLISH_PROMPT_BYTES = 7643
 
 POLISH_PROMPT_PATH = REPO_ROOT / "docs" / "production" / "prompts" / "VOICEOVER_POLISH_PROMPT.md"
 

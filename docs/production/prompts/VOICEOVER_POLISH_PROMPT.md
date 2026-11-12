@@ -68,9 +68,35 @@ which rule above justified it.
 | 2 Fragments | TTS renders each `dialogue` entry as one audio line; a fragment line produces a clipped intonation and a one-word subtitle that gets merged with the next line into a two-row card. |
 | 3 Sentence length | Subtitles are per-line; long lines wrap into two rows (sits lower, can cover legs). One sentence per `dialogue` entry is the authoring rule. |
 | 4 Punctuation | The engine's silence compactor preserves ellipsis pauses and gives sentence punctuation ≥ 0.42 s, commas ≥ 0.24 s — so your punctuation *is* the timing design. |
-| 5 Numbers/symbols | Backends spell digits inconsistently; spoken forms are deterministic. Word boundaries (which drive subtitle glow and lip-sync) are extracted from the spoken audio. |
+| 5 Numbers/symbols | Backends spell digits inconsistently, so the engine verbalizes them deterministically before synthesis (see below). Word boundaries (which drive subtitle glow and lip-sync) are extracted from the spoken audio. |
 | 6/7 Jargon, names | Mispronunciation is audible and unfixable in post — the mix is final after render. |
 | 9 Verbatim mode | `validate --script` compares word tokens (punctuation-insensitive, order-sensitive). Punctuation-only edits pass; word changes fail `exact_word_match` — so they must be an explicit, user-approved exception. |
+
+## REGISTER RULE — write numbers as you'd read them, not as you'd say them
+
+This standard used to be applied by **rewriting the script itself**, which meant the spoken
+form also became the subtitle: a board reading `254 days` sat under a subtitle reading
+*two hundred and fifty four days*. Same fact, two registers, one screen. That is a defect,
+not a style choice.
+
+The engine now keeps the two registers apart (`universal_toolbook/tts/verbalize.py`):
+
+* **`dialogue[].text` is the DISPLAY register.** Write it the way it should be *read*:
+  `21 days`, `1927`, `7 Nov 2076`, `20%`, `1.5x`, `H.264`, `40-90 seconds`.
+  These are what the subtitle shows, so they must carry the authored form.
+* **The audio is verbalized automatically.** The same tokens become
+  *twenty one days*, *nineteen twenty seven*, *the seventh of November twenty seventy six*,
+  *twenty percent*, *one and a half times*, *H two sixty four*, *forty to ninety seconds*.
+  The engine emits an alignment so subtitle glow stays frame-accurate even though
+  `254` became five spoken words.
+* **`dialogue[].spoken` is an optional pronunciation override.** Use it only for a name or
+  term the rules cannot know. `validate` rejects an override that says *different words*
+  than `text` would produce — a `spoken` field may change pronunciation, never meaning.
+
+So rules 5–7 are now **authoring guidance for the engine's verbalizer**, not manual
+hand-edits you must bake into `text`. Write the natural written form and let the engine
+speak it. Only override `spoken` when a human pronunciation judgement is needed, and keep
+`text` as the accurate written form either way.
 
 ## Applying it in practice
 
@@ -81,3 +107,17 @@ which rule above justified it.
    (`dialogue[].text` / `scene.narration`). No further editing happens between approval and
    render — if something is wrong at draft-review time, the fix loop goes back to this
    stage (re-approval for verbatim scripts).
+4. Write numerals and symbols in `text` as they should be **read**, and check the spoken
+   form the engine will actually say:
+
+   ```bash
+   python3 -c "import sys;sys.path.insert(0,'universal_toolbook');\
+   from tts.verbalize import verbalize;print(verbalize('Time ran 18 to 254 days.').spoken)"
+   # Time ran eighteen to two hundred and fifty four days.
+   ```
+
+   If a term is still mispronounced, add it to
+   `universal_toolbook/tts/config/pronunciation_dictionary.json` (acronyms and technical
+   terms) or set `dialogue[].spoken` for a one-off. Do **not** spell the number out in
+   `text` — that puts the spoken form back into the subtitle, which is the defect this
+   rule prevents.

@@ -135,7 +135,9 @@ TRACKED_BAD = (
     "runtime/logs/", "output/", "work/", "cache/", ".work_",
 )
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-PROTECTED_PROMPT_HASH = "aeef0850347ae43535379981d2cd9f4a90e747b7de63b6bb5bd93c31518dc1ea"
+# Updated 2026-11-12 (PC-011, KI-023): the standard gained the REGISTER RULE so
+# numerals stay in the written register for subtitles while the engine verbalizes speech.
+PROTECTED_PROMPT_HASH = "d6aa621f2147aecf756bc61dcb9355e1ab656dad2fb698fb85b29dac1c8006ef"
 LEGACY_PATHS = (
     "docs/production-workflow/", "outputs/", "downloads/",
     "universal_toolbook/MASTER_PROMPT.md", "universal_toolbook/00_START_HERE.md",

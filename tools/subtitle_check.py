@@ -98,7 +98,12 @@ def main(argv: list[str] | None = None) -> int:
         if not inside_speech(float(t["tStart"]), float(t["tEnd"]))
     ]
 
-    # 2. line coverage / order
+    # 2. line coverage / order.
+    #
+    # Subtitles are drawn from `dialogue[].text`, the DISPLAY register, so they must be
+    # compared against that same register. The engine speaks a verbalized form of it
+    # ("254 days" is voiced "two hundred and fifty four days"), and comparing the burned
+    # subtitle against the spoken string would report a permanent, bogus mismatch.
     spoken = [
         d["text"].strip()
         for sc in json.loads(retimed.read_text())["scenes"]
