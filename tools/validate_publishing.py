@@ -22,6 +22,9 @@ For each ``videos/<slug>/`` directory this checks the ten publishing rules:
 7. Format, aspect ratio and resolution agree with the actual MP4 (probed with
    ffprobe when available, otherwise recorded duration is trusted).
 8. No stray temporary/unfinished files sit next to the package.
+9. The master is **reproducible**: its first spoken line can be traced to a committed
+   ``examples/*.json`` episode spec. Reported as a note, because a published master cannot
+   be retracted and the gap can only be closed by re-authoring.
 
 Exit code 0 = every package publishable; 1 = at least one problem.
 """
@@ -402,7 +405,58 @@ def validate_package(directory: Path, index_entry: dict | None) -> tuple[list[st
                 problems.append(
                     "[index] content_fingerprint is stale — package bytes changed "
                     f"(index {index_entry.get('content_fingerprint')}, live {live})")
+    # ---- reproducibility
+    # A published film whose only record is its MP4 cannot be re-cut, re-rendered or
+    # re-scored: `the-first-plank` had to be re-authored from scratch for exactly this
+    # reason. Reported as a note, not a failure — a gate cannot retroactively create a
+    # spec, only keep the gap visible so the next production does not repeat it.
+    if script_path.exists():
+        first = _first_spoken_line(script_path.read_text(encoding="utf-8"))
+        if first and first not in spec_index():
+            notes.append(
+                "no committed episode spec reproduces this master — a re-cut or "
+                "re-render would require re-authoring from script.md")
     return problems, notes
+
+
+def _first_spoken_line(text: str) -> str:
+    """The first narration line of a script, normalised for comparison."""
+    import re
+
+    for match in re.finditer(r"\*\*[A-Z ]+:\*\*\s*(.+)", text):
+        line = match.group(1).strip()
+        if line:
+            return re.sub(r"[^a-z0-9]+", " ", line.lower()).strip()
+    return ""
+
+
+def spec_index() -> dict:
+    """Map first-spoken-line -> episode spec path across every example spec.
+
+    The first line of a cut is unique to that cut, which makes it a far more reliable
+    identity than the title: several examples share a title ("The Two-Inch Bridge" has
+    three) while their openings differ.
+    """
+    index: dict = {}
+    examples = ROOT / "examples"
+    if not examples.is_dir():
+        return index
+    for path in sorted(examples.glob("*.json")):
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            continue
+        for scene in data.get("scenes", []):
+            found = False
+            for line in scene.get("dialogue", []):
+                text = (line.get("text") or "").strip()
+                if text:
+                    index.setdefault(_first_spoken_line(f"**NARRATOR:** {text}"), path)
+                    found = True
+                    break
+            if found:
+                break
+    return index
 
 
 def validate_all() -> dict:

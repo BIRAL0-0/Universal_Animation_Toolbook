@@ -188,6 +188,26 @@ why the score rose from 0.615 to 0.735.
 **Rule:** when a cover shows the protagonist, render it from the episode spec. Generative
 art may supply backgrounds, objects or texture, but not the character the film already owns.
 
+The record now declares this in `thumbnail_spec.art_source` (`rendered_from_spec` or
+`generated_art`), and a cover claiming `rendered_from_spec` must name an `art_spec` that
+exists. `tests/unit/test_seo_and_style.py::test_cover_art_declares_its_source` enforces it.
+The rule is deliberately narrow: it does not attempt to judge whether the art is good, only
+that the claim made about it is true.
+
+### 4.1c Reproducibility is now checked
+
+`tools/validate_publishing.py` traces each master to a committed episode spec by its **first
+spoken line** — not its title, because three examples share the title "The Two-Inch Bridge"
+while their openings differ. A film with no traceable spec gets a note:
+
+> no committed episode spec reproduces this master — a re-cut or re-render would require
+> re-authoring from script.md
+
+That note currently fires for exactly one package, `what-if-every-notification-cost-you-23-minutes`.
+It is the same gap that forced `the-first-plank` to be re-authored from scratch, and it is
+recorded rather than hidden: a gate cannot retroactively create a spec for a published master,
+but it can stop the next production shipping without one.
+
 ### 4.1b The first re-cut: `the-two-inch-bridge` 3.0.0 → 3.1.0
 
 The judged weakness was that S01 established *scale* — "eight hundred metres of nothing" — with
