@@ -2340,18 +2340,18 @@ function computeBeatState(beat, bt, bDur, globalT, W, floorY, scale) {
     // read as a freeze-frame. Real animation rests with WEIGHT AND ATTENTION, not just a ribcage:
     // the body drifts onto one hip, the head keeps checking its surroundings, and the hands
     // resettle. Three desynchronised periods keep it from pulsing like a metronome.
-    lookX: 0.16 + 0.30 * microGaze + 0.10 * Math.sin(globalT * 0.23 + phaseSeed * 3.1),
-    lookY: 0.03 + 0.10 * slowShift,
+    // KI-020: weight shift, head attention and arm resettle now come from the shared
+    // secondary-motion layer so every hold is alive, not just this one. Keeping a private
+    // copy here made the two fight each other and measured WORSE (0.601 -> 0.560).
+    lookX: 0.16 + 0.12 * microGaze,
+    lookY: 0.03 + 0.04 * slowShift,
     pose: P({
       ...plantedStandingLegs(10, 12),
-      lean: 0.022 + 0.055 * slowShift + 0.018 * breath,
-      head: 0.015 + 0.070 * Math.sin(globalT * 0.37 + phaseSeed * 1.9)
-            + 0.030 * microGaze + 0.020 * breath,
-      spineCurve: (2.6 + 2.2 * slowShift + 0.7 * breath) * s,
-      al: [0.09 + 0.10 * Math.sin(globalT * 0.41 + phaseSeed * 2.7) + 0.03 * breathLag,
-           0.22 + 0.16 * Math.sin(globalT * 0.29 + phaseSeed * 1.3) + 0.04 * breathLag],
-      ar: [-0.07 + 0.12 * Math.sin(globalT * 0.33 + phaseSeed * 3.7) - 0.03 * breathLag,
-           0.15 + 0.20 * Math.sin(globalT * 0.26 + phaseSeed * 2.1) + 0.04 * breathLag],
+      lean: 0.022 + 0.018 * breath + 0.010 * slowShift,
+      head: 0.015 + 0.024 * breath + 0.016 * slowShift,
+      spineCurve: (2.6 + 0.7 * breath) * s,
+      al: [0.09 + 0.022 * breathLag, 0.22 + 0.038 * breathLag],
+      ar: [-0.07 - 0.018 * breathLag, 0.15 + 0.032 * breathLag],
       handL: 'relaxed',
       handR: 'relaxed',
     }),
@@ -2378,6 +2378,106 @@ function normalizeBeats(actor, sceneDur) {
     });
   }
   return [{ ...actor, start: 0, end: Math.max(0.1, sceneDur) }];
+}
+
+
+/**
+ * KI-020: shared secondary motion for stationary poses.
+ *
+ * Auditing every action by rendering it in isolation showed the problem was not
+ * one pose. Character-region frame delta, median over an 8 s probe:
+ *
+ *   sit_bench 0.132 | hold_blueprint 0.213 | cross_arms_skeptical 0.290
+ *   listen_nod 0.431 | look_horizon 0.491 | head_in_hands 0.586 | idle_stand 0.601
+ *   talk_explain 1.092 | sketch_desk 1.666 | sit_desk_type 1.969
+ *
+ * Everything that moves the body through space lands near 2.0. Everything the
+ * author holds still lands near 0.2-0.6 — a 10x gap, and `listen_nod` and
+ * `look_horizon` are two of the most-used actions in the corpus (79 and 43
+ * beats). Hand-tuning each pose fixes one action at a time and rots the moment
+ * somebody adds the next one.
+ *
+ * So the motion is layered on top instead: every stationary pose gets weight
+ * shift, head attention and breathing, at several desynchronised periods so it
+ * never pulses like a metronome. Actions that already carry their own secondary
+ * motion (walking, typing, sketching, gestures) are left exactly as authored —
+ * this adds life to a hold, it does not smear a performance.
+ *
+ * Continuity: oscillator phase depends only on the actor, never on the beat,
+ * so a cut cannot reset the oscillation. The amplitude has a 0.4 s eased envelope
+ * at beat edges and is interpolated across blends. (Seeding on beat.start would
+ * jump the phase at every cut.)
+ *
+ * Stillness control (KI-020 Phase 3): `secondary_motion` on a beat — or on the
+ * actor, to cover a whole scene — scales the layer:
+ *   "full"   (default) the full layer, preserving the KI-020 improvement
+ *   "subtle" 0.35x, for a calmer hold
+ *   "none"   no layer at all, for a deliberately frozen beat (dramatic pause,
+ *            suspense, shock). The base pose keeps whatever motion it was
+ *            authored with, so "none" is near-frozen, not a hard freeze-frame.
+ * Unknown values fall back to "full" so a typo degrades gracefully.
+ */
+const SECONDARY_MOTION_ACTIONS = new Set([
+  'idle_stand', 'listen_nod', 'nod_yes', 'look_horizon', 'cross_arms_skeptical',
+  'hold_blueprint', 'head_in_hands', 'sit_bench', 'sit_chair', 'sit_bed_edge',
+  'sit_cafe_listen', 'kneel_lookup', 'chest_hand_sincere', 'hold_umbrella',
+  'think_ponder', 'wait_patient', 'stand_wait',
+]);
+
+const SECONDARY_MOTION_SCALE = { full: 1.0, subtle: 0.35, none: 0.0 };
+
+function secondaryMotionScale(beat) {
+  const v = beat && beat.secondary_motion;
+  return Object.prototype.hasOwnProperty.call(SECONDARY_MOTION_SCALE, v)
+    ? SECONDARY_MOTION_SCALE[v]
+    : 1.0;
+}
+
+function secondaryMotionStrength(beat, ts) {
+  const action = beat.action || 'idle_stand';
+  if (!SECONDARY_MOTION_ACTIONS.has(action)) return 0;
+  const base = secondaryMotionScale(beat);
+  if (base === 0) return 0;
+  // Ease the layer over 0.4 s at beat edges. In blend windows the outgoing and
+  // incoming strengths are interpolated together, so a held pose never drops its
+  // motion abruptly when handing off to a moving action (or vice versa).
+  const ramp = 0.4;
+  const fadeIn = Math.max(0, Math.min(1, (ts - beat.start) / ramp));
+  const fadeOut = Math.max(0, Math.min(1, (beat.end - ts) / ramp));
+  const edge = Math.min(fadeIn, fadeOut);
+  const eased = edge * edge * (3 - 2 * edge);
+  return base * eased;
+}
+
+function applySecondaryMotion(state, beat, globalT, amount = null) {
+  if (!state || !state.pose) return state;
+  const scale = amount === null ? secondaryMotionStrength(beat, globalT) : amount;
+  if (scale === 0) return state;
+  // Actor-only seed: continuous across beats, deterministic for a given frame.
+  const seed = (beat._actorSeed || 0) * 7.3;
+  const w = Math.sin(globalT * 0.31 + seed);
+  const w2 = Math.sin(globalT * 0.47 + seed * 1.9);
+  const w3 = Math.sin(globalT * 0.23 + seed * 2.7);
+  const breathe = Math.sin(globalT * 1.55 + seed * 0.6);
+
+  const pose = { ...state.pose };
+  // Amplitudes are silhouette-scale on purpose. At 0.05 rad the motion is a tremor you can
+  // only see in a frame diff; these read as the body settling, at roughly 6-14 degrees.
+  pose.lean = (pose.lean ?? 0) + scale * (0.105 * w + 0.022 * breathe);
+  pose.head = (pose.head ?? 0) + scale * (0.135 * w2 + 0.035 * breathe);
+  pose.spineCurve = (pose.spineCurve ?? 0) + scale * 3.4 * w3 * (state.s ?? 1);
+  if (Array.isArray(pose.al)) {
+    pose.al = [pose.al[0] + scale * (0.175 * w2 + 0.05 * w), pose.al[1] + scale * (0.245 * w3 + 0.045 * breathe)];
+  }
+  if (Array.isArray(pose.ar)) {
+    pose.ar = [pose.ar[0] + scale * (0.155 * w3 - 0.05 * w), pose.ar[1] + scale * (0.215 * w + 0.045 * breathe)];
+  }
+  return {
+    ...state,
+    pose,
+    lookX: (state.lookX ?? 0) + scale * (0.26 * w3 + 0.08 * w),
+    lookY: (state.lookY ?? 0) + scale * 0.075 * w2,
+  };
 }
 
 function evaluateCharacterState(actor, ts, sceneDur, globalT, W, floorY, speechCtx = null) {
@@ -2463,7 +2563,7 @@ function evaluateCharacterState(actor, ts, sceneDur, globalT, W, floorY, speechC
     const prevHasPropAlign = Boolean(prevState.phoneAction || prevState.tableAction || prevState.doorAction);
     const curHasPropAlign = Boolean(curState.phoneAction || curState.tableAction || curState.doorAction);
 
-    return {
+    return applySecondaryMotion({
       x: lerp(prevState.x, curState.x, k),
       fy: lerp(prevState.fy, curState.fy, k),
       s: scale,
@@ -2521,7 +2621,11 @@ function evaluateCharacterState(actor, ts, sceneDur, globalT, W, floorY, speechC
       posture: Number.isFinite(prev.posture) && Number.isFinite(cur.posture)
         ? lerp(prev.posture, cur.posture, k)
         : cur.posture,
-    };
+    }, cur, globalT, lerp(
+      secondaryMotionStrength(prev, ts),
+      secondaryMotionStrength(cur, ts),
+      k
+    ));
   }
 
   curState.turnScaleX = curState.turnScaleX ?? 1.0;
@@ -2540,7 +2644,8 @@ function evaluateCharacterState(actor, ts, sceneDur, globalT, W, floorY, speechC
   curState.lookX = curState.lookX ?? cur.look_x ?? cur.lookX ?? 0;
   curState.lookY = curState.lookY ?? cur.look_y ?? cur.lookY ?? 0;
   curState.posture = cur.posture;
-  return curState;
+  // KI-020: shared secondary motion, so a held pose is a resting body not a freeze-frame.
+  return applySecondaryMotion(curState, cur, globalT, secondaryMotionStrength(cur, ts));
 }
 
 /**

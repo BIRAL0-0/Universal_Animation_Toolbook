@@ -42,6 +42,14 @@ Work per scene, in this order (mirrors the intake stage):
 3. **Beats.** 2–4 per character, tiling the scene with no gaps: enter, cross, sit, point,
    hand off, react. Locomotion uses `from_x`/`to_x`; a seated-rig action on a standing actor
    is the classic floating-squat bug (see 04_VISUAL_GEOMETRY §4.4).
+   Held actions receive shared secondary motion by default. On the character record, set
+   `"secondary_motion": "subtle"` or `"none"` for a quieter scene; a beat-level value
+   overrides it. `"full"` is the default. `"none"` suppresses the shared weight-shift/head/
+   arm layer only — it does not erase motion authored into the action itself. Use it when a
+   story beat deliberately calls for stillness (e.g. shock or suspense), not as a general
+   way to reduce animation. The renderer eases the layer at beat edges. See
+   [KI-020](KNOWN_ISSUES.md#ki-020--held-poses-were-nearly-motionless-with-no-deliberate-stillness-control-resolved)
+   for the audit, verification and limits.
 4. **Proof object.** One visual object that carries the scene's fact: a board, a prop,
    weather. No proof object and no camera move = two people talking in a void.
 5. **Camera.** An opening shot + at least one push/cut, every later shot `cue_on` an exact
